@@ -28,7 +28,7 @@ public abstract class AbstractSpec {
 
     private static final EnvironmentType activeEnvironment = setupEnvironment();
 
-    private static final String BROWSER_STACK_URL = "http://patrickpriestley2:o6P23x3opV48PRyzCXS6@hub.browserstack.com/wd/hub";
+    private static final String BROWSER_STACK_URL = "http://jencampbell2:6jEURzbszfaWhLJc7XWx@hub.browserstack.com/wd/hub";
     private static final String BUILD_ID = RandomStringUtils.randomAlphanumeric(6);
     public static final long DEFAULT_TIMEOUT = 5L;
 

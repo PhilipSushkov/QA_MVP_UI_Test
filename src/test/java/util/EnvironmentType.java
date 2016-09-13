@@ -3,8 +3,8 @@ package util;
 
 public enum EnvironmentType {
 
-  DEVELOP("beta.q4desktop.com"),
-  BETA("beta.q4desktop.com"),
+  DEVELOP(""),
+  BETA(""),
   PRODUCTION("");
 
   private final String host;
