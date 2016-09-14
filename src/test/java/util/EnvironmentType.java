@@ -3,8 +3,8 @@ package util;
 
 public enum EnvironmentType {
 
-  DEVELOP(""),
-  BETA(""),
+  DEVELOP("goldcorp.s1.q4web.dev/admin/"),
+  BETA("goldcorptest.s1.q4web.newtest/admin/"),
   PRODUCTION("");
 
   private final String host;

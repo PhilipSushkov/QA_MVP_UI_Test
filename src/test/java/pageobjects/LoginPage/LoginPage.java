@@ -10,9 +10,9 @@ import pageobjects.PageObject;
  * Created by patrickp on 2016-08-03.
  */
 public class LoginPage extends Page {
-    private final By emailField = By.name("user");
-    private final By passwordField = By.name("password");
-    private final By loginButton = By.cssSelector(".login .x-button.login-button");
+    private final By emailField = By.id("txtUserName");
+    private final By passwordField = By.name("txtPassword");
+    private final By loginButton = By.name("btnSubmit");
 
     public LoginPage(WebDriver driver) {
         super(driver);
@@ -20,8 +20,8 @@ public class LoginPage extends Page {
 
     public Dashboard loginUser() {
         waitForElementToAppear(emailField);
-        findElement(emailField).sendKeys("patrickp@q4inc.com");
-        findElement(passwordField).sendKeys("patrick!");
+        findElement(emailField).sendKeys("admin");
+        findElement(passwordField).sendKeys("Song2Q4!");
         pause(2000L);
         waitForElementToAppear(loginButton);
         retryClick(loginButton);
