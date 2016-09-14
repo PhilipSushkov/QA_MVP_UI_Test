@@ -23,7 +23,7 @@ public abstract class AbstractSpec {
 // IMPORTANT:
 // Determines which environment the test suite will run on but can be overridden by command line
 //------------------------------------------------------------------------------
-    private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.DEVELOP;
+    private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.BETA;
 //------------------------------------------------------------------------------
 
     private static final EnvironmentType activeEnvironment = setupEnvironment();
@@ -63,6 +63,9 @@ public abstract class AbstractSpec {
                 setupLocalDriver();
                 break;
             case BETA:
+                //temp code due to temp use of testing environment
+                setupLocalDriver();
+                break;
             case PRODUCTION:
                 setupWebDriver();
                 break;
@@ -102,7 +105,9 @@ public abstract class AbstractSpec {
     public void teardownWebDriver() {
 
         if (getActiveEnvironment() != EnvironmentType.DEVELOP) {
-            driver.quit();
+            if (getActiveEnvironment() != EnvironmentType.BETA) //temp code due to temp use of testing environment
+
+                driver.quit();
         }
     }
 
