@@ -6,6 +6,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.interactions.Actions;
 import pageobjects.AbstractPageObject;
 import pageobjects.PressReleases.PressReleases;
+import org.openqa.selenium.support.ui.Select;
 
 public class NewPressRelease extends AbstractPageObject {
     Actions action = new Actions(driver);
@@ -15,11 +16,6 @@ public class NewPressRelease extends AbstractPageObject {
     private final By pressReleaseMinute = By.xpath("//select[contains(@id,'ddlMinute')]");
     private final By pressReleaseAMPM = By.xpath("//select[contains(@id,'ddlAMPM')]");
     private final By pressReleaseHeadline = By.id("txtHeadline");
-    private final By insertMenuButton = By.className("rrbTab").linkText("Insert");
-    private final By imageManagerButton = By.className("ImageManager");
-    //private final By firstImage = By.className("rfeThumbTitle").tagName("span");
-    //private final By imagePreview = By.className("imagePreview");
-    //private final By insertImageButton = By.id("InsertButton");
     private final By switchToHtml = By.className("reMode_html");
     private final By htmlTextBox = By.xpath("//td[contains(@id,'RADeditor1Center')]");
     private final By updateComments = By.xpath("//textarea[contains(@id,'txtComments')]");
@@ -29,39 +25,19 @@ public class NewPressRelease extends AbstractPageObject {
         super(driver);
     }
 
-    public PressReleases addNewPressRelease(String headline) {
+    public PressReleases addNewPressRelease(String headline, String date, String hour, String minute, String AMPM) {
         wait.until(ExpectedConditions.visibilityOf(findElement(pressReleaseDate)));
-        findElement(pressReleaseDate).sendKeys("12/25/2030");
-        findElement(pressReleaseHour).sendKeys("12");
-        findElement(pressReleaseMinute).sendKeys("30");
-        findElement(pressReleaseAMPM).sendKeys("PM");
+        findElement(pressReleaseDate).sendKeys(date);
+        Select hourList = new Select(driver.findElement(pressReleaseHour));
+        hourList.selectByVisibleText(hour);
+        Select minuteList = new Select(driver.findElement(pressReleaseMinute));
+        minuteList.selectByVisibleText(minute);
+        Select AMPMList = new Select(driver.findElement(pressReleaseAMPM));
+        AMPMList.selectByVisibleText(AMPM);
         findElement(pressReleaseHeadline).sendKeys(headline);
         findElement(switchToHtml).click();
         findElement(htmlTextBox).click();
         action.sendKeys("This is a test of a press release.").perform();
-        /* findElement(insertMenuButton).click();
-        findElement(imageManagerButton).click();
-        System.out.println("Now waiting for images...");
-
-        try{Thread.sleep(5000);}
-        catch(InterruptedException e){
-            e.printStackTrace();
-        }
-
-        System.out.println("End of wait");
-        //wait.until(ExpectedConditions.visibilityOf(findElement(firstImage)));
-        findElement(By.xpath("//img[contains(@src,'png')]")).click();
-
-        System.out.println("Now waiting 5 seconds...");
-        try{Thread.sleep(5000);}
-        catch(InterruptedException e){
-            e.printStackTrace();
-        }
-
-
-        //wait.until(ExpectedConditions.visibilityOf(findElement(imagePreview)));
-        //wait.until(ExpectedConditions.elementToBeClickable(findElement(insertImageButton)));
-        //findElement(insertImageButton).click(); */
         findElement(updateComments).sendKeys("testing");
 
         findElement(saveAndSubmit).click();
