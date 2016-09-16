@@ -4,7 +4,7 @@ package util;
 public enum EnvironmentType {
 
   DEVELOP("goldcorp.s1.q4web.dev/admin/"),
-  BETA("aestest.s1.q4web.newtest/admin/"),
+  BETA("goldcorptest.s1.q4web.newtest/admin/"),
   PRODUCTION("");
 
   private final String host;
