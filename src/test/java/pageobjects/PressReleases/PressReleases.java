@@ -3,35 +3,38 @@ package pageobjects.PressReleases;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import pageobjects.AESLiveSite.AESLiveHome;
+import pageobjects.LiveSite.LivePressReleases;
 import pageobjects.AbstractPageObject;
 
 
 public class PressReleases extends AbstractPageObject {
 
-    private final By newPressReleaseHeadlineCell = By.xpath("//table[contains(@id,'UCPressReleases')]/tbody/tr[2]/td[3]");
-    private final By newPressReleaseStatusCell = By.xpath("//table[contains(@id,'UCPressReleases')]/tbody/tr[2]/td[7]/span");
-    private final By newPressReleaseCheckbox = By.xpath("//table[contains(@id,'UCPressReleases')]/tbody/tr[2]/td[8]/input[2]");
     private final By publishButton = By.xpath("//input[contains(@id,'UCPressReleases_btnPublish')]");
 
     public PressReleases(WebDriver driver) {
         super(driver);
     }
 
-    public AESLiveHome aesLiveHome() {
+    public EditPressRelease editPressRelease(String headline){
+        By pressReleaseEditButton = By.xpath("//td[contains(text(),'"+headline+"')]/preceding-sibling::td/input[contains(@id,'imgEdit')]");
 
-        driver.get(AESLiveHome.url);
+        findElement(pressReleaseEditButton).click();
 
-        return new AESLiveHome(getDriver());
+        return new EditPressRelease(getDriver());
     }
 
-    public String findNewPressReleaseHeadline(){
-        return findElement(newPressReleaseHeadlineCell).getText();
+    public LivePressReleases livePressReleases(String url) {
+
+        driver.get(url);
+
+        return new LivePressReleases(getDriver());
     }
 
-    public PressReleases publishNewPressRelease(){
-        wait.until(ExpectedConditions.visibilityOf(findElement(newPressReleaseCheckbox)));
-        findElement(newPressReleaseCheckbox).click();
+    public PressReleases publishPressRelease(String headline){
+        By pressReleaseCheckbox = By.xpath("//td[contains(text(),'"+headline+"')]/following-sibling::td/input[contains(@id,'chkWorkflow')]");
+
+        wait.until(ExpectedConditions.visibilityOf(findElement(pressReleaseCheckbox)));
+        findElement(pressReleaseCheckbox).click();
 
         //waiting 1 second for publish button to activate
         try{Thread.sleep(1000);}
@@ -40,24 +43,6 @@ public class PressReleases extends AbstractPageObject {
         }
 
         findElement(publishButton).click();
-
-        //waiting up to about 2 minutes for the press release to "go live" with refresh about every 30 seconds
-        System.out.println("Now waiting for press release to go live...");
-        int refreshAttempts = 0;
-        while (findElement(newPressReleaseStatusCell).getText().startsWith("Live - Publish Pending") && refreshAttempts<4){
-            try{Thread.sleep(30000);}
-            catch(InterruptedException e){
-                e.printStackTrace();
-            }
-            driver.navigate().refresh();
-            refreshAttempts++;
-        }
-        if (findElement(newPressReleaseStatusCell).getText().startsWith("Live - Publish Pending")){
-            System.out.println("Waiting timeout reached. Moving on.");
-        }
-        else {
-            System.out.println("Press release now live.");
-        }
 
         return new PressReleases(getDriver());
     }
