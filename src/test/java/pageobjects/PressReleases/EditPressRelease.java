@@ -1,6 +1,7 @@
 package pageobjects.PressReleases;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.interactions.Actions;
@@ -19,6 +20,12 @@ public class EditPressRelease extends AbstractPageObject {
     private final By pressReleaseHeadline = By.id("txtHeadline");
     private final By switchToHtml = By.className("reMode_html");
     private final By htmlTextBox = By.xpath("//td[contains(@id,'RADeditor1Center')]");
+
+    private final By insertMenuButton = By.className("rrbTab").linkText("Insert");
+    private final By imageManagerButton = By.className("ImageManager");
+    private final By pngImages = By.xpath("//li[contains(@class,'rfeThumbList')]/a[contains(@title,'.png')]");
+    private final By insertImageButton = By.id("InsertButton");
+
     private final By updateComments = By.xpath("//textarea[contains(@id,'txtComments')]");
     private final By deleteButton = By.xpath("//input[contains(@id,'btnDelete')]");
     private final By saveAndSubmit = By.xpath("//input[contains(@id,'btnSaveAndSubmit')]");
@@ -28,10 +35,13 @@ public class EditPressRelease extends AbstractPageObject {
     }
 
     public String addNewPressRelease(String headline, String date, String hour, String minute, String AMPM) {
+        // copying displayed URL of news page
         wait.until(ExpectedConditions.visibilityOf(findElement(displayedURL)));
         String newsPageURL = findElement(displayedURL).getText(); // gives URL like http://kinross.q4web.newtest/news-and-investors/news-releases/press-release-details/
         newsPageURL = newsPageURL.substring(0, newsPageURL.lastIndexOf("/"));
         newsPageURL = newsPageURL.substring(0, newsPageURL.lastIndexOf("/")); // substring repetition needed to remove the -details section of URL
+
+        // filling in mandatory date, time, and headline fields
         findElement(pressReleaseDate).sendKeys(date);
         Select hourList = new Select(driver.findElement(pressReleaseHour));
         hourList.selectByVisibleText(hour);
@@ -40,11 +50,27 @@ public class EditPressRelease extends AbstractPageObject {
         Select AMPMList = new Select(driver.findElement(pressReleaseAMPM));
         AMPMList.selectByVisibleText(AMPM);
         findElement(pressReleaseHeadline).sendKeys(headline);
-        findElement(switchToHtml).click();
-        findElement(htmlTextBox).click();
-        action.sendKeys("This is a test of a press release.").perform();
-        findElement(updateComments).sendKeys("testing");
 
+        // adding image
+        findElement(insertMenuButton).click();
+        findElement(imageManagerButton).click();
+        driver.switchTo().frame("Window");
+        findElements(pngImages).get(0).click();
+        //waiting a second for the image to select
+        try{Thread.sleep(1000);}
+        catch(InterruptedException e){
+            e.printStackTrace();
+        }
+        findElement(insertImageButton).click();
+        driver.switchTo().defaultContent();
+
+        // entering in body text
+        action.sendKeys(Keys.RETURN).perform();
+        action.sendKeys(Keys.RETURN).perform();
+        action.sendKeys("This is a test of a press release.").perform();
+
+        // adding comments (necessary formality) and submitting
+        findElement(updateComments).sendKeys("testing");
         findElement(saveAndSubmit).click();
 
         return newsPageURL;

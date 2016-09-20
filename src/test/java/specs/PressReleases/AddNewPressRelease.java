@@ -35,7 +35,6 @@ public class AddNewPressRelease extends AbstractSpec {
     @Test
     public void canAddNewPressRelease(){
         String dashboardURL = new Dashboard(driver).getURL();
-        System.out.println("Dashboard URL recorded as: "+dashboardURL);
 
         // adding new press release
         String newsPageURL = new Dashboard(driver).newPressRelease().addNewPressRelease(headline, date, hour, min, AMPM);
