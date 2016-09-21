@@ -1,10 +1,13 @@
 package pageobjects.PressReleases;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.LiveSite.LivePressReleases;
 import pageobjects.AbstractPageObject;
+
+import java.util.concurrent.TimeUnit;
 
 
 public class PressReleases extends AbstractPageObject {
@@ -25,7 +28,19 @@ public class PressReleases extends AbstractPageObject {
 
     public LivePressReleases livePressReleases(String url) {
 
-        driver.get(url);
+        driver.manage().timeouts().pageLoadTimeout(20, TimeUnit.SECONDS);
+        try {
+            driver.get(url);
+        } catch (TimeoutException e) {
+            driver.findElement(By.tagName("body")).sendKeys("Keys.ESCAPE");
+            if (driver.getCurrentUrl()!=url){
+                try {
+                    driver.get(url);
+                } catch (TimeoutException e2) {
+                    driver.findElement(By.tagName("body")).sendKeys("Keys.ESCAPE");
+                }
+            }
+        }
 
         return new LivePressReleases(getDriver());
     }

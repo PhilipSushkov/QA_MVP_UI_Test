@@ -23,8 +23,13 @@ public class EditPressRelease extends AbstractPageObject {
 
     private final By insertMenuButton = By.className("rrbTab").linkText("Insert");
     private final By imageManagerButton = By.className("ImageManager");
-    private final By pngImages = By.xpath("//li[contains(@class,'rfeThumbList')]/a[contains(@title,'.png')]");
+    private final By pngImages = By.xpath("//li[contains(@class,'rfeThumbList')]/a[contains(@title,'.PNG')]");
+    private final By imageFilename = By.id("selectedFileName");
     private final By insertImageButton = By.id("InsertButton");
+
+    private final By selectDocumentButton = By.xpath("//img[contains(@id,'btnDocument')]");
+    private final By pdfDocuments = By.xpath("//div[contains(@class,'rfeFileExtension') and contains(@class,'pdf')]");
+    private final By insertDocumentButton = By.id("InsertButton");
 
     private final By updateComments = By.xpath("//textarea[contains(@id,'txtComments')]");
     private final By deleteButton = By.xpath("//input[contains(@id,'btnDelete')]");
@@ -34,7 +39,7 @@ public class EditPressRelease extends AbstractPageObject {
         super(driver);
     }
 
-    public String addNewPressRelease(String headline, String date, String hour, String minute, String AMPM) {
+    public String addNewPressRelease(String headline, String date, String hour, String minute, String AMPM, String[] filenames) {
         // copying displayed URL of news page
         wait.until(ExpectedConditions.visibilityOf(findElement(displayedURL)));
         String newsPageURL = findElement(displayedURL).getText(); // gives URL like http://kinross.q4web.newtest/news-and-investors/news-releases/press-release-details/
@@ -61,6 +66,7 @@ public class EditPressRelease extends AbstractPageObject {
         catch(InterruptedException e){
             e.printStackTrace();
         }
+        filenames[0] = findElement(imageFilename).getText();
         findElement(insertImageButton).click();
         driver.switchTo().defaultContent();
 
@@ -68,6 +74,19 @@ public class EditPressRelease extends AbstractPageObject {
         action.sendKeys(Keys.RETURN).perform();
         action.sendKeys(Keys.RETURN).perform();
         action.sendKeys("This is a test of a press release.").perform();
+
+        // adding attachment
+        findElement(selectDocumentButton).click();
+        driver.switchTo().frame("Window");
+        findElements(pdfDocuments).get(0).click();
+        //waiting a second for the document to select
+        try{Thread.sleep(1000);}
+        catch(InterruptedException e){
+            e.printStackTrace();
+        }
+        filenames[1] = findElements(pdfDocuments).get(0).getText();
+        findElement(insertDocumentButton).click();
+        driver.switchTo().defaultContent();
 
         // adding comments (necessary formality) and submitting
         findElement(updateComments).sendKeys("testing");

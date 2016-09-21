@@ -35,15 +35,17 @@ public class AddNewPressRelease extends AbstractSpec {
     @Test
     public void canAddNewPressRelease(){
         String dashboardURL = new Dashboard(driver).getURL();
+        String[] filenames = new String[2];
 
         // adding new press release
-        String newsPageURL = new Dashboard(driver).newPressRelease().addNewPressRelease(headline, date, hour, min, AMPM);
+        String newsPageURL = new Dashboard(driver).newPressRelease().addNewPressRelease(headline, date, hour, min, AMPM, filenames);
 
         // publishing press release
         new PressReleases(driver).publishPressRelease(headline);
 
         // checking press release on live site
-        boolean headlineFound = new PressReleases(driver).livePressReleases(newsPageURL).canFindNewHeadline(headline, true);
+        System.out.println("Looking for headline: "+headline);
+        boolean headlineFound = new PressReleases(driver).livePressReleases(newsPageURL).canFindNewHeadline(headline, true, filenames);
         Assert.assertTrue(headlineFound);
 
         // changing headline on an existing press release
@@ -51,13 +53,14 @@ public class AddNewPressRelease extends AbstractSpec {
 
         // publishing and checking updated press release
         new PressReleases(driver).publishPressRelease(headlineV2);
-        headlineFound = new PressReleases(driver).livePressReleases(newsPageURL).canFindNewHeadline(headlineV2, true);
+        System.out.println("Looking for headline: "+headlineV2);
+        headlineFound = new PressReleases(driver).livePressReleases(newsPageURL).canFindNewHeadline(headlineV2, true, filenames);
         Assert.assertTrue(headlineFound);
 
         // deleting press release, and verifying it is gone
         new LivePressReleases(driver).dashboard(dashboardURL).pressReleases().editPressRelease(headlineV2).deletePressRelease();
         new PressReleases(driver).publishPressRelease(headlineV2);
-        headlineFound = new PressReleases(driver).livePressReleases(newsPageURL).canFindNewHeadline(headlineV2, false);
+        headlineFound = new PressReleases(driver).livePressReleases(newsPageURL).canFindNewHeadline(headlineV2, false, filenames);
         Assert.assertFalse(headlineFound);
     }
 }
