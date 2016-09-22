@@ -3,6 +3,7 @@ package specs.PressReleases;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.After;
 import specs.AbstractSpec;
 import pageobjects.LoginPage.LoginPage;
 import pageobjects.Dashboard.Dashboard;
@@ -60,4 +61,10 @@ public class AddNewPressRelease extends AbstractSpec {
         headlineFound = new PressReleases(driver).livePressReleases(newsPageURL).canFindNewHeadline(headlineV2, false);
         Assert.assertFalse(headlineFound);
     }
+
+    @After
+    public void tearDown() {
+        driver.quit();
+    }
+
 }
