@@ -4,7 +4,9 @@ public enum EnvironmentType {
 
   DEVELOP("goldcorp.s1.q4web.dev/admin/"),
   BETA("aestest.s1.q4web.newtest/admin/"), //AES url
+  //BETA("goldcorptest.s1.q4web.newtest/admin/"), //goldcorp url
   //BETA("kinross.s1.q4web.newtest/admin/"), //kinross url
+  //BETA("intactfinancial.s1.q4web.newtest/admin/"), //intact financial url
   PRODUCTION("");
 
   private final String host;

@@ -20,9 +20,8 @@ public class LoginPage extends Page {
 
     public Dashboard loginUser() {
         waitForElementToAppear(emailField);
-        //findElement(emailField).sendKeys("admin");
-        findElement(passwordField).sendKeys("Song2Q4!"); //aes password
-        findElement(passwordField).sendKeys("Song2Q4!_"); //kinross password
+        findElement(emailField).sendKeys("admin");
+        findElement(passwordField).sendKeys("Song2Q4!");
         pause(2000L);
         waitForElementToAppear(loginButton);
         retryClick(loginButton);
