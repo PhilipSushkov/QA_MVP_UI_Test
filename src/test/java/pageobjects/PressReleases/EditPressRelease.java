@@ -1,8 +1,7 @@
 package pageobjects.PressReleases;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.*;
+//import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.interactions.Actions;
 import pageobjects.AbstractPageObject;
@@ -19,23 +18,27 @@ public class EditPressRelease extends AbstractPageObject {
     private final By pressReleaseAMPM = By.xpath("//select[contains(@id,'ddlAMPM')]");
     private final By pressReleaseHeadline = By.id("txtHeadline");
     private final By switchToHtml = By.className("reMode_html");
-    private final By htmlTextBox = By.xpath("//td[contains(@id,'RADeditor1Center')]");
+    //private final By radEContentBordered = By.className(" RadEContentBordered");
+    //private final By htmlTextBox = By.xpath("//td[contains(@id,'RADeditor1Center')]");
 
-    private final By insertMenuButton = By.className("rrbTab").linkText("Insert");
-    private final By imageManagerButton = By.className("ImageManager");
-    private final By pngImages = By.xpath("//li[contains(@class,'rfeThumbList')]/a[contains(@title,'.PNG')]");
-    private final By imageFilename = By.id("selectedFileName");
-    private final By insertImageButton = By.id("InsertButton");
+    //private final By insertMenuButton = By.className("rrbTab").linkText("Insert");
+    //private final By imageManagerButton = By.className("ImageManager");
+    //private final By pngImages = By.xpath("//li[contains(@class,'rfeThumbList')]/a[contains(@title,'.PNG')]");
+    //private final By imageFilename = By.id("selectedFileName");
+    //private final By insertImageButton = By.id("InsertButton");
+    private final By textArea = By.tagName("textarea");
 
-    private final By selectDocumentButton = By.xpath("//img[contains(@id,'btnDocument')]");
-    private final By pdfDocuments = By.xpath("//div[contains(@class,'rfeFileExtension') and contains(@class,'pdf')]");
-    private final By insertDocumentButton = By.id("InsertButton");
+    //private final By selectDocumentButton = By.xpath("//img[contains(@id,'btnDocument')]");
+    //private final By pdfDocuments = By.xpath("//div[contains(@class,'rfeFileExtension') and contains(@class,'pdf')]");
+    //private final By insertDocumentButton = By.id("InsertButton");
+    private final By relatedDocument = By.xpath("//input[contains(@name,'txtDocument')]");
 
     private final By updateComments = By.xpath("//textarea[contains(@id,'txtComments')]");
     private final By deleteButton = By.xpath("//input[contains(@id,'btnDelete')]");
     private final By saveAndSubmit = By.xpath("//input[contains(@id,'btnSaveAndSubmit')]");
 
     public EditPressRelease(WebDriver driver) {
+
         super(driver);
     }
 
@@ -48,13 +51,29 @@ public class EditPressRelease extends AbstractPageObject {
 
         // filling in mandatory date, time, and headline fields
         findElement(pressReleaseDate).sendKeys(date);
-        Select hourList = new Select(driver.findElement(pressReleaseHour));
-        hourList.selectByVisibleText(hour);
-        Select minuteList = new Select(driver.findElement(pressReleaseMinute));
-        minuteList.selectByVisibleText(minute);
-        Select AMPMList = new Select(driver.findElement(pressReleaseAMPM));
-        AMPMList.selectByVisibleText(AMPM);
+        //Select hourList = new Select(driver.findElement(pressReleaseHour));
+        //hourList.selectByVisibleText(hour);
+        driver.findElement(pressReleaseHour).sendKeys(hour);
+        //pause(2000L);
+        //Select minuteList = new Select(driver.findElement(pressReleaseMinute));
+        //minuteList.selectByVisibleText(minute);
+        driver.findElement(pressReleaseMinute).sendKeys(minute);
+        //pause(2000L);
+        //Select AMPMList = new Select(driver.findElement(pressReleaseAMPM));
+        //AMPMList.selectByVisibleText(AMPM);
+        driver.findElement(pressReleaseAMPM).sendKeys(AMPM);
+        //pause(2000L);
+
         findElement(pressReleaseHeadline).sendKeys(headline);
+
+        findElement(switchToHtml).click();
+
+        driver.switchTo().frame(2);
+        findElement(textArea).sendKeys("<p>This is a test of a press release.</p><p><img src=\"/files/aes_rural.png\" alt=\"\" style=\"\"></p>");
+        driver.switchTo().defaultContent();
+        pause(1000L);
+
+        /*
 
         // adding image
         findElement(insertMenuButton).click();
@@ -75,6 +94,9 @@ public class EditPressRelease extends AbstractPageObject {
         action.sendKeys(Keys.RETURN).perform();
         action.sendKeys("This is a test of a press release.").perform();
 
+        */
+
+        /*
         // adding attachment
         findElement(selectDocumentButton).click();
         driver.switchTo().frame("Window");
@@ -87,9 +109,16 @@ public class EditPressRelease extends AbstractPageObject {
         filenames[1] = findElements(pdfDocuments).get(0).getText();
         findElement(insertDocumentButton).click();
         driver.switchTo().defaultContent();
+        */
+
+
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        WebElement elemSrc =  driver.findElement(relatedDocument);
+        js.executeScript("arguments[0].setAttribute(arguments[1], arguments[2]);", elemSrc, "value", "files/ISTQB_CTFL_Syllabus_2011.pdf");
 
         // adding comments (necessary formality) and submitting
         findElement(updateComments).sendKeys("testing");
+        pause(2000L);
         findElement(saveAndSubmit).click();
 
         return newsPageURL;

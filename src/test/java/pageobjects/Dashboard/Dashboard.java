@@ -17,10 +17,11 @@ public class Dashboard extends AbstractPageObject {
     private final By pressReleasesMenuButton = By.xpath("//a[contains(text(),'Press Releases')]/parent::li");
 
     public Dashboard(WebDriver driver) {
+
         super(driver);
     }
 
-    public String getURL() {
+    public String getURL() throws Exception {
         wait.until(ExpectedConditions.elementToBeClickable(addPressReleaseButton));
         return driver.getCurrentUrl();
     }

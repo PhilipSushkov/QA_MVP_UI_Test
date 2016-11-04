@@ -18,10 +18,12 @@ public enum BrowserType {
   }
 
   public String getName() {
+
     return name;
   }
 
   public String getLatestVersion() {
+
     return latestVersion;
   }
 }

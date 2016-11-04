@@ -1,5 +1,6 @@
 package specs;
 
+import com.gargoylesoftware.htmlunit.BrowserVersion;
 import org.apache.commons.lang.RandomStringUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -9,12 +10,16 @@ import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.phantomjs.PhantomJSDriverService;
 import org.openqa.selenium.remote.RemoteWebDriver;
+//import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import util.BrowserStackCapability;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import util.BrowserType;
 import util.EnvironmentType;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
@@ -35,6 +40,7 @@ public abstract class AbstractSpec {
     private static URL desktopUrl;
     private static BrowserStackCapability browser;
     protected static WebDriver driver;
+    //protected static HtmlUnitDriver driver;
     private static boolean setupIsDone = false;
     private static final Logger LOG = Logger.getLogger(AbstractSpec.class.getName());
 
@@ -60,11 +66,13 @@ public abstract class AbstractSpec {
 
         switch (getActiveEnvironment()) {
             case DEVELOP:
-                setupLocalDriver();
+                //setupLocalDriver();
+                setupChromeLocalDriver();
                 break;
             case BETA:
                 //temp code due to temp use of testing environment
-                setupLocalDriver();
+                //setupLocalDriver();
+                setupChromeLocalDriver();
                 break;
             case PRODUCTION:
                 setupWebDriver();
@@ -72,7 +80,24 @@ public abstract class AbstractSpec {
         }
     }
 
-    private void setupLocalDriver() {
+    private void setupLocalDriver() throws UnknownHostException {
+
+        DesiredCapabilities caps = new DesiredCapabilities();
+        caps.setJavascriptEnabled(true);
+        caps.setCapability(PhantomJSDriverService.PHANTOMJS_CLI_ARGS, new String[] {"--web-security=no", "--ignore-ssl-errors=yes", "--load-images=false"});
+        driver = new PhantomJSDriver(caps);
+        driver.manage().timeouts().implicitlyWait(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
+        driver.get(desktopUrl.toString());
+
+        //driver.setJavascriptEnabled(true);
+        //driver.manage().window().setSize(new Dimension(1400, 1400));
+        //driver.get("https://aestest.s1.q4web.newtest");
+        //driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+        //System.out.println(driver.getPageSource());
+
+    }
+
+    private void setupChromeLocalDriver() {
 
         driver = new ChromeDriver();
         driver.manage().timeouts().implicitlyWait(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
@@ -92,6 +117,7 @@ public abstract class AbstractSpec {
         capability.setCapability("acceptSslCerts", "true");
         capability.setCapability("browserstack.video","false");
         capability.setCapability("browserstack.debug", "false");
+
 
         driver = new RemoteWebDriver(new URL(BROWSER_STACK_URL), capability);
         driver.manage().timeouts().implicitlyWait(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
@@ -113,6 +139,7 @@ public abstract class AbstractSpec {
 
 
     public static EnvironmentType getActiveEnvironment() {
+
         return activeEnvironment;
     }
 

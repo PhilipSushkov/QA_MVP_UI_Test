@@ -3,6 +3,7 @@ package pageobjects.LiveSite;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
+//import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
@@ -21,13 +22,12 @@ public class LivePressReleases extends AbstractPageObject{
     private final By documentDownloadLink = By.xpath("//a[contains(@id,'hrefDownload')]");
 
     public LivePressReleases(WebDriver driver) {
+
         super(driver);
     }
 
     public Dashboard dashboard(String url) {
-
         driver.get(url);
-
         return new Dashboard(getDriver());
     }
 

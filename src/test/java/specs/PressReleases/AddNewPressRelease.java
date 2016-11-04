@@ -16,6 +16,7 @@ public class AddNewPressRelease extends AbstractSpec {
 
     @Before
     public void setUp() {
+
         new LoginPage(driver).loginUser();
     }
 
@@ -34,7 +35,7 @@ public class AddNewPressRelease extends AbstractSpec {
     private String AMPM = AMPMF.format(current);
 
     @Test
-    public void canAddNewPressRelease(){
+    public void canAddNewPressRelease() throws Exception {
         String dashboardURL = new Dashboard(driver).getURL();
         String[] filenames = new String[2];
 
@@ -45,7 +46,7 @@ public class AddNewPressRelease extends AbstractSpec {
         new PressReleases(driver).publishPressRelease(headline);
 
         // checking press release on live site
-        System.out.println("Looking for headline: "+headline);
+        System.out.println("Looking for headline: " + headline);
         boolean headlineFound = new PressReleases(driver).livePressReleases(newsPageURL).canFindNewHeadline(headline, true, filenames);
         Assert.assertTrue(headlineFound);
 
@@ -54,7 +55,7 @@ public class AddNewPressRelease extends AbstractSpec {
 
         // publishing and checking updated press release
         new PressReleases(driver).publishPressRelease(headlineV2);
-        System.out.println("Looking for headline: "+headlineV2);
+        System.out.println("Looking for headline: " + headlineV2);
         headlineFound = new PressReleases(driver).livePressReleases(newsPageURL).canFindNewHeadline(headlineV2, true, filenames);
         Assert.assertTrue(headlineFound);
 
@@ -67,6 +68,7 @@ public class AddNewPressRelease extends AbstractSpec {
 
     @After
     public void tearDown() {
+
         driver.quit();
     }
 

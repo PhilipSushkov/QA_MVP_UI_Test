@@ -3,6 +3,7 @@ package pageobjects;
 import org.apache.commons.collections4.Predicate;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+//import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -13,6 +14,7 @@ public class AbstractPageObject implements PageObject {
     private final Predicate<WebElement> displayedElementPredicate = new Predicate<WebElement>() {
         @Override
         public boolean evaluate(WebElement t) {
+
             return t.isDisplayed();
         }
     };
@@ -24,16 +26,19 @@ public class AbstractPageObject implements PageObject {
 
     @Override
     public WebDriver getDriver() {
+
         return this.driver;
     }
 
     @Override
     public Predicate<WebElement> getDisplayedElementPredicate() {
+
         return this.displayedElementPredicate;
     }
 
     @Override
     public WebDriverWait getWait() {
+
         return this.wait;
     }
 
