@@ -25,8 +25,8 @@ public class LoginPage extends Page {
     public Dashboard loginUser() {
 
         waitForElementToAppear(emailField);
-        findElement(emailField).sendKeys("admin");
-        findElement(passwordField).sendKeys("Song2Q4!");
+        findElement(emailField).sendKeys("admintest");
+        findElement(passwordField).sendKeys("qwerty@01");
         pause(1000L);
         retryClick(loginButton);
 

@@ -4,7 +4,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.After;
-import org.openqa.selenium.By;
 import pageobjects.Dashboard.Dashboard;
 import specs.AbstractSpec;
 import pageobjects.LoginPage.LoginPage;
@@ -15,7 +14,6 @@ import pageobjects.LoginPage.LoginPage;
  * Created by philipsushkov on 2016-11-04.
  */
 public class EnterToAdmin extends AbstractSpec {
-    private final By displayedURL = By.id("ParentUrl");
 
     @Before
     public void setUp() {
