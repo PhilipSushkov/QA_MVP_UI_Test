@@ -3,6 +3,7 @@ package testrunner;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import specs.LoginPage.EnterToAdmin;
+import specs.PressReleases.AddNewPressRelease;
 import specs.PublicSite.CheckPublicSite;
 
 /**
@@ -12,6 +13,7 @@ import specs.PublicSite.CheckPublicSite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         EnterToAdmin.class,
+        AddNewPressRelease.class,
         CheckPublicSite.class
 })
 

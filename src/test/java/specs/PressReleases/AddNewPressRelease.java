@@ -15,7 +15,7 @@ import java.util.Date;
 public class AddNewPressRelease extends AbstractSpec {
 
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
 
         new LoginPage(driver).loginUser();
     }
@@ -41,6 +41,7 @@ public class AddNewPressRelease extends AbstractSpec {
 
         // adding new press release
         String newsPageURL = new Dashboard(driver).newPressRelease().addNewPressRelease(headline, date, hour, min, AMPM, filenames);
+        Assert.assertNotNull(newsPageURL);
 
         // publishing press release
         new PressReleases(driver).publishPressRelease(headline);
@@ -65,6 +66,7 @@ public class AddNewPressRelease extends AbstractSpec {
         headlineFound = new PressReleases(driver).livePressReleases(newsPageURL).canFindNewHeadline(headlineV2, false, filenames);
         Assert.assertFalse(headlineFound);
     }
+
 
     @After
     public void tearDown() {

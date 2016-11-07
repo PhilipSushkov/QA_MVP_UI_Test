@@ -69,7 +69,8 @@ public class EditPressRelease extends AbstractPageObject {
         findElement(switchToHtml).click();
 
         driver.switchTo().frame(2);
-        findElement(textArea).sendKeys("<p>This is a test of a press release.</p><p><img src=\"/files/aes_rural.png\" alt=\"\" style=\"\"></p>");
+        filenames[0] = "Q4Touch_LtBlue.png";
+        findElement(textArea).sendKeys("<p>This is a test of a press release.</p><p><img src=\"/files/"+filenames[0]+"\" alt=\"\" style=\"\"></p>");
         driver.switchTo().defaultContent();
         pause(1000L);
 
@@ -114,11 +115,12 @@ public class EditPressRelease extends AbstractPageObject {
 
         JavascriptExecutor js = (JavascriptExecutor) driver;
         WebElement elemSrc =  driver.findElement(relatedDocument);
-        js.executeScript("arguments[0].setAttribute(arguments[1], arguments[2]);", elemSrc, "value", "files/ISTQB_CTFL_Syllabus_2011.pdf");
+        filenames[1] = "bitcoin.pdf";
+        js.executeScript("arguments[0].setAttribute(arguments[1], arguments[2]);", elemSrc, "value", "files/"+filenames[1]);
 
         // adding comments (necessary formality) and submitting
         findElement(updateComments).sendKeys("testing");
-        pause(2000L);
+        pause(1000L);
         findElement(saveAndSubmit).click();
 
         return newsPageURL;
