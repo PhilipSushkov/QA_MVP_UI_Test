@@ -24,4 +24,4 @@ module for q4webdriver, if not add one.
 
 curl -H "Content-Type: application/json" -d '{"build_parameters": {"TEST_ENV":"BETA","SUITE_NAME":"SmokeTest"}}' https://circleci.com/api/v1/project/PatrickPriestley/q4testsuite/tree/master?circle-token=5439aa08dd79b73f2f13535f252c0d69dbb31edb
 
-curl -H "Content-Type: application/json" -d '{"build_parameters": {"TEST_ENV":"PROD","SUITE_NAME":"SmokeTest"}}' https://circleci.com/api/v1/project/q4mobile/QA-WebCMS-Test/tree/smoke_test?circle-token=685a07c8591a4d41b3f9be3d2c1b5b7d5fa51594
+curl -H "Content-Type: application/json" -d '{"build_parameters": {"TEST_ENV":"PRODUCTION","SUITE_NAME":"SmokeTest"}}' https://circleci.com/api/v1/project/q4mobile/QA-WebCMS-Test/tree/smoke_test?circle-token=685a07c8591a4d41b3f9be3d2c1b5b7d5fa51594
