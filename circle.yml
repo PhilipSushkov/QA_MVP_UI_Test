@@ -5,6 +5,7 @@ machine:
 
 # Only runs a full test suite on CircleCI when build parameters are passed in.
 # otherwise only runs compile on a git push
+#mvn compile
 
 test:
   override:
@@ -12,7 +13,7 @@ test:
         if [ -n "${TEST_ENV}" ]; then
           mvn -Dsurefire.rerunFailingTestsCount=2 test -fae -D q4inc.specs=${TEST_ENV} -Dtest=${SUITE_NAME}
         else
-          mvn compile
+          mvn -Dsurefire.rerunFailingTestsCount=2 test -fae -D q4inc.specs=${TEST_ENV} -Dtest=${SUITE_NAME}
         fi
       : timeout: 1500
   post:
