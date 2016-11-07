@@ -3,7 +3,7 @@ package util;
 public enum EnvironmentType {
 
   DEVELOP("aestest.s1.q4web.newtest/admin/"),
-  BETA("aestest.s1.q4web.newtest/admin/"), //AES url
+  BETA("chicagotest.s3.q4web.com/admin/"), //chicagotest url
   //BETA("goldcorptest.s1.q4web.newtest/admin/"), //goldcorp url
   //BETA("kinross.s1.q4web.newtest/admin/"), //kinross url
   //BETA("intactfinancial.s1.q4web.newtest/admin/"), //intact financial url
