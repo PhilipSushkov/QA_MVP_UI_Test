@@ -1,6 +1,5 @@
 package specs;
 
-import com.gargoylesoftware.htmlunit.BrowserVersion;
 import org.apache.commons.lang.RandomStringUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -12,7 +11,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriverService;
 import org.openqa.selenium.remote.RemoteWebDriver;
-//import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import util.BrowserStackCapability;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -40,7 +38,6 @@ public abstract class AbstractSpec {
     private static URL desktopUrl;
     private static BrowserStackCapability browser;
     protected static WebDriver driver;
-    //protected static HtmlUnitDriver driver;
     private static boolean setupIsDone = false;
     private static final Logger LOG = Logger.getLogger(AbstractSpec.class.getName());
 

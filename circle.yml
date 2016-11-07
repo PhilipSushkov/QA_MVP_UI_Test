@@ -13,7 +13,7 @@ test:
         if [ -n "${TEST_ENV}" ]; then
           mvn -Dsurefire.rerunFailingTestsCount=2 test -fae -D q4inc.specs=${TEST_ENV} -Dtest=${SUITE_NAME}
         else
-          mvn -Dsurefire.rerunFailingTestsCount=2 test -fae -D q4inc.specs=${TEST_ENV} -Dtest=${SUITE_NAME}
+          mvn compile
         fi
       : timeout: 1500
   post:
