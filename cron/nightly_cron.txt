@@ -1,1 +1,3 @@
 TODO: Add nightly cron/figure out which build server to use
+
+curl -H "Content-Type: application/json" -d '{"build_parameters": {"TEST_ENV":"PRODUCTION","SUITE_NAME":"SmokeTest"}}' https://circleci.com/api/v1/project/q4mobile/QA-WebCMS-Test/tree/smoke_test?circle-token=685a07c8591a4d41b3f9be3d2c1b5b7d5fa51594
