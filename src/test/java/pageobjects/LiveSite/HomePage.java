@@ -17,10 +17,12 @@ public class HomePage extends AbstractPageObject {
     }
 
     public boolean logoIsPresent(){
+
         return doesElementExist(Q4Logo);
     }
 
     public String getVersionNumber(){
+
         return findElement(versionNumber).getText();
     }
 }

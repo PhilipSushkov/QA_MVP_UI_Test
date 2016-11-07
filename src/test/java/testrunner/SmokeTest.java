@@ -13,7 +13,7 @@ import specs.PublicSite.CheckPublicSite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         EnterToAdmin.class,
-        AddNewPressRelease.class,
+        //AddNewPressRelease.class,
         CheckPublicSite.class
 })
 
