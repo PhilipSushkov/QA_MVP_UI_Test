@@ -4,6 +4,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import specs.LoginPage.EnterToAdmin;
 import specs.PressReleases.AddNewPressRelease;
+import specs.Presentations.AddNewPresentation;
 import specs.PublicSite.CheckPublicSite;
 
 /**
@@ -14,6 +15,7 @@ import specs.PublicSite.CheckPublicSite;
 @Suite.SuiteClasses({
         EnterToAdmin.class,
         AddNewPressRelease.class,
+        AddNewPresentation.class,
         CheckPublicSite.class
 })
 
