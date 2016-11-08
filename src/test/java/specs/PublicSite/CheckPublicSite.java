@@ -27,11 +27,13 @@ public class CheckPublicSite extends AbstractSpec {
     public void stockChartWorks(){
         Assert.assertTrue("Stock chart is not displayed", new HomePage(driver).selectStockInformationFromMenu().stockChartIsDisplayed());
         new StockInformationPage(driver).switchChartTo1Month();
-        Assert.assertEquals("Stock chart is not displaying one month", "366", new StockInformationPage(driver).getChartSliderXStart());
+        int xStart1Month = new StockInformationPage(driver).getChartSliderXStart();
         new StockInformationPage(driver).switchChartTo1Quarter();
-        Assert.assertEquals("Stock chart is not displaying one quarter", "338", new StockInformationPage(driver).getChartSliderXStart());
+        int xStart1Quarter = new StockInformationPage(driver).getChartSliderXStart();
         new StockInformationPage(driver).switchChartTo1Year();
-        Assert.assertEquals("Stock chart is not displaying one year", "211", new StockInformationPage(driver).getChartSliderXStart());
+        int xStart1Year = new StockInformationPage(driver).getChartSliderXStart();
+        Assert.assertTrue("Stock chart period is not switching properly.\nxStart1Year="+xStart1Year+"\nxStart1Quarter="+xStart1Quarter+"\nxStart1Month="+xStart1Month,
+                xStart1Month>xStart1Quarter && xStart1Quarter>xStart1Year);
         Assert.assertTrue("Hovering over chart doesn't work.", new StockInformationPage(driver).canHoverOverChart());
     }
 }
