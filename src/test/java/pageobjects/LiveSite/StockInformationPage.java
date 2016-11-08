@@ -40,8 +40,8 @@ public class StockInformationPage extends AbstractPageObject {
         findElements(timeRangeButton).get(2).click();
     }
 
-    public String getChartSliderXStart(){
-        return findElement(chartSlider).getAttribute("x");
+    public int getChartSliderXStart(){
+        return Integer.parseInt(findElement(chartSlider).getAttribute("x"));
     }
 
     public boolean canHoverOverChart(){
