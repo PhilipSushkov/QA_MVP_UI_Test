@@ -100,6 +100,11 @@
             <version>2.5</version>
             <type>maven-plugin</type>
         </dependency>
+        <dependency>
+            <groupId>com.yahoofinance-api</groupId>
+            <artifactId>YahooFinanceAPI</artifactId>
+            <version>3.5.0</version>
+        </dependency>
     </dependencies>
     <profiles>
         <profile>

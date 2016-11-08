@@ -8,6 +8,12 @@ import pageobjects.LiveSite.HomePage;
 import pageobjects.Page;
 import pageobjects.LiveSite.StockInformationPage;
 import specs.AbstractSpec;
+import yahoofinance.YahooFinance;
+import yahoofinance.quotes.stock.StockQuote;
+
+import java.io.IOException;
+
+import static org.junit.Assert.fail;
 
 public class CheckPublicSite extends AbstractSpec {
     private final String Q4WebVersionNumber = "4.2.1.64";
@@ -25,7 +31,7 @@ public class CheckPublicSite extends AbstractSpec {
 
     @Test
     public void stockChartWorks(){
-        Assert.assertTrue("Stock chart is not displayed", new HomePage(driver).selectStockInformationFromMenu().stockChartIsDisplayed());
+        Assert.assertTrue("Stock chart is not displayed.", new HomePage(driver).selectStockInformationFromMenu().stockChartIsDisplayed());
         new StockInformationPage(driver).switchChartTo1Month();
         int xStart1Month = new StockInformationPage(driver).getChartSliderXStart();
         new StockInformationPage(driver).switchChartTo1Quarter();
@@ -35,5 +41,32 @@ public class CheckPublicSite extends AbstractSpec {
         Assert.assertTrue("Stock chart period is not switching properly.\nxStart1Year="+xStart1Year+"\nxStart1Quarter="+xStart1Quarter+"\nxStart1Month="+xStart1Month,
                 xStart1Month>xStart1Quarter && xStart1Quarter>xStart1Year);
         Assert.assertTrue("Hovering over chart doesn't work.", new StockInformationPage(driver).canHoverOverChart());
+    }
+
+    @Test
+    public void stockQuoteWorks(){
+        Assert.assertTrue("Stock quote is not displayed.", new HomePage(driver).selectStockInformationFromMenu().stockQuoteIsDisplayed());
+        Assert.assertTrue("One or more stock quote values are missing.", new StockInformationPage(driver).stockQuoteValuesArePresent());
+    }
+
+    @Test
+    public void stockQuoteValuesAreAccurate(){
+        Assert.assertTrue("Stock quote is not displayed.", new HomePage(driver).selectStockInformationFromMenu().stockQuoteIsDisplayed());
+        StockQuote stockQuote;
+        try {
+            stockQuote = YahooFinance.get("TXRH").getQuote(false);
+        }catch (IOException e){
+            fail("Problem retrieving stock data from Yahoo Finance.");
+            return;
+        }
+        Assert.assertEquals("Stock price isn't accurate", stockQuote.getPrice().doubleValue(), new StockInformationPage(driver).getStockPrice(), 0.1);
+        Assert.assertEquals("Stock change isn't accurate", stockQuote.getChange().doubleValue(), new StockInformationPage(driver).getStockChange(), 0.1);
+        Assert.assertEquals("Stock % change isn't accurate", stockQuote.getChangeInPercent().doubleValue(), new StockInformationPage(driver).getStockPChange(), 0.5);
+        Assert.assertEquals("Stock intraday high isn't accurate", stockQuote.getDayHigh().doubleValue(), new StockInformationPage(driver).getStockDayHigh(), 0.1);
+        Assert.assertEquals("Stock 52 week high isn't accurate", stockQuote.getYearHigh().doubleValue(), new StockInformationPage(driver).getStock52WeekHigh(), 0.1);
+        Assert.assertEquals("Stock intraday low isn't accurate", stockQuote.getDayLow().doubleValue(), new StockInformationPage(driver).getStockDayLow(), 0.1);
+        Assert.assertEquals("Stock 52 week low isn't accurate", stockQuote.getYearLow().doubleValue(), new StockInformationPage(driver).getStock52WeekLow(), 0.1);
+        Assert.assertEquals("Stock today's open isn't accurate", stockQuote.getOpen().doubleValue(), new StockInformationPage(driver).getStockTodayOpen(), 0.01);
+        Assert.assertEquals("Stock previous close isn't accurate", stockQuote.getPreviousClose().doubleValue(), new StockInformationPage(driver).getStockPreviousClose(), 0.01);
     }
 }
