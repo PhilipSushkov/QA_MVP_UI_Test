@@ -1,7 +1,6 @@
 package pageobjects.PressReleases;
 
 import org.openqa.selenium.*;
-//import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.interactions.Actions;
 import pageobjects.AbstractPageObject;

@@ -8,11 +8,14 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
 import pageobjects.PressReleases.EditPressRelease;
 import pageobjects.PressReleases.PressReleases;
+import pageobjects.Presentations.EditPresentation;
+import pageobjects.Presentations.Presentations;
 
 public class Dashboard extends AbstractPageObject {
     Actions action = new Actions(driver);
 
     private final By addPressReleaseButton = By.xpath("//a[contains(@id,'hrefPressReleases')]");
+    private final By addPresentationButton = By.xpath("//a[contains(@id,'hrefPresentations')]");
     private final By contentAdminMenuButton = By.xpath("//span[contains(text(),'Content Admin')]");
     private final By pressReleasesMenuButton = By.xpath("//a[contains(text(),'Press Releases')]/parent::li");
 
@@ -38,5 +41,11 @@ public class Dashboard extends AbstractPageObject {
         wait.until(ExpectedConditions.elementToBeClickable(addPressReleaseButton));
         findElement(addPressReleaseButton).click();
         return new EditPressRelease(getDriver());
+    }
+
+    public EditPresentation newPresentation() {
+        wait.until(ExpectedConditions.elementToBeClickable(addPresentationButton));
+        findElement(addPresentationButton).click();
+        return new EditPresentation(getDriver());
     }
 }
