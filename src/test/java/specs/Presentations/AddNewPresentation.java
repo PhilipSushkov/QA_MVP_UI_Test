@@ -29,7 +29,7 @@ public class AddNewPresentation extends AbstractSpec {
     private SimpleDateFormat minF = new SimpleDateFormat("mm");
     private SimpleDateFormat AMPMF = new SimpleDateFormat("a");
 
-    private String headline = "Exciting testing news! v: " + fullDateF.format(current);
+    private String headline = "Exciting testing presentation! v: " + fullDateF.format(current);
     private String date = dateF.format(current);
     private String hour = hourF.format(current);
     private String min = minF.format(current);
@@ -43,6 +43,15 @@ public class AddNewPresentation extends AbstractSpec {
         String[] filenames = new String[2];
 
         String newsPageURL = new Dashboard(driver).newPresentation().addNewPresentation(headline, date, hour, min, AMPM, filenames);
+        Assert.assertNotNull(newsPageURL);
+
+        // publishing press release
+        new Presentations(driver).publishPresentation(headline);
+
+        // checking press release on live site
+        System.out.println("Looking for headline: " + headline);
+        boolean headlineFound = new Presentations(driver).livePresentations(newsPageURL).canFindNewHeadline(headline, true, filenames);
+        Assert.assertTrue(headlineFound);
 
     }
 

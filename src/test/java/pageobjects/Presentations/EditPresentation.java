@@ -11,13 +11,62 @@ import pageobjects.AbstractPageObject;
 public class EditPresentation extends AbstractPageObject {
     Actions action = new Actions(driver);
 
+    private final By displayedURL = By.id("PageUrl");
+
+    private final By presentationDate = By.id("txtPresentationDate");
+    private final By presentationHour = By.xpath("//select[contains(@id,'ddlHour')]");
+    private final By presentationMinute = By.xpath("//select[contains(@id,'ddlMinute')]");
+    private final By presentationAMPM = By.xpath("//select[contains(@id,'ddlAMPM')]");
+    private final By presentationHeadline = By.id("txtTitle");
+
+    private final By switchToHtml = By.className("reMode_html");
+    private final By textArea = By.tagName("textarea");
+
+    private final By relatedDocument = By.xpath("//input[contains(@name,'txtDocument')]");
+
+    private final By updateComments = By.xpath("//textarea[contains(@id,'txtComments')]");
+    private final By deleteButton = By.xpath("//input[contains(@id,'btnDelete')]");
+    private final By saveAndSubmit = By.xpath("//input[contains(@id,'btnSaveAndSubmit')]");
+
+    private final String imageFile = "Q4Touch_LtBlue.png";
+    private final String presentationFile = "bitcoin.pdf";
+
     public EditPresentation(WebDriver driver) {
         super(driver);
     }
 
     public String addNewPresentation(String headline, String date, String hour, String minute, String AMPM, String[] filenames) {
 
-        String newsPageURL = "";
+        wait.until(ExpectedConditions.visibilityOf(findElement(displayedURL)));
+        String newsPageURL = findElement(displayedURL).getText(); // gives URL like http://kinross.q4web.newtest/news-and-investors/news-releases/press-release-details/
+
+        newsPageURL = newsPageURL.substring(0, newsPageURL.lastIndexOf("/"));
+        newsPageURL = newsPageURL.substring(0, newsPageURL.lastIndexOf("/")); // substring repetition needed to remove the -details section of URL
+
+        // filling in mandatory date, time, and headline fields
+        findElement(presentationDate).sendKeys(date);
+        driver.findElement(presentationHour).sendKeys(hour);
+        driver.findElement(presentationMinute).sendKeys(minute);
+        driver.findElement(presentationAMPM).sendKeys(AMPM);
+        findElement(presentationHeadline).sendKeys(headline);
+        findElement(switchToHtml).click();
+
+        driver.switchTo().frame(2);
+        filenames[0] = imageFile;
+        findElement(textArea).sendKeys("<p>This is a test of a press release.</p><p><img src=\"/files/"+filenames[0]+"\" alt=\"\" style=\"\"></p>");
+        driver.switchTo().defaultContent();
+        pause(1000L);
+
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        WebElement elemSrc =  driver.findElement(relatedDocument);
+        filenames[1] = presentationFile;
+        js.executeScript("arguments[0].setAttribute(arguments[1], arguments[2]);", elemSrc, "value", "files/"+filenames[1]);
+
+        // adding comments (necessary formality) and submitting
+        findElement(updateComments).sendKeys("testing");
+        pause(1000L);
+        findElement(saveAndSubmit).click();
+
         return newsPageURL;
     }
 
