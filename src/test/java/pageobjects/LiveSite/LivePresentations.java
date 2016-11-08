@@ -50,6 +50,11 @@ public class LivePresentations extends AbstractPageObject {
             System.out.println("Now performing refresh "+refreshAttempts);
             time = System.currentTimeMillis();
 
+            try {
+                driver.navigate().refresh();
+            } catch (TimeoutException e) {
+                driver.findElement(By.tagName("body")).sendKeys("Keys.ESCAPE");
+            }
 
             headlines = findElement(latestHeadlines);
 

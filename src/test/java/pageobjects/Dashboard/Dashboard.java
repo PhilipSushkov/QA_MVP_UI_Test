@@ -18,6 +18,7 @@ public class Dashboard extends AbstractPageObject {
     private final By addPresentationButton = By.xpath("//a[contains(@id,'hrefPresentations')]");
     private final By contentAdminMenuButton = By.xpath("//span[contains(text(),'Content Admin')]");
     private final By pressReleasesMenuButton = By.xpath("//a[contains(text(),'Press Releases')]/parent::li");
+    private final By presentationsMenuButton = By.xpath("//a[contains(text(),'Presentations')]/parent::li");
 
     public Dashboard(WebDriver driver) {
 
@@ -47,5 +48,12 @@ public class Dashboard extends AbstractPageObject {
         wait.until(ExpectedConditions.elementToBeClickable(addPresentationButton));
         findElement(addPresentationButton).click();
         return new EditPresentation(getDriver());
+    }
+
+    public Presentations presentations() {
+        action.moveToElement(findElement(contentAdminMenuButton)).perform();
+        wait.until(ExpectedConditions.visibilityOf(findElement(presentationsMenuButton)));
+        findElement(presentationsMenuButton).click();
+        return new Presentations(getDriver());
     }
 }

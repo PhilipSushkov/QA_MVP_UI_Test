@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.After;
+import pageobjects.LiveSite.LivePresentations;
 import specs.AbstractSpec;
 import pageobjects.LoginPage.LoginPage;
 import pageobjects.Dashboard.Dashboard;
@@ -30,6 +31,7 @@ public class AddNewPresentation extends AbstractSpec {
     private SimpleDateFormat AMPMF = new SimpleDateFormat("a");
 
     private String headline = "Exciting testing presentation! v: " + fullDateF.format(current);
+    private String headlineV2 = "Amazing testing presentation! v: " + fullDateF.format(current);
     private String date = dateF.format(current);
     private String hour = hourF.format(current);
     private String min = minF.format(current);
@@ -45,12 +47,21 @@ public class AddNewPresentation extends AbstractSpec {
         String newsPageURL = new Dashboard(driver).newPresentation().addNewPresentation(headline, date, hour, min, AMPM, filenames);
         Assert.assertNotNull(newsPageURL);
 
-        // publishing press release
+        // publishing presentation
         new Presentations(driver).publishPresentation(headline);
 
-        // checking press release on live site
+        // checking presentation on live site
         System.out.println("Looking for headline: " + headline);
         boolean headlineFound = new Presentations(driver).livePresentations(newsPageURL).canFindNewHeadline(headline, true, filenames);
+        Assert.assertTrue(headlineFound);
+
+        // changing headline on an existing presentation
+        new LivePresentations(driver).dashboard(dashboardURL).presentations().editPresentation(headline).changeHeadlineTo(headlineV2);
+
+        // publishing and checking updated presentation
+        new Presentations(driver).publishPresentation(headlineV2);
+        System.out.println("Looking for headline: " + headlineV2);
+        headlineFound = new Presentations(driver).livePresentations(newsPageURL).canFindNewHeadline(headlineV2, true, filenames);
         Assert.assertTrue(headlineFound);
 
     }

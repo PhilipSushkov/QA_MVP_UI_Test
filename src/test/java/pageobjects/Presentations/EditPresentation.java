@@ -31,6 +31,7 @@ public class EditPresentation extends AbstractPageObject {
     private final String imageFile = "Q4Touch_LtBlue.png";
     private final String presentationFile = "bitcoin.pdf";
 
+
     public EditPresentation(WebDriver driver) {
         super(driver);
     }
@@ -68,6 +69,17 @@ public class EditPresentation extends AbstractPageObject {
         findElement(saveAndSubmit).click();
 
         return newsPageURL;
+    }
+
+    public Presentations changeHeadlineTo(String newHeadline) {
+        wait.until(ExpectedConditions.visibilityOf(findElement(presentationHeadline)));
+        findElement(presentationHeadline).clear();
+        findElement(presentationHeadline).sendKeys(newHeadline);
+        findElement(updateComments).sendKeys("testing");
+
+        findElement(saveAndSubmit).click();
+
+        return new Presentations(getDriver());
     }
 
 }
