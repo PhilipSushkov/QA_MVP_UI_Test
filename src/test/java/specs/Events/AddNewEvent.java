@@ -4,11 +4,12 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.After;
-import pageobjects.LiveSite.LivePresentations;
+import org.openqa.selenium.By;
+import pageobjects.LiveSite.LiveEvents;
 import specs.AbstractSpec;
 import pageobjects.LoginPage.LoginPage;
 import pageobjects.Dashboard.Dashboard;
-import pageobjects.Presentations.Presentations;
+import pageobjects.Events.Events;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -17,5 +18,56 @@ import java.util.Date;
  */
 
 public class AddNewEvent extends AbstractSpec {
+
+
+    @Before
+    public void setUp() throws Exception {
+        new LoginPage(driver).loginUser();
+    }
+
+    private Date current = new Date();
+
+    private SimpleDateFormat fullDateF = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
+    private SimpleDateFormat dateF = new SimpleDateFormat("MM/dd/yyyy");
+    private SimpleDateFormat hourF = new SimpleDateFormat("h");
+    private SimpleDateFormat minF = new SimpleDateFormat("mm");
+    private SimpleDateFormat AMPMF = new SimpleDateFormat("a");
+
+    private String headline = "Exciting testing event! v: " + fullDateF.format(current);
+    private String headlineV2 = "Amazing testing event! v: " + fullDateF.format(current);
+    private String timeZone = "Eastern Standard Time";
+    private String tags = "en";
+    private String location = "Toronto";
+    private String today = dateF.format(current);
+    private String tommorrow = dateF.format(current.getTime() + (1000 * 60 * 60 * 24));
+    private String hour = hourF.format(current);
+    private String min = minF.format(current);
+    private String AMPM = AMPMF.format(current);
+
+    @Test
+    public void canAddNewEvent() throws Exception {
+
+        String dashboardURL = new Dashboard(driver).getURL();
+        String[] filenames = new String[2];
+
+        String newsPageURL = new Dashboard(driver).newEvent().addNewEvent(headline, today, tommorrow, hour, min, AMPM, timeZone, tags, location, filenames);
+        Assert.assertNotNull(newsPageURL);
+
+        System.out.println(newsPageURL);
+
+        // publishing event
+        new Events(driver).publishEvent(headline);
+
+        // checking event on live site
+        System.out.println("Looking for headline: " + headline);
+
+
+
+    }
+
+    @After
+    public void tearDown() {
+        driver.quit();
+    }
 
 }

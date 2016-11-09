@@ -9,7 +9,7 @@ import pageobjects.AbstractPageObject;
  * Created by philipsushkov on 2016-11-08.
  */
 public class EditPresentation extends AbstractPageObject {
-    Actions action = new Actions(driver);
+    //Actions action = new Actions(driver);
 
     private final By displayedURL = By.id("PageUrl");
 

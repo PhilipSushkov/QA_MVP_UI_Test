@@ -6,6 +6,7 @@ import specs.LoginPage.EnterToAdmin;
 import specs.PressReleases.AddNewPressRelease;
 import specs.Presentations.AddNewPresentation;
 import specs.PublicSite.CheckPublicSite;
+import specs.Events.AddNewEvent;
 
 /**
  * Created by philips on 2016-11-07.

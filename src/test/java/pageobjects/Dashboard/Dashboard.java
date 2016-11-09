@@ -10,12 +10,15 @@ import pageobjects.PressReleases.EditPressRelease;
 import pageobjects.PressReleases.PressReleases;
 import pageobjects.Presentations.EditPresentation;
 import pageobjects.Presentations.Presentations;
+import pageobjects.Events.EditEvent;
+import pageobjects.Events.Events;
 
 public class Dashboard extends AbstractPageObject {
     Actions action = new Actions(driver);
 
     private final By addPressReleaseButton = By.xpath("//a[contains(@id,'hrefPressReleases')]");
     private final By addPresentationButton = By.xpath("//a[contains(@id,'hrefPresentations')]");
+    private final By addEventButton = By.xpath("//a[contains(@id,'hrefEvents')]");
     private final By contentAdminMenuButton = By.xpath("//span[contains(text(),'Content Admin')]");
     private final By pressReleasesMenuButton = By.xpath("//a[contains(text(),'Press Releases')]/parent::li");
     private final By presentationsMenuButton = By.xpath("//a[contains(text(),'Presentations')]/parent::li");
@@ -48,6 +51,12 @@ public class Dashboard extends AbstractPageObject {
         wait.until(ExpectedConditions.elementToBeClickable(addPresentationButton));
         findElement(addPresentationButton).click();
         return new EditPresentation(getDriver());
+    }
+
+    public EditEvent newEvent() {
+        wait.until(ExpectedConditions.elementToBeClickable(addEventButton));
+        findElement(addEventButton).click();
+        return new EditEvent(getDriver());
     }
 
     public Presentations presentations() {
