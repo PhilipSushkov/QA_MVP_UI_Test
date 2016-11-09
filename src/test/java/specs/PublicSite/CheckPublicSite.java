@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
+import pageobjects.LiveSite.FinancialReportsPage;
 import pageobjects.LiveSite.HomePage;
 import pageobjects.Page;
 import pageobjects.LiveSite.StockInformationPage;
@@ -121,6 +122,13 @@ public class CheckPublicSite extends AbstractSpec {
         Assert.assertEquals("Older day volume isn't accurate", olderDayQuotes.getVolume().doubleValue(), new StockInformationPage(driver).getHistoricalVolume(), 5000);
         Assert.assertEquals("Older day opening price isn't accurate", olderDayQuotes.getOpen().doubleValue(), new StockInformationPage(driver).getHistoricalOpen(), 0.01);
         Assert.assertEquals("Older day last price isn't accurate", olderDayQuotes.getClose().doubleValue(), new StockInformationPage(driver).getHistoricalLast(), 0.01);
+    }
+
+    @Test
+    public void financialReportsWork(){
+        Assert.assertTrue("Financial reports are not displayed.", new HomePage(driver).selectFinancialReportsFromMenu().financialReportsAreDisplayed());
+        Assert.assertTrue("One or more financial report titles are not links.", new FinancialReportsPage(driver).reportTitlesAreLinks());
+        Assert.assertTrue("No financial reports links to a .pdf file.", new FinancialReportsPage(driver).pdfLinkIsPresent());
     }
 
 }
