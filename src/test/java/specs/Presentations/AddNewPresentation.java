@@ -64,6 +64,12 @@ public class AddNewPresentation extends AbstractSpec {
         headlineFound = new Presentations(driver).livePresentations(newsPageURL).canFindNewHeadline(headlineV2, true, filenames);
         Assert.assertTrue(headlineFound);
 
+        // deleting presentation, and verifying it is gone
+        new LivePresentations(driver).dashboard(dashboardURL).presentations().editPresentation(headlineV2).deletePresentation();
+        new Presentations(driver).publishPresentation(headlineV2);
+        headlineFound = new Presentations(driver).livePresentations(newsPageURL).canFindNewHeadline(headlineV2, false, filenames);
+        Assert.assertFalse(headlineFound);
+
     }
 
 

@@ -21,7 +21,16 @@ public class Presentations extends AbstractPageObject {
 
 
     public Presentations publishPresentation(String headline) {
-        By presentationCheckbox = By.xpath("//td[contains(text(),'"+headline+"')]/following-sibling::td/input[contains(@id,'chkWorkflow')]");
+
+        By presentationCheckbox;
+
+        try {
+            presentationCheckbox = By.xpath("//td[contains(text(),'" + headline + "')]/following-sibling::td/input[contains(@id,'chkWorkflow')]");
+            wait.until(ExpectedConditions.visibilityOf(findElement(presentationCheckbox)));
+        } catch (ElementNotFoundException e1) {
+            presentationCheckbox = By.xpath("//td[contains(text(),'" + headline + "')]/following-sibling::td/span/input[contains(@id,'chkWorkflow')]");
+            wait.until(ExpectedConditions.visibilityOf(findElement(presentationCheckbox)));
+        }
 
         wait.until(ExpectedConditions.visibilityOf(findElement(presentationCheckbox)));
         findElement(presentationCheckbox).click();

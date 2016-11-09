@@ -82,4 +82,12 @@ public class EditPresentation extends AbstractPageObject {
         return new Presentations(getDriver());
     }
 
+    public Presentations deletePresentation(){
+        wait.until(ExpectedConditions.visibilityOf(findElement(updateComments)));
+        findElement(updateComments).sendKeys("testing");
+        findElement(deleteButton).click();
+
+        return new Presentations(getDriver());
+    }
+
 }

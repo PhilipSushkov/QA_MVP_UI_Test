@@ -1,6 +1,7 @@
 package pageobjects.PressReleases;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -47,15 +48,24 @@ public class PressReleases extends AbstractPageObject {
     }
 
     public PressReleases publishPressRelease(String headline){
-        By pressReleaseCheckbox = By.xpath("//td[contains(text(),'"+headline+"')]/following-sibling::td/input[contains(@id,'chkWorkflow')]");
+
+        By pressReleaseCheckbox;
+
+        try {
+            pressReleaseCheckbox = By.xpath("//td[contains(text(),'" + headline + "')]/following-sibling::td/input[contains(@id,'chkWorkflow')]");
+            wait.until(ExpectedConditions.visibilityOf(findElement(pressReleaseCheckbox)));
+        } catch (ElementNotFoundException e1) {
+            pressReleaseCheckbox = By.xpath("//td[contains(text(),'" + headline + "')]/following-sibling::td/span/input[contains(@id,'chkWorkflow')]");
+            wait.until(ExpectedConditions.visibilityOf(findElement(pressReleaseCheckbox)));
+        }
 
         wait.until(ExpectedConditions.visibilityOf(findElement(pressReleaseCheckbox)));
         findElement(pressReleaseCheckbox).click();
 
         //waiting 1 second for publish button to activate
         try{Thread.sleep(1000);}
-        catch(InterruptedException e){
-            e.printStackTrace();
+        catch(InterruptedException e2){
+            e2.printStackTrace();
         }
 
         findElement(publishButton).click();

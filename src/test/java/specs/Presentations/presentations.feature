@@ -7,11 +7,11 @@ Feature: Create a presentation
     When I click “Add a Presentation”
     And fill in necessary information (date, time, headline, comment)
     And click “Save And Submit”
-    Then that press release is listed in the “Presentation Page”
+    Then that presentation is listed in the “Presentation Page”
     And the displayed status of that listing is “For Approval”
 
   Scenario: Publish a presentation
-    Given that there exists a press release with the status “For Approval”
+    Given that there exists a presentation with the status “For Approval”
     And I a, on the presentation List page
     When I select the presentation’s checkbox
     And I click “Publish”
