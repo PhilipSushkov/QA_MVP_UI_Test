@@ -9,9 +9,12 @@ import pageobjects.Page;
 import pageobjects.LiveSite.StockInformationPage;
 import specs.AbstractSpec;
 import yahoofinance.YahooFinance;
+import yahoofinance.histquotes.HistoricalQuote;
+import yahoofinance.histquotes.Interval;
 import yahoofinance.quotes.stock.StockQuote;
 
 import java.io.IOException;
+import java.util.Calendar;
 
 import static org.junit.Assert.fail;
 
@@ -46,7 +49,7 @@ public class CheckPublicSite extends AbstractSpec {
     @Test
     public void stockQuoteWorks(){
         Assert.assertTrue("Stock quote is not displayed.", new HomePage(driver).selectStockInformationFromMenu().stockQuoteIsDisplayed());
-        Assert.assertTrue("One or more stock quote values are missing.", new StockInformationPage(driver).stockQuoteValuesArePresent());
+        Assert.assertTrue("One or more stock quote values are missing or invalid.", new StockInformationPage(driver).stockQuoteValuesArePresent());
     }
 
     @Test
@@ -69,4 +72,55 @@ public class CheckPublicSite extends AbstractSpec {
         Assert.assertEquals("Stock today's open isn't accurate", stockQuote.getOpen().doubleValue(), new StockInformationPage(driver).getStockTodayOpen(), 0.01);
         Assert.assertEquals("Stock previous close isn't accurate", stockQuote.getPreviousClose().doubleValue(), new StockInformationPage(driver).getStockPreviousClose(), 0.01);
     }
+
+    @Test
+    public void historicalQuotesWork(){
+        Assert.assertTrue("Historical quotes are not displayed.", new HomePage(driver).selectStockInformationFromMenu().historicalQuotesAreDisplayed());
+        Assert.assertTrue("One or more historical quote values are missing or invalid.", new StockInformationPage(driver).historicalQuoteValuesArePresent());
+        String[] lastDayQuotes = new StockInformationPage(driver).getHistoricalQuote();
+        new StockInformationPage(driver).changeQuoteDate();
+        Assert.assertTrue("One or more historical quote values are missing or invalid after changing date.", new StockInformationPage(driver).historicalQuoteValuesArePresent());
+        String[] olderDayQuotes = new StockInformationPage(driver).getHistoricalQuote();
+        for (int i=0; i<olderDayQuotes.length; i++){
+            Assert.assertFalse("Identical value ("+lastDayQuotes[i]+" = "+olderDayQuotes[i]+") present in last trading day's historical quote and older (May 25th, 2016) historical quote.",
+                    olderDayQuotes[i].equals(lastDayQuotes[i]));
+        }
+    }
+
+    @Test
+    public void historicalQuoteValuesAreAccurate(){
+        Assert.assertTrue("Historical quotes are not displayed.", new HomePage(driver).selectStockInformationFromMenu().historicalQuotesAreDisplayed());
+
+        // checking historical values from last trading day
+        Calendar lastTradingDay = new StockInformationPage(driver).getCurrentDate();
+        HistoricalQuote lastTradingDayQuotes;
+        try {
+            lastTradingDayQuotes = YahooFinance.get("TXRH").getHistory(lastTradingDay, lastTradingDay, Interval.DAILY).get(0);
+        }catch (IOException e){
+            fail("Problem retrieving last trading day stock data from Yahoo Finance.");
+            return;
+        }
+        Assert.assertEquals("Last trading day high isn't accurate", lastTradingDayQuotes.getHigh().doubleValue(), new StockInformationPage(driver).getHistoricalHigh(), 0.01);
+        Assert.assertEquals("Last trading day low isn't accurate", lastTradingDayQuotes.getLow().doubleValue(), new StockInformationPage(driver).getHistoricalLow(), 0.01);
+        Assert.assertEquals("Last trading day volume isn't accurate", lastTradingDayQuotes.getVolume().doubleValue(), new StockInformationPage(driver).getHistoricalVolume(), 5000);
+        Assert.assertEquals("Last trading day opening price isn't accurate", lastTradingDayQuotes.getOpen().doubleValue(), new StockInformationPage(driver).getHistoricalOpen(), 0.01);
+        Assert.assertEquals("Last trading day last price isn't accurate", lastTradingDayQuotes.getClose().doubleValue(), new StockInformationPage(driver).getHistoricalLast(), 0.01);
+
+        // checking historical values from older day
+        new StockInformationPage(driver).changeQuoteDate();
+        Calendar olderDay = new StockInformationPage(driver).getCurrentDate();
+        HistoricalQuote olderDayQuotes;
+        try {
+            olderDayQuotes = YahooFinance.get("TXRH").getHistory(olderDay, olderDay, Interval.DAILY).get(0);
+        }catch (IOException e){
+            fail("Problem retrieving older day stock data from Yahoo Finance.");
+            return;
+        }
+        Assert.assertEquals("Older day high isn't accurate", olderDayQuotes.getHigh().doubleValue(), new StockInformationPage(driver).getHistoricalHigh(), 0.01);
+        Assert.assertEquals("Older day low isn't accurate", olderDayQuotes.getLow().doubleValue(), new StockInformationPage(driver).getHistoricalLow(), 0.01);
+        Assert.assertEquals("Older day volume isn't accurate", olderDayQuotes.getVolume().doubleValue(), new StockInformationPage(driver).getHistoricalVolume(), 5000);
+        Assert.assertEquals("Older day opening price isn't accurate", olderDayQuotes.getOpen().doubleValue(), new StockInformationPage(driver).getHistoricalOpen(), 0.01);
+        Assert.assertEquals("Older day last price isn't accurate", olderDayQuotes.getClose().doubleValue(), new StockInformationPage(driver).getHistoricalLast(), 0.01);
+    }
+
 }

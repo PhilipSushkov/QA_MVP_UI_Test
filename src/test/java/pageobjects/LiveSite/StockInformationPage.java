@@ -3,10 +3,12 @@ package pageobjects.LiveSite;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.Select;
 import pageobjects.AbstractPageObject;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.Calendar;
 import java.util.Locale;
 
 /**
@@ -31,6 +33,17 @@ public class StockInformationPage extends AbstractPageObject {
     private final By stockQuote52WeekLow = By.cssSelector(".StockData.WeekLow");
     private final By stockQuoteTodayOpen = By.cssSelector(".StockData.TodaysOpen");
     private final By stockQuotePreviousClose = By.cssSelector(".StockData.PreviousClose");
+
+    private final By historicalQuotes = By.className("StockHistorical");
+    private final By historicalHigh = By.cssSelector(".StockHistorical .High");
+    private final By historicalLow = By.cssSelector(".StockHistorical .Low");
+    private final By historicalVolume = By.cssSelector(".StockHistorical .Volume");
+    private final By historicalOpen = By.cssSelector(".StockHistorical .TodaysOpen");
+    private final By historicalLast = By.cssSelector(".StockHistorical .PreviousClose");
+    private final By historicalMonthSelector = By.xpath("//select[contains(@id,'ddlMonth')]");
+    private final By historicalDaySelector = By.xpath("//select[contains(@id,'ddlDay')]");
+    private final By historicalYearSelector = By.xpath("//select[contains(@id,'ddlYear')]");
+    private final By lookupButton = By.xpath("//input[contains(@id,'btnLookup')]");
 
     Actions actions = new Actions(driver);
 
@@ -190,6 +203,121 @@ public class StockInformationPage extends AbstractPageObject {
 
     public double getStockPreviousClose(){
         return Double.parseDouble(findElement(stockQuotePreviousClose).getText());
+    }
+
+    // HISTORICAL QUOTE METHODS
+
+    public boolean historicalQuotesAreDisplayed(){
+        return doesElementExist(historicalQuotes);
+    }
+
+    public boolean historicalQuoteValuesArePresent(){
+        boolean valuesArePresent = true;
+
+        if (!findElement(historicalHigh).isDisplayed()){
+            System.out.println("Historical high is not displayed.");
+            valuesArePresent = false;
+        }
+        else if (Double.parseDouble(findElement(historicalHigh).getText()) <= 0){
+            System.out.println("Historical high ("+findElement(historicalHigh).getText()+") is not a positive number.");
+            valuesArePresent = false;
+        }
+        if (!findElement(historicalLow).isDisplayed()){
+            System.out.println("Historical low is not displayed.");
+            valuesArePresent = false;
+        }
+        else if (Double.parseDouble(findElement(historicalLow).getText()) <= 0){
+            System.out.println("Historical low ("+findElement(historicalLow).getText()+") is not a positive number.");
+            valuesArePresent = false;
+        }
+        try {
+            if (!findElement(historicalVolume).isDisplayed()){
+                System.out.println("Historical volume is not displayed.");
+                valuesArePresent = false;
+            }
+            else if (NumberFormat.getNumberInstance(Locale.US).parse(findElement(historicalVolume).getText()).intValue() < 0){
+                System.out.println("Historical volume ("+findElement(historicalVolume).getText()+") is not a positive number.");
+                valuesArePresent = false;
+            }
+        }catch (ParseException e){
+            System.out.println("Historical volume ("+findElement(historicalVolume).getText()+") is not a number.");
+            valuesArePresent = false;
+        }
+        if (!findElement(historicalOpen).isDisplayed()){
+            System.out.println("Historical opening price is not displayed.");
+            valuesArePresent = false;
+        }
+        else if (Double.parseDouble(findElement(historicalOpen).getText()) <= 0){
+            System.out.println("Historical opening price ("+findElement(historicalOpen).getText()+") is not a positive number.");
+            valuesArePresent = false;
+        }
+        if (!findElement(historicalLast).isDisplayed()){
+            System.out.println("Historical last is not displayed.");
+            valuesArePresent = false;
+        }
+        else if (Double.parseDouble(findElement(historicalLast).getText()) <= 0){
+            System.out.println("Historical last ("+findElement(historicalLast).getText()+") is not a positive number.");
+            valuesArePresent = false;
+        }
+
+        return valuesArePresent;
+    }
+
+    public String[] getHistoricalQuote(){
+        return new String[] {
+                findElement(historicalHigh).getText(),
+                findElement(historicalLow).getText(),
+                findElement(historicalVolume).getText(),
+                findElement(historicalOpen).getText(),
+                findElement(historicalLast).getText()
+        };
+    }
+
+    public void changeQuoteDate(){
+        Select monthDropdown = new Select(findElement(historicalMonthSelector));
+        Select dayDropdown = new Select(findElement(historicalDaySelector));
+        Select yearDropdown = new Select(findElement(historicalYearSelector));
+        monthDropdown.selectByValue("5");
+        dayDropdown.selectByValue("25");
+        yearDropdown.selectByValue("2016");
+        findElement(lookupButton).click();
+    }
+
+    public Calendar getCurrentDate(){
+        Select monthDropdown = new Select(findElement(historicalMonthSelector));
+        Select dayDropdown = new Select(findElement(historicalDaySelector));
+        Select yearDropdown = new Select(findElement(historicalYearSelector));
+        Calendar calendar = Calendar.getInstance();
+        calendar.clear();
+        calendar.set(Integer.parseInt(yearDropdown.getFirstSelectedOption().getAttribute("value")),
+                Integer.parseInt(monthDropdown.getFirstSelectedOption().getAttribute("value"))-1,
+                Integer.parseInt(dayDropdown.getFirstSelectedOption().getAttribute("value")));
+        return calendar;
+    }
+
+    public double getHistoricalHigh(){
+        return Double.parseDouble(findElement(historicalHigh).getText());
+    }
+
+    public double getHistoricalLow(){
+        return Double.parseDouble(findElement(historicalLow).getText());
+    }
+
+    public double getHistoricalVolume(){
+        try {
+            return NumberFormat.getNumberInstance(Locale.US).parse(findElement(historicalVolume).getText()).doubleValue();
+        }catch (ParseException e){
+            System.out.println("Historical volume ("+findElement(historicalVolume).getText()+") is not a number.");
+            return -1;
+        }
+    }
+
+    public double getHistoricalOpen(){
+        return Double.parseDouble(findElement(historicalOpen).getText());
+    }
+
+    public double getHistoricalLast(){
+        return Double.parseDouble(findElement(historicalLast).getText());
     }
 
 }
