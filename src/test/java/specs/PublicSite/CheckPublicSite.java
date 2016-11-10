@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import pageobjects.LiveSite.FinancialReportsPage;
 import pageobjects.LiveSite.HomePage;
+import pageobjects.LiveSite.LivePressReleases;
 import pageobjects.LiveSite.StockInformationPage;
 import specs.AbstractSpec;
 import yahoofinance.YahooFinance;
@@ -13,6 +14,7 @@ import yahoofinance.histquotes.Interval;
 import yahoofinance.quotes.stock.StockQuote;
 
 import java.io.IOException;
+import java.time.Year;
 import java.util.Calendar;
 import static org.hamcrest.CoreMatchers.containsString;
 
@@ -179,6 +181,16 @@ public class CheckPublicSite extends AbstractSpec {
         Assert.assertTrue("Financial reports are not displayed.", new HomePage(driver).selectFinancialReportsFromMenu().financialReportsAreDisplayed());
         Assert.assertTrue("One or more financial report titles are not links.", new FinancialReportsPage(driver).reportTitlesAreLinks());
         Assert.assertTrue("No financial reports links to a .pdf file.", new FinancialReportsPage(driver).pdfLinkIsPresent());
+    }
+
+    @Test
+    public void pressReleasesWork(){
+        Assert.assertTrue("Press releases are not displayed.", new HomePage(driver).selectPressReleasesFromMenu().pressReleasesAreDisplayed());
+        Assert.assertTrue("One or more displayed press releases are not from the current year.", new LivePressReleases(driver).pressReleasesAreAllFromYear(Year.now().toString()));
+        new LivePressReleases(driver).switchYearTo("2015");
+        Assert.assertTrue("One or more displayed press releases are not from the selected year (2015).", new LivePressReleases(driver).pressReleasesAreAllFromYear("2015"));
+        new LivePressReleases(driver).openFirstPressRelease();
+        Assert.assertTrue("Press release is not open.", new LivePressReleases(driver).pressReleaseIsOpen());
     }
 
 }

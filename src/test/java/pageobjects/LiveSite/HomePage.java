@@ -13,6 +13,7 @@ public class HomePage extends AbstractPageObject {
     private final By versionNumber = By.className("Version");
     private final By stockInformation = By.xpath("//a[contains(text(),'Stock Information')]");
     private final By financialReports = By.xpath("//a[contains(text(),'Financial Reports')]");
+    private final By pressReleases = By.xpath("//a[contains(text(),'Press Releases')]");
 
     public HomePage(WebDriver driver) {
         super(driver);
@@ -36,5 +37,10 @@ public class HomePage extends AbstractPageObject {
     public FinancialReportsPage selectFinancialReportsFromMenu(){
         findVisibleElement(financialReports).click();
         return new FinancialReportsPage(getDriver());
+    }
+
+    public LivePressReleases selectPressReleasesFromMenu(){
+        findVisibleElement(pressReleases).click();
+        return new LivePressReleases(getDriver());
     }
 }
