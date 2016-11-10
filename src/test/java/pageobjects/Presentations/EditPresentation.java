@@ -54,7 +54,7 @@ public class EditPresentation extends AbstractPageObject {
 
         driver.switchTo().frame(2);
         filenames[0] = imageFile;
-        findElement(textArea).sendKeys("<p>This is a test of a press release.</p><p><img src=\"/files/"+filenames[0]+"\" alt=\"\" style=\"\"></p>");
+        findElement(textArea).sendKeys("<p>This is a test of a presentation.</p><p><img src=\"/files/"+filenames[0]+"\" alt=\"\" style=\"\"></p>");
         driver.switchTo().defaultContent();
         pause(1000L);
 

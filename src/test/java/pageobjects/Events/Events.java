@@ -1,9 +1,13 @@
 package pageobjects.Events;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
+import pageobjects.LiveSite.LiveEvents;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by philipsushkov on 2016-11-09.
@@ -39,5 +43,32 @@ public class Events extends AbstractPageObject {
         findElement(publishButton).click();
 
         return new Events(getDriver());
+    }
+
+
+    public LiveEvents liveEvents(String url) {
+
+        driver.manage().timeouts().pageLoadTimeout(20, TimeUnit.SECONDS);
+        try {
+            driver.get(url);
+        } catch (TimeoutException e) {
+            driver.findElement(By.tagName("body")).sendKeys("Keys.ESCAPE");
+            if (driver.getCurrentUrl()!=url){
+                try {
+                    driver.get(url);
+                } catch (TimeoutException e2) {
+                    driver.findElement(By.tagName("body")).sendKeys("Keys.ESCAPE");
+                }
+            }
+        }
+
+        return new LiveEvents(getDriver());
+    }
+
+
+    public EditEvent clickEditEventButton(String headline){
+        By pressReleaseEditButton = By.xpath("//td[contains(text(),'"+headline+"')]/preceding-sibling::td/input[contains(@id,'imgEdit')]");
+        findElement(pressReleaseEditButton).click();
+        return new EditEvent(getDriver());
     }
 }

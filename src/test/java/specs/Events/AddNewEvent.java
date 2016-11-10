@@ -60,9 +60,23 @@ public class AddNewEvent extends AbstractSpec {
 
         // checking event on live site
         System.out.println("Looking for headline: " + headline);
+        boolean headlineFound = new Events(driver).liveEvents(newsPageURL).canFindNewHeadline(headline, true, filenames);
+        Assert.assertTrue(headlineFound);
 
+        // changing headline on an existing event
+        new LiveEvents(driver).dashboard(dashboardURL).events().clickEditEventButton(headline).changeHeadlineTo(headlineV2);
 
+        // publishing and checking updated event
+        new Events(driver).publishEvent(headlineV2);
+        System.out.println("Looking for headline: " + headlineV2);
+        headlineFound = new Events(driver).liveEvents(newsPageURL).canFindNewHeadline(headlineV2, true, filenames);
+        Assert.assertTrue(headlineFound);
 
+        // deleting event, and verifying it is gone
+        new LiveEvents(driver).dashboard(dashboardURL).events().clickEditEventButton(headlineV2).deleteEvent();
+        new Events(driver).publishEvent(headlineV2);
+        headlineFound = new Events(driver).liveEvents(newsPageURL).canFindNewHeadline(headlineV2, false, filenames);
+        Assert.assertFalse(headlineFound);
     }
 
     @After

@@ -22,6 +22,7 @@ public class Dashboard extends AbstractPageObject {
     private final By contentAdminMenuButton = By.xpath("//span[contains(text(),'Content Admin')]");
     private final By pressReleasesMenuButton = By.xpath("//a[contains(text(),'Press Releases')]/parent::li");
     private final By presentationsMenuButton = By.xpath("//a[contains(text(),'Presentations')]/parent::li");
+    private final By eventsMenuButton = By.xpath("//a[contains(text(),'Events')]/parent::li");
 
     public Dashboard(WebDriver driver) {
 
@@ -31,14 +32,6 @@ public class Dashboard extends AbstractPageObject {
     public String getURL() throws Exception {
         wait.until(ExpectedConditions.elementToBeClickable(addPressReleaseButton));
         return driver.getCurrentUrl();
-    }
-
-    public PressReleases pressReleases() {
-        action.moveToElement(findElement(contentAdminMenuButton)).perform();
-        wait.until(ExpectedConditions.visibilityOf(findElement(pressReleasesMenuButton)));
-        findElement(pressReleasesMenuButton).click();
-
-        return new PressReleases(getDriver());
     }
 
     public EditPressRelease newPressRelease() {
@@ -59,10 +52,26 @@ public class Dashboard extends AbstractPageObject {
         return new EditEvent(getDriver());
     }
 
+    public PressReleases pressReleases() {
+        action.moveToElement(findElement(contentAdminMenuButton)).perform();
+        wait.until(ExpectedConditions.visibilityOf(findElement(pressReleasesMenuButton)));
+        findElement(pressReleasesMenuButton).click();
+
+        return new PressReleases(getDriver());
+    }
+
     public Presentations presentations() {
         action.moveToElement(findElement(contentAdminMenuButton)).perform();
         wait.until(ExpectedConditions.visibilityOf(findElement(presentationsMenuButton)));
         findElement(presentationsMenuButton).click();
         return new Presentations(getDriver());
     }
+
+    public Events events() {
+        action.moveToElement(findElement(contentAdminMenuButton)).perform();
+        wait.until(ExpectedConditions.visibilityOf(findElement(eventsMenuButton)));
+        findElement(eventsMenuButton).click();
+        return new Events(getDriver());
+    }
+
 }

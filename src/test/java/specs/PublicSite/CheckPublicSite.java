@@ -24,6 +24,7 @@ public class CheckPublicSite extends AbstractSpec {
     @Before
     public void goToPublicSite() {
         driver.get("http://chicagotest.q4web.com/English/Investors/default.aspx");
+        //driver.get("http://fiesta.q4web.newtest/stock-information/default.aspx");
         Assert.assertTrue("Home page of public site has not been loaded.", new HomePage(driver).logoIsPresent());
     }
 

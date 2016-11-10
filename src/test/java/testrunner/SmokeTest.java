@@ -17,6 +17,7 @@ import specs.Events.AddNewEvent;
         EnterToAdmin.class,
         AddNewPressRelease.class,
         AddNewPresentation.class,
+        AddNewEvent.class,
         CheckPublicSite.class
 })
 

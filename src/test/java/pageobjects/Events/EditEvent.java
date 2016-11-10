@@ -59,7 +59,7 @@ public class EditEvent extends AbstractPageObject {
 
         driver.switchTo().frame(2);
         filenames[0] = imageFile;
-        findElement(textArea).sendKeys("<p>This is a test of a press release.</p><p><img src=\"/files/"+filenames[0]+"\" alt=\"\" style=\"\"></p>");
+        findElement(textArea).sendKeys("<p>This is a test of an event.</p><p><img src=\"/files/"+filenames[0]+"\" alt=\"\" style=\"\"></p>");
         driver.switchTo().defaultContent();
         pause(1000L);
 
@@ -75,6 +75,25 @@ public class EditEvent extends AbstractPageObject {
 
         return newsPageURL;
 
+    }
+
+    public Events changeHeadlineTo(String newHeadline) {
+        wait.until(ExpectedConditions.visibilityOf(findElement(eventHeadline)));
+        findElement(eventHeadline).clear();
+        findElement(eventHeadline).sendKeys(newHeadline);
+        findElement(updateComments).sendKeys("testing");
+
+        findElement(saveAndSubmit).click();
+
+        return new Events(getDriver());
+    }
+
+    public Events deleteEvent(){
+        wait.until(ExpectedConditions.visibilityOf(findElement(updateComments)));
+        findElement(updateComments).sendKeys("testing");
+        findElement(deleteButton).click();
+
+        return new Events(getDriver());
     }
 
 }
