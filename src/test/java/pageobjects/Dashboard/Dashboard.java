@@ -12,6 +12,7 @@ import pageobjects.Presentations.EditPresentation;
 import pageobjects.Presentations.Presentations;
 import pageobjects.Events.EditEvent;
 import pageobjects.Events.Events;
+import pageobjects.SystemAdmin.UserList.UserList;
 
 public class Dashboard extends AbstractPageObject {
     Actions action = new Actions(driver);
@@ -23,6 +24,8 @@ public class Dashboard extends AbstractPageObject {
     private final By pressReleasesMenuButton = By.xpath("//a[contains(text(),'Press Releases')]/parent::li");
     private final By presentationsMenuButton = By.xpath("//a[contains(text(),'Presentations')]/parent::li");
     private final By eventsMenuButton = By.xpath("//a[contains(text(),'Events')]/parent::li");
+    private final By systemAdminMenuButton = By.xpath("//span[contains(text(),'System Admin')]");
+    private final By userListMenuItem = By.xpath("//a[contains(text(),'User List')]/parent::li");
 
     public Dashboard(WebDriver driver) {
 
@@ -50,6 +53,13 @@ public class Dashboard extends AbstractPageObject {
         wait.until(ExpectedConditions.elementToBeClickable(addEventButton));
         findElement(addEventButton).click();
         return new EditEvent(getDriver());
+    }
+
+    public UserList openUserListPage() {
+        action.moveToElement(findElement(systemAdminMenuButton)).perform();
+        wait.until(ExpectedConditions.visibilityOf(findElement(userListMenuItem)));
+        findElement(userListMenuItem).click();
+        return new UserList(getDriver());
     }
 
     public PressReleases pressReleases() {
