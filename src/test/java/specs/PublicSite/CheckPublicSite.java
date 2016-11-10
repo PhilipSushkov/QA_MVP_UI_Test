@@ -3,10 +3,8 @@ package specs.PublicSite;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.WebDriver;
 import pageobjects.LiveSite.FinancialReportsPage;
 import pageobjects.LiveSite.HomePage;
-import pageobjects.Page;
 import pageobjects.LiveSite.StockInformationPage;
 import specs.AbstractSpec;
 import yahoofinance.YahooFinance;
@@ -16,6 +14,7 @@ import yahoofinance.quotes.stock.StockQuote;
 
 import java.io.IOException;
 import java.util.Calendar;
+import static org.hamcrest.CoreMatchers.containsString;
 
 import static org.junit.Assert.fail;
 
@@ -35,17 +34,17 @@ public class CheckPublicSite extends AbstractSpec {
     }
 
     @Test
-    public void stockChartWorks(){
-        Assert.assertTrue("Stock chart is not displayed.", new HomePage(driver).selectStockInformationFromMenu().stockChartIsDisplayed());
-        new StockInformationPage(driver).switchChartTo1Month();
-        int xStart1Month = new StockInformationPage(driver).getChartSliderXStart();
-        new StockInformationPage(driver).switchChartTo1Quarter();
-        int xStart1Quarter = new StockInformationPage(driver).getChartSliderXStart();
-        new StockInformationPage(driver).switchChartTo1Year();
-        int xStart1Year = new StockInformationPage(driver).getChartSliderXStart();
-        Assert.assertTrue("Stock chart period is not switching properly.\nxStart1Year="+xStart1Year+"\nxStart1Quarter="+xStart1Quarter+"\nxStart1Month="+xStart1Month,
+    public void stockChartXigniteWorks(){
+        Assert.assertTrue("Xignite stock chart is not displayed.", new HomePage(driver).selectStockInformationFromMenu().stockChartXigniteIsDisplayed());
+        new StockInformationPage(driver).switchChartXigniteTo1Month();
+        int xStart1Month = new StockInformationPage(driver).getChartXigniteSliderXStart();
+        new StockInformationPage(driver).switchChartXigniteTo1Quarter();
+        int xStart1Quarter = new StockInformationPage(driver).getChartXigniteSliderXStart();
+        new StockInformationPage(driver).switchChartXigniteTo1Year();
+        int xStart1Year = new StockInformationPage(driver).getChartXigniteSliderXStart();
+        Assert.assertTrue("Xignite stock chart period is not switching properly.\nxStart1Year="+xStart1Year+"\nxStart1Quarter="+xStart1Quarter+"\nxStart1Month="+xStart1Month,
                 xStart1Month>xStart1Quarter && xStart1Quarter>xStart1Year);
-        Assert.assertTrue("Hovering over chart doesn't work.", new StockInformationPage(driver).canHoverOverChart());
+        Assert.assertTrue("Hovering over Xignite chart doesn't work.", new StockInformationPage(driver).canHoverOverChartXignite());
     }
 
     @Test
@@ -73,6 +72,56 @@ public class CheckPublicSite extends AbstractSpec {
         Assert.assertEquals("Stock 52 week low isn't accurate", stockQuote.getYearLow().doubleValue(), new StockInformationPage(driver).getStock52WeekLow(), 0.1);
         Assert.assertEquals("Stock today's open isn't accurate", stockQuote.getOpen().doubleValue(), new StockInformationPage(driver).getStockTodayOpen(), 0.01);
         Assert.assertEquals("Stock previous close isn't accurate", stockQuote.getPreviousClose().doubleValue(), new StockInformationPage(driver).getStockPreviousClose(), 0.01);
+    }
+
+    @Test
+    public void stockChartTickertechWorks(){
+        //go to stock information page and check that chart is present
+        Assert.assertTrue("Tickertech stock chart is not displayed.", new HomePage(driver).selectStockInformationFromMenu().stockChartTickertechIsDisplayed());
+        //cycle through time periods and check that chart changes accordingly
+        new StockInformationPage(driver).switchChartTickertechTo1Month();
+        Assert.assertThat("Tickertech chart isn't displaying 1 month period", new StockInformationPage(driver).getTickertechSRC(), containsString("period=1m&"));
+        new StockInformationPage(driver).switchChartTickertechTo1Quarter();
+        Assert.assertThat("Tickertech chart isn't displaying 1 quarter period", new StockInformationPage(driver).getTickertechSRC(), containsString("period=1q&"));
+        new StockInformationPage(driver).switchChartTickertechTo1Year();
+        Assert.assertThat("Tickertech chart isn't displaying 1 year period", new StockInformationPage(driver).getTickertechSRC(), containsString("period=1y&"));
+        //try switching to % change and check that chart changes accordingly
+        new StockInformationPage(driver).switchChartTickertechToPChange();
+        Assert.assertThat("Tickertech chart isn't displaying % change", new StockInformationPage(driver).getTickertechSRC(), containsString("period=1yp&"));
+        //try switching back to price and check that chart changes accordingly
+        new StockInformationPage(driver).switchChartTickertechToPrice();
+        Assert.assertThat("Tickertech chart isn't displaying price", new StockInformationPage(driver).getTickertechSRC(), containsString("period=1y&"));
+        //cycle though chart types and check that chart changes accordingly
+        new StockInformationPage(driver).switchChartTickertechToFillToPrevClose();
+        Assert.assertThat("Tickertech chart isn't displaying fill to prev. close type", new StockInformationPage(driver).getTickertechSRC(), containsString("fillBelowLine=prev&"));
+        new StockInformationPage(driver).switchChartTickertechToLine();
+        Assert.assertThat("Tickertech chart isn't displaying line type", new StockInformationPage(driver).getTickertechSRC(), containsString("fillBelowLine=no&"));
+        Assert.assertThat("Tickertech chart isn't displaying line type", new StockInformationPage(driver).getTickertechSRC(), containsString("type=line&"));
+        Assert.assertThat("Tickertech chart isn't displaying line type", new StockInformationPage(driver).getTickertechSRC(), containsString("showHighsLows=no&"));
+        new StockInformationPage(driver).switchChartTickertechToPoint();
+        Assert.assertThat("Tickertech chart isn't displaying point type", new StockInformationPage(driver).getTickertechSRC(), containsString("type=point&"));
+        Assert.assertThat("Tickertech chart isn't displaying point type", new StockInformationPage(driver).getTickertechSRC(), containsString("showHighsLows=yes&"));
+        new StockInformationPage(driver).switchChartTickertechToBar();
+        Assert.assertThat("Tickertech chart isn't displaying bar type", new StockInformationPage(driver).getTickertechSRC(), containsString("type=bar&"));
+        Assert.assertThat("Tickertech chart isn't displaying bar type", new StockInformationPage(driver).getTickertechSRC(), containsString("showHighsLows=no&"));
+        new StockInformationPage(driver).switchChartTickertechToCandleStick();
+        Assert.assertThat("Tickertech chart isn't displaying candle stick type", new StockInformationPage(driver).getTickertechSRC(), containsString("type=candle&"));
+        new StockInformationPage(driver).switchChartTickertechToMountain();
+        Assert.assertThat("Tickertech chart isn't displaying mountain type", new StockInformationPage(driver).getTickertechSRC(), containsString("fillBelowLine=yes&"));
+        Assert.assertThat("Tickertech chart isn't displaying mountain type", new StockInformationPage(driver).getTickertechSRC(), containsString("type=line&"));
+        //select one or more indices/stocks and check that chart changes accordingly
+        new StockInformationPage(driver).tickertechCompareVs("", true, false, true, false); // comparing with Dow and S&P
+        Assert.assertThat("Tickertech chart isn't comparing with indices properly", new StockInformationPage(driver).getTickertechSRC(), containsString("showVolumeTable=no&"));
+        Assert.assertThat("Tickertech chart isn't comparing with indices properly", new StockInformationPage(driver).getTickertechSRC(), containsString("showLegendTable=yes&"));
+        Assert.assertThat("Tickertech chart isn't comparing with indices properly", new StockInformationPage(driver).getTickertechSRC(), containsString("period=1yp&"));
+        Assert.assertThat("Tickertech chart isn't comparing with indices properly", new StockInformationPage(driver).getTickertechSRC(), containsString("fillBelowLine=no&"));
+        Assert.assertThat("Tickertech chart isn't displaying Dow and S&P only", new StockInformationPage(driver).getTickertechSRC(), containsString("symbols=TXRH,$DJI,SPX&"));
+        new StockInformationPage(driver).tickertechCompareVs("", true, true, true, true); // comparing with all four indices
+        Assert.assertThat("Tickertech chart isn't displaying all four indices", new StockInformationPage(driver).getTickertechSRC(), containsString("symbols=TXRH,$DJI,COMP,SPX,RUT&"));
+        new StockInformationPage(driver).tickertechCompareVs("", false, true, false, false); // comparing with Nasdaq
+        Assert.assertThat("Tickertech chart isn't displaying Nasdaq only", new StockInformationPage(driver).getTickertechSRC(), containsString("symbols=TXRH,COMP&"));
+        new StockInformationPage(driver).tickertechCompareVs("AAPL", false, true, false, false); // comparing with AAPL and Nasdaq
+        Assert.assertThat("Tickertech chart isn't displaying AAPL and Nasdaq only", new StockInformationPage(driver).getTickertechSRC(), containsString("symbols=TXRH,AAPL,COMP&"));
     }
 
     @Test

@@ -8,9 +8,9 @@ Feature: pages on public site are displayed properly
     Given that I am on a page of the public site
     Then the version number on that page is valid
 
-  Scenario: Stock Information page contains stock chart
+  Scenario: Stock Information page contains Xignite stock chart
     When I select "Stock Information" from the site menu
-    Then the stock chart is displayed at the top of the page
+    Then the Xignite stock chart is displayed at the top of the page
     When I click on the time periods above the chart
     Then the chart displays those time periods
     When I hover the mouse over the chart
@@ -18,9 +18,25 @@ Feature: pages on public site are displayed properly
 
   Scenario: Stock Information page contains stock quote
     When I select "Stock Information" from the site menu
-    Then the stock quote is displayed below the stock chart
+    Then the stock quote is displayed below the Xignite stock chart
     And all the appropriate values are displayed
     And the values displayed are accurate (keeping into account the 20 minute delay)
+
+  Scenario: Stock Information page contains TickerTech stock chart
+    When I select "Stock Information" from the site menu
+    Then the TickerTech stock chart is displayed below the stock quote
+    When I click on the time periods above the chart
+    Then the chart displays those time periods
+    When I click on "% change"
+    Then the chart displays % change
+    When I click on "price"
+    Then the chart displays stock price again
+    When I click on each of the chart types
+    Then the chart displays that type
+    When I type the symbol of a stock into the "Compare vs." textbox
+    And I select the checkboxes of one or more indices
+    And I click the "Compare" button
+    Then the chart displays a comparison between my stock, the entered in stock, and those indices
 
   Scenario: Stock Information page contains historical stock quotes
     When I select "Stock Information" from the site menu

@@ -16,11 +16,11 @@ import java.util.Locale;
  */
 public class StockInformationPage extends AbstractPageObject {
 
-    private final By stockChart = By.className("highcharts-container");
-    private final By stockChartGridArea = By.cssSelector(".highcharts-background+rect");
-    private final By timeRangeButton = By.className("highcharts-button");
-    private final By chartSlider = By.cssSelector(".highcharts-navigator rect");
-    private final By chartTooltip = By.className("highcharts-tooltip");
+    private final By stockChartXignite = By.className("highcharts-container");
+    private final By stockChartXigniteGridArea = By.cssSelector(".highcharts-background+rect");
+    private final By timeRangeButtonXignite = By.className("highcharts-button");
+    private final By chartXigniteSlider = By.cssSelector(".highcharts-navigator rect");
+    private final By chartXigniteTooltip = By.className("highcharts-tooltip");
 
     private final By stockQuote = By.className("StockQuoteContainer");
     private final By stockQuotePrice = By.className("Price");
@@ -33,6 +33,18 @@ public class StockInformationPage extends AbstractPageObject {
     private final By stockQuote52WeekLow = By.cssSelector(".StockData.WeekLow");
     private final By stockQuoteTodayOpen = By.cssSelector(".StockData.TodaysOpen");
     private final By stockQuotePreviousClose = By.cssSelector(".StockData.PreviousClose");
+
+    private final By stockChartTickertechFrame = By.id("stock-chart-frame");
+    private final By stockChartTickertech = By.cssSelector("[name=ctchart]");
+    private final By timeRangeButtonTickertech = By.cssSelector("[href*=handleMouseClick]");
+    private final By chartByButtonTickertech = By.cssSelector("[href*=chartPrice]");
+    private final By chartTypeButtonTickertech = By.cssSelector("[href*=clickType]");
+    private final By compareStock = By.cssSelector("[name=compare]");
+    private final By dowCheckbox = By.cssSelector("[name=comparedji]");
+    private final By nasdaqCheckbox = By.cssSelector("[name=comparecomp]");
+    private final By spCheckbox = By.cssSelector("[name=comparespx]");
+    private final By russellCheckbox = By.cssSelector("[name=comparerut]");
+    private final By tickertechCompareButton = By.cssSelector("[type=submit]");
 
     private final By historicalQuotes = By.className("StockHistorical");
     private final By historicalHigh = By.cssSelector(".StockHistorical .High");
@@ -51,31 +63,31 @@ public class StockInformationPage extends AbstractPageObject {
         super(driver);
     }
 
-    // STOCK CHART METHODS
+    // XIGNITE STOCK CHART METHODS
 
-    public boolean stockChartIsDisplayed(){
-        return doesElementExist(stockChart);
+    public boolean stockChartXigniteIsDisplayed(){
+        return doesElementExist(stockChartXignite);
     }
 
-    public void switchChartTo1Month(){
-        findElements(timeRangeButton).get(0).click();
+    public void switchChartXigniteTo1Month(){
+        findElements(timeRangeButtonXignite).get(0).click();
     }
 
-    public void switchChartTo1Quarter(){
-        findElements(timeRangeButton).get(1).click();
+    public void switchChartXigniteTo1Quarter(){
+        findElements(timeRangeButtonXignite).get(1).click();
     }
 
-    public void switchChartTo1Year(){
-        findElements(timeRangeButton).get(2).click();
+    public void switchChartXigniteTo1Year(){
+        findElements(timeRangeButtonXignite).get(2).click();
     }
 
-    public int getChartSliderXStart(){
-        return Integer.parseInt(findElement(chartSlider).getAttribute("x"));
+    public int getChartXigniteSliderXStart(){
+        return Integer.parseInt(findElement(chartXigniteSlider).getAttribute("x"));
     }
 
-    public boolean canHoverOverChart(){
-        actions.clickAndHold(findElement(stockChartGridArea)).perform();
-        return !findElement(chartTooltip).getAttribute("transform").contains("-9999");
+    public boolean canHoverOverChartXignite(){
+        actions.clickAndHold(findElement(stockChartXigniteGridArea)).perform();
+        return !findElement(chartXigniteTooltip).getAttribute("transform").contains("-9999");
     }
 
     // STOCK QUOTE METHODS
@@ -203,6 +215,105 @@ public class StockInformationPage extends AbstractPageObject {
 
     public double getStockPreviousClose(){
         return Double.parseDouble(findElement(stockQuotePreviousClose).getText());
+    }
+
+    // TICKERTECH STOCK CHART METHODS
+
+    public boolean stockChartTickertechIsDisplayed(){
+        driver.switchTo().defaultContent();
+        driver.switchTo().frame(findElement(stockChartTickertechFrame));
+        return findElement(stockChartTickertech).isDisplayed();
+    }
+
+    public String getTickertechSRC(){
+        driver.switchTo().defaultContent();
+        driver.switchTo().frame(findElement(stockChartTickertechFrame));
+        return findElement(stockChartTickertech).getAttribute("src");
+    }
+
+    public void switchChartTickertechTo1Month(){
+        driver.switchTo().defaultContent();
+        driver.switchTo().frame(findElement(stockChartTickertechFrame));
+        findElements(timeRangeButtonTickertech).get(0).click();
+    }
+
+    public void switchChartTickertechTo1Quarter(){
+        driver.switchTo().defaultContent();
+        driver.switchTo().frame(findElement(stockChartTickertechFrame));
+        findElements(timeRangeButtonTickertech).get(1).click();
+    }
+
+    public void switchChartTickertechTo1Year(){
+        driver.switchTo().defaultContent();
+        driver.switchTo().frame(findElement(stockChartTickertechFrame));
+        findElements(timeRangeButtonTickertech).get(2).click();
+    }
+
+    public void switchChartTickertechToPrice(){
+        driver.switchTo().defaultContent();
+        driver.switchTo().frame(findElement(stockChartTickertechFrame));
+        findElements(chartByButtonTickertech).get(0).click();
+    }
+
+    public void switchChartTickertechToPChange(){
+        driver.switchTo().defaultContent();
+        driver.switchTo().frame(findElement(stockChartTickertechFrame));
+        findElements(chartByButtonTickertech).get(1).click();
+    }
+
+    public void switchChartTickertechToMountain(){
+        driver.switchTo().defaultContent();
+        driver.switchTo().frame(findElement(stockChartTickertechFrame));
+        findElements(chartTypeButtonTickertech).get(0).click();
+    }
+
+    public void switchChartTickertechToFillToPrevClose(){
+        driver.switchTo().defaultContent();
+        driver.switchTo().frame(findElement(stockChartTickertechFrame));
+        findElements(chartTypeButtonTickertech).get(1).click();
+    }
+
+    public void switchChartTickertechToLine(){
+        driver.switchTo().defaultContent();
+        driver.switchTo().frame(findElement(stockChartTickertechFrame));
+        findElements(chartTypeButtonTickertech).get(2).click();
+    }
+
+    public void switchChartTickertechToPoint(){
+        driver.switchTo().defaultContent();
+        driver.switchTo().frame(findElement(stockChartTickertechFrame));
+        findElements(chartTypeButtonTickertech).get(3).click();
+    }
+
+    public void switchChartTickertechToBar(){
+        driver.switchTo().defaultContent();
+        driver.switchTo().frame(findElement(stockChartTickertechFrame));
+        findElements(chartTypeButtonTickertech).get(4).click();
+    }
+
+    public void switchChartTickertechToCandleStick(){
+        driver.switchTo().defaultContent();
+        driver.switchTo().frame(findElement(stockChartTickertechFrame));
+        findElements(chartTypeButtonTickertech).get(5).click();
+    }
+
+    public void tickertechCompareVs(String stock, boolean dow, boolean nasdaq, boolean sp, boolean russell){
+        driver.switchTo().defaultContent();
+        driver.switchTo().frame(findElement(stockChartTickertechFrame));
+        findElement(compareStock).sendKeys(stock);
+        if (dow ^ findElement(dowCheckbox).isSelected()){
+            findElement(dowCheckbox).click();
+        }
+        if (nasdaq ^ findElement(nasdaqCheckbox).isSelected()){
+            findElement(nasdaqCheckbox).click();
+        }
+        if (sp ^ findElement(spCheckbox).isSelected()){
+            findElement(spCheckbox).click();
+        }
+        if (russell ^ findElement(russellCheckbox).isSelected()){
+            findElement(russellCheckbox).click();
+        }
+        findElement(tickertechCompareButton).click();
     }
 
     // HISTORICAL QUOTE METHODS
