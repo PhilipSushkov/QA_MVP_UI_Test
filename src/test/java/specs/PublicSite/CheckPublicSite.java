@@ -3,10 +3,7 @@ package specs.PublicSite;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import pageobjects.LiveSite.FinancialReportsPage;
-import pageobjects.LiveSite.HomePage;
-import pageobjects.LiveSite.LivePressReleases;
-import pageobjects.LiveSite.StockInformationPage;
+import pageobjects.LiveSite.*;
 import specs.AbstractSpec;
 import yahoofinance.YahooFinance;
 import yahoofinance.histquotes.HistoricalQuote;
@@ -65,12 +62,12 @@ public class CheckPublicSite extends AbstractSpec {
             fail("Problem retrieving stock data from Yahoo Finance.");
             return;
         }
-        Assert.assertEquals("Stock price isn't accurate", stockQuote.getPrice().doubleValue(), new StockInformationPage(driver).getStockPrice(), 0.1);
-        Assert.assertEquals("Stock change isn't accurate", stockQuote.getChange().doubleValue(), new StockInformationPage(driver).getStockChange(), 0.1);
-        Assert.assertEquals("Stock % change isn't accurate", stockQuote.getChangeInPercent().doubleValue(), new StockInformationPage(driver).getStockPChange(), 0.5);
-        Assert.assertEquals("Stock intraday high isn't accurate", stockQuote.getDayHigh().doubleValue(), new StockInformationPage(driver).getStockDayHigh(), 0.1);
+        Assert.assertEquals("Stock price isn't accurate", stockQuote.getPrice().doubleValue(), new StockInformationPage(driver).getStockPrice(), 0.25);
+        Assert.assertEquals("Stock change isn't accurate", stockQuote.getChange().doubleValue(), new StockInformationPage(driver).getStockChange(), 0.25);
+        Assert.assertEquals("Stock % change isn't accurate", stockQuote.getChangeInPercent().doubleValue(), new StockInformationPage(driver).getStockPChange(), 1);
+        Assert.assertEquals("Stock intraday high isn't accurate", stockQuote.getDayHigh().doubleValue(), new StockInformationPage(driver).getStockDayHigh(), 0.25);
         Assert.assertEquals("Stock 52 week high isn't accurate", stockQuote.getYearHigh().doubleValue(), new StockInformationPage(driver).getStock52WeekHigh(), 0.1);
-        Assert.assertEquals("Stock intraday low isn't accurate", stockQuote.getDayLow().doubleValue(), new StockInformationPage(driver).getStockDayLow(), 0.1);
+        Assert.assertEquals("Stock intraday low isn't accurate", stockQuote.getDayLow().doubleValue(), new StockInformationPage(driver).getStockDayLow(), 0.25);
         Assert.assertEquals("Stock 52 week low isn't accurate", stockQuote.getYearLow().doubleValue(), new StockInformationPage(driver).getStock52WeekLow(), 0.1);
         Assert.assertEquals("Stock today's open isn't accurate", stockQuote.getOpen().doubleValue(), new StockInformationPage(driver).getStockTodayOpen(), 0.01);
         Assert.assertEquals("Stock previous close isn't accurate", stockQuote.getPreviousClose().doubleValue(), new StockInformationPage(driver).getStockPreviousClose(), 0.01);
@@ -191,6 +188,17 @@ public class CheckPublicSite extends AbstractSpec {
         Assert.assertTrue("One or more displayed press releases are not from the selected year (2015).", new LivePressReleases(driver).pressReleasesAreAllFromYear("2015"));
         new LivePressReleases(driver).openFirstPressRelease();
         Assert.assertTrue("Press release is not open.", new LivePressReleases(driver).pressReleaseIsOpen());
+    }
+
+    @Test
+    public void eventsWork(){
+        Assert.assertTrue("Upcoming events are not displayed.", new HomePage(driver).selectEventsFromMenu().eventsAreDisplayed());
+        Assert.assertTrue("One or more events displayed are not upcoming.", new LiveEvents(driver).allEventsAreUpcoming());
+        new LiveEvents(driver).switchToPastEvents();
+        Assert.assertTrue("Past events are not displayed.", new LiveEvents(driver).eventsAreDisplayed());
+        Assert.assertTrue("One or more events displayed are not past.", new LiveEvents(driver).allEventsArePast());
+        new LiveEvents(driver).openFirstEvent();
+        Assert.assertTrue("Event details have not been loaded.", new LiveEvents(driver).eventIsOpen());
     }
 
 }
