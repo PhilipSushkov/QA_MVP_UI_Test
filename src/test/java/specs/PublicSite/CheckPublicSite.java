@@ -220,4 +220,10 @@ public class CheckPublicSite extends AbstractSpec {
         Assert.assertTrue("One or more pdf icons do not link to a .pdf file.", new SECFilingsPage(driver).pdfIconsLinkToPDF());
     }
 
+    @Test
+    public void peopleWork(){
+        Assert.assertTrue("People are not displayed.", new HomePage(driver).selectBoardOfDirectorsFromMenu().peopleAreDisplayed());
+        Assert.assertTrue("One or more people do not have biographical information.", new BoardOfDirectorsPage(driver).peopleHaveBiographicalInformation());
+    }
+
 }
