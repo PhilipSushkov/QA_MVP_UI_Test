@@ -7,6 +7,7 @@ import org.junit.After;
 import specs.AbstractSpec;
 import pageobjects.LoginPage.LoginPage;
 import pageobjects.Dashboard.Dashboard;
+import pageobjects.SystemAdmin.UserList.UserList;
 
 /**
  * Created by philipsushkov on 2016-11-10.
@@ -21,11 +22,15 @@ public class CheckUserList extends AbstractSpec {
 
     @Test
     public void checkUserList() throws Exception {
-        String dashboardURL = new Dashboard(driver).getURL();
+        final String expectedTitle = "User List";
+        final Integer expectedQuantity = 10;
 
-        String userListPageURL = new Dashboard(driver).openUserListPage().getUrl();
-        System.out.println(userListPageURL);
-        Assert.assertNotNull(userListPageURL);
+        Assert.assertNotNull(new Dashboard(driver).openUserListPage().getUrl());
+        Assert.assertEquals("Actual User List page Title doesn't match to expected", expectedTitle, new UserList(driver).getTitle());
+
+        //System.out.println(new UserList(driver).getUserNameQuantity().toString());
+        Assert.assertTrue(expectedQuantity < new UserList(driver).getUserNameQuantity() );
+
     }
 
     @After

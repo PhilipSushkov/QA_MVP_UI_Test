@@ -13,5 +13,3 @@ Feature: Check User List page opens well
         Given: User List page opened
         When I find User table
         Then User Name column contains more than 10 items
-        And User Email column contains more than 10 items
-        And Active column contains more than 10 items

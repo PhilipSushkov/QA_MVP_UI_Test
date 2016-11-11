@@ -36,8 +36,7 @@ public class EnterToAdmin extends AbstractSpec {
 
     @After
     public void tearDown() {
-
         //Close Browser
-        //driver.quit();
+        driver.quit();
     }
 }

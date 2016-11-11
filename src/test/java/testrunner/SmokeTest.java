@@ -7,6 +7,7 @@ import specs.PressReleases.AddNewPressRelease;
 import specs.Presentations.AddNewPresentation;
 import specs.PublicSite.CheckPublicSite;
 import specs.Events.AddNewEvent;
+import specs.SystemAdmin.UserList.CheckUserList;
 
 /**
  * Created by philips on 2016-11-07.
@@ -18,7 +19,8 @@ import specs.Events.AddNewEvent;
         AddNewPressRelease.class,
         AddNewPresentation.class,
         AddNewEvent.class,
-        CheckPublicSite.class
+        CheckPublicSite.class,
+        CheckUserList.class
 })
 
 public class SmokeTest {
