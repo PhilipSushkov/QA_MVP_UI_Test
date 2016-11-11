@@ -18,6 +18,10 @@ public class LivePresentations extends AbstractPageObject {
 
     private final By latestHeadlines = By.xpath("//h1[contains(@class,'ModuleDetailHeadline')]/span[contains(@class,'ModuleDetailHeadlineText')]");
     //private final By latestHeadlineLinks = By.xpath("//a[contains(@id,'hrefDownload')][span]");
+    private final By presentationTitle = By.className("ModuleHeadline");
+    private final By presentationDate = By.className("ModuleDate");
+    private final By presentationLink = By.partialLinkText("View this Presentation");
+    private final By yearLink = By.className("ModuleYearLink");
 
     // elements on page of loaded presentation
     private final By presentationImage = By.xpath("//div[@class='ModuleBody']//img");
@@ -85,6 +89,60 @@ public class LivePresentations extends AbstractPageObject {
         }
 
         return foundHeadline;
+    }
+
+    // NEW METHODS CREATED FOR PUBLIC SITE SMOKE TEST
+
+    public boolean presentationsAreDisplayed(){
+        return doesElementExist(presentationLink) && findElement(presentationLink).isDisplayed();
+    }
+
+    public boolean presentationsAreAllFromYear(String year){
+        boolean allFromYear = true;
+        List<WebElement> titles = findElements(presentationTitle);
+        List<WebElement> presentationDates = findElements(presentationDate);
+        for (int i=0; i<presentationDates.size(); i++){
+            if (!presentationDates.get(i).getText().contains(year)){
+                System.out.println("Press release with headline: "+titles.get(i).getText()+"\n\thas date "+presentationDates.get(i).getText()+" not in "+year);
+                allFromYear = false;
+            }
+        }
+        return allFromYear;
+    }
+
+    public void switchYearTo(String year){
+        List<WebElement> yearLinks = findElements(yearLink);
+        for (int i=0; i<yearLinks.size(); i++){
+            if (yearLinks.get(i).getText().equals(year)){
+                yearLinks.get(i).click();
+                return;
+            }
+        }
+    }
+
+    public boolean presentationLinksAreLinks(){
+        boolean allLinks = true;
+
+        List<WebElement> presentationTitles = findElements(presentationTitle);
+        List<WebElement> presentationLinks = findElements(presentationLink);
+        for (int i=0; i<presentationLinks.size(); i++){
+            if (!presentationLinks.get(i).getAttribute("href").contains("//")){
+                System.out.println("Report '"+presentationTitles.get(i).getText()+"' does not have valid link.\n\thref = "+presentationLinks.get(i).getAttribute("href"));
+                allLinks = false;
+            }
+        }
+
+        return allLinks;
+    }
+
+    public boolean pdfLinkIsPresent(){
+        List<WebElement> presentationLinks = findElements(presentationLink);
+        for (int i=0; i<presentationLinks.size(); i++){
+            if (presentationLinks.get(i).getAttribute("href").endsWith(".pdf")){
+                return true;
+            }
+        }
+        return false;
     }
 
 }

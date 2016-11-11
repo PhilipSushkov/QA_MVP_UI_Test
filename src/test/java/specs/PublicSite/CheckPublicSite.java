@@ -201,4 +201,14 @@ public class CheckPublicSite extends AbstractSpec {
         Assert.assertTrue("Event details have not been loaded.", new LiveEvents(driver).eventIsOpen());
     }
 
+    @Test
+    public void presentationsWork(){
+        Assert.assertTrue("Presentations are not displayed.", new HomePage(driver).selectPresentationsFromMenu().presentationsAreDisplayed());
+        Assert.assertTrue("One or more displayed presentations are not from the current year.", new LivePresentations(driver).presentationsAreAllFromYear(Year.now().toString()));
+        new LivePresentations(driver).switchYearTo("2015");
+        Assert.assertTrue("One or more displayed presentations are not from the selected year (2015).", new LivePresentations(driver).presentationsAreAllFromYear("2015"));
+        Assert.assertTrue("One or more presentation links are not links.", new LivePresentations(driver).presentationLinksAreLinks());
+        Assert.assertTrue("No presentations link to a .pdf file.", new LivePresentations(driver).pdfLinkIsPresent());
+    }
+
 }
