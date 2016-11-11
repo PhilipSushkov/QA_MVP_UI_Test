@@ -1,22 +1,20 @@
-package pageobjects.SystemAdmin.UserList;
+package pageobjects.SystemAdmin.AlertFilterList;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
 
-import java.util.List;
-
 /**
- * Created by philipsushkov on 2016-11-10.
+ * Created by philipsushkov on 2016-11-11.
  */
 
-public class UserList extends AbstractPageObject {
+public class AlertFilterList extends AbstractPageObject {
     private final By moduleTitle = By.xpath("//span[contains(@class, 'AdminContent')]/h1/span[contains(@id,'ModuleTitle')]");
-    private final By grid = By.xpath("//table[contains(@id, 'dataGridUsers')]");
-    private final By gridUserName = By.xpath("//td[contains(@class,'DataGridItemBorder')]");
+    private final By grid = By.xpath("//table[contains(@id, 'AlertFilterList')]");
+    private final By gridFilterName = By.xpath("//td[contains(@class,'DataGridItemBorder')]");
 
-    public UserList(WebDriver driver) {
+    public AlertFilterList(WebDriver driver) {
         super(driver);
     }
 
@@ -29,9 +27,8 @@ public class UserList extends AbstractPageObject {
         return findElement(moduleTitle).getText();
     }
 
-    public Integer getUserNameQuantity() {
+    public Integer getFilterNameQuantity() {
         wait.until(ExpectedConditions.visibilityOf(findElement(grid)));
-        return findElement(grid).findElements(gridUserName).size()/4;
+        return findElement(grid).findElements(gridFilterName).size()/4;
     }
-
 }
