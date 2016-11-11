@@ -15,6 +15,7 @@ import pageobjects.Events.Events;
 import pageobjects.SystemAdmin.UserList.UserList;
 import pageobjects.SystemAdmin.AlertFilterList.AlertFilterList;
 import pageobjects.SystemAdmin.GenericStorageList.GenericStorageList;
+import pageobjects.SystemAdmin.WorkflowEmailList.WorkflowEmailList;
 
 public class Dashboard extends AbstractPageObject {
     Actions action = new Actions(driver);
@@ -30,6 +31,7 @@ public class Dashboard extends AbstractPageObject {
     private final By userListMenuItem = By.xpath("//a[contains(text(),'User List')]/parent::li");
     private final By alertFilterListMenuItem = By.xpath("//a[contains(text(),'Alert Filter List')]/parent::li");
     private final By genericStorageListMenuItem = By.xpath("//a[contains(text(),'Generic Storage List')]/parent::li");
+    private final By workflowEmailListMenuItem = By.xpath("//a[contains(text(),'Workflow Email List')]/parent::li");
 
     public Dashboard(WebDriver driver) {
 
@@ -62,6 +64,7 @@ public class Dashboard extends AbstractPageObject {
     public UserList openUserListPage() {
         action.moveToElement(findElement(systemAdminMenuButton)).perform();
         wait.until(ExpectedConditions.visibilityOf(findElement(userListMenuItem)));
+        pause(1000L);
         findElement(userListMenuItem).click();
         return new UserList(getDriver());
     }
@@ -69,13 +72,23 @@ public class Dashboard extends AbstractPageObject {
     public AlertFilterList openAlertFilterListPage() {
         action.moveToElement(findElement(systemAdminMenuButton)).perform();
         wait.until(ExpectedConditions.visibilityOf(findElement(alertFilterListMenuItem)));
+        pause(1000L);
         findElement(alertFilterListMenuItem).click();
         return new AlertFilterList(getDriver());
+    }
+
+    public WorkflowEmailList openWorkflowEmailListPage() {
+        action.moveToElement(findElement(systemAdminMenuButton)).perform();
+        wait.until(ExpectedConditions.visibilityOf(findElement(workflowEmailListMenuItem)));
+        pause(1000L);
+        findElement(workflowEmailListMenuItem).click();
+        return new WorkflowEmailList(getDriver());
     }
 
     public GenericStorageList openGenericStorageListPage() {
         action.moveToElement(findElement(systemAdminMenuButton)).perform();
         wait.until(ExpectedConditions.visibilityOf(findElement(genericStorageListMenuItem)));
+        pause(1000L);
         findElement(genericStorageListMenuItem).click();
         return new GenericStorageList(getDriver());
     }

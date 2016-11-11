@@ -27,7 +27,7 @@ public class CheckGenericStorageList extends AbstractSpec {
         Assert.assertNotNull(new Dashboard(driver).openGenericStorageListPage().getUrl());
         Assert.assertEquals("Actual Generic Storage List page Title doesn't match to expected", expectedTitle, new GenericStorageList(driver).getTitle());
 
-        System.out.println(new GenericStorageList(driver).getStorageListHeader().toString());
+        //System.out.println(new GenericStorageList(driver).getStorageListHeader().toString());
         Assert.assertTrue(expectedQuantity == new GenericStorageList(driver).getStorageListHeader() );
     }
 
