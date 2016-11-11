@@ -13,6 +13,7 @@ public class AlertFilterList extends AbstractPageObject {
     private final By moduleTitle = By.xpath("//span[contains(@class, 'AdminContent')]/h1/span[contains(@id,'ModuleTitle')]");
     private final By grid = By.xpath("//table[contains(@id, 'AlertFilterList')]");
     private final By gridFilterName = By.xpath("//td[contains(@class,'DataGridItemBorder')]");
+    private final Integer columnsNumber = 4;
 
     public AlertFilterList(WebDriver driver) {
         super(driver);
@@ -29,6 +30,6 @@ public class AlertFilterList extends AbstractPageObject {
 
     public Integer getFilterNameQuantity() {
         wait.until(ExpectedConditions.visibilityOf(findElement(grid)));
-        return findElement(grid).findElements(gridFilterName).size()/4;
+        return findElement(grid).findElements(gridFilterName).size()/columnsNumber;
     }
 }

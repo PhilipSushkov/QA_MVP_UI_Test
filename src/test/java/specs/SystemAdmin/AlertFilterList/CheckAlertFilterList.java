@@ -14,6 +14,7 @@ import pageobjects.SystemAdmin.AlertFilterList.AlertFilterList;
  */
 
 public class CheckAlertFilterList extends AbstractSpec {
+
     @Before
     public void setUp() throws Exception {
         new LoginPage(driver).loginUser();

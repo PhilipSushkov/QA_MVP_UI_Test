@@ -14,6 +14,7 @@ import pageobjects.Events.EditEvent;
 import pageobjects.Events.Events;
 import pageobjects.SystemAdmin.UserList.UserList;
 import pageobjects.SystemAdmin.AlertFilterList.AlertFilterList;
+import pageobjects.SystemAdmin.GenericStorageList.GenericStorageList;
 
 public class Dashboard extends AbstractPageObject {
     Actions action = new Actions(driver);
@@ -28,6 +29,7 @@ public class Dashboard extends AbstractPageObject {
     private final By systemAdminMenuButton = By.xpath("//span[contains(text(),'System Admin')]");
     private final By userListMenuItem = By.xpath("//a[contains(text(),'User List')]/parent::li");
     private final By alertFilterListMenuItem = By.xpath("//a[contains(text(),'Alert Filter List')]/parent::li");
+    private final By genericStorageListMenuItem = By.xpath("//a[contains(text(),'Generic Storage List')]/parent::li");
 
     public Dashboard(WebDriver driver) {
 
@@ -69,6 +71,13 @@ public class Dashboard extends AbstractPageObject {
         wait.until(ExpectedConditions.visibilityOf(findElement(alertFilterListMenuItem)));
         findElement(alertFilterListMenuItem).click();
         return new AlertFilterList(getDriver());
+    }
+
+    public GenericStorageList openGenericStorageListPage() {
+        action.moveToElement(findElement(systemAdminMenuButton)).perform();
+        wait.until(ExpectedConditions.visibilityOf(findElement(genericStorageListMenuItem)));
+        findElement(genericStorageListMenuItem).click();
+        return new GenericStorageList(getDriver());
     }
 
     public PressReleases pressReleases() {

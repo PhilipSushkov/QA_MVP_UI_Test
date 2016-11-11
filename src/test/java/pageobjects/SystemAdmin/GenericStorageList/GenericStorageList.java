@@ -1,23 +1,21 @@
-package pageobjects.SystemAdmin.UserList;
+package pageobjects.SystemAdmin.GenericStorageList;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
 
-import java.util.List;
-
 /**
- * Created by philipsushkov on 2016-11-10.
+ * Created by philipsushkov on 2016-11-11.
  */
 
-public class UserList extends AbstractPageObject {
+public class GenericStorageList extends AbstractPageObject {
     private final By moduleTitle = By.xpath("//span[contains(@class, 'AdminContent')]/h1/span[contains(@id,'ModuleTitle')]");
-    private final By grid = By.xpath("//table[contains(@id, 'dataGridUsers')]");
-    private final By gridUserName = By.xpath("//td[contains(@class,'DataGridItemBorder')]");
-    private final Integer columnsNumber = 4;
+    private final By grid = By.xpath("//table[contains(@id, 'GenericStorages_dataGrid')]");
+    private final By gridStorageListHeader = By.xpath("//td[contains(@class,'DataGridHeader')]");
+    private final Integer columnsNumber = 7;
 
-    public UserList(WebDriver driver) {
+    public GenericStorageList(WebDriver driver) {
         super(driver);
     }
 
@@ -30,9 +28,8 @@ public class UserList extends AbstractPageObject {
         return findElement(moduleTitle).getText();
     }
 
-    public Integer getUserNameQuantity() {
+    public Integer getStorageListHeader() {
         wait.until(ExpectedConditions.visibilityOf(findElement(grid)));
-        return findElement(grid).findElements(gridUserName).size()/columnsNumber;
+        return findElement(grid).findElements(gridStorageListHeader).size()/columnsNumber;
     }
-
 }
