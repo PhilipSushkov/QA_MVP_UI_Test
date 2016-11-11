@@ -13,8 +13,9 @@ import java.util.concurrent.TimeUnit;
 
 public class LivePressReleases extends AbstractPageObject{
 
-    private final By latestHeadlines = By.xpath("//a[contains(@id,'hrefHeadline')]/span[contains(@class,'ModuleHeadline')]");
-    private final By latestHeadlineLinks = By.xpath("//a[contains(@id,'hrefHeadline')][span]");
+    private final By latestHeadlines = By.xpath("//a[contains(@id,'hrefHeadline')][span]");
+    private final By pressReleaseDate = By.className("ModuleDate");
+    private final By yearLink = By.className("ModuleYearLink");
 
     // elements on page of loaded press release
     private final By pressReleaseImage = By.xpath("//div[@class='ModuleBody']//img");
@@ -55,7 +56,6 @@ public class LivePressReleases extends AbstractPageObject{
             }
 
             headlines = findElements(latestHeadlines);
-            headlineLinks = findElements(latestHeadlineLinks);
 
             for (int i=0; i<headlines.size(); i++){
                 System.out.println("HEADLINE: "+headlines.get(i).getText());
@@ -63,7 +63,7 @@ public class LivePressReleases extends AbstractPageObject{
                     foundHeadline = true;
                     if(desiredState){
                         try {
-                            headlineLinks.get(i).click();
+                            headlines.get(i).click();
                         } catch (TimeoutException e) {
                             driver.findElement(By.tagName("body")).sendKeys("Keys.ESCAPE");
                         }
@@ -93,5 +93,42 @@ public class LivePressReleases extends AbstractPageObject{
         }
 
         return foundHeadline;
+    }
+
+    // NEW METHODS CREATED FOR PUBLIC SITE SMOKE TEST
+
+    public boolean pressReleasesAreDisplayed(){
+        return doesElementExist(latestHeadlines) && findElement(latestHeadlines).isDisplayed();
+    }
+
+    public boolean pressReleasesAreAllFromYear(String year){
+        boolean allFromYear = true;
+        List<WebElement> headlines = findElements(latestHeadlines);
+        List<WebElement> pressReleaseDates = findElements(pressReleaseDate);
+        for (int i=0; i<pressReleaseDates.size(); i++){
+            if (!pressReleaseDates.get(i).getText().contains(year)){
+                System.out.println("Press release with headline: "+headlines.get(i).getText()+"\n\thas date "+pressReleaseDates.get(i).getText()+" not in "+year);
+                allFromYear = false;
+            }
+        }
+        return allFromYear;
+    }
+
+    public void switchYearTo(String year){
+        List<WebElement> yearLinks = findElements(yearLink);
+        for (int i=0; i<yearLinks.size(); i++){
+            if (yearLinks.get(i).getText().equals(year)){
+                yearLinks.get(i).click();
+                return;
+            }
+        }
+    }
+
+    public void openFirstPressRelease(){
+        findElement(latestHeadlines).click();
+    }
+
+    public boolean pressReleaseIsOpen(){
+        return doesElementExist(documentDownloadLink) && findElement(documentDownloadLink).isDisplayed();
     }
 }
