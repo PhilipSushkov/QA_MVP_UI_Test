@@ -211,4 +211,13 @@ public class CheckPublicSite extends AbstractSpec {
         Assert.assertTrue("No presentations link to a .pdf file.", new LivePresentations(driver).pdfLinkIsPresent());
     }
 
+    @Test
+    public void secFilingsWork(){
+        Assert.assertTrue("SEC filings are not displayed.", new HomePage(driver).selectSECFilingsFromMenu().filingsAreDisplayed());
+        Assert.assertTrue("One or more displayed filings are not from the current year.", new SECFilingsPage(driver).filingsAreAllFromYear(Year.now().toString()));
+        new SECFilingsPage(driver).switchYearTo("2015");
+        Assert.assertTrue("One or more displayed filings are not from the selected year (2015).", new SECFilingsPage(driver).filingsAreAllFromYear("2015"));
+        Assert.assertTrue("One or more pdf icons do not link to a .pdf file.", new SECFilingsPage(driver).pdfIconsLinkToPDF());
+    }
+
 }
