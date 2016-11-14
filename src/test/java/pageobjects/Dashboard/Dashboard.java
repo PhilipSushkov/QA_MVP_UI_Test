@@ -12,10 +12,12 @@ import pageobjects.Presentations.EditPresentation;
 import pageobjects.Presentations.Presentations;
 import pageobjects.Events.EditEvent;
 import pageobjects.Events.Events;
+import pageobjects.SystemAdmin.SiteMaintenance.SiteMaintenance;
 import pageobjects.SystemAdmin.UserList.UserList;
 import pageobjects.SystemAdmin.AlertFilterList.AlertFilterList;
 import pageobjects.SystemAdmin.GenericStorageList.GenericStorageList;
 import pageobjects.SystemAdmin.WorkflowEmailList.WorkflowEmailList;
+import pageobjects.SystemAdmin.PDFTemplateEdit.PDFTemplateEdit;
 
 public class Dashboard extends AbstractPageObject {
     Actions action = new Actions(driver);
@@ -32,6 +34,8 @@ public class Dashboard extends AbstractPageObject {
     private final By alertFilterListMenuItem = By.xpath("//a[contains(text(),'Alert Filter List')]/parent::li");
     private final By genericStorageListMenuItem = By.xpath("//a[contains(text(),'Generic Storage List')]/parent::li");
     private final By workflowEmailListMenuItem = By.xpath("//a[contains(text(),'Workflow Email List')]/parent::li");
+    private final By pdfTemplateEditPageItem = By.xpath("//a[contains(text(),'PDF Template Edit')]/parent::li");
+    private final By siteMaintenancePageItem = By.xpath("//a[contains(text(),'Site Maintenance')]/parent::li");
 
     public Dashboard(WebDriver driver) {
 
@@ -91,6 +95,22 @@ public class Dashboard extends AbstractPageObject {
         pause(1000L);
         findElement(genericStorageListMenuItem).click();
         return new GenericStorageList(getDriver());
+    }
+
+    public PDFTemplateEdit openPDFTemplateEditPage() {
+        action.moveToElement(findElement(systemAdminMenuButton)).perform();
+        wait.until(ExpectedConditions.visibilityOf(findElement(pdfTemplateEditPageItem)));
+        pause(1000L);
+        findElement(pdfTemplateEditPageItem).click();
+        return new PDFTemplateEdit(getDriver());
+    }
+
+    public SiteMaintenance openSiteMaintenancePage() {
+        action.moveToElement(findElement(systemAdminMenuButton)).perform();
+        wait.until(ExpectedConditions.visibilityOf(findElement(siteMaintenancePageItem)));
+        pause(1000L);
+        findElement(siteMaintenancePageItem).click();
+        return new SiteMaintenance(getDriver());
     }
 
     public PressReleases pressReleases() {

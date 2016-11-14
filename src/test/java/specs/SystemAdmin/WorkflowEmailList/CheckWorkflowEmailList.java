@@ -21,7 +21,7 @@ public class CheckWorkflowEmailList extends AbstractSpec {
     }
 
     @Test
-    public void CheckWorkflowEmailList() throws Exception {
+    public void checkWorkflowEmailList() throws Exception {
         final String expectedTitle = "Workflow Email List";
         final Integer expectedQuantity = 4;
 

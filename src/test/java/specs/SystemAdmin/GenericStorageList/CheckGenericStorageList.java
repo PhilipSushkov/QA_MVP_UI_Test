@@ -20,7 +20,7 @@ public class CheckGenericStorageList extends AbstractSpec {
     }
 
     @Test
-    public void checkAlertFilterList() throws Exception {
+    public void checkGenericStorageList() throws Exception {
         final String expectedTitle = "Generic Storage List";
         final Integer expectedQuantity = 1;
 
