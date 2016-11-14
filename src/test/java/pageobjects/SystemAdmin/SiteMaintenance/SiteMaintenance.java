@@ -12,6 +12,9 @@ import pageobjects.AbstractPageObject;
 
 public class SiteMaintenance extends AbstractPageObject {
     private final By moduleTitle = By.xpath("//div[contains(@id, 'SiteMaintenanceApp')]/h1/span[contains(@id,'ModuleTitle')]");
+    private final By buttonGoLive = By.xpath("//button[contains(@ng-click, 'goLive()')]");
+    private final By buttonOneTouchButton = By.xpath("//button[contains(@ng-click, 'toggleOneTouch()')]");
+    private final By buttonTwoFactorAuthenticationButton = By.xpath("//button[contains(@ng-click, 'toggleTwoFactorAuthentication()')]");
 
     public SiteMaintenance(WebDriver driver) {
         super(driver);
@@ -24,6 +27,21 @@ public class SiteMaintenance extends AbstractPageObject {
     public String getTitle() {
         wait.until(ExpectedConditions.visibilityOf(findElement(moduleTitle)));
         return findElement(moduleTitle).getText();
+    }
+
+    public WebElement getGoLiveButton() {
+        wait.until(ExpectedConditions.visibilityOf(findElement(buttonGoLive)));
+        return findElement(buttonGoLive);
+    }
+
+    public WebElement getOneTouchButton() {
+        wait.until(ExpectedConditions.visibilityOf(findElement(buttonOneTouchButton)));
+        return findElement(buttonOneTouchButton);
+    }
+
+    public WebElement getTwoFactorAuthenticationButton() {
+        wait.until(ExpectedConditions.visibilityOf(findElement(buttonTwoFactorAuthenticationButton)));
+        return findElement(buttonTwoFactorAuthenticationButton);
     }
 
 }

@@ -4,10 +4,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.After;
+import pageobjects.SystemAdmin.SiteMaintenance.SiteMaintenance;
 import specs.AbstractSpec;
 import pageobjects.LoginPage.LoginPage;
 import pageobjects.Dashboard.Dashboard;
-import pageobjects.SystemAdmin.PDFTemplateEdit.PDFTemplateEdit;
 
 /**
  * Created by philipsushkov on 2016-11-14.
@@ -26,12 +26,12 @@ public class CheckSiteMaintenance extends AbstractSpec {
 
         Assert.assertNotNull(new Dashboard(driver).openSiteMaintenancePage().getUrl());
 
-        Assert.assertEquals("Actual PDF Template Edit page Title doesn't match to expected", expectedTitle, new PDFTemplateEdit(driver).getTitle());
+        Assert.assertEquals("Actual PDF Template Edit page Title doesn't match to expected", expectedTitle, new SiteMaintenance(driver).getTitle());
 
-        //System.out.println(new PDFTemplateEdit(driver).getHeaderRadEditor().getSize().toString() );
-        Assert.assertNotNull(new PDFTemplateEdit(driver).getHeaderRadEditor() );
-        Assert.assertNotNull(new PDFTemplateEdit(driver).getBodyRadEditor() );
-        Assert.assertNotNull(new PDFTemplateEdit(driver).getFooterRadEditor() );
+        //System.out.println(new SiteMaintenance(driver).getGoLiveButton().getText() );
+        Assert.assertNotNull(new SiteMaintenance(driver).getGoLiveButton() );
+        Assert.assertNotNull(new SiteMaintenance(driver).getOneTouchButton() );
+        Assert.assertNotNull(new SiteMaintenance(driver).getTwoFactorAuthenticationButton() );
 
     }
 
