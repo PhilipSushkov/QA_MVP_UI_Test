@@ -5,7 +5,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.After;
 import pageobjects.SiteAdmin.GlobalModuleList.GlobalModuleList;
-import pageobjects.SystemAdmin.UserGroupList.UserGroupList;
 import specs.AbstractSpec;
 import pageobjects.LoginPage.LoginPage;
 import pageobjects.Dashboard.Dashboard;
@@ -29,7 +28,7 @@ public class CheckGlobalModuleList extends AbstractSpec {
         Assert.assertNotNull(new Dashboard(driver).openGlobalModuleListPage().getUrl());
         Assert.assertEquals("Actual Global Module List page Title doesn't match to expected", expectedTitle, new GlobalModuleList(driver).getTitle());
 
-        System.out.println(new GlobalModuleList(driver).getGlobalModuleListQuantity().toString());
+        //System.out.println(new GlobalModuleList(driver).getGlobalModuleListQuantity().toString());
         Assert.assertTrue(expectedQuantity <= new GlobalModuleList(driver).getGlobalModuleListQuantity() );
 
     }

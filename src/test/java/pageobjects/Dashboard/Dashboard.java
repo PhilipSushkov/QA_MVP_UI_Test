@@ -12,6 +12,9 @@ import pageobjects.Presentations.EditPresentation;
 import pageobjects.Presentations.Presentations;
 import pageobjects.Events.EditEvent;
 import pageobjects.Events.Events;
+import pageobjects.SiteAdmin.GlobalModuleList.GlobalModuleList;
+import pageobjects.SiteAdmin.LayoutDefinitionList.LayoutDefinitionList;
+import pageobjects.SiteAdmin.ModuleDefinitionList.ModuleDefinitionList;
 import pageobjects.SystemAdmin.SiteMaintenance.SiteMaintenance;
 import pageobjects.SystemAdmin.UserGroupList.UserGroupList;
 import pageobjects.SystemAdmin.UserList.UserList;
@@ -42,6 +45,9 @@ public class Dashboard extends AbstractPageObject {
     private final By siteListMenuItem = By.xpath("//a[contains(text(),'Site List')]/parent::li");
     private final By userGroupListMenuItem = By.xpath("//a[contains(text(),'User Group List')]/parent::li");
     private final By globalModuleListMenuItem = By.xpath("//a[contains(text(),'Global Module List')]/parent::li");
+    private final By layoutDefinitionListMenuItem = By.xpath("//a[contains(text(),'Layout Definition List')]/parent::li");
+    private final By moduleDefinitionListMenuItem = By.xpath("//a[contains(text(),'Module Definition List')]/parent::li");
+
 
     public Dashboard(WebDriver driver) {
 
@@ -135,12 +141,28 @@ public class Dashboard extends AbstractPageObject {
         return new UserGroupList(getDriver());
     }
 
-    public SiteList openGlobalModuleListPage() {
+    public GlobalModuleList openGlobalModuleListPage() {
         action.moveToElement(findElement(siteAdminMenuButton)).perform();
         wait.until(ExpectedConditions.visibilityOf(findElement(globalModuleListMenuItem)));
         pause(1000L);
         findElement(globalModuleListMenuItem).click();
-        return new SiteList(getDriver());
+        return new GlobalModuleList(getDriver());
+    }
+
+    public LayoutDefinitionList openLayoutDefinitionListPage() {
+        action.moveToElement(findElement(siteAdminMenuButton)).perform();
+        wait.until(ExpectedConditions.visibilityOf(findElement(layoutDefinitionListMenuItem)));
+        pause(1000L);
+        findElement(layoutDefinitionListMenuItem).click();
+        return new LayoutDefinitionList(getDriver());
+    }
+
+    public ModuleDefinitionList openModuleDefinitionListPage() {
+        action.moveToElement(findElement(siteAdminMenuButton)).perform();
+        wait.until(ExpectedConditions.visibilityOf(findElement(moduleDefinitionListMenuItem)));
+        pause(1000L);
+        findElement(moduleDefinitionListMenuItem).click();
+        return new ModuleDefinitionList(getDriver());
     }
 
     public PressReleases pressReleases() {
