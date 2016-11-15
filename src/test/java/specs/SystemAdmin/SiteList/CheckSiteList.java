@@ -28,8 +28,8 @@ public class CheckSiteList extends AbstractSpec {
         Assert.assertNotNull(new Dashboard(driver).openSiteListPage().getUrl());
         Assert.assertEquals("Actual Site List page Title doesn't match to expected", expectedTitle, new SiteList(driver).getTitle());
 
-        System.out.println(new SiteList(driver).getSiteListHeader().toString());
-        Assert.assertTrue(expectedQuantity <= new SiteList(driver).getSiteListHeader() );
+        //System.out.println(new SiteList(driver).getSiteListHeader().toString());
+        Assert.assertTrue(expectedQuantity <= new SiteList(driver).getSiteListQuantity() );
     }
 
     @After

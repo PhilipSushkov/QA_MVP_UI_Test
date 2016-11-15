@@ -1,4 +1,4 @@
-package pageobjects.SystemAdmin.SiteList;
+package pageobjects.SystemAdmin.UserGroupList;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -6,16 +6,16 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
 
 /**
- * Created by philipsushkov on 2016-11-14.
+ * Created by philipsushkov on 2016-11-15.
  */
 
-public class SiteList extends AbstractPageObject {
+public class UserGroupList extends AbstractPageObject {
     private final By moduleTitle = By.xpath("//span[contains(@class, 'AdminContent')]/h1/span[contains(@id,'ModuleTitle')]");
-    private final By grid = By.xpath("//table[contains(@id, 'Sites_dataGrid')]");
-    private final By gridSiteListHeader = By.xpath("//td[contains(@class,'DataGridItemBorder')]");
-    private final Integer columnsNumber = 7;
+    private final By grid = By.xpath("//table[contains(@id, 'dataGridUserGroups')]");
+    private final By gridUserGroupList = By.xpath("//td[contains(@class,'DataGridItemBorder')]");
+    private final Integer columnsNumber = 3;
 
-    public SiteList(WebDriver driver) {
+    public UserGroupList(WebDriver driver) {
         super(driver);
     }
 
@@ -28,8 +28,8 @@ public class SiteList extends AbstractPageObject {
         return findElement(moduleTitle).getText();
     }
 
-    public Integer getSiteListQuantity() {
+    public Integer getUserGroupListQuantity() {
         wait.until(ExpectedConditions.visibilityOf(findElement(grid)));
-        return findElement(grid).findElements(gridSiteListHeader).size()/columnsNumber;
+        return findElement(grid).findElements(gridUserGroupList).size()/columnsNumber;
     }
 }

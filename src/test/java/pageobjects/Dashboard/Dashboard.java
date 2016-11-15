@@ -38,6 +38,7 @@ public class Dashboard extends AbstractPageObject {
     private final By pdfTemplateEditMenuItem = By.xpath("//a[contains(text(),'PDF Template Edit')]/parent::li");
     private final By siteMaintenanceMenuItem = By.xpath("//a[contains(text(),'Site Maintenance')]/parent::li");
     private final By siteListMenuItem = By.xpath("//a[contains(text(),'Site List')]/parent::li");
+    private final By userGroupListMenuItem = By.xpath("//a[contains(text(),'User Group List')]/parent::li");
 
     public Dashboard(WebDriver driver) {
 
@@ -120,6 +121,14 @@ public class Dashboard extends AbstractPageObject {
         wait.until(ExpectedConditions.visibilityOf(findElement(siteListMenuItem)));
         pause(1000L);
         findElement(siteListMenuItem).click();
+        return new SiteList(getDriver());
+    }
+
+    public SiteList openUserGroupListPage() {
+        action.moveToElement(findElement(systemAdminMenuButton)).perform();
+        wait.until(ExpectedConditions.visibilityOf(findElement(userGroupListMenuItem)));
+        pause(1000L);
+        findElement(userGroupListMenuItem).click();
         return new SiteList(getDriver());
     }
 

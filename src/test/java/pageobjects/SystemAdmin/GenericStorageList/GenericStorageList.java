@@ -28,7 +28,7 @@ public class GenericStorageList extends AbstractPageObject {
         return findElement(moduleTitle).getText();
     }
 
-    public Integer getStorageListHeader() {
+    public Integer getStorageListQuantity() {
         wait.until(ExpectedConditions.visibilityOf(findElement(grid)));
         return findElement(grid).findElements(gridStorageListHeader).size()/columnsNumber;
     }
