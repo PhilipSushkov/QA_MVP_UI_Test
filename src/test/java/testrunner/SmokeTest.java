@@ -7,7 +7,10 @@ import specs.PressReleases.AddNewPressRelease;
 import specs.Presentations.AddNewPresentation;
 import specs.PublicSite.CheckPublicSite;
 import specs.Events.AddNewEvent;
+import specs.SiteAdmin.GlobalModuleList.CheckGlobalModuleList;
 import specs.SystemAdmin.PDFTemplateEdit.CheckPDFTemplateEdit;
+import specs.SystemAdmin.SiteList.CheckSiteList;
+import specs.SystemAdmin.UserGroupList.CheckUserGroupList;
 import specs.SystemAdmin.UserList.CheckUserList;
 import specs.SystemAdmin.WorkflowEmailList.CheckWorkflowEmailList;
 import specs.SystemAdmin.AlertFilterList.CheckAlertFilterList;
@@ -28,7 +31,10 @@ import specs.SystemAdmin.GenericStorageList.CheckGenericStorageList;
         CheckWorkflowEmailList.class,
         CheckAlertFilterList.class,
         CheckGenericStorageList.class,
-        CheckPDFTemplateEdit.class
+        CheckPDFTemplateEdit.class,
+        CheckSiteList.class,
+        CheckUserGroupList.class,
+        CheckGlobalModuleList.class
 })
 
 public class SmokeTest {

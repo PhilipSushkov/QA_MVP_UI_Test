@@ -13,6 +13,7 @@ import pageobjects.Presentations.Presentations;
 import pageobjects.Events.EditEvent;
 import pageobjects.Events.Events;
 import pageobjects.SystemAdmin.SiteMaintenance.SiteMaintenance;
+import pageobjects.SystemAdmin.UserGroupList.UserGroupList;
 import pageobjects.SystemAdmin.UserList.UserList;
 import pageobjects.SystemAdmin.AlertFilterList.AlertFilterList;
 import pageobjects.SystemAdmin.GenericStorageList.GenericStorageList;
@@ -31,6 +32,7 @@ public class Dashboard extends AbstractPageObject {
     private final By presentationsMenuButton = By.xpath("//a[contains(text(),'Presentations')]/parent::li");
     private final By eventsMenuButton = By.xpath("//a[contains(text(),'Events')]/parent::li");
     private final By systemAdminMenuButton = By.xpath("//span[contains(text(),'System Admin')]");
+    private final By siteAdminMenuButton = By.xpath("//span[contains(text(),'Site Admin')]");
     private final By userListMenuItem = By.xpath("//a[contains(text(),'User List')]/parent::li");
     private final By alertFilterListMenuItem = By.xpath("//a[contains(text(),'Alert Filter List')]/parent::li");
     private final By genericStorageListMenuItem = By.xpath("//a[contains(text(),'Generic Storage List')]/parent::li");
@@ -39,6 +41,7 @@ public class Dashboard extends AbstractPageObject {
     private final By siteMaintenanceMenuItem = By.xpath("//a[contains(text(),'Site Maintenance')]/parent::li");
     private final By siteListMenuItem = By.xpath("//a[contains(text(),'Site List')]/parent::li");
     private final By userGroupListMenuItem = By.xpath("//a[contains(text(),'User Group List')]/parent::li");
+    private final By globalModuleListMenuItem = By.xpath("//a[contains(text(),'Global Module List')]/parent::li");
 
     public Dashboard(WebDriver driver) {
 
@@ -124,11 +127,19 @@ public class Dashboard extends AbstractPageObject {
         return new SiteList(getDriver());
     }
 
-    public SiteList openUserGroupListPage() {
+    public UserGroupList openUserGroupListPage() {
         action.moveToElement(findElement(systemAdminMenuButton)).perform();
         wait.until(ExpectedConditions.visibilityOf(findElement(userGroupListMenuItem)));
         pause(1000L);
         findElement(userGroupListMenuItem).click();
+        return new UserGroupList(getDriver());
+    }
+
+    public SiteList openGlobalModuleListPage() {
+        action.moveToElement(findElement(siteAdminMenuButton)).perform();
+        wait.until(ExpectedConditions.visibilityOf(findElement(globalModuleListMenuItem)));
+        pause(1000L);
+        findElement(globalModuleListMenuItem).click();
         return new SiteList(getDriver());
     }
 
