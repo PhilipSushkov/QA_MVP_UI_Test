@@ -35,7 +35,7 @@ public class CheckLayoutDefinitionList extends AbstractSpec {
 
     @After
     public void tearDown() {
-        driver.quit();
+        //driver.quit();
     }
 
 }

@@ -34,7 +34,7 @@ public class CheckSiteList extends AbstractSpec {
 
     @After
     public void tearDown() {
-        driver.quit();
+        //driver.quit();
     }
 
 }

@@ -35,7 +35,7 @@ public class CheckGlobalModuleList extends AbstractSpec {
 
     @After
     public void tearDown() {
-        driver.quit();
+        //driver.quit();
     }
 
 }

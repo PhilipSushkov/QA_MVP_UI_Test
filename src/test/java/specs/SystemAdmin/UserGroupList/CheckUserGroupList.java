@@ -35,7 +35,7 @@ public class CheckUserGroupList extends AbstractSpec {
 
     @After
     public void tearDown() {
-        driver.quit();
+        //driver.quit();
     }
 
 }

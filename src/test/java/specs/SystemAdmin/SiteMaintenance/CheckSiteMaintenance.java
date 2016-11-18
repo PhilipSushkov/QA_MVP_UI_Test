@@ -37,7 +37,7 @@ public class CheckSiteMaintenance extends AbstractSpec {
 
     @After
     public void tearDown() {
-        driver.quit();
+        //driver.quit();
     }
 
 }
