@@ -13,6 +13,7 @@ import pageobjects.Presentations.Presentations;
 import pageobjects.Events.EditEvent;
 import pageobjects.Events.Events;
 import pageobjects.SiteAdmin.CssFileList.CssFileList;
+import pageobjects.SiteAdmin.ExternalFeedList.ExternalFeedList;
 import pageobjects.SiteAdmin.GlobalModuleList.GlobalModuleList;
 import pageobjects.SiteAdmin.LayoutDefinitionList.LayoutDefinitionList;
 import pageobjects.SiteAdmin.ModuleDefinitionList.ModuleDefinitionList;
@@ -49,6 +50,7 @@ public class Dashboard extends AbstractPageObject {
     private final By layoutDefinitionListMenuItem = By.xpath("//a[contains(text(),'Layout Definition List')]/parent::li");
     private final By moduleDefinitionListMenuItem = By.xpath("//a[contains(text(),'Module Definition List')]/parent::li");
     private final By moduleCssFileListMenuItem = By.xpath("//a[contains(text(),'Css File List')]/parent::li");
+    private final By moduleExternalFeedListMenuItem = By.xpath("//a[contains(text(),'External Feed List')]/parent::li");
 
 
     public Dashboard(WebDriver driver) {
@@ -173,6 +175,14 @@ public class Dashboard extends AbstractPageObject {
         pause(1000L);
         findElement(moduleCssFileListMenuItem).click();
         return new CssFileList(getDriver());
+    }
+
+    public ExternalFeedList openExternalFeedListPage() {
+        action.moveToElement(findElement(siteAdminMenuButton)).perform();
+        wait.until(ExpectedConditions.visibilityOf(findElement(moduleExternalFeedListMenuItem)));
+        pause(1000L);
+        findElement(moduleExternalFeedListMenuItem).click();
+        return new ExternalFeedList(getDriver());
     }
 
     public PressReleases pressReleases() {
