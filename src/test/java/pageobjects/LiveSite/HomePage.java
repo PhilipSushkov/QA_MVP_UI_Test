@@ -19,6 +19,8 @@ public class HomePage extends AbstractPageObject {
     private final By secFilings = By.linkText("SEC Filings");
     private final By boardOfDirectors = By.linkText("Board of Directors");
     private final By rssFeeds = By.linkText("RSS Feeds");
+    private final By siteMap = By.linkText("Site Map");
+    private final By emailAlerts = By.linkText("Email Alerts");
 
     public HomePage(WebDriver driver) {
         super(driver);
@@ -71,6 +73,13 @@ public class HomePage extends AbstractPageObject {
 
     public RSSFeedsPage selectRSSFeedsFromMenu(){
         findVisibleElement(rssFeeds).click();
+        return new RSSFeedsPage(getDriver());
+    }
+
+    public RSSFeedsPage emailAlertsFromMap(){
+        findVisibleElement(siteMap).click();
+        pause(1000L);
+        findVisibleElement(emailAlerts).click();
         return new RSSFeedsPage(getDriver());
     }
 }

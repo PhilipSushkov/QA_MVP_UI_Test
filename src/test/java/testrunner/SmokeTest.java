@@ -2,6 +2,7 @@ package testrunner;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
+import pageobjects.SiteAdmin.CssFileList.CssFileList;
 import pageobjects.SiteAdmin.ModuleDefinitionList.ModuleDefinitionList;
 import specs.LoginPage.EnterToAdmin;
 import specs.PressReleases.AddNewPressRelease;
@@ -38,7 +39,8 @@ import specs.SystemAdmin.GenericStorageList.CheckGenericStorageList;
         CheckUserGroupList.class,
         CheckGlobalModuleList.class,
         CheckLayoutDefinitionList.class,
-        ModuleDefinitionList.class
+        ModuleDefinitionList.class,
+        CssFileList.class
         }
 )
 
