@@ -10,6 +10,7 @@ import specs.Presentations.AddNewPresentation;
 import specs.PublicSite.CheckPublicSite;
 import specs.Events.AddNewEvent;
 import specs.SiteAdmin.GlobalModuleList.CheckGlobalModuleList;
+import specs.SiteAdmin.IndexContent.CheckIndexContent;
 import specs.SiteAdmin.LayoutDefinitionList.CheckLayoutDefinitionList;
 import specs.SystemAdmin.PDFTemplateEdit.CheckPDFTemplateEdit;
 import specs.SystemAdmin.SiteList.CheckSiteList;
@@ -40,7 +41,8 @@ import specs.SystemAdmin.GenericStorageList.CheckGenericStorageList;
         CheckGlobalModuleList.class,
         CheckLayoutDefinitionList.class,
         ModuleDefinitionList.class,
-        CssFileList.class
+        CssFileList.class,
+        CheckIndexContent.class
         }
 )
 
