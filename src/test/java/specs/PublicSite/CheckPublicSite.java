@@ -226,4 +226,26 @@ public class CheckPublicSite extends AbstractSpec {
         Assert.assertTrue("One or more people do not have biographical information.", new BoardOfDirectorsPage(driver).peopleHaveBiographicalInformation());
     }
 
+
+    @Test
+    public void rssPressReleaseWorks() {
+        Assert.assertTrue("RSS Feeds are not displayed.", new HomePage(driver).selectRSSFeedsFromMenu().rssFeedsExist());
+        Assert.assertTrue("RSS Feeds for press release do not open correctly", new RSSFeedsPage(driver).pressReleaseRSSExists());
+    }
+
+    @Test
+    public void rssEventsWorks(){
+        Assert.assertTrue("RSS Feeds are not displayed.", new HomePage(driver).selectRSSFeedsFromMenu().rssFeedsExist());
+        Assert.assertTrue("RSS Feeds for events do not open correctly", new RSSFeedsPage(driver).eventRSSExists());
+    }
+
+
+    @Test
+    public void rssPresentationsWorks(){
+        Assert.assertTrue("RSS Feeds are not displayed.", new HomePage(driver).selectRSSFeedsFromMenu().rssFeedsExist());
+        Assert.assertTrue("RSS Feeds for presentations do not open correctly", new RSSFeedsPage(driver).presentationRSSExists());
+    }
+
+
+
 }

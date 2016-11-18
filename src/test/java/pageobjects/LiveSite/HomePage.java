@@ -18,6 +18,7 @@ public class HomePage extends AbstractPageObject {
     private final By presentations = By.linkText("Presentations");
     private final By secFilings = By.linkText("SEC Filings");
     private final By boardOfDirectors = By.linkText("Board of Directors");
+    private final By rssFeeds = By.linkText("RSS Feeds");
 
     public HomePage(WebDriver driver) {
         super(driver);
@@ -66,5 +67,10 @@ public class HomePage extends AbstractPageObject {
     public BoardOfDirectorsPage selectBoardOfDirectorsFromMenu(){
         findVisibleElement(boardOfDirectors).click();
         return new BoardOfDirectorsPage(getDriver());
+    }
+
+    public RSSFeedsPage selectRSSFeedsFromMenu(){
+        findVisibleElement(rssFeeds).click();
+        return new RSSFeedsPage(getDriver());
     }
 }
