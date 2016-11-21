@@ -282,6 +282,6 @@ public class CheckPublicSite extends AbstractSpec {
 
     @After
     public void waitDriver(){
-        driver.manage().timeouts().implicitlyWait(1, TimeUnit.MINUTES);
+        driver.manage().timeouts().implicitlyWait(2, TimeUnit.MINUTES);
     }
 }

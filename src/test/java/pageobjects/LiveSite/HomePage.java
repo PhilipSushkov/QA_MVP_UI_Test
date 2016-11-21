@@ -22,15 +22,8 @@ public class HomePage extends AbstractPageObject {
     private final By boardOfDirectors = By.linkText("Board of Directors");
     private final By rssFeeds = By.linkText("RSS Feeds");
     private final By siteMap = By.linkText("Site Map");
-<<<<<<< Updated upstream
     private final By emailAlerts = By.linkText("Email Alerts");
-=======
-    private final By emailAlerts = By.linkText("Email Alerts"); //By.id("_ctrl0_ctl45_SiteMapRepeater_ctl15_hrefLink"); //Exists/isDislpayed once siteMap is clicked
-
-    // ^^ Currently the above is within a <ul></ul> which is an unordered list. Perhaps attempt to get the X element of that list with x-path to get the emailAlerts as it is not working as of now
-
->>>>>>> Stashed changes
-
+    
     public HomePage(WebDriver driver) {
         super(driver);
     }
@@ -89,14 +82,6 @@ public class HomePage extends AbstractPageObject {
         return new RSSFeedsPage(getDriver());
     }
 
-<<<<<<< Updated upstream
-    public RSSFeedsPage emailAlertsFromMap(){
-        findVisibleElement(siteMap).click();
-        pause(1000L);
-        findVisibleElement(emailAlerts).click();
-        return new RSSFeedsPage(getDriver());
-    }
-=======
     public EmailAlertsPage selectEmailAlertsFromPage() { //perhaps just go to URL instead of clicking on elements?
     /*
         findVisibleElement(siteMap).click();
@@ -114,5 +99,4 @@ public class HomePage extends AbstractPageObject {
         return new EmailAlertsPage(getDriver());
     }
 
->>>>>>> Stashed changes
 }
