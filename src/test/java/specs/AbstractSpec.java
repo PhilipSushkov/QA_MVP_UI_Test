@@ -9,6 +9,7 @@ import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriverService;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
@@ -70,6 +71,7 @@ public abstract class AbstractSpec {
             case BETA:
                 //temp code due to temp use of testing environment
                 //setupLocalDriver();
+                //setupFirefoxLocalDriver();
                 setupChromeLocalDriver();
                 break;
             case PRODUCTION:
@@ -96,8 +98,16 @@ public abstract class AbstractSpec {
     }
 
     private void setupChromeLocalDriver() {
-
         driver = new ChromeDriver();
+        driver.manage().timeouts().implicitlyWait(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
+        driver.manage().timeouts().pageLoadTimeout(4, TimeUnit.SECONDS);
+        driver.manage().window().setSize(new Dimension(1400, 1400));
+        driver.get(desktopUrl.toString());
+
+    }
+
+    private void setupFirefoxLocalDriver() {
+        driver = new FirefoxDriver();
         driver.manage().timeouts().implicitlyWait(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
         driver.manage().window().setSize(new Dimension(1400, 1400));
         driver.get(desktopUrl.toString());

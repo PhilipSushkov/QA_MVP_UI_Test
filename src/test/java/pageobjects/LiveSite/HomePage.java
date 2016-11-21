@@ -4,7 +4,11 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
+
+import java.util.concurrent.TimeUnit;
+import org.openqa.selenium.*;
 
 /**
  * Created by jasons on 2016-11-07.
@@ -14,6 +18,7 @@ public class HomePage extends AbstractPageObject {
     private final By Q4Logo = By.className("ClientLogo");
     private final By versionNumber = By.className("Version");
     private final By stockInformation = By.linkText("Stock Information");
+    private final By stockInformationTitle = By.xpath("//h1[contains(@id,'ModuleTitle')]");
     private final By financialReports = By.linkText("Financial Reports");
     private final By pressReleases = By.linkText("Press Releases");
     private final By events = By.linkText("Events");
@@ -42,8 +47,15 @@ public class HomePage extends AbstractPageObject {
         return findElement(versionNumber).getText();
     }
 
-    public StockInformationPage selectStockInformationFromMenu(){
-        findVisibleElement(stockInformation).click();
+    public StockInformationPage selectStockInformationFromMenu() {
+
+        try {
+            findElement(stockInformation).click();
+            //wait.until(ExpectedConditions.visibilityOf(findElement(stockInformationTitle)));
+        } catch (TimeoutException e) {
+            driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
+        }
+
         return new StockInformationPage(getDriver());
     }
 
@@ -83,19 +95,28 @@ public class HomePage extends AbstractPageObject {
     }
 
     public EmailAlertsPage selectEmailAlertsFromPage() { //perhaps just go to URL instead of clicking on elements?
-    /*
+        /*
         findVisibleElement(siteMap).click();
         pause(500L);
         driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
         wait.until(ExpectedConditions.visibilityOf(findElement(emailAlerts)));
         findElement(emailAlerts).click();
-*/
-// /*
+        */
+
+        /*
         driver.get("http://chicagotest.q4web.com/English/Contact-Us/email-alerts/default.aspx");
         driver.findElement(By.tagName("body")).sendKeys("Keys.ESCAPE");
         driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
         ((JavascriptExecutor)driver).executeScript("return window.stop");
-//*/
+        */
+
+
+        try {
+            driver.get("http://chicagotest.q4web.com/English/Contact-Us/email-alerts/default.aspx");
+        } catch (TimeoutException e) {
+            driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
+        }
+
         return new EmailAlertsPage(getDriver());
     }
 

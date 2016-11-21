@@ -3,7 +3,7 @@ package util;
 
 public enum BrowserType {
 
-  CHROME("chrome", "49"),
+  CHROME("chrome", "54"),
   FIREFOX("firefox", "45"),
   OPERA("opera", "12"),
   SAFARI("safari", "9"),
