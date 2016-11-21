@@ -27,6 +27,7 @@ import pageobjects.SystemAdmin.WorkflowEmailList.WorkflowEmailList;
 import pageobjects.SystemAdmin.PDFTemplateEdit.PDFTemplateEdit;
 import pageobjects.SystemAdmin.SiteList.SiteList;
 import pageobjects.SiteAdmin.LinkToPageList.LinkToPageList;
+import pageobjects.SiteAdmin.LookupList.LookupList;
 
 public class Dashboard extends AbstractPageObject {
     Actions action = new Actions(driver);
@@ -55,7 +56,7 @@ public class Dashboard extends AbstractPageObject {
     private final By externalFeedListMenuItem = By.xpath("//a[contains(text(),'External Feed List')]/parent::li");
     private final By indexContentMenuItem = By.xpath("//a[contains(text(),'Index Content')]/parent::li");
     private final By linkToPageListMenuItem = By.xpath("//a[contains(text(),'Link To Page List')]/parent::li");
-
+    private final By lookupListMenuItem = By.xpath("//a[contains(text(),'Lookup List')]/parent::li");
 
     public Dashboard(WebDriver driver) {
 
@@ -203,6 +204,14 @@ public class Dashboard extends AbstractPageObject {
         pause(1000L);
         findElement(linkToPageListMenuItem).click();
         return new LinkToPageList(getDriver());
+    }
+
+    public LookupList openLookupListPage() {
+        action.moveToElement(findElement(siteAdminMenuButton)).perform();
+        wait.until(ExpectedConditions.visibilityOf(findElement(lookupListMenuItem)));
+        pause(1000L);
+        findElement(lookupListMenuItem).click();
+        return new LookupList(getDriver());
     }
 
     public PressReleases pressReleases() {
