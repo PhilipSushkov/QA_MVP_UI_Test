@@ -68,7 +68,7 @@ public class RSSFeedsPage extends AbstractPageObject{
         }
 
         return true;
-    } 
+    }
 
     public boolean presentationRSSExists()
     {

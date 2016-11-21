@@ -1,6 +1,8 @@
 package pageobjects.LiveSite;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import pageobjects.AbstractPageObject;
 
@@ -21,7 +23,7 @@ public class HomePage extends AbstractPageObject {
     private final By rssFeeds = By.linkText("RSS Feeds");
     private final By siteMap = By.linkText("Site Map");
     private final By emailAlerts = By.linkText("Email Alerts");
-
+    
     public HomePage(WebDriver driver) {
         super(driver);
     }
@@ -29,6 +31,10 @@ public class HomePage extends AbstractPageObject {
     public boolean logoIsPresent(){
 
         return doesElementExist(Q4Logo);
+    }
+
+    public void clickSiteMap(){
+        findElement(siteMap).click();
     }
 
     public String getVersionNumber(){
@@ -76,10 +82,21 @@ public class HomePage extends AbstractPageObject {
         return new RSSFeedsPage(getDriver());
     }
 
-    public RSSFeedsPage emailAlertsFromMap(){
+    public EmailAlertsPage selectEmailAlertsFromPage() { //perhaps just go to URL instead of clicking on elements?
+    /*
         findVisibleElement(siteMap).click();
-        pause(1000L);
-        findVisibleElement(emailAlerts).click();
-        return new RSSFeedsPage(getDriver());
+        pause(500L);
+        driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
+        wait.until(ExpectedConditions.visibilityOf(findElement(emailAlerts)));
+        findElement(emailAlerts).click();
+*/
+// /*
+        driver.get("http://chicagotest.q4web.com/English/Contact-Us/email-alerts/default.aspx");
+        driver.findElement(By.tagName("body")).sendKeys("Keys.ESCAPE");
+        driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
+        ((JavascriptExecutor)driver).executeScript("return window.stop");
+//*/
+        return new EmailAlertsPage(getDriver());
     }
+
 }

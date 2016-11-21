@@ -1,5 +1,6 @@
 package specs.PublicSite;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,8 +14,9 @@ import yahoofinance.quotes.stock.StockQuote;
 import java.io.IOException;
 import java.time.Year;
 import java.util.Calendar;
-import static org.hamcrest.CoreMatchers.containsString;
+import java.util.concurrent.TimeUnit;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.fail;
 
 public class CheckPublicSite extends AbstractSpec {
@@ -240,12 +242,46 @@ public class CheckPublicSite extends AbstractSpec {
     }
 
 
-    @Test
+    @Test 
     public void rssPresentationsWorks(){
         Assert.assertTrue("RSS Feeds are not displayed.", new HomePage(driver).selectRSSFeedsFromMenu().rssFeedsExist());
         Assert.assertTrue("RSS Feeds for presentations do not open correctly", new RSSFeedsPage(driver).presentationRSSExists());
     }
 
+    @Test
+    public void emailAlertsWork() {
+        EmailAlertsPage emailAlertsPage = new HomePage(driver).selectEmailAlertsFromPage();
+        String wrongEmail = "QWEASDZXC1234567";
+        String rightEmail = "kelvint@q4inc.com";
+        boolean buttonsActivated = true; //State of the buttons
 
+        Assert.assertTrue("Buttons did not behave as expected", emailAlertsPage.clickAllButtonsWorks(buttonsActivated));
+        /*
+        buttonsActivated = false;
+        Assert.assertTrue("Buttons did not behave as expected", emailAlertsPage.clickAllButtonsWorks(buttonsActivated));
+        Assert.assertTrue("Selecting no options for the mailing list still allowed submitting"
+                , emailAlertsPage.clickSubmitWorks());
+        Assert.assertFalse("Entering no credentials allowed submitting", emailAlertsPage.clickSubmitWorks());
 
+        emailAlertsPage.enterSubEmailAddress(wrongEmail);
+        Assert.assertFalse("Entering an incorrectly formatted password works", emailAlertsPage.clickSubmitWorks());
+
+        emailAlertsPage.enterSubEmailAddress(rightEmail);
+        Assert.assertTrue("Submitting doesn't work", emailAlertsPage.clickSubmitWorks());
+        // */
+    }
+
+    @Test
+    public void unsubscribeEmailAlertsWorks() {
+        EmailAlertsPage emailAlertsPage = new HomePage(driver).selectEmailAlertsFromPage();
+        String wrongEmail = "telvink@q4inc.com"; //never used to subscribe
+        String rightEmail = "kelvint@q4inc.com";
+
+        //Add the neccesary methods and primitive types to make this work
+    }
+
+    @After
+    public void waitDriver(){
+        driver.manage().timeouts().implicitlyWait(2, TimeUnit.MINUTES);
+    }
 }
