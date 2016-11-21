@@ -3,12 +3,14 @@ package testrunner;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import pageobjects.SiteAdmin.CssFileList.CssFileList;
+import pageobjects.SiteAdmin.MobileLinkList.MobileLinkList;
 import pageobjects.SiteAdmin.ModuleDefinitionList.ModuleDefinitionList;
 import specs.LoginPage.EnterToAdmin;
 import specs.PressReleases.AddNewPressRelease;
 import specs.Presentations.AddNewPresentation;
 import specs.PublicSite.CheckPublicSite;
 import specs.Events.AddNewEvent;
+import specs.SiteAdmin.AliasList.CheckAliasList;
 import specs.SiteAdmin.GlobalModuleList.CheckGlobalModuleList;
 import specs.SiteAdmin.IndexContent.CheckIndexContent;
 import specs.SiteAdmin.LayoutDefinitionList.CheckLayoutDefinitionList;
@@ -46,7 +48,9 @@ import specs.SystemAdmin.GenericStorageList.CheckGenericStorageList;
         CssFileList.class,
         CheckIndexContent.class,
         CheckLinkToPageList.class,
-        CheckLookupList.class
+        CheckLookupList.class,
+        CheckAliasList.class,
+        MobileLinkList.class
         }
 )
 

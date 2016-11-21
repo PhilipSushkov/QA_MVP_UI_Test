@@ -18,6 +18,7 @@ import pageobjects.SiteAdmin.ExternalFeedList.ExternalFeedList;
 import pageobjects.SiteAdmin.GlobalModuleList.GlobalModuleList;
 import pageobjects.SiteAdmin.IndexContent.IndexContent;
 import pageobjects.SiteAdmin.LayoutDefinitionList.LayoutDefinitionList;
+import pageobjects.SiteAdmin.MobileLinkList.MobileLinkList;
 import pageobjects.SiteAdmin.ModuleDefinitionList.ModuleDefinitionList;
 import pageobjects.SystemAdmin.SiteMaintenance.SiteMaintenance;
 import pageobjects.SystemAdmin.UserGroupList.UserGroupList;
@@ -59,6 +60,7 @@ public class Dashboard extends AbstractPageObject {
     private final By linkToPageListMenuItem = By.xpath("//a[contains(text(),'Link To Page List')]/parent::li");
     private final By lookupListMenuItem = By.xpath("//a[contains(text(),'Lookup List')]/parent::li");
     private final By aliasListMenuItem = By.xpath("//a[contains(text(),'Alias List')]/parent::li");
+    private final By mobileLinkListMenuItem = By.xpath("//a[contains(text(),'Mobile Link List')]/parent::li");
 
     public Dashboard(WebDriver driver) {
 
@@ -214,6 +216,14 @@ public class Dashboard extends AbstractPageObject {
         pause(1000L);
         findElement(lookupListMenuItem).click();
         return new LookupList(getDriver());
+    }
+
+    public MobileLinkList openMobileLinkListPage() {
+        action.moveToElement(findElement(siteAdminMenuButton)).perform();
+        wait.until(ExpectedConditions.visibilityOf(findElement(mobileLinkListMenuItem)));
+        pause(1000L);
+        findElement(mobileLinkListMenuItem).click();
+        return new MobileLinkList(getDriver());
     }
 
     public AliasList openAliasListPage() {
