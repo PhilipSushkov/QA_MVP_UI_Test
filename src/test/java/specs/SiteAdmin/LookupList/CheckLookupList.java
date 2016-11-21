@@ -29,7 +29,7 @@ public class CheckLookupList extends AbstractSpec {
         Assert.assertEquals("Actual Lookup List page Title doesn't match to expected", expectedTitle, new LookupList(driver).getTitle());
 
         Assert.assertNotNull(new LookupList(driver).getLookupListLookupType() );
-        System.out.println(new LookupList(driver).getLookupListQuantity().toString());
+        //System.out.println(new LookupList(driver).getLookupListQuantity().toString());
         Assert.assertTrue(expectedQuantity <= new LookupList(driver).getLookupListQuantity() );
 
     }

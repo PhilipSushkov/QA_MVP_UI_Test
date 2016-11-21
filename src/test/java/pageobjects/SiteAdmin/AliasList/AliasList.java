@@ -1,4 +1,4 @@
-package pageobjects.SiteAdmin.LinkToPageList;
+package pageobjects.SiteAdmin.AliasList;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -10,14 +10,14 @@ import pageobjects.AbstractPageObject;
  * Created by philipsushkov on 2016-11-21.
  */
 
-public class LinkToPageList extends AbstractPageObject {
+public class AliasList extends AbstractPageObject {
+
     private final By moduleTitle = By.xpath("//span[contains(@class, 'AdminContent')]/h1/span[contains(@id,'ModuleTitle')]");
-    private final By grid = By.xpath("//table[contains(@id, 'ModuleInstanceKeys_dataGrid')]");
-    private final By gridKeyName = By.xpath("//td[contains(@class,'DataGridItemBorder')]");
-    private final By dataGridPager = By.xpath("//tr[contains(@class, 'DataGridPager')]");
+    private final By grid = By.xpath("//table[contains(@id, 'Alias_dataGrid')]");
+    private final By gridAliasList = By.xpath("//td[contains(@class,'DataGridItemBorder')]");
     private final Integer columnsNumber = 7;
 
-    public LinkToPageList(WebDriver driver) {
+    public AliasList(WebDriver driver) {
         super(driver);
     }
 
@@ -30,13 +30,9 @@ public class LinkToPageList extends AbstractPageObject {
         return findElement(moduleTitle).getText();
     }
 
-    public Integer getLinkToPageListQuantity() {
+    public Integer getAliasListQuantity() {
         wait.until(ExpectedConditions.visibilityOf(findElement(grid)) );
-        return findElement(grid).findElements(gridKeyName).size()/columnsNumber;
+        return findElement(grid).findElements(gridAliasList).size()/columnsNumber;
     }
 
-    public WebElement getLinkToPageListPagination() {
-        wait.until(ExpectedConditions.visibilityOf(findElement(dataGridPager)) );
-        return findElement(dataGridPager);
-    }
 }

@@ -30,6 +30,7 @@ public class CheckLinkToPageList extends AbstractSpec {
 
         //System.out.println(new LinkToPageList(driver).getLinkToPageListQuantity().toString());
         Assert.assertTrue(expectedQuantity == new LinkToPageList(driver).getLinkToPageListQuantity() );
+        Assert.assertNotNull(new LinkToPageList(driver).getLinkToPageListPagination() );
 
     }
 

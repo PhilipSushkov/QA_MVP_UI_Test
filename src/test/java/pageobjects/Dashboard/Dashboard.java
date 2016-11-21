@@ -12,6 +12,7 @@ import pageobjects.Presentations.EditPresentation;
 import pageobjects.Presentations.Presentations;
 import pageobjects.Events.EditEvent;
 import pageobjects.Events.Events;
+import pageobjects.SiteAdmin.AliasList.AliasList;
 import pageobjects.SiteAdmin.CssFileList.CssFileList;
 import pageobjects.SiteAdmin.ExternalFeedList.ExternalFeedList;
 import pageobjects.SiteAdmin.GlobalModuleList.GlobalModuleList;
@@ -57,6 +58,7 @@ public class Dashboard extends AbstractPageObject {
     private final By indexContentMenuItem = By.xpath("//a[contains(text(),'Index Content')]/parent::li");
     private final By linkToPageListMenuItem = By.xpath("//a[contains(text(),'Link To Page List')]/parent::li");
     private final By lookupListMenuItem = By.xpath("//a[contains(text(),'Lookup List')]/parent::li");
+    private final By aliasListMenuItem = By.xpath("//a[contains(text(),'Alias List')]/parent::li");
 
     public Dashboard(WebDriver driver) {
 
@@ -212,6 +214,14 @@ public class Dashboard extends AbstractPageObject {
         pause(1000L);
         findElement(lookupListMenuItem).click();
         return new LookupList(getDriver());
+    }
+
+    public AliasList openAliasListPage() {
+        action.moveToElement(findElement(siteAdminMenuButton)).perform();
+        wait.until(ExpectedConditions.visibilityOf(findElement(aliasListMenuItem)));
+        pause(1000L);
+        findElement(aliasListMenuItem).click();
+        return new AliasList(getDriver());
     }
 
     public PressReleases pressReleases() {
