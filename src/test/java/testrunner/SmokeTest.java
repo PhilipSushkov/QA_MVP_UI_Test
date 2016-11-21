@@ -12,6 +12,7 @@ import specs.Events.AddNewEvent;
 import specs.SiteAdmin.GlobalModuleList.CheckGlobalModuleList;
 import specs.SiteAdmin.IndexContent.CheckIndexContent;
 import specs.SiteAdmin.LayoutDefinitionList.CheckLayoutDefinitionList;
+import specs.SiteAdmin.LinkToPageList.CheckLinkToPageList;
 import specs.SystemAdmin.PDFTemplateEdit.CheckPDFTemplateEdit;
 import specs.SystemAdmin.SiteList.CheckSiteList;
 import specs.SystemAdmin.UserGroupList.CheckUserGroupList;
@@ -42,7 +43,8 @@ import specs.SystemAdmin.GenericStorageList.CheckGenericStorageList;
         CheckLayoutDefinitionList.class,
         ModuleDefinitionList.class,
         CssFileList.class,
-        CheckIndexContent.class
+        CheckIndexContent.class,
+        CheckLinkToPageList.class
         }
 )
 

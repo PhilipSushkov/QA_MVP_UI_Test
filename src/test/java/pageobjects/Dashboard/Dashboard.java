@@ -26,6 +26,7 @@ import pageobjects.SystemAdmin.GenericStorageList.GenericStorageList;
 import pageobjects.SystemAdmin.WorkflowEmailList.WorkflowEmailList;
 import pageobjects.SystemAdmin.PDFTemplateEdit.PDFTemplateEdit;
 import pageobjects.SystemAdmin.SiteList.SiteList;
+import pageobjects.SiteAdmin.LinkToPageList.LinkToPageList;
 
 public class Dashboard extends AbstractPageObject {
     Actions action = new Actions(driver);
@@ -50,9 +51,10 @@ public class Dashboard extends AbstractPageObject {
     private final By globalModuleListMenuItem = By.xpath("//a[contains(text(),'Global Module List')]/parent::li");
     private final By layoutDefinitionListMenuItem = By.xpath("//a[contains(text(),'Layout Definition List')]/parent::li");
     private final By moduleDefinitionListMenuItem = By.xpath("//a[contains(text(),'Module Definition List')]/parent::li");
-    private final By moduleCssFileListMenuItem = By.xpath("//a[contains(text(),'Css File List')]/parent::li");
-    private final By moduleExternalFeedListMenuItem = By.xpath("//a[contains(text(),'External Feed List')]/parent::li");
-    private final By moduleIndexContentMenuItem = By.xpath("//a[contains(text(),'Index Content')]/parent::li");
+    private final By cssFileListMenuItem = By.xpath("//a[contains(text(),'Css File List')]/parent::li");
+    private final By externalFeedListMenuItem = By.xpath("//a[contains(text(),'External Feed List')]/parent::li");
+    private final By indexContentMenuItem = By.xpath("//a[contains(text(),'Index Content')]/parent::li");
+    private final By linkToPageListMenuItem = By.xpath("//a[contains(text(),'Link To Page List')]/parent::li");
 
 
     public Dashboard(WebDriver driver) {
@@ -173,26 +175,34 @@ public class Dashboard extends AbstractPageObject {
 
     public CssFileList openCssFileListPage() {
         action.moveToElement(findElement(siteAdminMenuButton)).perform();
-        wait.until(ExpectedConditions.visibilityOf(findElement(moduleCssFileListMenuItem)));
+        wait.until(ExpectedConditions.visibilityOf(findElement(cssFileListMenuItem)));
         pause(1000L);
-        findElement(moduleCssFileListMenuItem).click();
+        findElement(cssFileListMenuItem).click();
         return new CssFileList(getDriver());
     }
 
     public ExternalFeedList openExternalFeedListPage() {
         action.moveToElement(findElement(siteAdminMenuButton)).perform();
-        wait.until(ExpectedConditions.visibilityOf(findElement(moduleExternalFeedListMenuItem)));
+        wait.until(ExpectedConditions.visibilityOf(findElement(externalFeedListMenuItem)));
         pause(1000L);
-        findElement(moduleExternalFeedListMenuItem).click();
+        findElement(externalFeedListMenuItem).click();
         return new ExternalFeedList(getDriver());
     }
 
     public IndexContent openIndexContentPage() {
         action.moveToElement(findElement(siteAdminMenuButton)).perform();
-        wait.until(ExpectedConditions.visibilityOf(findElement(moduleIndexContentMenuItem)));
+        wait.until(ExpectedConditions.visibilityOf(findElement(indexContentMenuItem)));
         pause(1000L);
-        findElement(moduleIndexContentMenuItem).click();
+        findElement(indexContentMenuItem).click();
         return new IndexContent(getDriver());
+    }
+
+    public LinkToPageList openLinkToPageListPage() {
+        action.moveToElement(findElement(siteAdminMenuButton)).perform();
+        wait.until(ExpectedConditions.visibilityOf(findElement(linkToPageListMenuItem)));
+        pause(1000L);
+        findElement(linkToPageListMenuItem).click();
+        return new LinkToPageList(getDriver());
     }
 
     public PressReleases pressReleases() {
