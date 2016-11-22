@@ -100,7 +100,7 @@ public abstract class AbstractSpec {
     private void setupChromeLocalDriver() {
         driver = new ChromeDriver();
         driver.manage().timeouts().implicitlyWait(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
-        driver.manage().timeouts().pageLoadTimeout(4, TimeUnit.SECONDS);
+        driver.manage().timeouts().pageLoadTimeout(20, TimeUnit.SECONDS);
         driver.manage().window().setSize(new Dimension(1400, 1400));
         driver.get(desktopUrl.toString());
 
@@ -152,7 +152,6 @@ public abstract class AbstractSpec {
         }
         */
         Thread.sleep(1000);
-
         driver.quit();
     }
 

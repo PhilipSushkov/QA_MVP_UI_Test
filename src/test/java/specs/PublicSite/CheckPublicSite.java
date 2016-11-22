@@ -1,6 +1,5 @@
 package specs.PublicSite;
 
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,7 +13,6 @@ import yahoofinance.quotes.stock.StockQuote;
 import java.io.IOException;
 import java.time.Year;
 import java.util.Calendar;
-import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.fail;
@@ -256,32 +254,42 @@ public class CheckPublicSite extends AbstractSpec {
         boolean buttonsActivated = true; //State of the buttons
 
         Assert.assertTrue("Buttons did not behave as expected", emailAlertsPage.clickAllButtonsWorks(buttonsActivated));
-        /*
-        buttonsActivated = false;
-        Assert.assertTrue("Buttons did not behave as expected", emailAlertsPage.clickAllButtonsWorks(buttonsActivated));
-        Assert.assertTrue("Selecting no options for the mailing list still allowed submitting"
-                , emailAlertsPage.clickSubmitWorks());
-        Assert.assertFalse("Entering no credentials allowed submitting", emailAlertsPage.clickSubmitWorks());
 
+        buttonsActivated = false;
+
+        Assert.assertTrue("Buttons did not behave as expected", emailAlertsPage.clickAllButtonsWorks(buttonsActivated));
+        Assert.assertFalse("Selecting no options for the mailing list still allowed submitting"
+                , emailAlertsPage.clickSubmitWorks());
+
+        Assert.assertFalse("Entering no credentials allowed submitting", emailAlertsPage.clickSubmitWorks());
         emailAlertsPage.enterSubEmailAddress(wrongEmail);
         Assert.assertFalse("Entering an incorrectly formatted password works", emailAlertsPage.clickSubmitWorks());
-
+        emailAlertsPage.clearAllTextFields();
         emailAlertsPage.enterSubEmailAddress(rightEmail);
         Assert.assertTrue("Submitting doesn't work", emailAlertsPage.clickSubmitWorks());
-        // */
     }
 
-    @Test
+    @Test //Perform this test once you have performed the above once, at any time before this test was initiated.
     public void unsubscribeEmailAlertsWorks() {
         EmailAlertsPage emailAlertsPage = new HomePage(driver).selectEmailAlertsFromPage();
+        String incorrectFormEmail = "QWEASDZXC1234567";
         String wrongEmail = "telvink@q4inc.com"; //never used to subscribe
         String rightEmail = "kelvint@q4inc.com";
 
-        //Add the neccesary methods and primitive types to make this work
+        Assert.assertFalse("Entering no credentials allowed submitting", emailAlertsPage.clickUnsubscribeWorks());
+
+        emailAlertsPage.enterUnsubEmailAddress(incorrectFormEmail);
+        Assert.assertFalse("Unsubbing with an incorrectly formatted email works"
+                , emailAlertsPage.clickUnsubscribeWorks());
+
+        emailAlertsPage.clearAllTextFields();
+        emailAlertsPage.enterUnsubEmailAddress(wrongEmail);
+
+        Assert.assertFalse("Unsubbing with a non-subscribed email works", emailAlertsPage.clickUnsubscribeWorks()); // should be false
+        emailAlertsPage.clearAllTextFields();
+        emailAlertsPage.enterUnsubEmailAddress(rightEmail);
+
+        Assert.assertTrue("Unsubscribing doesn't work", emailAlertsPage.clickUnsubscribeWorks());
     }
 
-    @After
-    public void waitDriver(){
-        driver.manage().timeouts().implicitlyWait(2, TimeUnit.MINUTES);
-    }
 }

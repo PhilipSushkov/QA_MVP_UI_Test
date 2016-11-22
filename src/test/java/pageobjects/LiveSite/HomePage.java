@@ -1,14 +1,10 @@
 package pageobjects.LiveSite;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
-
-import java.util.concurrent.TimeUnit;
-import org.openqa.selenium.*;
 
 /**
  * Created by jasons on 2016-11-07.
@@ -94,22 +90,7 @@ public class HomePage extends AbstractPageObject {
         return new RSSFeedsPage(getDriver());
     }
 
-    public EmailAlertsPage selectEmailAlertsFromPage() { //perhaps just go to URL instead of clicking on elements?
-        /*
-        findVisibleElement(siteMap).click();
-        pause(500L);
-        driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
-        wait.until(ExpectedConditions.visibilityOf(findElement(emailAlerts)));
-        findElement(emailAlerts).click();
-        */
-
-        /*
-        driver.get("http://chicagotest.q4web.com/English/Contact-Us/email-alerts/default.aspx");
-        driver.findElement(By.tagName("body")).sendKeys("Keys.ESCAPE");
-        driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
-        ((JavascriptExecutor)driver).executeScript("return window.stop");
-        */
-
+    public EmailAlertsPage selectEmailAlertsFromPage() {
 
         try {
             driver.get("http://chicagotest.q4web.com/English/Contact-Us/email-alerts/default.aspx");

@@ -2,6 +2,7 @@ package pageobjects.LiveSite;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import pageobjects.AbstractPageObject;
 
 /**
@@ -27,6 +28,12 @@ public class EmailAlertsPage extends AbstractPageObject {
         findElement(emailSubTextField).click();
         findElement(emailSubTextField).sendKeys(email);
     }
+    public void clearAllTextFields(){
+        findElement(emailSubTextField).click();
+        findElement(emailSubTextField).clear();
+        findElement(emailUnsubTextField).click();
+        findElement(emailUnsubTextField).clear();
+    }
     public void enterUnsubEmailAddress(String email){
         findElement(emailUnsubTextField).click();
         findElement(emailUnsubTextField).sendKeys(email);
@@ -36,35 +43,38 @@ public class EmailAlertsPage extends AbstractPageObject {
         findElement(pressReleaseBtn).click();
         findElement(testListBtn).click();
         findElement(eodBtn).click();
+
     }
 
     public boolean clickAllButtonsWorks(boolean allActivated){
         clickAllButtons();
 
-        if(findElement(pressReleaseBtn).getText() != "Press Release" || findElement(testListBtn).getText() != "Test List"
-                || findElement(eodBtn).getText() != "eod")
-        {
-            return true; //supposed to return false. Review logic
-        }
-        if((findElement(pressReleaseBtn).isSelected() || findElement(testListBtn).isSelected()
-                || findElement(eodBtn).isSelected()) && allActivated)
-        {
-            return false;
-        }
+        return !((findElement(pressReleaseBtn).isSelected() || findElement(testListBtn).isSelected()
+                || findElement(eodBtn).isSelected()) && allActivated);
 
-        return true;
     }
 
     public boolean clickSubmitWorks(){
         findElement(submitBtn).click();
         pause(5000L);
-        return doesElementExist(submitMessage);
+        WebElement submit = findElement(submitMessage);
+        return submit.isDisplayed();
+
     }
 
-    public boolean clickUnsubscribeWorks(){
+    public boolean clickUnsubscribeWorks( ){
         findElement(unsubscribeBtn).click();
         pause(5000L);
-        return doesElementExist(unsubscribeMessage);
+        WebElement unsubscribe = findElement(unsubscribeMessage);
+        //String message = findElement(unsubscribeMessage).getText();
+
+/*
+        if (unsubscribe.isDisplayed() && unsubscribe.getText() != "\n" + "Unsubscription Failed."){
+            System.out.print(unsubscribe.getText());
+            return true;
+        } */
+        return unsubscribe.isDisplayed() && unsubscribe.getText().equals("Unsubscription Email Sent!");
+
     }
 
 }
