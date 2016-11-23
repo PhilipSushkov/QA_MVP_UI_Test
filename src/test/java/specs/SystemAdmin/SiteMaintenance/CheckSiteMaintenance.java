@@ -29,9 +29,9 @@ public class CheckSiteMaintenance extends AbstractSpec {
         Assert.assertEquals("Actual PDF Template Edit page Title doesn't match to expected", expectedTitle, new SiteMaintenance(driver).getTitle());
 
         //System.out.println(new SiteMaintenance(driver).getGoLiveButton().getText() );
-        Assert.assertNotNull(new SiteMaintenance(driver).getGoLiveButton() );
-        Assert.assertNotNull(new SiteMaintenance(driver).getOneTouchButton() );
-        Assert.assertNotNull(new SiteMaintenance(driver).getTwoFactorAuthenticationButton() );
+        Assert.assertNotNull("Go Live Button doesn't exist", new SiteMaintenance(driver).getGoLiveButton() );
+        Assert.assertNotNull("One Touch Button doesn't exist", new SiteMaintenance(driver).getOneTouchButton() );
+        Assert.assertNotNull("Two Factor Authentication Button doesn't exist", new SiteMaintenance(driver).getTwoFactorAuthenticationButton() );
 
     }
 

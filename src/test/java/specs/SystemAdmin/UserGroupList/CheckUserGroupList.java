@@ -29,7 +29,7 @@ public class CheckUserGroupList extends AbstractSpec {
         Assert.assertEquals("Actual User Group List page Title doesn't match to expected", expectedTitle, new UserGroupList(driver).getTitle());
 
         System.out.println(new UserGroupList(driver).getUserGroupListQuantity().toString());
-        Assert.assertTrue(expectedQuantity <= new UserGroupList(driver).getUserGroupListQuantity() );
+        Assert.assertTrue("Actual User Group Quantity is less than expected: "+expectedQuantity, expectedQuantity <= new UserGroupList(driver).getUserGroupListQuantity() );
 
     }
 

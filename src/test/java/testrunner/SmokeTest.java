@@ -2,21 +2,21 @@ package testrunner;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
-import pageobjects.SiteAdmin.CssFileList.CssFileList;
-import pageobjects.SiteAdmin.DomainList.DomainList;
-import pageobjects.SiteAdmin.MobileLinkList.MobileLinkList;
-import pageobjects.SiteAdmin.ModuleDefinitionList.ModuleDefinitionList;
 import specs.LoginPage.EnterToAdmin;
 import specs.PressReleases.AddNewPressRelease;
 import specs.Presentations.AddNewPresentation;
 import specs.PublicSite.CheckPublicSite;
 import specs.Events.AddNewEvent;
 import specs.SiteAdmin.AliasList.CheckAliasList;
+import specs.SiteAdmin.CssFileList.CheckCssFileList;
+import specs.SiteAdmin.DomainList.CheckDomainList;
 import specs.SiteAdmin.GlobalModuleList.CheckGlobalModuleList;
 import specs.SiteAdmin.IndexContent.CheckIndexContent;
 import specs.SiteAdmin.LayoutDefinitionList.CheckLayoutDefinitionList;
 import specs.SiteAdmin.LinkToPageList.CheckLinkToPageList;
 import specs.SiteAdmin.LookupList.CheckLookupList;
+import specs.SiteAdmin.MobileLinkList.CheckMobileLinkList;
+import specs.SiteAdmin.ModuleDefinitionList.CheckModuleDefinitionList;
 import specs.SystemAdmin.PDFTemplateEdit.CheckPDFTemplateEdit;
 import specs.SystemAdmin.SiteList.CheckSiteList;
 import specs.SystemAdmin.UserGroupList.CheckUserGroupList;
@@ -45,14 +45,14 @@ import specs.SystemAdmin.GenericStorageList.CheckGenericStorageList;
         CheckUserGroupList.class,
         CheckGlobalModuleList.class,
         CheckLayoutDefinitionList.class,
-        ModuleDefinitionList.class,
-        CssFileList.class,
+        CheckModuleDefinitionList.class,
+        CheckCssFileList.class,
         CheckIndexContent.class,
         CheckLinkToPageList.class,
         CheckLookupList.class,
         CheckAliasList.class,
-        MobileLinkList.class,
-        DomainList.class
+        CheckMobileLinkList.class,
+        CheckDomainList.class
         }
 )
 

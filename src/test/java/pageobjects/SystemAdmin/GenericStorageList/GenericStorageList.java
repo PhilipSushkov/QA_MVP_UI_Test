@@ -1,7 +1,9 @@
 package pageobjects.SystemAdmin.GenericStorageList;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
 
@@ -28,8 +30,17 @@ public class GenericStorageList extends AbstractPageObject {
         return findElement(moduleTitle).getText();
     }
 
-    public Integer getStorageListQuantity() {
-        wait.until(ExpectedConditions.visibilityOf(findElement(grid)));
-        return findElement(grid).findElements(gridStorageListHeader).size()/columnsNumber;
+    public Integer getStorageHeaderSize() {
+        Integer headerSize = null;
+
+        try {
+            wait.until(ExpectedConditions.visibilityOf(findElement(grid)));
+            headerSize = findElement(grid).findElements(gridStorageListHeader).size()/columnsNumber;
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        }
+
+        return headerSize;
     }
+
 }

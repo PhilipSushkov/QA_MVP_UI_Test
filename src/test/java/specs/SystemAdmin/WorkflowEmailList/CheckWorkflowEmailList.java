@@ -28,8 +28,8 @@ public class CheckWorkflowEmailList extends AbstractSpec {
         Assert.assertNotNull(new Dashboard(driver).openWorkflowEmailListPage().getUrl());
         Assert.assertEquals("Actual Workflow Email List page Title doesn't match to expected", expectedTitle, new WorkflowEmailList(driver).getTitle());
 
-        System.out.println(new WorkflowEmailList(driver).getDescriptionQuantity().toString());
-        Assert.assertTrue(expectedQuantity < new WorkflowEmailList(driver).getDescriptionQuantity() );
+        //System.out.println(new WorkflowEmailList(driver).getDescriptionQuantity().toString());
+        Assert.assertTrue("Actual Description Quantity is less than expected: "+expectedQuantity, expectedQuantity < new WorkflowEmailList(driver).getDescriptionQuantity() );
     }
 
     @After

@@ -29,9 +29,9 @@ public class CheckPDFTemplateEdit extends AbstractSpec {
         Assert.assertEquals("Actual PDF Template Edit page Title doesn't match to expected", expectedTitle, new PDFTemplateEdit(driver).getTitle());
 
         //System.out.println(new PDFTemplateEdit(driver).getHeaderRadEditor().getSize().toString() );
-        Assert.assertNotNull(new PDFTemplateEdit(driver).getHeaderRadEditor() );
-        Assert.assertNotNull(new PDFTemplateEdit(driver).getBodyRadEditor() );
-        Assert.assertNotNull(new PDFTemplateEdit(driver).getFooterRadEditor() );
+        Assert.assertNotNull("Header Rad Editor doesn't exist", new PDFTemplateEdit(driver).getHeaderRadEditor() );
+        Assert.assertNotNull("Body Rad Editor doesn't exist", new PDFTemplateEdit(driver).getBodyRadEditor() );
+        Assert.assertNotNull("Footer Rad Editor doesn't exist", new PDFTemplateEdit(driver).getFooterRadEditor() );
 
     }
 

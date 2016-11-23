@@ -23,13 +23,13 @@ public class CheckUserList extends AbstractSpec {
     @Test
     public void checkUserList() throws Exception {
         final String expectedTitle = "User List";
-        final Integer expectedQuantity = 10;
+        final Integer expectedQuantity = 30;
 
         Assert.assertNotNull(new Dashboard(driver).openUserListPage().getUrl());
         Assert.assertEquals("Actual User List page Title doesn't match to expected", expectedTitle, new UserList(driver).getTitle());
 
         //System.out.println(new UserList(driver).getUserNameQuantity().toString());
-        Assert.assertTrue(expectedQuantity < new UserList(driver).getUserNameQuantity() );
+        Assert.assertTrue("Actual User Name Quantity is less than expected: "+expectedQuantity, expectedQuantity <= new UserList(driver).getUserNameQuantity() );
 
     }
 

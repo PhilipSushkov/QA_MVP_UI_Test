@@ -29,8 +29,8 @@ public class CheckDomainList extends AbstractSpec {
         Assert.assertEquals("Actual Domain List page Title doesn't match to expected", expectedTitle, new DomainList(driver).getTitle());
 
         //System.out.println(new DomainList(driver).getDomainQuantity().toString());
-        Assert.assertTrue(expectedQuantity <= new DomainList(driver).getDomainQuantity() );
-        Assert.assertNotNull(new DomainList(driver).getHrefPublicSite() );
+        Assert.assertTrue("Actual Domain Quantity is less than expected: "+expectedQuantity, expectedQuantity <= new DomainList(driver).getDomainQuantity() );
+        Assert.assertNotNull("Public Site Link doesn't exist", new DomainList(driver).getHrefPublicSite() );
 
     }
 

@@ -1,6 +1,7 @@
 package pageobjects.SystemAdmin.SiteMaintenance;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -30,18 +31,45 @@ public class SiteMaintenance extends AbstractPageObject {
     }
 
     public WebElement getGoLiveButton() {
-        wait.until(ExpectedConditions.visibilityOf(findElement(buttonGoLive)));
-        return findElement(buttonGoLive);
+        WebElement element = null;
+
+        try {
+            wait.until(ExpectedConditions.visibilityOf(findElement(buttonGoLive)));
+            element = findElement(buttonGoLive);
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        }
+
+        return element;
     }
+
 
     public WebElement getOneTouchButton() {
-        wait.until(ExpectedConditions.visibilityOf(findElement(buttonOneTouchButton)));
-        return findElement(buttonOneTouchButton);
+        WebElement element = null;
+
+        try {
+            wait.until(ExpectedConditions.visibilityOf(findElement(buttonOneTouchButton)));
+            element = findElement(buttonOneTouchButton);
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        }
+
+        return element;
+
     }
 
+
     public WebElement getTwoFactorAuthenticationButton() {
-        wait.until(ExpectedConditions.visibilityOf(findElement(buttonTwoFactorAuthenticationButton)));
-        return findElement(buttonTwoFactorAuthenticationButton);
+        WebElement element = null;
+
+        try {
+            wait.until(ExpectedConditions.visibilityOf(findElement(buttonTwoFactorAuthenticationButton)));
+            element = findElement(buttonTwoFactorAuthenticationButton);
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        }
+
+        return element;
     }
 
 }

@@ -1,6 +1,7 @@
 package pageobjects.SystemAdmin.PDFTemplateEdit;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -30,18 +31,46 @@ public class PDFTemplateEdit extends AbstractPageObject {
     }
 
     public WebElement getHeaderRadEditor() {
-        wait.until(ExpectedConditions.visibilityOf(findElement(frameHeaderRadEditor)));
-        return findElement(frameHeaderRadEditor);
+        WebElement element = null;
+
+        try {
+            wait.until(ExpectedConditions.visibilityOf(findElement(frameHeaderRadEditor)));
+            element = findElement(frameHeaderRadEditor);
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        }
+
+        return element;
     }
+
 
     public WebElement getBodyRadEditor() {
-        wait.until(ExpectedConditions.visibilityOf(findElement(frameBodyRadEditor)));
-        return findElement(frameBodyRadEditor);
+        WebElement element = null;
+
+        try {
+            wait.until(ExpectedConditions.visibilityOf(findElement(frameBodyRadEditor)));
+            element = findElement(frameBodyRadEditor);
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        }
+
+        return element;
     }
 
+
     public WebElement getFooterRadEditor() {
-        wait.until(ExpectedConditions.visibilityOf(findElement(frameFooterRadEditor)));
-        return findElement(frameFooterRadEditor);
+
+        WebElement element = null;
+
+        try {
+            wait.until(ExpectedConditions.visibilityOf(findElement(frameFooterRadEditor)));
+            element = findElement(frameFooterRadEditor);
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        }
+
+        return element;
     }
+
 
 }
