@@ -29,8 +29,8 @@ public class CheckLinkToPageList extends AbstractSpec {
         Assert.assertEquals("Actual Link To Page List page Title doesn't match to expected", expectedTitle, new LinkToPageList(driver).getTitle());
 
         //System.out.println(new LinkToPageList(driver).getLinkToPageListQuantity().toString());
-        Assert.assertTrue(expectedQuantity == new LinkToPageList(driver).getLinkToPageListQuantity() );
-        Assert.assertNotNull(new LinkToPageList(driver).getLinkToPageListPagination() );
+        Assert.assertTrue("Actual Link To Page Quantity is less than expected: "+expectedQuantity, expectedQuantity == new LinkToPageList(driver).getLinkToPageListQuantity() );
+        Assert.assertNotNull("Link To Page Pagination doesn't exist", new LinkToPageList(driver).getLinkToPageListPagination() );
 
     }
 

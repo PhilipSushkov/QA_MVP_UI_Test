@@ -29,7 +29,8 @@ public class CheckLayoutDefinitionList extends AbstractSpec {
         Assert.assertEquals("Actual Layout Definition List page Title doesn't match to expected", expectedTitle, new LayoutDefinitionList(driver).getTitle());
 
         //System.out.println(new LayoutDefinitionList(driver).getLayoutDefinitionListQuantity().toString());
-        Assert.assertTrue(expectedQuantity == new LayoutDefinitionList(driver).getLayoutDefinitionListQuantity() );
+        Assert.assertTrue("Actual Layout Definition Quantity is less than expected: "+expectedQuantity, expectedQuantity == new LayoutDefinitionList(driver).getLayoutDefinitionListQuantity() );
+        Assert.assertNotNull("Layout Definition Pagination doesn't exist", new LayoutDefinitionList(driver).getLayoutDefinitionPagination() );
 
     }
 

@@ -29,8 +29,8 @@ public class CheckModuleDefinitionList extends AbstractSpec {
         Assert.assertEquals("Actual Module Definition List page Title doesn't match to expected", expectedTitle, new ModuleDefinitionList(driver).getTitle());
 
         //System.out.println(new ModuleDefinitionList(driver).getModuleDefinitionQuantity().toString());
-        Assert.assertTrue(expectedQuantity <= new ModuleDefinitionList(driver).getModuleDefinitionQuantity() );
-        Assert.assertNotNull(new ModuleDefinitionList(driver).getModuleDefinitionPagination() );
+        Assert.assertTrue("Actual Module Definition Name Quantity is less than expected: "+expectedQuantity, expectedQuantity <= new ModuleDefinitionList(driver).getModuleDefinitionQuantity() );
+        Assert.assertNotNull("Module Definition pagination doesn't exist", new ModuleDefinitionList(driver).getModuleDefinitionPagination() );
 
     }
 

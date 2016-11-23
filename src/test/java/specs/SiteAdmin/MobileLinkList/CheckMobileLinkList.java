@@ -30,8 +30,8 @@ public class CheckMobileLinkList extends AbstractSpec {
         Assert.assertEquals("Actual Mobile Link List page Title doesn't match to expected", expectedTitle, new MobileLinkList(driver).getTitle());
 
         //System.out.println(new MobileLinkList(driver).getMobileLinkListQuantity().toString());
-        Assert.assertTrue(expectedQuantity <= new MobileLinkList(driver).getMobileLinkListQuantity() );
-        Assert.assertNotNull(new MobileLinkList(driver).getMobileLinkListPagination() );
+        Assert.assertTrue("Actual Mobile Link Quantity is less than expected: "+expectedQuantity, expectedQuantity <= new MobileLinkList(driver).getMobileLinkListQuantity() );
+        Assert.assertNotNull("Mobile View pagination doesn't exist", new MobileLinkList(driver).getMobileLinkListPagination() );
 
     }
 

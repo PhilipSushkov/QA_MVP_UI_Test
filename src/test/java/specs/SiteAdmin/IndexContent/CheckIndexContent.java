@@ -29,7 +29,8 @@ public class CheckIndexContent extends AbstractSpec {
         Assert.assertEquals("Actual Index Content page Title doesn't match to expected", expectedTitle, new IndexContent(driver).getTitle());
 
         //System.out.println(new IndexContent(driver).getIndexContentQuantity().toString());
-        Assert.assertTrue(expectedQuantity == new IndexContent(driver).getIndexContentQuantity() );
+        Assert.assertTrue("Actual Index Quantity is less than expected: "+expectedQuantity, expectedQuantity == new IndexContent(driver).getIndexContentQuantity() );
+        Assert.assertNotNull("Index Content Pagination doesn't exist", new IndexContent(driver).getIndexContentPagination() );
 
     }
 

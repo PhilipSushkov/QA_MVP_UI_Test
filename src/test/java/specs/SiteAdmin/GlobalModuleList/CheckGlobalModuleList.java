@@ -29,7 +29,7 @@ public class CheckGlobalModuleList extends AbstractSpec {
         Assert.assertEquals("Actual Global Module List page Title doesn't match to expected", expectedTitle, new GlobalModuleList(driver).getTitle());
 
         //System.out.println(new GlobalModuleList(driver).getGlobalModuleListQuantity().toString());
-        Assert.assertTrue(expectedQuantity <= new GlobalModuleList(driver).getGlobalModuleListQuantity() );
+        Assert.assertTrue("Actual Module Name Quantity is less than expected: "+expectedQuantity, expectedQuantity <= new GlobalModuleList(driver).getGlobalModuleListQuantity() );
 
     }
 

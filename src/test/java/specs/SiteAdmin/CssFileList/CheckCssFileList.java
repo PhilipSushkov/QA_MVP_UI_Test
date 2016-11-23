@@ -30,7 +30,7 @@ public class CheckCssFileList extends AbstractSpec {
         Assert.assertEquals("Actual Css File List page Title doesn't match to expected", expectedTitle, new CssFileList(driver).getTitle());
 
         //System.out.println(new CssFileList(driver).getCssFileListQuantity().toString());
-        Assert.assertTrue(expectedQuantity <= new CssFileList(driver).getCssFileListQuantity() );
+        Assert.assertTrue("Actual Css Name Quantity is less than expected: "+expectedQuantity, expectedQuantity <= new CssFileList(driver).getCssFileListQuantity() );
 
     }
 

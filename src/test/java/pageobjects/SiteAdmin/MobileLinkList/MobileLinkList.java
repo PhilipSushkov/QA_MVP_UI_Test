@@ -1,6 +1,7 @@
 package pageobjects.SiteAdmin.MobileLinkList;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -36,8 +37,16 @@ public class MobileLinkList extends AbstractPageObject {
     }
 
     public WebElement getMobileLinkListPagination() {
-        wait.until(ExpectedConditions.visibilityOf(findElement(dataGridPager)) );
-        return findElement(dataGridPager);
+        WebElement element = null;
+
+        try {
+            wait.until(ExpectedConditions.visibilityOf(findElement(dataGridPager)));
+            element = findElement(dataGridPager);
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        }
+
+        return element;
     }
 
 }

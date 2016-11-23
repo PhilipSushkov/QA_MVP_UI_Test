@@ -29,7 +29,7 @@ public class CheckAliasList extends AbstractSpec {
         Assert.assertEquals("Actual Alias List page Title doesn't match to expected", expectedTitle, new AliasList(driver).getTitle());
 
         //System.out.println(new AliasList(driver).getAliasListQuantity().toString());
-        Assert.assertTrue(expectedQuantity == new AliasList(driver).getAliasListQuantity() );
+        Assert.assertTrue("Actual Alias Quantity is less than expected: "+expectedQuantity, expectedQuantity == new AliasList(driver).getAliasListQuantity() );
 
     }
 
