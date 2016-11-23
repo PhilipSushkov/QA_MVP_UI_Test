@@ -1,4 +1,4 @@
-package specs.SiteAdmin.EditContentAdminPages;
+package specs.SiteAdmin.ContentAdminEdit;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -26,10 +26,10 @@ public class CheckEditContentAdminPages extends AbstractSpec {
         final Integer expectedQuantity = 20;
 
         Assert.assertNotNull(new Dashboard(driver).openEditContentAdminPages().getUrl());
-        Assert.assertEquals("Actual Edit Content Admin Pages Title doesn't match to expected", expectedTitle, new EditContentAdminPages(driver).getTitle());
+        Assert.assertEquals("Actual Content Admin Edit page Title doesn't match to expected", expectedTitle, new EditContentAdminPages(driver).getTitle());
 
-        System.out.println(new EditContentAdminPages(driver).getShowInNavCkbQuantity().toString());
-        Assert.assertTrue("Actual Title Quantity is less than expected: "+expectedQuantity, expectedQuantity <= new EditContentAdminPages(driver).getDomainQuantity() );
+        //System.out.println(new ContentAdminEdit(driver).getShowInNavCkbQuantity().toString());
+        Assert.assertTrue("Actual Content Admin Title Quantity is less than expected: "+expectedQuantity, expectedQuantity <= new EditContentAdminPages(driver).getDomainQuantity() );
         Assert.assertTrue("Actual Show In Nav Checkboxes Quantity is less than expected: "+expectedQuantity+" or doesn't exist", expectedQuantity <= new EditContentAdminPages(driver).getShowInNavCkbQuantity() );
 
     }

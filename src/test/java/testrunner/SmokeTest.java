@@ -2,6 +2,7 @@ package testrunner;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
+import specs.ContentAdmin.FinancialReports.CheckFinancialReports;
 import specs.LoginPage.EnterToAdmin;
 import specs.PressReleases.AddNewPressRelease;
 import specs.Presentations.AddNewPresentation;
@@ -10,7 +11,7 @@ import specs.Events.AddNewEvent;
 import specs.SiteAdmin.AliasList.CheckAliasList;
 import specs.SiteAdmin.CssFileList.CheckCssFileList;
 import specs.SiteAdmin.DomainList.CheckDomainList;
-import specs.SiteAdmin.EditContentAdminPages.CheckEditContentAdminPages;
+import specs.SiteAdmin.ContentAdminEdit.CheckEditContentAdminPages;
 import specs.SiteAdmin.GlobalModuleList.CheckGlobalModuleList;
 import specs.SiteAdmin.IndexContent.CheckIndexContent;
 import specs.SiteAdmin.LayoutDefinitionList.CheckLayoutDefinitionList;
@@ -54,7 +55,8 @@ import specs.SystemAdmin.GenericStorageList.CheckGenericStorageList;
         CheckAliasList.class,
         CheckMobileLinkList.class,
         CheckDomainList.class,
-        CheckEditContentAdminPages.class
+        CheckEditContentAdminPages.class,
+        CheckFinancialReports.class
         }
 )
 
