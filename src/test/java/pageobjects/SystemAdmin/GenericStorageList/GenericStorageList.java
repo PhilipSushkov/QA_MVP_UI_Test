@@ -31,7 +31,7 @@ public class GenericStorageList extends AbstractPageObject {
     }
 
     public Integer getStorageHeaderSize() {
-        Integer headerSize = null;
+        Integer headerSize = 0;
 
         try {
             wait.until(ExpectedConditions.visibilityOf(findElement(grid)));

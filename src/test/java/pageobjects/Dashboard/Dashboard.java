@@ -15,6 +15,7 @@ import pageobjects.Events.Events;
 import pageobjects.SiteAdmin.AliasList.AliasList;
 import pageobjects.SiteAdmin.CssFileList.CssFileList;
 import pageobjects.SiteAdmin.DomainList.DomainList;
+import pageobjects.SiteAdmin.EditContentAdminPages.EditContentAdminPages;
 import pageobjects.SiteAdmin.ExternalFeedList.ExternalFeedList;
 import pageobjects.SiteAdmin.GlobalModuleList.GlobalModuleList;
 import pageobjects.SiteAdmin.IndexContent.IndexContent;
@@ -63,6 +64,7 @@ public class Dashboard extends AbstractPageObject {
     private final By aliasListMenuItem = By.xpath("//a[contains(text(),'Alias List')]/parent::li");
     private final By mobileLinkListMenuItem = By.xpath("//a[contains(text(),'Mobile Link List')]/parent::li");
     private final By domainListMenuItem = By.xpath("//a[contains(text(),'Domain List')]/parent::li");
+    private final By editContentAdminPagesMenuItem = By.xpath("//a[contains(text(),'Content Admin Edit')]/parent::li");
 
 
     public Dashboard(WebDriver driver) {
@@ -243,6 +245,14 @@ public class Dashboard extends AbstractPageObject {
         pause(1000L);
         findElement(domainListMenuItem).click();
         return new DomainList(getDriver());
+    }
+
+    public EditContentAdminPages openEditContentAdminPages() {
+        action.moveToElement(findElement(siteAdminMenuButton)).perform();
+        wait.until(ExpectedConditions.visibilityOf(findElement(editContentAdminPagesMenuItem)));
+        pause(1000L);
+        findElement(editContentAdminPagesMenuItem).click();
+        return new EditContentAdminPages(getDriver());
     }
 
     public PressReleases pressReleases() {

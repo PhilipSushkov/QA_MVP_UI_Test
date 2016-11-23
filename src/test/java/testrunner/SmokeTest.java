@@ -10,6 +10,7 @@ import specs.Events.AddNewEvent;
 import specs.SiteAdmin.AliasList.CheckAliasList;
 import specs.SiteAdmin.CssFileList.CheckCssFileList;
 import specs.SiteAdmin.DomainList.CheckDomainList;
+import specs.SiteAdmin.EditContentAdminPages.CheckEditContentAdminPages;
 import specs.SiteAdmin.GlobalModuleList.CheckGlobalModuleList;
 import specs.SiteAdmin.IndexContent.CheckIndexContent;
 import specs.SiteAdmin.LayoutDefinitionList.CheckLayoutDefinitionList;
@@ -52,7 +53,8 @@ import specs.SystemAdmin.GenericStorageList.CheckGenericStorageList;
         CheckLookupList.class,
         CheckAliasList.class,
         CheckMobileLinkList.class,
-        CheckDomainList.class
+        CheckDomainList.class,
+        CheckEditContentAdminPages.class
         }
 )
 
