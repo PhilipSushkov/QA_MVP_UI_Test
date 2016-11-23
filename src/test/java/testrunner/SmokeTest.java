@@ -3,6 +3,7 @@ package testrunner;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import pageobjects.SiteAdmin.CssFileList.CssFileList;
+import pageobjects.SiteAdmin.DomainList.DomainList;
 import pageobjects.SiteAdmin.MobileLinkList.MobileLinkList;
 import pageobjects.SiteAdmin.ModuleDefinitionList.ModuleDefinitionList;
 import specs.LoginPage.EnterToAdmin;
@@ -50,7 +51,8 @@ import specs.SystemAdmin.GenericStorageList.CheckGenericStorageList;
         CheckLinkToPageList.class,
         CheckLookupList.class,
         CheckAliasList.class,
-        MobileLinkList.class
+        MobileLinkList.class,
+        DomainList.class
         }
 )
 

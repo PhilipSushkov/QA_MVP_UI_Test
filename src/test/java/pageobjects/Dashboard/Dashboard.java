@@ -14,6 +14,7 @@ import pageobjects.Events.EditEvent;
 import pageobjects.Events.Events;
 import pageobjects.SiteAdmin.AliasList.AliasList;
 import pageobjects.SiteAdmin.CssFileList.CssFileList;
+import pageobjects.SiteAdmin.DomainList.DomainList;
 import pageobjects.SiteAdmin.ExternalFeedList.ExternalFeedList;
 import pageobjects.SiteAdmin.GlobalModuleList.GlobalModuleList;
 import pageobjects.SiteAdmin.IndexContent.IndexContent;
@@ -61,6 +62,8 @@ public class Dashboard extends AbstractPageObject {
     private final By lookupListMenuItem = By.xpath("//a[contains(text(),'Lookup List')]/parent::li");
     private final By aliasListMenuItem = By.xpath("//a[contains(text(),'Alias List')]/parent::li");
     private final By mobileLinkListMenuItem = By.xpath("//a[contains(text(),'Mobile Link List')]/parent::li");
+    private final By domainListMenuItem = By.xpath("//a[contains(text(),'Domain List')]/parent::li");
+
 
     public Dashboard(WebDriver driver) {
 
@@ -232,6 +235,14 @@ public class Dashboard extends AbstractPageObject {
         pause(1000L);
         findElement(aliasListMenuItem).click();
         return new AliasList(getDriver());
+    }
+
+    public DomainList openDomainListPage() {
+        action.moveToElement(findElement(siteAdminMenuButton)).perform();
+        wait.until(ExpectedConditions.visibilityOf(findElement(domainListMenuItem)));
+        pause(1000L);
+        findElement(domainListMenuItem).click();
+        return new DomainList(getDriver());
     }
 
     public PressReleases pressReleases() {
