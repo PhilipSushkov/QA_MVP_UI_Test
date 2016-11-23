@@ -56,23 +56,15 @@ public class EmailAlertsPage extends AbstractPageObject {
 
     public boolean clickSubmitWorks(){
         findElement(submitBtn).click();
-        pause(5000L);
         WebElement submit = findElement(submitMessage);
         return submit.isDisplayed();
-
     }
 
     public boolean clickUnsubscribeWorks( ){
         findElement(unsubscribeBtn).click();
-        pause(5000L);
-        WebElement unsubscribe = findElement(unsubscribeMessage);
-        //String message = findElement(unsubscribeMessage).getText();
 
-/*
-        if (unsubscribe.isDisplayed() && unsubscribe.getText() != "\n" + "Unsubscription Failed."){
-            System.out.print(unsubscribe.getText());
-            return true;
-        } */
+        WebElement unsubscribe = findElement(unsubscribeMessage);
+
         return unsubscribe.isDisplayed() && unsubscribe.getText().equals("Unsubscription Email Sent!");
 
     }

@@ -87,6 +87,7 @@ public class StockInformationPage extends AbstractPageObject {
 
     public boolean canHoverOverChartXignite(){
         actions.clickAndHold(findElement(stockChartXigniteGridArea)).perform();
+        pause(5000L);//ADD a WAIT FOR THE ATTRIBUTE "TRANSFORM" TO NOT BE -9999 perhaps? replace with pause
         return !findElement(chartXigniteTooltip).getAttribute("transform").contains("-9999");
     }
 

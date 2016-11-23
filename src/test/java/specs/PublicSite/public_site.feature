@@ -81,7 +81,24 @@ Feature: pages on public site are displayed properly
     When I click on "View this Presentation"
     Then then the presentation opens in a new tab
 
-  # Consider adding email alert page test
+  Scenario: Subscribing to email alerts works
+    Given that the site allows email alerts
+    When I select "Site Map" from the site footer
+    And select "Email Alerts" from the site map
+    Then the email alerts page opens
+    When I input my email credentials in the subscribe section
+    And select alert options
+    And submit the form
+    Then a message appears signifying subscription email went out
+
+  Scenario: Unsubscribing to email alerts works
+    Given that the site allows email alerts
+    When I select "Site Map" fromm the site footer
+    And select "Email Alerts" from the site map
+    Then the email alerts page opens
+    When I input my email credentials in the unsubscibe section
+    And submit the form
+    Then a message appears signifying unsubscribe success
 
   Scenario: SEC Filings page contains filings
     Given that the site has filings from both the current and previous years
@@ -105,3 +122,4 @@ Feature: pages on public site are displayed properly
     Given that the site has people identified as part of the "Board of Directors"
     When I select "Board of Directors" from the site menu
     Then a list of people is displayed with biographical information
+

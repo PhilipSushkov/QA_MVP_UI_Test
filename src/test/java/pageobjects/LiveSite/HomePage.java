@@ -30,7 +30,6 @@ public class HomePage extends AbstractPageObject {
     }
 
     public boolean logoIsPresent(){
-
         return doesElementExist(Q4Logo);
     }
 
@@ -56,37 +55,65 @@ public class HomePage extends AbstractPageObject {
     }
 
     public FinancialReportsPage selectFinancialReportsFromMenu(){
-        findVisibleElement(financialReports).click();
+        try{
+            findVisibleElement(financialReports).click();
+        }catch (TimeoutException e){
+            driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
+        }
         return new FinancialReportsPage(getDriver());
     }
 
     public LivePressReleases selectPressReleasesFromMenu(){
-        findVisibleElement(pressReleases).click();
+        try {
+            findVisibleElement(pressReleases).click();
+        }catch (TimeoutException e){
+            driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
+        }
         return new LivePressReleases(getDriver());
     }
 
     public LiveEvents selectEventsFromMenu(){
-        findVisibleElement(events).click();
+        try {
+            findVisibleElement(events).click();
+        }catch (TimeoutException e){
+            driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
+        }
         return new LiveEvents(getDriver());
     }
 
     public LivePresentations selectPresentationsFromMenu(){
-        findVisibleElement(presentations).click();
+        try {
+            findVisibleElement(presentations).click();
+        }catch (TimeoutException e){
+            driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
+        }
         return new LivePresentations(getDriver());
     }
 
     public SECFilingsPage selectSECFilingsFromMenu(){
-        findVisibleElement(secFilings).click();
+        try {
+            findVisibleElement(secFilings).click();
+        }catch (TimeoutException e){
+            driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
+        }
         return new SECFilingsPage(getDriver());
     }
 
     public BoardOfDirectorsPage selectBoardOfDirectorsFromMenu(){
-        findVisibleElement(boardOfDirectors).click();
+        try {
+            findVisibleElement(boardOfDirectors).click();
+        }catch (TimeoutException e){
+            driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
+        }
         return new BoardOfDirectorsPage(getDriver());
     }
 
     public RSSFeedsPage selectRSSFeedsFromMenu(){
-        findVisibleElement(rssFeeds).click();
+       try {
+           findVisibleElement(rssFeeds).click();
+       }catch (TimeoutException e){
+           driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
+       }
         return new RSSFeedsPage(getDriver());
     }
 
