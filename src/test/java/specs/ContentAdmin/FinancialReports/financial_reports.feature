@@ -4,7 +4,7 @@ Background: I am logged into Admin site / have valid session cookie
 
    Scenario: Find Financial Reports menu item and open the page
        Given: Dashboard page opened
-       When I click Site Admin menu item
+       When I click Content Admin menu item
        And click Financial Reports item
        Then Financial Reports page opens
        And expected Title of the page is "Financial Report List"

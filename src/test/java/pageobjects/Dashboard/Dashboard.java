@@ -7,6 +7,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
 import pageobjects.ContentAdmin.FinancialReports.FinancialReports;
+import pageobjects.ContentAdmin.PressReleaseCategories.PressReleaseCategories;
 import pageobjects.PressReleases.EditPressRelease;
 import pageobjects.PressReleases.PressReleases;
 import pageobjects.Presentations.EditPresentation;
@@ -67,6 +68,7 @@ public class Dashboard extends AbstractPageObject {
     private final By domainListMenuItem = By.xpath("//a[contains(text(),'Domain List')]/parent::li");
     private final By editContentAdminPagesMenuItem = By.xpath("//a[contains(text(),'Content Admin Edit')]/parent::li");
     private final By financialReportsMenuItem = By.xpath("//a[contains(text(),'Financial Reports')]/parent::li");
+    private final By pressReleaseCategoriesMenuItem = By.xpath("//a[contains(text(),'Press Release Categories')]/parent::li");
 
 
     public Dashboard(WebDriver driver) {
@@ -263,6 +265,14 @@ public class Dashboard extends AbstractPageObject {
         pause(1000L);
         findElement(financialReportsMenuItem).click();
         return new FinancialReports(getDriver());
+    }
+
+    public PressReleaseCategories openPressReleaseCategories() {
+        action.moveToElement(findElement(contentAdminMenuButton)).perform();
+        wait.until(ExpectedConditions.visibilityOf(findElement(pressReleaseCategoriesMenuItem)));
+        pause(1000L);
+        findElement(pressReleaseCategoriesMenuItem).click();
+        return new PressReleaseCategories(getDriver());
     }
 
     public PressReleases pressReleases() {

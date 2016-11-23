@@ -28,7 +28,7 @@ public class CheckFinancialReports extends AbstractSpec {
         Assert.assertNotNull(new Dashboard(driver).openFinancialReports().getUrl());
         Assert.assertEquals("Actual Financial Reports page Title doesn't match to expected", expectedTitle, new FinancialReports(driver).getTitle());
 
-        System.out.println(new FinancialReports(driver).getTitleQuantity().toString());
+        //System.out.println(new FinancialReports(driver).getTitleQuantity().toString());
         Assert.assertTrue("Actual Financial Reports Title Quantity is less than expected: "+expectedQuantity, expectedQuantity <= new FinancialReports(driver).getTitleQuantity() );
         Assert.assertNotNull("Financial Reports Pagination doesn't exist", new FinancialReports(driver).getFinancialReportPagination() );
         Assert.assertNotNull("Filter By Tag field doesn't exist", new FinancialReports(driver).getFilterByTag() );

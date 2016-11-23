@@ -3,6 +3,7 @@ package testrunner;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import specs.ContentAdmin.FinancialReports.CheckFinancialReports;
+import specs.ContentAdmin.PressReleaseCategories.CheckPressReleaseCategories;
 import specs.LoginPage.EnterToAdmin;
 import specs.PressReleases.AddNewPressRelease;
 import specs.Presentations.AddNewPresentation;
@@ -56,7 +57,8 @@ import specs.SystemAdmin.GenericStorageList.CheckGenericStorageList;
         CheckMobileLinkList.class,
         CheckDomainList.class,
         CheckEditContentAdminPages.class,
-        CheckFinancialReports.class
+        CheckFinancialReports.class,
+        CheckPressReleaseCategories.class
         }
 )
 
