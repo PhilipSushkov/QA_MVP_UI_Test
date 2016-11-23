@@ -32,7 +32,8 @@ public class CheckPublicSite extends AbstractSpec {
 
     @Test
     public void versionNumberIsCorrect(){
-        Assert.assertEquals("Displayed version number is incorrect", Q4WebVersionNumber, new HomePage(driver).getVersionNumber());
+        Assert.assertEquals("Displayed version number is incorrect", Q4WebVersionNumber,
+                new HomePage(driver).getVersionNumber());
     }
 
     @Test
@@ -45,21 +46,26 @@ public class CheckPublicSite extends AbstractSpec {
         int xStart1Quarter = new StockInformationPage(driver).getChartXigniteSliderXStart();
         new StockInformationPage(driver).switchChartXigniteTo1Year();
         int xStart1Year = new StockInformationPage(driver).getChartXigniteSliderXStart();
-        Assert.assertTrue("Xignite stock chart period is not switching properly.\nxStart1Year="+xStart1Year+"\nxStart1Quarter="+xStart1Quarter+"\nxStart1Month="+xStart1Month,
+        Assert.assertTrue("Xignite stock chart period is not switching properly.\nxStart1Year="+xStart1Year+
+                        "\nxStart1Quarter="+xStart1Quarter+"\nxStart1Month="+xStart1Month,
                 xStart1Month>xStart1Quarter && xStart1Quarter>xStart1Year);
-        Assert.assertTrue("Hovering over Xignite chart doesn't work.", new StockInformationPage(driver).canHoverOverChartXignite());
+        Assert.assertTrue("Hovering over Xignite chart doesn't work.",
+                new StockInformationPage(driver).canHoverOverChartXignite());
     }
-//does 13 inch non-touchbar macbook pro have touch ID?
+
     @Test
     public void stockQuoteWorks(){
-        Assert.assertTrue("Stock quote is not displayed.", new HomePage(driver).selectStockInformationFromMenu().stockQuoteIsDisplayed());
-        Assert.assertTrue("One or more stock quote values are missing or invalid.", new StockInformationPage(driver).stockQuoteValuesArePresent());
+        Assert.assertTrue("Stock quote is not displayed.",
+                new HomePage(driver).selectStockInformationFromMenu().stockQuoteIsDisplayed());
+        Assert.assertTrue("One or more stock quote values are missing or invalid.",
+                new StockInformationPage(driver).stockQuoteValuesArePresent());
     }
 
     @Test
     public void stockQuoteValuesAreAccurate() throws TimeoutException{
 
-        Assert.assertTrue("Stock quote is not displayed.", new HomePage(driver).selectStockInformationFromMenu().stockQuoteIsDisplayed());
+        Assert.assertTrue("Stock quote is not displayed.",
+                new HomePage(driver).selectStockInformationFromMenu().stockQuoteIsDisplayed());
 
         driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
 
@@ -70,15 +76,24 @@ public class CheckPublicSite extends AbstractSpec {
             fail("Problem retrieving stock data from Yahoo Finance.");
             return;
         }
-        Assert.assertEquals("Stock price isn't accurate", stockQuote.getPrice().doubleValue(), new StockInformationPage(driver).getStockPrice(), 0.25);
-        Assert.assertEquals("Stock change isn't accurate", stockQuote.getChange().doubleValue(), new StockInformationPage(driver).getStockChange(), 0.25);
-        Assert.assertEquals("Stock % change isn't accurate", stockQuote.getChangeInPercent().doubleValue(), new StockInformationPage(driver).getStockPChange(), 1);
-        Assert.assertEquals("Stock intraday high isn't accurate", stockQuote.getDayHigh().doubleValue(), new StockInformationPage(driver).getStockDayHigh(), 0.25);
-        Assert.assertEquals("Stock 52 week high isn't accurate", stockQuote.getYearHigh().doubleValue(), new StockInformationPage(driver).getStock52WeekHigh(), 0.1);
-        Assert.assertEquals("Stock intraday low isn't accurate", stockQuote.getDayLow().doubleValue(), new StockInformationPage(driver).getStockDayLow(), 0.25);
-        Assert.assertEquals("Stock 52 week low isn't accurate", stockQuote.getYearLow().doubleValue(), new StockInformationPage(driver).getStock52WeekLow(), 0.1);
-        Assert.assertEquals("Stock today's open isn't accurate", stockQuote.getOpen().doubleValue(), new StockInformationPage(driver).getStockTodayOpen(), 0.01);
-        Assert.assertEquals("Stock previous close isn't accurate", stockQuote.getPreviousClose().doubleValue(), new StockInformationPage(driver).getStockPreviousClose(), 0.01);
+        Assert.assertEquals("Stock price isn't accurate", stockQuote.getPrice().doubleValue(),
+                new StockInformationPage(driver).getStockPrice(), 0.25);
+        Assert.assertEquals("Stock change isn't accurate", stockQuote.getChange().doubleValue()
+                , new StockInformationPage(driver).getStockChange(), 0.25);
+        Assert.assertEquals("Stock % change isn't accurate", stockQuote.getChangeInPercent().doubleValue()
+                , new StockInformationPage(driver).getStockPChange(), 1);
+        Assert.assertEquals("Stock intraday high isn't accurate", stockQuote.getDayHigh().doubleValue()
+                , new StockInformationPage(driver).getStockDayHigh(), 0.25);
+        Assert.assertEquals("Stock 52 week high isn't accurate", stockQuote.getYearHigh().doubleValue()
+                , new StockInformationPage(driver).getStock52WeekHigh(), 0.1);
+        Assert.assertEquals("Stock intraday low isn't accurate", stockQuote.getDayLow().doubleValue()
+                , new StockInformationPage(driver).getStockDayLow(), 0.25);
+        Assert.assertEquals("Stock 52 week low isn't accurate", stockQuote.getYearLow().doubleValue()
+                , new StockInformationPage(driver).getStock52WeekLow(), 0.1);
+        Assert.assertEquals("Stock today's open isn't accurate", stockQuote.getOpen().doubleValue()
+                , new StockInformationPage(driver).getStockTodayOpen(), 0.01);
+        Assert.assertEquals("Stock previous close isn't accurate", stockQuote.getPreviousClose().doubleValue()
+                , new StockInformationPage(driver).getStockPreviousClose(), 0.01);
     }
 
     @Test
@@ -141,31 +156,34 @@ public class CheckPublicSite extends AbstractSpec {
     @Test
     public void historicalQuotesWork(){
         try{
-           Assert.assertTrue("Historical quotes are not displayed.", new HomePage(driver).selectStockInformationFromMenu().historicalQuotesAreDisplayed());
+           Assert.assertTrue("Historical quotes are not displayed.",
+                   new HomePage(driver).selectStockInformationFromMenu().historicalQuotesAreDisplayed());
         }catch (TimeoutException e) {
            driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
         }
 
         try {
-           Assert.assertTrue("One or more historical quote values are missing or invalid.", new StockInformationPage(driver).historicalQuoteValuesArePresent());
+           Assert.assertTrue("One or more historical quote values are missing or invalid.",
+                   new StockInformationPage(driver).historicalQuoteValuesArePresent());
         }catch (TimeoutException e){
             driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
         }
-         try {
+        try {
             String[] lastDayQuotes = new StockInformationPage(driver).getHistoricalQuote();
             new StockInformationPage(driver).changeQuoteDate();
 
-            Assert.assertTrue("One or more historical quote values are missing or invalid after changing date.", new StockInformationPage(driver).historicalQuoteValuesArePresent());
+            Assert.assertTrue("One or more historical quote values are missing or invalid after changing date.",
+                    new StockInformationPage(driver).historicalQuoteValuesArePresent());
 
             String[] olderDayQuotes = new StockInformationPage(driver).getHistoricalQuote();
             for (int i = 0; i < olderDayQuotes.length; i++) {
                 Assert.assertFalse("Identical value (" + lastDayQuotes[i] + " = " + olderDayQuotes[i] + ") present in last trading day's historical quote and older (May 25th, 2016) historical quote.",
                 olderDayQuotes[i].equals(lastDayQuotes[i]));
                 }
-         }catch (TimeoutException e){
+        }catch (TimeoutException e){
             e.printStackTrace();
             driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
-         }
+        }
     }
 
     @Test
@@ -198,11 +216,16 @@ public class CheckPublicSite extends AbstractSpec {
                 fail("Problem retrieving older day stock data from Yahoo Finance.");
                 return;
             }
-            Assert.assertEquals("Older day high isn't accurate", olderDayQuotes.getHigh().doubleValue(), new StockInformationPage(driver).getHistoricalHigh(), 0.01);
-            Assert.assertEquals("Older day low isn't accurate", olderDayQuotes.getLow().doubleValue(), new StockInformationPage(driver).getHistoricalLow(), 0.01);
-            Assert.assertEquals("Older day volume isn't accurate", olderDayQuotes.getVolume().doubleValue(), new StockInformationPage(driver).getHistoricalVolume(), 5000);
-            Assert.assertEquals("Older day opening price isn't accurate", olderDayQuotes.getOpen().doubleValue(), new StockInformationPage(driver).getHistoricalOpen(), 0.01);
-            Assert.assertEquals("Older day last price isn't accurate", olderDayQuotes.getClose().doubleValue(), new StockInformationPage(driver).getHistoricalLast(), 0.01);
+            Assert.assertEquals("Older day high isn't accurate", olderDayQuotes.getHigh().doubleValue()
+                    , new StockInformationPage(driver).getHistoricalHigh(), 0.01);
+            Assert.assertEquals("Older day low isn't accurate", olderDayQuotes.getLow().doubleValue()
+                    , new StockInformationPage(driver).getHistoricalLow(), 0.01);
+            Assert.assertEquals("Older day volume isn't accurate", olderDayQuotes.getVolume().doubleValue()
+                    , new StockInformationPage(driver).getHistoricalVolume(), 5000);
+            Assert.assertEquals("Older day opening price isn't accurate",olderDayQuotes.getOpen().doubleValue()
+                    , new StockInformationPage(driver).getHistoricalOpen(), 0.01);
+            Assert.assertEquals("Older day last price isn't accurate", olderDayQuotes.getClose().doubleValue()
+                    , new StockInformationPage(driver).getHistoricalLast(), 0.01);
 
         }catch (TimeoutException e)
         {
@@ -214,40 +237,49 @@ public class CheckPublicSite extends AbstractSpec {
     @Test
     public void financialReportsWork(){
         try {
-            Assert.assertTrue("Financial reports are not displayed.", new HomePage(driver).selectFinancialReportsFromMenu().financialReportsAreDisplayed());
+            Assert.assertTrue("Financial reports are not displayed."
+                    , new HomePage(driver).selectFinancialReportsFromMenu().financialReportsAreDisplayed());
         }catch (TimeoutException e){
             driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
         }
-        Assert.assertTrue("One or more financial report titles are not links.", new FinancialReportsPage(driver).reportTitlesAreLinks());
-        Assert.assertTrue("No financial reports links to a .pdf file.", new FinancialReportsPage(driver).pdfLinkIsPresent());
+        Assert.assertTrue("One or more financial report titles are not links."
+                , new FinancialReportsPage(driver).reportTitlesAreLinks());
+        Assert.assertTrue("No financial reports links to a .pdf file."
+                , new FinancialReportsPage(driver).pdfLinkIsPresent());
     }
 
     @Test
     public void pressReleasesWork(){
        try {
-           Assert.assertTrue("Press releases are not displayed.", new HomePage(driver).selectPressReleasesFromMenu().pressReleasesAreDisplayed());
+           Assert.assertTrue("Press releases are not displayed."
+                   , new HomePage(driver).selectPressReleasesFromMenu().pressReleasesAreDisplayed());
        }catch (TimeoutException e) {
            driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
        }
-        Assert.assertTrue("One or more displayed press releases are not from the current year.", new LivePressReleases(driver).pressReleasesAreAllFromYear(Year.now().toString()));
+        Assert.assertTrue("One or more displayed press releases are not from the current year."
+                , new LivePressReleases(driver).pressReleasesAreAllFromYear(Year.now().toString()));
         new LivePressReleases(driver).switchYearTo("2015");
-        Assert.assertTrue("One or more displayed press releases are not from the selected year (2015).", new LivePressReleases(driver).pressReleasesAreAllFromYear("2015"));
+        Assert.assertTrue("One or more displayed press releases are not from the selected year (2015)."
+                , new LivePressReleases(driver).pressReleasesAreAllFromYear("2015"));
         try {
             new LivePressReleases(driver).openFirstPressRelease();
         }catch (TimeoutException e){
             driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
         }
-        Assert.assertTrue("Press release is not open.", new LivePressReleases(driver).pressReleaseIsOpen());
+        Assert.assertTrue("Press release is not open."
+                , new LivePressReleases(driver).pressReleaseIsOpen());
     }
 
     @Test
     public void eventsWork(){
         try {
-            Assert.assertTrue("Upcoming events are not displayed.", new HomePage(driver).selectEventsFromMenu().eventsAreDisplayed());
+            Assert.assertTrue("Upcoming events are not displayed."
+                    , new HomePage(driver).selectEventsFromMenu().eventsAreDisplayed());
         }catch (TimeoutException e){
             driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
         }
-        Assert.assertTrue("One or more events displayed are not upcoming.", new LiveEvents(driver).allEventsAreUpcoming());
+        Assert.assertTrue("One or more events displayed are not upcoming."
+                , new LiveEvents(driver).allEventsAreUpcoming());
         new LiveEvents(driver).switchToPastEvents();
         Assert.assertTrue("Past events are not displayed.", new LiveEvents(driver).eventsAreDisplayed());
         try {
@@ -273,28 +305,37 @@ public class CheckPublicSite extends AbstractSpec {
     @Test
     public void presentationsWork(){
         try{
-            Assert.assertTrue("Presentations are not displayed.", new HomePage(driver).selectPresentationsFromMenu().presentationsAreDisplayed());
+            Assert.assertTrue("Presentations are not displayed."
+                    , new HomePage(driver).selectPresentationsFromMenu().presentationsAreDisplayed());
         } catch(TimeoutException e){
             driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
         }
-        Assert.assertTrue("One or more displayed presentations are not from the current year.", new LivePresentations(driver).presentationsAreAllFromYear(Year.now().toString()));
+        Assert.assertTrue("One or more displayed presentations are not from the current year."
+                , new LivePresentations(driver).presentationsAreAllFromYear(Year.now().toString()));
         new LivePresentations(driver).switchYearTo("2015");
-        Assert.assertTrue("One or more displayed presentations are not from the selected year (2015).", new LivePresentations(driver).presentationsAreAllFromYear("2015"));
-        Assert.assertTrue("One or more presentation links are not links.", new LivePresentations(driver).presentationLinksAreLinks());
-        Assert.assertTrue("No presentations link to a .pdf file.", new LivePresentations(driver).pdfLinkIsPresent());
+        Assert.assertTrue("One or more displayed presentations are not from the selected year (2015)."
+                , new LivePresentations(driver).presentationsAreAllFromYear("2015"));
+        Assert.assertTrue("One or more presentation links are not links."
+                , new LivePresentations(driver).presentationLinksAreLinks());
+        Assert.assertTrue("No presentations link to a .pdf file."
+                , new LivePresentations(driver).pdfLinkIsPresent());
     }
 
     @Test
     public void secFilingsWork(){
         try {
-            Assert.assertTrue("SEC filings are not displayed.", new HomePage(driver).selectSECFilingsFromMenu().filingsAreDisplayed());
+            Assert.assertTrue("SEC filings are not displayed."
+                    , new HomePage(driver).selectSECFilingsFromMenu().filingsAreDisplayed());
         }catch (TimeoutException e){
             driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
         }
-        Assert.assertTrue("One or more displayed filings are not from the current year.", new SECFilingsPage(driver).filingsAreAllFromYear(Year.now().toString()));
+        Assert.assertTrue("One or more displayed filings are not from the current year."
+                , new SECFilingsPage(driver).filingsAreAllFromYear(Year.now().toString()));
         new SECFilingsPage(driver).switchYearTo("2015");
-        Assert.assertTrue("One or more displayed filings are not from the selected year (2015).", new SECFilingsPage(driver).filingsAreAllFromYear("2015"));
-        Assert.assertTrue("One or more pdf icons do not link to a .pdf file.", new SECFilingsPage(driver).pdfIconsLinkToPDF());
+        Assert.assertTrue("One or more displayed filings are not from the selected year (2015)."
+                , new SECFilingsPage(driver).filingsAreAllFromYear("2015"));
+        Assert.assertTrue("One or more pdf icons do not link to a .pdf file."
+                , new SECFilingsPage(driver).pdfIconsLinkToPDF());
     }
 
     @Test
@@ -400,5 +441,5 @@ public class CheckPublicSite extends AbstractSpec {
             driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
         }
     }
-//haywyre smooth criminal
+
 }
