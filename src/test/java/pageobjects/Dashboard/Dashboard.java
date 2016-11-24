@@ -8,6 +8,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
 import pageobjects.ContentAdmin.FinancialReports.FinancialReports;
 import pageobjects.ContentAdmin.PressReleaseCategories.PressReleaseCategories;
+import pageobjects.LoginPage.LoginPage;
 import pageobjects.PressReleases.EditPressRelease;
 import pageobjects.PressReleases.PressReleases;
 import pageobjects.Presentations.EditPresentation;
@@ -34,6 +35,7 @@ import pageobjects.SystemAdmin.PDFTemplateEdit.PDFTemplateEdit;
 import pageobjects.SystemAdmin.SiteList.SiteList;
 import pageobjects.SiteAdmin.LinkToPageList.LinkToPageList;
 import pageobjects.SiteAdmin.LookupList.LookupList;
+import specs.AbstractSpec;
 
 public class Dashboard extends AbstractPageObject {
     Actions action = new Actions(driver);
@@ -78,6 +80,9 @@ public class Dashboard extends AbstractPageObject {
 
     public String getURL() throws Exception {
         wait.until(ExpectedConditions.elementToBeClickable(addPressReleaseButton));
+        if (AbstractSpec.getSessionID() == null) {
+            new LoginPage(driver).sessionID();
+        }
         return driver.getCurrentUrl();
     }
 

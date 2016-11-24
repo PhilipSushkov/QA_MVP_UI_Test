@@ -16,7 +16,7 @@ import pageobjects.LoginPage.LoginPage;
 public class EnterToAdmin extends AbstractSpec {
 
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
 
         //Login to Admin site with valid credentials
         new LoginPage(driver).loginUser();
@@ -24,12 +24,12 @@ public class EnterToAdmin extends AbstractSpec {
 
 
     @Test
-    public void getSessionID() throws Exception {
+    public void checkSessionID() throws Exception {
 
         //Get SessionID from Browser Cookies and make assertion
         new Dashboard(driver).getURL();
         String[] sessionIDCookie = new LoginPage(driver).sessionID();
-        //System.out.println(sessionIDCookie[0]+": " +sessionIDCookie[1]);
+        System.out.println(sessionIDCookie[0]+": " +sessionIDCookie[1]);
         Assert.assertNotNull(sessionIDCookie[1]);
     }
 

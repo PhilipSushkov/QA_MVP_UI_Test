@@ -16,7 +16,7 @@ public class DomainList extends AbstractPageObject {
     private final By moduleTitle = By.xpath("//span[contains(@class, 'AdminContent')]/h1/span[contains(@id,'ModuleTitle')]");
     private final By grid = By.xpath("//table[contains(@id, 'Domain_dataGrid')]");
     private final By gridDomainList = By.xpath("//td[contains(@class,'DataGridItemBorder')]");
-    private final By hrefDefaultDomain = By.xpath("//span[contains(@class, 'DefaultDomain')]/a[contains(text(),'Public Site_Edit')]");
+    private final By hrefDefaultDomain = By.xpath("//span[contains(@class, 'DefaultDomain')]/a[contains(text(),'Public Site Edit')]");
     private final Integer columnsNumber = 7;
 
     public DomainList(WebDriver driver) {

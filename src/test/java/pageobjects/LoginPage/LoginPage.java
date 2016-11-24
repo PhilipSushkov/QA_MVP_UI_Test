@@ -1,12 +1,9 @@
 package pageobjects.LoginPage;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.Page;
-import pageobjects.PageObject;
+import specs.AbstractSpec;
 
 
 /**
@@ -22,13 +19,21 @@ public class LoginPage extends Page {
         super(driver);
     }
 
-    public Dashboard loginUser() {
+    public Dashboard loginUser() throws Exception {
 
         waitForElementToAppear(emailField);
-        findElement(emailField).sendKeys("admintest");
-        findElement(passwordField).sendKeys("qwerty@01");
-        pause(1000L);
-        retryClick(loginButton);
+
+        if (AbstractSpec.getSessionID() != null) {
+            //System.out.println(AbstractSpec.getSessionID());
+            driver.manage().addCookie(new Cookie("ASP.NET_SessionId", AbstractSpec.getSessionID()));
+            driver.get(AbstractSpec.desktopUrl.toString());
+        } else {
+            findElement(emailField).sendKeys("admintest");
+            findElement(passwordField).sendKeys("qwerty@01");
+            pause(1000L);
+            retryClick(loginButton);
+            new Dashboard(driver).getURL();
+        }
 
         return new Dashboard(getDriver());
 
@@ -49,6 +54,9 @@ public class LoginPage extends Page {
         String sessionIDvalue = driver.manage().getCookieNamed("ASP.NET_SessionId").getValue();
 
         String sessionID[] = {sessionIDname, sessionIDvalue};
+
+        AbstractSpec.setSessionID(sessionIDvalue);
+
         return sessionID;
     }
 

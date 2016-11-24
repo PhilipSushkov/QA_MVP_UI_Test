@@ -27,8 +27,8 @@ public abstract class AbstractSpec {
 // IMPORTANT:
 // Determines which environment the test suite will run on but can be overridden by command line
 //------------------------------------------------------------------------------
-    private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.BETA;
-    //private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.PRODUCTION;
+    //private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.BETA;
+    private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.PRODUCTION;
 //------------------------------------------------------------------------------
 
     private static final EnvironmentType activeEnvironment = setupEnvironment();
@@ -37,11 +37,12 @@ public abstract class AbstractSpec {
     private static final String BUILD_ID = RandomStringUtils.randomAlphanumeric(6);
     public static final long DEFAULT_TIMEOUT = 5L;
 
-    private static URL desktopUrl;
+    public static URL desktopUrl;
     private static BrowserStackCapability browser;
     protected static WebDriver driver;
     private static boolean setupIsDone = false;
     private static final Logger LOG = Logger.getLogger(AbstractSpec.class.getName());
+    public static String sessionID = null;
 
     @Rule
     public TestName testName = new TestName();
@@ -168,5 +169,13 @@ public abstract class AbstractSpec {
         } else {
             return DEFAULT_ENVIRONMENT;
         }
+    }
+
+    public static String getSessionID() {
+        return sessionID;
+    }
+
+    public static void setSessionID(String sessionIDCookie) {
+        sessionID = sessionIDCookie;
     }
 }
