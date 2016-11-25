@@ -30,6 +30,7 @@ public class LoginPage extends Page {
         } else {
             findElement(emailField).sendKeys("admintest");
             findElement(passwordField).sendKeys("qwerty@01");
+
             pause(1000L);
             retryClick(loginButton);
             new Dashboard(driver).getURL();

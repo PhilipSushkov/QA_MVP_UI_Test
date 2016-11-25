@@ -34,7 +34,6 @@ import specs.SystemAdmin.GenericStorageList.CheckGenericStorageList;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-
         EnterToAdmin.class,
         AddNewPressRelease.class,
         AddNewPresentation.class,

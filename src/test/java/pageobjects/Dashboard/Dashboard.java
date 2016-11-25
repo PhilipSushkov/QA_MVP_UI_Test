@@ -72,6 +72,7 @@ public class Dashboard extends AbstractPageObject {
     private final By financialReportsMenuItem = By.xpath("//a[contains(text(),'Financial Reports')]/parent::li");
     private final By pressReleaseCategoriesMenuItem = By.xpath("//a[contains(text(),'Press Release Categories')]/parent::li");
 
+    public static final long DEFAULT_PAUSE = 2000;
 
     public Dashboard(WebDriver driver) {
 
@@ -107,7 +108,7 @@ public class Dashboard extends AbstractPageObject {
     public UserList openUserListPage() {
         action.moveToElement(findElement(systemAdminMenuButton)).perform();
         wait.until(ExpectedConditions.visibilityOf(findElement(userListMenuItem)));
-        pause(1000L);
+        pause(DEFAULT_PAUSE);
         findElement(userListMenuItem).click();
         return new UserList(getDriver());
     }
@@ -115,7 +116,7 @@ public class Dashboard extends AbstractPageObject {
     public AlertFilterList openAlertFilterListPage() {
         action.moveToElement(findElement(systemAdminMenuButton)).perform();
         wait.until(ExpectedConditions.visibilityOf(findElement(alertFilterListMenuItem)));
-        pause(1000L);
+        pause(DEFAULT_PAUSE);
         findElement(alertFilterListMenuItem).click();
         return new AlertFilterList(getDriver());
     }
@@ -123,7 +124,7 @@ public class Dashboard extends AbstractPageObject {
     public WorkflowEmailList openWorkflowEmailListPage() {
         action.moveToElement(findElement(systemAdminMenuButton)).perform();
         wait.until(ExpectedConditions.visibilityOf(findElement(workflowEmailListMenuItem)));
-        pause(1000L);
+        pause(DEFAULT_PAUSE);
         findElement(workflowEmailListMenuItem).click();
         return new WorkflowEmailList(getDriver());
     }
@@ -131,7 +132,7 @@ public class Dashboard extends AbstractPageObject {
     public GenericStorageList openGenericStorageListPage() {
         action.moveToElement(findElement(systemAdminMenuButton)).perform();
         wait.until(ExpectedConditions.visibilityOf(findElement(genericStorageListMenuItem)));
-        pause(1000L);
+        pause(DEFAULT_PAUSE);
         findElement(genericStorageListMenuItem).click();
         return new GenericStorageList(getDriver());
     }
@@ -139,7 +140,7 @@ public class Dashboard extends AbstractPageObject {
     public PDFTemplateEdit openPDFTemplateEditPage() {
         action.moveToElement(findElement(systemAdminMenuButton)).perform();
         wait.until(ExpectedConditions.visibilityOf(findElement(pdfTemplateEditMenuItem)));
-        pause(1000L);
+        pause(DEFAULT_PAUSE);
         findElement(pdfTemplateEditMenuItem).click();
         return new PDFTemplateEdit(getDriver());
     }
@@ -147,7 +148,7 @@ public class Dashboard extends AbstractPageObject {
     public SiteMaintenance openSiteMaintenancePage() {
         action.moveToElement(findElement(systemAdminMenuButton)).perform();
         wait.until(ExpectedConditions.visibilityOf(findElement(siteMaintenanceMenuItem)));
-        pause(1000L);
+        pause(DEFAULT_PAUSE);
         findElement(siteMaintenanceMenuItem).click();
         return new SiteMaintenance(getDriver());
     }
@@ -155,7 +156,7 @@ public class Dashboard extends AbstractPageObject {
     public SiteList openSiteListPage() {
         action.moveToElement(findElement(systemAdminMenuButton)).perform();
         wait.until(ExpectedConditions.visibilityOf(findElement(siteListMenuItem)));
-        pause(1000L);
+        pause(DEFAULT_PAUSE);
         findElement(siteListMenuItem).click();
         return new SiteList(getDriver());
     }
@@ -163,7 +164,7 @@ public class Dashboard extends AbstractPageObject {
     public UserGroupList openUserGroupListPage() {
         action.moveToElement(findElement(systemAdminMenuButton)).perform();
         wait.until(ExpectedConditions.visibilityOf(findElement(userGroupListMenuItem)));
-        pause(1000L);
+        pause(DEFAULT_PAUSE);
         findElement(userGroupListMenuItem).click();
         return new UserGroupList(getDriver());
     }
@@ -171,7 +172,7 @@ public class Dashboard extends AbstractPageObject {
     public GlobalModuleList openGlobalModuleListPage() {
         action.moveToElement(findElement(siteAdminMenuButton)).perform();
         wait.until(ExpectedConditions.visibilityOf(findElement(globalModuleListMenuItem)));
-        pause(1000L);
+        pause(DEFAULT_PAUSE);
         findElement(globalModuleListMenuItem).click();
         return new GlobalModuleList(getDriver());
     }
@@ -179,7 +180,7 @@ public class Dashboard extends AbstractPageObject {
     public LayoutDefinitionList openLayoutDefinitionListPage() {
         action.moveToElement(findElement(siteAdminMenuButton)).perform();
         wait.until(ExpectedConditions.visibilityOf(findElement(layoutDefinitionListMenuItem)));
-        pause(1000L);
+        pause(DEFAULT_PAUSE);
         findElement(layoutDefinitionListMenuItem).click();
         return new LayoutDefinitionList(getDriver());
     }
@@ -187,7 +188,7 @@ public class Dashboard extends AbstractPageObject {
     public ModuleDefinitionList openModuleDefinitionListPage() {
         action.moveToElement(findElement(siteAdminMenuButton)).perform();
         wait.until(ExpectedConditions.visibilityOf(findElement(moduleDefinitionListMenuItem)));
-        pause(1000L);
+        pause(DEFAULT_PAUSE);
         findElement(moduleDefinitionListMenuItem).click();
         return new ModuleDefinitionList(getDriver());
     }
@@ -195,7 +196,7 @@ public class Dashboard extends AbstractPageObject {
     public CssFileList openCssFileListPage() {
         action.moveToElement(findElement(siteAdminMenuButton)).perform();
         wait.until(ExpectedConditions.visibilityOf(findElement(cssFileListMenuItem)));
-        pause(1000L);
+        pause(DEFAULT_PAUSE);
         findElement(cssFileListMenuItem).click();
         return new CssFileList(getDriver());
     }
@@ -203,7 +204,7 @@ public class Dashboard extends AbstractPageObject {
     public ExternalFeedList openExternalFeedListPage() {
         action.moveToElement(findElement(siteAdminMenuButton)).perform();
         wait.until(ExpectedConditions.visibilityOf(findElement(externalFeedListMenuItem)));
-        pause(1000L);
+        pause(DEFAULT_PAUSE);
         findElement(externalFeedListMenuItem).click();
         return new ExternalFeedList(getDriver());
     }
@@ -211,7 +212,7 @@ public class Dashboard extends AbstractPageObject {
     public IndexContent openIndexContentPage() {
         action.moveToElement(findElement(siteAdminMenuButton)).perform();
         wait.until(ExpectedConditions.visibilityOf(findElement(indexContentMenuItem)));
-        pause(1000L);
+        pause(DEFAULT_PAUSE);
         findElement(indexContentMenuItem).click();
         return new IndexContent(getDriver());
     }
@@ -219,7 +220,7 @@ public class Dashboard extends AbstractPageObject {
     public LinkToPageList openLinkToPageListPage() {
         action.moveToElement(findElement(siteAdminMenuButton)).perform();
         wait.until(ExpectedConditions.visibilityOf(findElement(linkToPageListMenuItem)));
-        pause(1000L);
+        pause(DEFAULT_PAUSE);
         findElement(linkToPageListMenuItem).click();
         return new LinkToPageList(getDriver());
     }
@@ -227,7 +228,7 @@ public class Dashboard extends AbstractPageObject {
     public LookupList openLookupListPage() {
         action.moveToElement(findElement(siteAdminMenuButton)).perform();
         wait.until(ExpectedConditions.visibilityOf(findElement(lookupListMenuItem)));
-        pause(1000L);
+        pause(DEFAULT_PAUSE);
         findElement(lookupListMenuItem).click();
         return new LookupList(getDriver());
     }
@@ -235,7 +236,7 @@ public class Dashboard extends AbstractPageObject {
     public MobileLinkList openMobileLinkListPage() {
         action.moveToElement(findElement(siteAdminMenuButton)).perform();
         wait.until(ExpectedConditions.visibilityOf(findElement(mobileLinkListMenuItem)));
-        pause(1000L);
+        pause(DEFAULT_PAUSE);
         findElement(mobileLinkListMenuItem).click();
         return new MobileLinkList(getDriver());
     }
@@ -243,7 +244,7 @@ public class Dashboard extends AbstractPageObject {
     public AliasList openAliasListPage() {
         action.moveToElement(findElement(siteAdminMenuButton)).perform();
         wait.until(ExpectedConditions.visibilityOf(findElement(aliasListMenuItem)));
-        pause(1000L);
+        pause(DEFAULT_PAUSE);
         findElement(aliasListMenuItem).click();
         return new AliasList(getDriver());
     }
@@ -251,7 +252,7 @@ public class Dashboard extends AbstractPageObject {
     public DomainList openDomainListPage() {
         action.moveToElement(findElement(siteAdminMenuButton)).perform();
         wait.until(ExpectedConditions.visibilityOf(findElement(domainListMenuItem)));
-        pause(1000L);
+        pause(DEFAULT_PAUSE);
         findElement(domainListMenuItem).click();
         return new DomainList(getDriver());
     }
@@ -259,7 +260,7 @@ public class Dashboard extends AbstractPageObject {
     public EditContentAdminPages openEditContentAdminPages() {
         action.moveToElement(findElement(siteAdminMenuButton)).perform();
         wait.until(ExpectedConditions.visibilityOf(findElement(editContentAdminPagesMenuItem)));
-        pause(1000L);
+        pause(DEFAULT_PAUSE);
         findElement(editContentAdminPagesMenuItem).click();
         return new EditContentAdminPages(getDriver());
     }
@@ -267,7 +268,7 @@ public class Dashboard extends AbstractPageObject {
     public FinancialReports openFinancialReports() {
         action.moveToElement(findElement(contentAdminMenuButton)).perform();
         wait.until(ExpectedConditions.visibilityOf(findElement(financialReportsMenuItem)));
-        pause(1000L);
+        pause(DEFAULT_PAUSE);
         findElement(financialReportsMenuItem).click();
         return new FinancialReports(getDriver());
     }
@@ -275,7 +276,7 @@ public class Dashboard extends AbstractPageObject {
     public PressReleaseCategories openPressReleaseCategories() {
         action.moveToElement(findElement(contentAdminMenuButton)).perform();
         wait.until(ExpectedConditions.visibilityOf(findElement(pressReleaseCategoriesMenuItem)));
-        pause(1000L);
+        pause(DEFAULT_PAUSE);
         findElement(pressReleaseCategoriesMenuItem).click();
         return new PressReleaseCategories(getDriver());
     }
