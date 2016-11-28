@@ -23,8 +23,9 @@ public class LoginPage extends Page {
 
         waitForElementToAppear(emailField);
 
+        /*
         if (AbstractSpec.getSessionID() != null) {
-            //System.out.println(AbstractSpec.getSessionID());
+            System.out.println(AbstractSpec.getSessionID());
             driver.manage().addCookie(new Cookie("ASP.NET_SessionId", AbstractSpec.getSessionID()));
             driver.get(AbstractSpec.desktopUrl.toString());
         } else {
@@ -35,6 +36,14 @@ public class LoginPage extends Page {
             retryClick(loginButton);
             new Dashboard(driver).getURL();
         }
+        */
+
+        findElement(emailField).sendKeys("admintest");
+        findElement(passwordField).sendKeys("qwerty@01");
+
+        pause(1000L);
+        retryClick(loginButton);
+        new Dashboard(driver).getURL();
 
         return new Dashboard(getDriver());
 
