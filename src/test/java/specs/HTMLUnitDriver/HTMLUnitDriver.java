@@ -46,6 +46,7 @@ public class HTMLUnitDriver {
     private final String USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:45.0)";
     private String access_token = null;
     private HttpClient client = null;
+    private WebDriver driver = null;
 
     @BeforeTest
     public void setup() throws Exception {
@@ -58,6 +59,7 @@ public class HTMLUnitDriver {
 
     @AfterTest
     public void tearDown() throws Exception {
+        driver.quit();
 
     }
 
@@ -183,6 +185,50 @@ public class HTMLUnitDriver {
     }
 
 
+    @Test (priority = 2)
+    public void Q4SlackNLP () throws Exception {
+
+        String urlAuth = "https://q4inc.slack.com";
+        driver = new ChromeDriver();
+
+        driver.get(urlAuth);
+
+        Thread.sleep(1000);
+
+        driver.findElement(By.id("email")).sendKeys("philips@q4inc.com");
+        driver.findElement(By.id("password")).sendKeys("asdfgh@01");
+
+        driver.findElement(By.id("signin_btn")).click();
+
+        Thread.sleep(5000);
+
+        System.out.println(driver.getTitle());
+
+        driver.findElement(By.id("message-input")).clear();
+        driver.findElement(By.id("message-input")).sendKeys("/q4 price");
+        driver.findElement(By.id("message-input")).sendKeys(Keys.ENTER);
+        Thread.sleep(3000);
+        List<WebElement> webElementsMsgBody = driver.findElements(By.className("message_body"));
+        System.out.println(webElementsMsgBody.get(webElementsMsgBody.size() - 1).getText());
+
+        Assert.assertTrue(webElementsMsgBody.get(webElementsMsgBody.size() - 1).getText().contains("Get my stock price"));
+
+        /*
+        Thread.sleep(3000);
+        driver.findElement(By.id("message-input")).clear();
+        driver.findElement(By.id("message-input")).sendKeys("/q4 stock");
+        driver.findElement(By.id("message-input")).sendKeys(Keys.ENTER);
+        Thread.sleep(3000);
+        List<WebElement> webElementsMsgBody2 = driver.findElements(By.className("message_body"));
+        //Assert.assertEquals("Wrong answer", "", "");
+        //String str = webElementsMsgBody.get(webElementsMsgBody.size() - 1).getText();
+        Assert.assertTrue(webElementsMsgBody.get(webElementsMsgBody2.size()-1).getText().contains("Stock Price"));
+        Assert.assertTrue(webElementsMsgBody.get(webElementsMsgBody2.size()-1).getText().contains("Volume"));
+        Assert.assertTrue(webElementsMsgBody.get(webElementsMsgBody2.size()-1).getText().contains("Today\'s high"));
+        Assert.assertTrue(webElementsMsgBody.get(webElementsMsgBody2.size()-1).getText().contains("Today\'s high"));
+
+        */
+    }
 
 
 }
