@@ -14,6 +14,8 @@ import yahoofinance.histquotes.Interval;
 import yahoofinance.quotes.stock.StockQuote;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.Month;
 import java.time.Year;
 import java.util.Calendar;
 
@@ -21,7 +23,7 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.fail;
 
 public class CheckPublicSite extends AbstractSpec {
-    private final String Q4WebVersionNumber = "4.2.1.64";
+    private final String Q4WebVersionNumber = "4.3.0.55";
 
     @Before
     public void goToPublicSite() {
@@ -440,6 +442,26 @@ public class CheckPublicSite extends AbstractSpec {
         }catch (TimeoutException e) {
             driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
         }
+    }
+
+    @Test
+    public void investmentCalculatorWorks(){
+        String symbol = "NWL"; // This is the symbol of the stock used by the module
+        String comparedSymbol = "AAPL";
+        LocalDate startDate = LocalDate.of(2016, Month.APRIL, 4);
+        LocalDate endDate = LocalDate.of(2016, Month.OCTOBER, 28);
+        InvestmentCalculatorPage investmentCalculatorPage = new HomePage(driver).selectInvestmentCalculatorFromMenu();
+        Assert.assertTrue("Investment Calculator is not displayed.", investmentCalculatorPage.investmentCalculatorExists());
+        Assert.assertTrue("Growth chart is not displayed after clicking calculate.", investmentCalculatorPage.performSampleCalculation(startDate, endDate).growthChartIsPresent());
+        Assert.assertTrue("Expected symbol is not present.", investmentCalculatorPage.resultsIncludeSymbol(symbol));
+        Assert.assertTrue("Cannot hover over the growth chart.", investmentCalculatorPage.canHoverOverGrowthChart());
+        Assert.assertTrue("Invalid growth data is displayed.", investmentCalculatorPage.growthDataIsValid());
+        Assert.assertEquals("Start date does not match", startDate, investmentCalculatorPage.getStartDate());
+        Assert.assertEquals("End date does not match", endDate, investmentCalculatorPage.getEndDate());
+        Assert.assertFalse("Results area is not closed.", investmentCalculatorPage.closeResults().resultsAreOpen());
+        Assert.assertTrue("Recalculation with compare to other symbol doesn't work.", investmentCalculatorPage.recalculateAndCompareTo(comparedSymbol).growthChartIsPresent());
+        Assert.assertTrue("Expected symbol is not present after recalculating.", investmentCalculatorPage.resultsIncludeSymbol(symbol));
+        Assert.assertTrue("Compared to symbol is not present.", investmentCalculatorPage.resultsIncludeSymbol(comparedSymbol));
     }
 
 }

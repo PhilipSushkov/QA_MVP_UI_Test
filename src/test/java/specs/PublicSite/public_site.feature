@@ -123,3 +123,19 @@ Feature: pages on public site are displayed properly
     When I select "Board of Directors" from the site menu
     Then a list of people is displayed with biographical information
 
+  Scenario: Investment Calculator works
+    When I select "Investment Calculator" from the site menu
+    Then the investment calculator is displayed
+    When I enter in an investment amount
+      And I enter in a start date in the past
+      And I enter in an end date later than the start date that is in the past or present
+      And I click the "Calculate" button
+    Then a stock chart displaying the growth of the investment over that period of time is displayed
+      And appropriate data is displayed below the chart
+    When I click outside the chart and data area
+    Then the chart and data disappear
+      And the input fields are visible again
+    When I select a checkbox next to one of the indices
+      And I click the "Calculate" button
+    Then the chart and data includes both the stock and the selected index
+

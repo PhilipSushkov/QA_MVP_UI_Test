@@ -24,6 +24,7 @@ public class HomePage extends AbstractPageObject {
     private final By rssFeeds = By.linkText("RSS Feeds");
     private final By siteMap = By.linkText("Site Map");
     private final By emailAlerts = By.linkText("Email Alerts");
+    private final By investmentCalculator = By.linkText("Investment Calculator");
     
     public HomePage(WebDriver driver) {
         super(driver);
@@ -126,6 +127,15 @@ public class HomePage extends AbstractPageObject {
         }
 
         return new EmailAlertsPage(getDriver());
+    }
+
+    public InvestmentCalculatorPage selectInvestmentCalculatorFromMenu(){
+        try {
+            findVisibleElement(investmentCalculator).click();
+        }catch (TimeoutException e){
+            driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
+        }
+        return new InvestmentCalculatorPage(getDriver());
     }
 
 }
