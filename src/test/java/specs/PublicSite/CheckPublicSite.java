@@ -23,7 +23,7 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.fail;
 
 public class CheckPublicSite extends AbstractSpec {
-    private final String Q4WebVersionNumber = "4.3.0.55";
+    private final String Q4WebVersionNumber = "4.3.0.56";
 
     @Before
     public void goToPublicSite() {
@@ -100,6 +100,7 @@ public class CheckPublicSite extends AbstractSpec {
 
     @Test
     public void stockChartTickertechWorks() {
+
         try {
             //go to stock information page and check that chart is present
             Assert.assertTrue("Tickertech stock chart is not displayed.", new HomePage(driver).selectStockInformationFromMenu().stockChartTickertechIsDisplayed());
@@ -153,6 +154,7 @@ public class CheckPublicSite extends AbstractSpec {
             e.printStackTrace();
             driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
         }
+
     }
 
     @Test

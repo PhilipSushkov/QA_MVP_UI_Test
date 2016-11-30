@@ -13,10 +13,9 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriverService;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
-import util.BrowserStackCapability;
+import util.*;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import util.BrowserType;
-import util.EnvironmentType;
+
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.concurrent.TimeUnit;
@@ -38,7 +37,7 @@ public abstract class AbstractSpec {
     public static final long DEFAULT_TIMEOUT = 5L;
 
     public static URL desktopUrl;
-    private static BrowserStackCapability browser;
+    public static BrowserStackCapability browser;
     protected static WebDriver driver;
     private static boolean setupIsDone = false;
     private static final Logger LOG = Logger.getLogger(AbstractSpec.class.getName());
@@ -99,12 +98,19 @@ public abstract class AbstractSpec {
     }
 
     private void setupChromeLocalDriver() {
+
         driver = new ChromeDriver();
         driver.manage().timeouts().implicitlyWait(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
         driver.manage().timeouts().pageLoadTimeout(20, TimeUnit.SECONDS); //Increased to 20 to perhaps reduce timeouts?
         driver.manage().window().setSize(new Dimension(1400, 1400));
         driver.get(desktopUrl.toString());
 
+        /*
+        driver = LocalDriverFactory.createInstance();
+        LocalDriverManager.setWebDriver(driver);
+        System.out.println("Thread id = " + Thread.currentThread().getId());
+        System.out.println("Hashcode of webDriver instance = " + LocalDriverManager.getDriver().hashCode());
+        */
     }
 
     private void setupFirefoxLocalDriver() {
@@ -152,8 +158,8 @@ public abstract class AbstractSpec {
                 driver.quit();
         }
         */
-        Thread.sleep(1000);
-        driver.quit();
+
+
     }
 
 
