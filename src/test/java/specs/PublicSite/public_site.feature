@@ -139,3 +139,13 @@ Feature: pages on public site are displayed properly
       And I click the "Calculate" button
     Then the chart and data includes both the stock and the selected index
 
+  Scenario: FAQ page displays questions and answers
+    Given that the site has questions and answers
+    When I select "FAQ" from the site menu
+    Then a list of questions is displayed at the top of the page
+      And each question along with its answer is displayed below
+    When I click on one of the questions on the top
+    Then the page scrolls down to that question and its answer below
+    When I click on "back to top"
+    Then the page scrolls up to the top
+

@@ -466,4 +466,18 @@ public class CheckPublicSite extends AbstractSpec {
         Assert.assertTrue("Compared to symbol is not present.", investmentCalculatorPage.resultsIncludeSymbol(comparedSymbol));
     }
 
+    @Test
+    public void faqPageWorks(){
+        FAQPage faqPage = new HomePage(driver).selectFAQFromMenu();
+        int numQuestionsTop = faqPage.getNumQuestionsTop();
+        Assert.assertTrue("No questions are displayed at top of page.", numQuestionsTop > 0);
+        int numQuestionsBelow = faqPage.getNumQuestionsBelow();
+        Assert.assertEquals("Number of questions displayed at below is different from number of questions displayed at top of page",
+                numQuestionsTop, numQuestionsBelow);
+        int numAnswers = faqPage.getNumAnswers();
+        Assert.assertEquals("There is not an answer for every question", numQuestionsBelow, numAnswers);
+        Assert.assertEquals("Page does not scroll down after clicking question", faqPage.getFirstQuestionY(), faqPage.clickFirstQuestion().getScrollPositionY());
+        Assert.assertEquals("Page does not scroll back up after clicking 'back to top'", 0, faqPage.clickBackToTop().getScrollPositionY());
+    }
+
 }

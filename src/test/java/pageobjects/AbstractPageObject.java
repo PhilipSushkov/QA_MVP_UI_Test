@@ -2,6 +2,7 @@ package pageobjects;
 
 import org.apache.commons.collections4.Predicate;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 //import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.WebElement;
@@ -47,5 +48,10 @@ public class AbstractPageObject implements PageObject {
         if (!Boolean.parseBoolean(value)) {
             findElement(selector).click();
         }
+    }
+
+    public long getScrollPositionY(){
+        JavascriptExecutor executor = (JavascriptExecutor) driver;
+        return (Long) executor.executeScript("return window.pageYOffset;");
     }
 }

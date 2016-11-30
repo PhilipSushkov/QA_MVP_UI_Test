@@ -25,6 +25,7 @@ public class HomePage extends AbstractPageObject {
     private final By siteMap = By.linkText("Site Map");
     private final By emailAlerts = By.linkText("Email Alerts");
     private final By investmentCalculator = By.linkText("Investment Calculator");
+    private final By faq = By.linkText("FAQ");
     
     public HomePage(WebDriver driver) {
         super(driver);
@@ -136,6 +137,15 @@ public class HomePage extends AbstractPageObject {
             driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
         }
         return new InvestmentCalculatorPage(getDriver());
+    }
+
+    public FAQPage selectFAQFromMenu(){
+        try {
+            findVisibleElement(faq).click();
+        }catch (TimeoutException e){
+            driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
+        }
+        return new FAQPage(getDriver());
     }
 
 }
