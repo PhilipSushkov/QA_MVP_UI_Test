@@ -28,7 +28,7 @@ public class CheckPersonList extends AbstractSpec {
         Assert.assertEquals("Actual Person List page Title doesn't match to expected", expectedTitle, new PersonList(driver).getTitle());
 
         //System.out.println(new PersonList(driver).getTitleQuantity().toString());
-        Assert.assertTrue("Actual Person List Name is less than expected: "+expectedQuantity, expectedQuantity <= new PersonList(driver).getTitleQuantity() );
+        Assert.assertTrue("Actual Person List Name Quantity is less than expected: "+expectedQuantity, expectedQuantity <= new PersonList(driver).getTitleQuantity() );
         //Assert.assertNotNull("Person List Pagination doesn't exist", new PersonList(driver).getQuickLinksPagination() );
         Assert.assertNotNull("Department drop down list doesn't exist", new PersonList(driver).getDepartmentList() );
 

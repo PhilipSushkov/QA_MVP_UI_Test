@@ -2,6 +2,7 @@ package testrunner;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
+import pageobjects.ContentAdmin.DepartmentList.DepartmentList;
 import specs.ContentAdmin.DownloadList.CheckDownloadList;
 import specs.ContentAdmin.FinancialReports.CheckFinancialReports;
 import specs.ContentAdmin.PersonList.CheckPersonList;
@@ -64,7 +65,8 @@ import specs.SystemAdmin.GenericStorageList.CheckGenericStorageList;
         CheckPressReleaseCategories.class,
         CheckQuickLinkList.class,
         CheckDownloadList.class,
-        CheckPersonList.class
+        CheckPersonList.class,
+        DepartmentList.class
         }
 )
 
