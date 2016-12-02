@@ -119,14 +119,13 @@ public class HomePage extends AbstractPageObject {
         return new RSSFeedsPage(getDriver());
     }
 
-    public EmailAlertsPage selectEmailAlertsFromPage() {
+    public EmailAlertsPage selectEmailAlertsFromMenu() {
 
         try {
-            driver.get("http://chicagotest.q4web.com/English/Contact-Us/email-alerts/default.aspx");
+            findVisibleElement(emailAlerts).click();
         } catch (TimeoutException e) {
             driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
         }
-
         return new EmailAlertsPage(getDriver());
     }
 
