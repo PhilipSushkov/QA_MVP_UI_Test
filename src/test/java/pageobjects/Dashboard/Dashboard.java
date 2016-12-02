@@ -8,6 +8,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
 import pageobjects.ContentAdmin.DownloadList.DownloadList;
 import pageobjects.ContentAdmin.FinancialReports.FinancialReports;
+import pageobjects.ContentAdmin.PersonList.PersonList;
 import pageobjects.ContentAdmin.PressReleaseCategories.PressReleaseCategories;
 import pageobjects.ContentAdmin.QuickLinkList.QuickLinks;
 import pageobjects.LoginPage.LoginPage;
@@ -75,6 +76,7 @@ public class Dashboard extends AbstractPageObject {
     private final By pressReleaseCategoriesMenuItem = By.xpath("//a[contains(text(),'Press Release Categories')]/parent::li");
     private final By quickLinksMenuItem = By.xpath("//a[contains(text(),'Quick Links')]/parent::li");
     private final By downloadListMenuItem = By.xpath("//a[contains(text(),'Download List')]/parent::li");
+    private final By personListMenuItem = By.xpath("//a[contains(text(),'Person List')]/parent::li");
 
     public static final long DEFAULT_PAUSE = 2000;
 
@@ -299,6 +301,14 @@ public class Dashboard extends AbstractPageObject {
         pause(DEFAULT_PAUSE);
         findElement(downloadListMenuItem).click();
         return new DownloadList(getDriver());
+    }
+
+    public PersonList openPersonList() {
+        action.moveToElement(findElement(contentAdminMenuButton)).perform();
+        wait.until(ExpectedConditions.visibilityOf(findElement(personListMenuItem)));
+        pause(DEFAULT_PAUSE);
+        findElement(personListMenuItem).click();
+        return new PersonList(getDriver());
     }
 
     public PressReleases pressReleases() {
