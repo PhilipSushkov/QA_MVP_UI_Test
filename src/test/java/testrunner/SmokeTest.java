@@ -4,6 +4,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import specs.ContentAdmin.FinancialReports.CheckFinancialReports;
 import specs.ContentAdmin.PressReleaseCategories.CheckPressReleaseCategories;
+import specs.ContentAdmin.QuickLinkList.CheckQuickLinkList;
 import specs.LoginPage.EnterToAdmin;
 import specs.PressReleases.AddNewPressRelease;
 import specs.Presentations.AddNewPresentation;
@@ -58,7 +59,8 @@ import specs.SystemAdmin.GenericStorageList.CheckGenericStorageList;
         CheckDomainList.class,
         CheckEditContentAdminPages.class,
         CheckFinancialReports.class,
-        CheckPressReleaseCategories.class
+        CheckPressReleaseCategories.class,
+        CheckQuickLinkList.class
         }
 )
 
