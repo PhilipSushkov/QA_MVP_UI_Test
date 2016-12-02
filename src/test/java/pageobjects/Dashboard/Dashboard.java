@@ -6,8 +6,10 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
+import pageobjects.ContentAdmin.DownloadList.DownloadList;
 import pageobjects.ContentAdmin.FinancialReports.FinancialReports;
 import pageobjects.ContentAdmin.PressReleaseCategories.PressReleaseCategories;
+import pageobjects.ContentAdmin.QuickLinkList.QuickLinks;
 import pageobjects.LoginPage.LoginPage;
 import pageobjects.PressReleases.EditPressRelease;
 import pageobjects.PressReleases.PressReleases;
@@ -71,6 +73,8 @@ public class Dashboard extends AbstractPageObject {
     private final By editContentAdminPagesMenuItem = By.xpath("//a[contains(text(),'Content Admin Edit')]/parent::li");
     private final By financialReportsMenuItem = By.xpath("//a[contains(text(),'Financial Reports')]/parent::li");
     private final By pressReleaseCategoriesMenuItem = By.xpath("//a[contains(text(),'Press Release Categories')]/parent::li");
+    private final By quickLinksMenuItem = By.xpath("//a[contains(text(),'Quick Links')]/parent::li");
+    private final By downloadListMenuItem = By.xpath("//a[contains(text(),'Download List')]/parent::li");
 
     public static final long DEFAULT_PAUSE = 2000;
 
@@ -279,6 +283,22 @@ public class Dashboard extends AbstractPageObject {
         pause(DEFAULT_PAUSE);
         findElement(pressReleaseCategoriesMenuItem).click();
         return new PressReleaseCategories(getDriver());
+    }
+
+    public QuickLinks openQuickLinks() {
+        action.moveToElement(findElement(contentAdminMenuButton)).perform();
+        wait.until(ExpectedConditions.visibilityOf(findElement(quickLinksMenuItem)));
+        pause(DEFAULT_PAUSE);
+        findElement(quickLinksMenuItem).click();
+        return new QuickLinks(getDriver());
+    }
+
+    public DownloadList openDownloadList() {
+        action.moveToElement(findElement(contentAdminMenuButton)).perform();
+        wait.until(ExpectedConditions.visibilityOf(findElement(downloadListMenuItem)));
+        pause(DEFAULT_PAUSE);
+        findElement(downloadListMenuItem).click();
+        return new DownloadList(getDriver());
     }
 
     public PressReleases pressReleases() {

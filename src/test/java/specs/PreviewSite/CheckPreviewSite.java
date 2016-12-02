@@ -17,7 +17,7 @@ public class CheckPreviewSite extends AbstractSpec {
 
     @Before
     public void goToPreviewSite() throws Exception {
-        new LoginPage(driver).loginUser().previewSite().goToInvestorsPage();
+        //new LoginPage(driver).loginUser().previewSite().goToInvestorsPage();
     }
 
     @Test
