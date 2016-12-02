@@ -8,7 +8,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
 import pageobjects.ContentAdmin.FinancialReports.FinancialReports;
 import pageobjects.ContentAdmin.PressReleaseCategories.PressReleaseCategories;
-import pageobjects.ContentAdmin.QuickLinkList.QuickLinks;
 import pageobjects.LoginPage.LoginPage;
 import pageobjects.PressReleases.EditPressRelease;
 import pageobjects.PressReleases.PressReleases;
@@ -72,7 +71,6 @@ public class Dashboard extends AbstractPageObject {
     private final By editContentAdminPagesMenuItem = By.xpath("//a[contains(text(),'Content Admin Edit')]/parent::li");
     private final By financialReportsMenuItem = By.xpath("//a[contains(text(),'Financial Reports')]/parent::li");
     private final By pressReleaseCategoriesMenuItem = By.xpath("//a[contains(text(),'Press Release Categories')]/parent::li");
-    private final By quickLinkMenuItem = By.xpath("//a[contains(text(),'Quick Links')]/parent::li");
 
     public static final long DEFAULT_PAUSE = 2000;
 
@@ -281,14 +279,6 @@ public class Dashboard extends AbstractPageObject {
         pause(DEFAULT_PAUSE);
         findElement(pressReleaseCategoriesMenuItem).click();
         return new PressReleaseCategories(getDriver());
-    }
-
-    public QuickLinks openQuickLinks() {
-        action.moveToElement(findElement(contentAdminMenuButton)).perform();
-        wait.until(ExpectedConditions.visibilityOf(findElement(quickLinkMenuItem)));
-        pause(DEFAULT_PAUSE);
-        findElement(quickLinkMenuItem).click();
-        return new QuickLinks(getDriver());
     }
 
     public PressReleases pressReleases() {

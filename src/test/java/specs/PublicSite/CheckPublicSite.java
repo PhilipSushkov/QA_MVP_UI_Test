@@ -389,7 +389,7 @@ public class CheckPublicSite extends AbstractSpec {
 
     @Test
     public void emailAlertsWork() {
-        EmailAlertsPage emailAlertsPage = new HomePage(driver).selectEmailAlertsFromPage();
+        EmailAlertsPage emailAlertsPage = new HomePage(driver).selectEmailAlertsFromMenu();
         String wrongEmail = "QWEASDZXC1234567";
         String rightEmail = "kelvint@q4inc.com";
         boolean buttonsActivated = true; //State of the buttons
@@ -418,7 +418,7 @@ public class CheckPublicSite extends AbstractSpec {
 
     @Test
     public void unsubscribeEmailAlertsWorks() { //Timeouts still occur, despite all the escapes :/
-        EmailAlertsPage emailAlertsPage = new HomePage(driver).selectEmailAlertsFromPage();
+        EmailAlertsPage emailAlertsPage = new HomePage(driver).selectEmailAlertsFromMenu();
         String incorrectFormEmail = "QWEASDZXC1234567";
         String wrongEmail = "telvink@q4inc.com"; //never used to subscribe
         String rightEmail = "kelvint@q4inc.com";

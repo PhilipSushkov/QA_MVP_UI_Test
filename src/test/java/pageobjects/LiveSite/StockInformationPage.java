@@ -221,85 +221,86 @@ public class StockInformationPage extends AbstractPageObject {
     // TICKERTECH STOCK CHART METHODS
 
     public boolean stockChartTickertechIsDisplayed(){
-        driver.switchTo().defaultContent();
         driver.switchTo().frame(findElement(stockChartTickertechFrame));
-        return findElement(stockChartTickertech).isDisplayed();
+        boolean isDisplayed = findElement(stockChartTickertech).isDisplayed();
+        driver.switchTo().defaultContent();
+        return isDisplayed;
     }
 
     public String getTickertechSRC(){
-        driver.switchTo().defaultContent();
         driver.switchTo().frame(findElement(stockChartTickertechFrame));
-        return findElement(stockChartTickertech).getAttribute("src");
+        String src = findElement(stockChartTickertech).getAttribute("src");
+        driver.switchTo().defaultContent();
+        return src;
     }
 
     public void switchChartTickertechTo1Month(){
-        driver.switchTo().defaultContent();
         driver.switchTo().frame(findElement(stockChartTickertechFrame));
         findElements(timeRangeButtonTickertech).get(0).click();
+        driver.switchTo().defaultContent();
     }
 
     public void switchChartTickertechTo1Quarter(){
-        driver.switchTo().defaultContent();
         driver.switchTo().frame(findElement(stockChartTickertechFrame));
         findElements(timeRangeButtonTickertech).get(1).click();
+        driver.switchTo().defaultContent();
     }
 
     public void switchChartTickertechTo1Year(){
-        driver.switchTo().defaultContent();
         driver.switchTo().frame(findElement(stockChartTickertechFrame));
         findElements(timeRangeButtonTickertech).get(2).click();
+        driver.switchTo().defaultContent();
     }
 
     public void switchChartTickertechToPrice(){
-        driver.switchTo().defaultContent();
         driver.switchTo().frame(findElement(stockChartTickertechFrame));
         findElements(chartByButtonTickertech).get(0).click();
+        driver.switchTo().defaultContent();
     }
 
     public void switchChartTickertechToPChange(){
-        driver.switchTo().defaultContent();
         driver.switchTo().frame(findElement(stockChartTickertechFrame));
         findElements(chartByButtonTickertech).get(1).click();
+        driver.switchTo().defaultContent();
     }
 
     public void switchChartTickertechToMountain(){
-        driver.switchTo().defaultContent();
         driver.switchTo().frame(findElement(stockChartTickertechFrame));
         findElements(chartTypeButtonTickertech).get(0).click();
+        driver.switchTo().defaultContent();
     }
 
     public void switchChartTickertechToFillToPrevClose(){
-        driver.switchTo().defaultContent();
         driver.switchTo().frame(findElement(stockChartTickertechFrame));
         findElements(chartTypeButtonTickertech).get(1).click();
+        driver.switchTo().defaultContent();
     }
 
     public void switchChartTickertechToLine(){
-        driver.switchTo().defaultContent();
         driver.switchTo().frame(findElement(stockChartTickertechFrame));
         findElements(chartTypeButtonTickertech).get(2).click();
+        driver.switchTo().defaultContent();
     }
 
     public void switchChartTickertechToPoint(){
-        driver.switchTo().defaultContent();
         driver.switchTo().frame(findElement(stockChartTickertechFrame));
         findElements(chartTypeButtonTickertech).get(3).click();
+        driver.switchTo().defaultContent();
     }
 
     public void switchChartTickertechToBar(){
-        driver.switchTo().defaultContent();
         driver.switchTo().frame(findElement(stockChartTickertechFrame));
         findElements(chartTypeButtonTickertech).get(4).click();
+        driver.switchTo().defaultContent();
     }
 
     public void switchChartTickertechToCandleStick(){
-        driver.switchTo().defaultContent();
         driver.switchTo().frame(findElement(stockChartTickertechFrame));
         findElements(chartTypeButtonTickertech).get(5).click();
+        driver.switchTo().defaultContent();
     }
 
     public void tickertechCompareVs(String stock, boolean dow, boolean nasdaq, boolean sp, boolean russell){
-        driver.switchTo().defaultContent();
         driver.switchTo().frame(findElement(stockChartTickertechFrame));
         findElement(compareStock).sendKeys(stock);
         if (dow ^ findElement(dowCheckbox).isSelected()){
@@ -315,6 +316,7 @@ public class StockInformationPage extends AbstractPageObject {
             findElement(russellCheckbox).click();
         }
         findElement(tickertechCompareButton).click();
+        driver.switchTo().defaultContent();
     }
 
     // HISTORICAL QUOTE METHODS
