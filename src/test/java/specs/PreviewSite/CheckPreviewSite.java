@@ -5,6 +5,7 @@ import org.junit.Test;
 import pageobjects.LoginPage.LoginPage;
 import specs.AbstractSpec;
 import specs.PublicSite.CheckPublicSite;
+import pageobjects.PreviewSite.PreviewSiteHome;
 
 import static org.junit.Assert.fail;
 
@@ -17,7 +18,8 @@ public class CheckPreviewSite extends AbstractSpec {
 
     @Before
     public void goToPreviewSite() throws Exception {
-        //new LoginPage(driver).loginUser().previewSite().goToInvestorsPage();
+        new LoginPage(driver).loginUser();
+        new PreviewSiteHome(driver).goToInvestorsPage();
     }
 
     @Test

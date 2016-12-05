@@ -1,4 +1,4 @@
-package pageobjects.ContentAdmin.DownloadList;
+package pageobjects.ContentAdmin.FaqList;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.ElementNotVisibleException;
@@ -8,18 +8,17 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
 
 /**
- * Created by philipsushkov on 2016-12-02.
+ * Created by philipsushkov on 2016-12-05.
  */
 
-public class DownloadList extends AbstractPageObject {
+public class FaqList extends AbstractPageObject {
     private final By moduleTitle = By.xpath("//span[contains(@class, 'AdminContent')]/h1/span[contains(@id,'ModuleTitle')]");
-    private final By grid = By.xpath("//table[contains(@id, 'Reports2_dataGrid')]");
-    private final By gridDownloadList = By.xpath("//td[contains(@class,'DataGridItemBorder')]");
+    private final By grid = By.xpath("//table[contains(@id, 'Faq_dataGrid')]");
+    private final By gridFaqList = By.xpath("//td[contains(@class,'DataGridItemBorder')]");
     private final By dataGridPager = By.xpath("//tr[contains(@class, 'DataGridPager')]");
-    private final By inputFilterByTag = By.xpath("//input[contains(@id, 'TagSelection_txtTags')]");
-    private final Integer columnsNumber = 8;
+    private final Integer columnsNumber = 7;
 
-    public DownloadList(WebDriver driver) {
+    public FaqList(WebDriver driver) {
         super(driver);
     }
 
@@ -37,30 +36,16 @@ public class DownloadList extends AbstractPageObject {
 
     public Integer getTitleQuantity() {
         wait.until(ExpectedConditions.visibilityOf(findElement(grid)) );
-        return findElement(grid).findElements(gridDownloadList).size()/columnsNumber;
+        return findElement(grid).findElements(gridFaqList).size()/columnsNumber;
     }
 
 
-    public WebElement getDownloadListPagination() {
+    public WebElement getFaqListPagination() {
         WebElement element = null;
 
         try {
             wait.until(ExpectedConditions.visibilityOf(findElement(dataGridPager)));
             element = findElement(dataGridPager);
-        } catch (ElementNotFoundException e1) {
-        } catch (ElementNotVisibleException e2) {
-        }
-
-        return element;
-    }
-
-
-    public WebElement getFilterByTag() {
-        WebElement element = null;
-
-        try {
-            wait.until(ExpectedConditions.visibilityOf(findElement(inputFilterByTag)));
-            element = findElement(inputFilterByTag);
         } catch (ElementNotFoundException e1) {
         } catch (ElementNotVisibleException e2) {
         }

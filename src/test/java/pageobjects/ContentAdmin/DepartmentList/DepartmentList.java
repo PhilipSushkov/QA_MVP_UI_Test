@@ -41,7 +41,7 @@ public class DepartmentList extends AbstractPageObject {
     }
 
 
-    public WebElement getQuickLinksPagination() {
+    public WebElement getDepartmentListPagination() {
         WebElement element = null;
 
         try {

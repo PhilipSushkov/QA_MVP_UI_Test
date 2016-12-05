@@ -8,6 +8,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
 import pageobjects.ContentAdmin.DepartmentList.DepartmentList;
 import pageobjects.ContentAdmin.DownloadList.DownloadList;
+import pageobjects.ContentAdmin.FaqList.FaqList;
 import pageobjects.ContentAdmin.FinancialReports.FinancialReports;
 import pageobjects.ContentAdmin.PersonList.PersonList;
 import pageobjects.ContentAdmin.PressReleaseCategories.PressReleaseCategories;
@@ -79,6 +80,7 @@ public class Dashboard extends AbstractPageObject {
     private final By downloadListMenuItem = By.xpath("//a[contains(text(),'Download List')]/parent::li");
     private final By personListMenuItem = By.xpath("//a[contains(text(),'Person List')]/parent::li");
     private final By departmentListMenuItem = By.xpath("//a[contains(text(),'Department List')]/parent::li");
+    private final By faqListMenuItem = By.xpath("//a[contains(text(),'Faq List')]/parent::li");
 
     public static final long DEFAULT_PAUSE = 2000;
 
@@ -319,6 +321,14 @@ public class Dashboard extends AbstractPageObject {
         pause(DEFAULT_PAUSE);
         findElement(departmentListMenuItem).click();
         return new DepartmentList(getDriver());
+    }
+
+    public FaqList openFaqList() {
+        action.moveToElement(findElement(contentAdminMenuButton)).perform();
+        wait.until(ExpectedConditions.visibilityOf(findElement(faqListMenuItem)));
+        pause(DEFAULT_PAUSE);
+        findElement(faqListMenuItem).click();
+        return new FaqList(getDriver());
     }
 
     public PressReleases pressReleases() {

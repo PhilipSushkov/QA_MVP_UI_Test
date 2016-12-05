@@ -30,7 +30,7 @@ public class CheckDownloadList extends AbstractSpec {
 
         //System.out.println(new DownloadList(driver).getTitleQuantity().toString());
         Assert.assertTrue("Actual Download List Title Quantity is less than expected: "+expectedQuantity, expectedQuantity <= new DownloadList(driver).getTitleQuantity() );
-        Assert.assertNotNull("Download List Pagination doesn't exist", new DownloadList(driver).getQuickLinksPagination() );
+        Assert.assertNotNull("Download List Pagination doesn't exist", new DownloadList(driver).getDownloadListPagination() );
         Assert.assertNotNull("Filter By Tag field doesn't exist", new DownloadList(driver).getFilterByTag() );
 
     }
