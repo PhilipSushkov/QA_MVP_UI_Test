@@ -14,6 +14,7 @@ import pageobjects.ContentAdmin.JobPostingList.JobPostingList;
 import pageobjects.ContentAdmin.PersonList.PersonList;
 import pageobjects.ContentAdmin.PressReleaseCategories.PressReleaseCategories;
 import pageobjects.ContentAdmin.QuickLinkList.QuickLinks;
+import pageobjects.EmailAdmin.Compose;
 import pageobjects.LoginPage.LoginPage;
 import pageobjects.PressReleases.EditPressRelease;
 import pageobjects.PressReleases.PressReleases;
@@ -86,6 +87,7 @@ public class Dashboard extends AbstractPageObject {
     private final By departmentListMenuItem = By.xpath("//a[contains(text(),'Department List')]/parent::li");
     private final By faqListMenuItem = By.xpath("//a[contains(text(),'Faq List')]/parent::li");
     private final By jobPostingMenuItem = By.xpath("//a[contains(text(),'Job Posting List')]/parent::li");
+    private final By composeMenuItem = By.xpath("//a[contains(text(),'Compose')]/parent::li");
     private final By previewSiteButton = By.linkText("PREVIEW SITE");
 
     public static final long DEFAULT_PAUSE = 2000;
@@ -335,6 +337,14 @@ public class Dashboard extends AbstractPageObject {
         pause(DEFAULT_PAUSE);
         findElement(departmentListMenuItem).click();
         return new DepartmentList(getDriver());
+    }
+
+    public Compose openCompose() {
+        action.moveToElement(findElement(contentAdminMenuButton)).perform();
+        wait.until(ExpectedConditions.visibilityOf(findElement(composeMenuItem)));
+        pause(DEFAULT_PAUSE);
+        findElement(composeMenuItem).click();
+        return new Compose(getDriver());
     }
 
     public FaqList openFaqList() {

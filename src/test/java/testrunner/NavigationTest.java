@@ -10,15 +10,11 @@ import specs.ContentAdmin.JobPostingList.CheckJobPostingList;
 import specs.ContentAdmin.PersonList.CheckPersonList;
 import specs.ContentAdmin.PressReleaseCategories.CheckPressReleaseCategories;
 import specs.ContentAdmin.QuickLinkList.CheckQuickLinkList;
-import specs.LoginPage.EnterToAdmin;
-import specs.PressReleases.AddNewPressRelease;
-import specs.Presentations.AddNewPresentation;
-import specs.PublicSite.CheckPublicSite;
-import specs.Events.AddNewEvent;
+import specs.EmailAdmin.Compose.CheckCompose;
 import specs.SiteAdmin.AliasList.CheckAliasList;
+import specs.SiteAdmin.ContentAdminEdit.CheckEditContentAdminPages;
 import specs.SiteAdmin.CssFileList.CheckCssFileList;
 import specs.SiteAdmin.DomainList.CheckDomainList;
-import specs.SiteAdmin.ContentAdminEdit.CheckEditContentAdminPages;
 import specs.SiteAdmin.GlobalModuleList.CheckGlobalModuleList;
 import specs.SiteAdmin.IndexContent.CheckIndexContent;
 import specs.SiteAdmin.LayoutDefinitionList.CheckLayoutDefinitionList;
@@ -26,26 +22,21 @@ import specs.SiteAdmin.LinkToPageList.CheckLinkToPageList;
 import specs.SiteAdmin.LookupList.CheckLookupList;
 import specs.SiteAdmin.MobileLinkList.CheckMobileLinkList;
 import specs.SiteAdmin.ModuleDefinitionList.CheckModuleDefinitionList;
+import specs.SystemAdmin.AlertFilterList.CheckAlertFilterList;
+import specs.SystemAdmin.GenericStorageList.CheckGenericStorageList;
 import specs.SystemAdmin.PDFTemplateEdit.CheckPDFTemplateEdit;
 import specs.SystemAdmin.SiteList.CheckSiteList;
 import specs.SystemAdmin.UserGroupList.CheckUserGroupList;
 import specs.SystemAdmin.UserList.CheckUserList;
 import specs.SystemAdmin.WorkflowEmailList.CheckWorkflowEmailList;
-import specs.SystemAdmin.AlertFilterList.CheckAlertFilterList;
-import specs.SystemAdmin.GenericStorageList.CheckGenericStorageList;
-import specs.EmailAdmin.Compose.CheckCompose;
 
 /**
- * Created by philips on 2016-11-07.
+ * Created by philipsushkov on 2016-12-05.
  */
+
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        EnterToAdmin.class,
-        AddNewPressRelease.class,
-        AddNewPresentation.class,
-        AddNewEvent.class,
-        CheckPublicSite.class,
         CheckUserList.class,
         CheckWorkflowEmailList.class,
         CheckAlertFilterList.class,
@@ -73,8 +64,9 @@ import specs.EmailAdmin.Compose.CheckCompose;
         CheckFaqList.class,
         CheckJobPostingList.class,
         CheckCompose.class
-        }
+}
 )
 
-public class SmokeTest {
+public class NavigationTest {
+
 }
