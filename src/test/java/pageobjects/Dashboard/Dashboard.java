@@ -19,6 +19,7 @@ import pageobjects.Presentations.EditPresentation;
 import pageobjects.Presentations.Presentations;
 import pageobjects.Events.EditEvent;
 import pageobjects.Events.Events;
+import pageobjects.PreviewSite.PreviewSiteHome;
 import pageobjects.SiteAdmin.AliasList.AliasList;
 import pageobjects.SiteAdmin.CssFileList.CssFileList;
 import pageobjects.SiteAdmin.DomainList.DomainList;
@@ -40,6 +41,8 @@ import pageobjects.SystemAdmin.SiteList.SiteList;
 import pageobjects.SiteAdmin.LinkToPageList.LinkToPageList;
 import pageobjects.SiteAdmin.LookupList.LookupList;
 import specs.AbstractSpec;
+
+import java.util.ArrayList;
 
 public class Dashboard extends AbstractPageObject {
     Actions action = new Actions(driver);
@@ -79,6 +82,7 @@ public class Dashboard extends AbstractPageObject {
     private final By downloadListMenuItem = By.xpath("//a[contains(text(),'Download List')]/parent::li");
     private final By personListMenuItem = By.xpath("//a[contains(text(),'Person List')]/parent::li");
     private final By departmentListMenuItem = By.xpath("//a[contains(text(),'Department List')]/parent::li");
+    private final By previewSiteButton = By.linkText("PREVIEW SITE");
 
     public static final long DEFAULT_PAUSE = 2000;
 
@@ -93,6 +97,14 @@ public class Dashboard extends AbstractPageObject {
             new LoginPage(driver).sessionID();
         }
         return driver.getCurrentUrl();
+    }
+
+    public PreviewSiteHome previewSite() {
+        waitForElement(previewSiteButton);
+        findElement(previewSiteButton).click();
+        ArrayList<String> tabs = new ArrayList<String> (driver.getWindowHandles());
+        driver.switchTo().window(tabs.get(1));
+        return new PreviewSiteHome(getDriver());
     }
 
     public EditPressRelease newPressRelease() {
