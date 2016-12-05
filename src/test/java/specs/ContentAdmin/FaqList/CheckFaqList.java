@@ -28,7 +28,7 @@ public class CheckFaqList extends AbstractSpec {
         Assert.assertNotNull(new Dashboard(driver).openFaqList().getUrl());
         Assert.assertEquals("Actual Faq List page Title doesn't match to expected", expectedTitle, new FaqList(driver).getTitle());
 
-        System.out.println(new FaqList(driver).getTitleQuantity().toString());
+        //System.out.println(new FaqList(driver).getTitleQuantity().toString());
         Assert.assertTrue("Actual Faq List Name Quantity is less than expected: "+expectedQuantity, expectedQuantity <= new FaqList(driver).getTitleQuantity() );
         Assert.assertNotNull("Faq List Pagination doesn't exist", new FaqList(driver).getFaqListPagination() );
         //Assert.assertNotNull("Filter By Tag field doesn't exist", new FaqList(driver).getFilterByTag() );

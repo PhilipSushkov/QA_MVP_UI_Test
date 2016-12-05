@@ -2,9 +2,11 @@ package testrunner;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
-import pageobjects.ContentAdmin.DepartmentList.DepartmentList;
+import specs.ContentAdmin.DepartmentList.CheckDepartmentList;
 import specs.ContentAdmin.DownloadList.CheckDownloadList;
+import specs.ContentAdmin.FaqList.CheckFaqList;
 import specs.ContentAdmin.FinancialReports.CheckFinancialReports;
+import specs.ContentAdmin.JobPostingList.CheckJobPostingList;
 import specs.ContentAdmin.PersonList.CheckPersonList;
 import specs.ContentAdmin.PressReleaseCategories.CheckPressReleaseCategories;
 import specs.ContentAdmin.QuickLinkList.CheckQuickLinkList;
@@ -66,7 +68,9 @@ import specs.SystemAdmin.GenericStorageList.CheckGenericStorageList;
         CheckQuickLinkList.class,
         CheckDownloadList.class,
         CheckPersonList.class,
-        DepartmentList.class
+        CheckDepartmentList.class,
+        CheckFaqList.class,
+        CheckJobPostingList.class
         }
 )
 
