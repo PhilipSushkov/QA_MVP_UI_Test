@@ -17,8 +17,12 @@ public class Compose extends AbstractPageObject {
     private final By moduleTitle = By.xpath("//span[contains(@class, 'AdminContent')]/h1/span[contains(@id,'ModuleTitle')]");
     private final By selectTemplate = By.xpath("//select[contains(@id, 'ddlTemplate')]");
     private final By selectTo = By.xpath("//select[contains(@id, 'ddlMailingLists')]");
-    private final By fieldFrom = By.xpath("//select[contains(@id, 'txtFrom')]");
-    private final By fieldSubject = By.xpath("//select[contains(@id, 'txtSubject')]");
+    private final By inputFrom = By.xpath("//input[contains(@id, 'txtFrom')]");
+    private final By inputSubject = By.xpath("//input[contains(@id, 'txtSubject')]");
+    private final By textareaBodyText = By.xpath("//iframe[contains(@id, 'radBody_contentIframe')]");
+    private final By inputCreatedBy = By.xpath("//input[contains(@id, 'txtCreatedBy')]");
+    private final By buttonSendTestEmail = By.xpath("//input[contains(@id, 'btnSendTestEmail')]");
+    private final By buttonSave = By.xpath("//input[contains(@id, 'btnSave')]");
 
     public Compose(WebDriver driver) {
         super(driver);
@@ -66,8 +70,8 @@ public class Compose extends AbstractPageObject {
         WebElement element = null;
 
         try {
-            wait.until(ExpectedConditions.visibilityOf(findElement(fieldFrom)));
-            element = findElement(fieldFrom);
+            wait.until(ExpectedConditions.visibilityOf(findElement(inputFrom)));
+            element = findElement(inputFrom);
         } catch (PageObject.ElementNotFoundException e1) {
         } catch (ElementNotVisibleException e2) {
         }
@@ -79,8 +83,60 @@ public class Compose extends AbstractPageObject {
         WebElement element = null;
 
         try {
-            wait.until(ExpectedConditions.visibilityOf(findElement(fieldSubject)));
-            element = findElement(fieldSubject);
+            wait.until(ExpectedConditions.visibilityOf(findElement(inputSubject)));
+            element = findElement(inputSubject);
+        } catch (PageObject.ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        }
+
+        return element;
+    }
+
+    public WebElement getBodyTextArea() {
+        WebElement element = null;
+
+        try {
+            wait.until(ExpectedConditions.visibilityOf(findElement(textareaBodyText)));
+            element = findElement(textareaBodyText);
+        } catch (PageObject.ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        }
+
+        return element;
+    }
+
+    public WebElement getCreatedByField() {
+        WebElement element = null;
+
+        try {
+            wait.until(ExpectedConditions.visibilityOf(findElement(inputCreatedBy)));
+            element = findElement(inputCreatedBy);
+        } catch (PageObject.ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        }
+
+        return element;
+    }
+
+    public WebElement getSendTestEmailButton() {
+        WebElement element = null;
+
+        try {
+            wait.until(ExpectedConditions.visibilityOf(findElement(buttonSendTestEmail)));
+            element = findElement(buttonSendTestEmail);
+        } catch (PageObject.ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        }
+
+        return element;
+    }
+
+    public WebElement getSaveButton() {
+        WebElement element = null;
+
+        try {
+            wait.until(ExpectedConditions.visibilityOf(findElement(buttonSave)));
+            element = findElement(buttonSave);
         } catch (PageObject.ElementNotFoundException e1) {
         } catch (ElementNotVisibleException e2) {
         }

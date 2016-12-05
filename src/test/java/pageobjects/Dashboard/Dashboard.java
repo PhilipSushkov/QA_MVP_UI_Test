@@ -59,6 +59,7 @@ public class Dashboard extends AbstractPageObject {
     private final By eventsMenuButton = By.xpath("//a[contains(text(),'Events')]/parent::li");
     private final By systemAdminMenuButton = By.xpath("//span[contains(text(),'System Admin')]");
     private final By siteAdminMenuButton = By.xpath("//span[contains(text(),'Site Admin')]");
+    private final By emailAdminMenuButton = By.xpath("//span[contains(text(),'Email Admin')]");
     private final By userListMenuItem = By.xpath("//a[contains(text(),'User List')]/parent::li");
     private final By alertFilterListMenuItem = By.xpath("//a[contains(text(),'Alert Filter List')]/parent::li");
     private final By genericStorageListMenuItem = By.xpath("//a[contains(text(),'Generic Storage List')]/parent::li");
@@ -340,7 +341,7 @@ public class Dashboard extends AbstractPageObject {
     }
 
     public Compose openCompose() {
-        action.moveToElement(findElement(contentAdminMenuButton)).perform();
+        action.moveToElement(findElement(emailAdminMenuButton)).perform();
         wait.until(ExpectedConditions.visibilityOf(findElement(composeMenuItem)));
         pause(DEFAULT_PAUSE);
         findElement(composeMenuItem).click();
