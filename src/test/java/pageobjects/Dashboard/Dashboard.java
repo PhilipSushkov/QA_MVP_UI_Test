@@ -15,6 +15,7 @@ import pageobjects.ContentAdmin.PersonList.PersonList;
 import pageobjects.ContentAdmin.PressReleaseCategories.PressReleaseCategories;
 import pageobjects.ContentAdmin.QuickLinkList.QuickLinks;
 import pageobjects.EmailAdmin.Compose.Compose;
+import pageobjects.EmailAdmin.ManageList.MailingLists;
 import pageobjects.LoginPage.LoginPage;
 import pageobjects.PressReleases.EditPressRelease;
 import pageobjects.PressReleases.PressReleases;
@@ -89,6 +90,7 @@ public class Dashboard extends AbstractPageObject {
     private final By faqListMenuItem = By.xpath("//a[contains(text(),'Faq List')]/parent::li");
     private final By jobPostingMenuItem = By.xpath("//a[contains(text(),'Job Posting List')]/parent::li");
     private final By composeMenuItem = By.xpath("//a[contains(text(),'Compose')]/parent::li");
+    private final By manageListMenuItem = By.xpath("//a[contains(text(),'Manage List')]/parent::li");
     private final By previewSiteButton = By.linkText("PREVIEW SITE");
 
     public static final long DEFAULT_PAUSE = 2000;
@@ -346,6 +348,14 @@ public class Dashboard extends AbstractPageObject {
         pause(DEFAULT_PAUSE);
         findElement(composeMenuItem).click();
         return new Compose(getDriver());
+    }
+
+    public MailingLists openMailingLists() {
+        action.moveToElement(findElement(emailAdminMenuButton)).perform();
+        wait.until(ExpectedConditions.visibilityOf(findElement(manageListMenuItem)));
+        pause(DEFAULT_PAUSE);
+        findElement(manageListMenuItem).click();
+        return new MailingLists(getDriver());
     }
 
     public FaqList openFaqList() {

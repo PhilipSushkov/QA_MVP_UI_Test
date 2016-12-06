@@ -15,7 +15,11 @@ import pageobjects.PageObject;
 public class MailingLists extends AbstractPageObject {
 
     private final By moduleTitle = By.xpath("//span[contains(@class, 'AdminContent')]/h1/span[contains(@id,'ModuleTitle')]");
-    private final By selectTemplate = By.xpath("//select[contains(@id, 'ddlTemplate')]");
+    private final By grid = By.xpath("//table[contains(@id, 'MailingListsDataGrid')]");
+    private final By gridMailingLists = By.xpath("//td[contains(@class,'DataGridItemBorder')]");
+    private final By inputSearch = By.xpath("//input[contains(@id, 'txtSearch')]");
+    private final By buttonSearch = By.xpath("//input[contains(@id, 'btnSearch')]");
+    private final Integer columnsNumber = 5;
 
     public MailingLists(WebDriver driver) {
         super(driver);
@@ -33,12 +37,32 @@ public class MailingLists extends AbstractPageObject {
     }
 
 
-    public WebElement getTemplateList() {
+    public Integer getTitleQuantity() {
+        wait.until(ExpectedConditions.visibilityOf(findElement(grid)) );
+        return findElement(grid).findElements(gridMailingLists).size()/columnsNumber;
+    }
+
+
+    public WebElement getSearchField() {
         WebElement element = null;
 
         try {
-            wait.until(ExpectedConditions.visibilityOf(findElement(selectTemplate)));
-            element = findElement(selectTemplate);
+            wait.until(ExpectedConditions.visibilityOf(findElement(inputSearch)));
+            element = findElement(inputSearch);
+        } catch (PageObject.ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        }
+
+        return element;
+    }
+
+
+    public WebElement getSearchButton() {
+        WebElement element = null;
+
+        try {
+            wait.until(ExpectedConditions.visibilityOf(findElement(buttonSearch)));
+            element = findElement(buttonSearch);
         } catch (PageObject.ElementNotFoundException e1) {
         } catch (ElementNotVisibleException e2) {
         }
