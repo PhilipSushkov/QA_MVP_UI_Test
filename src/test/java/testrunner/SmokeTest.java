@@ -10,6 +10,8 @@ import specs.ContentAdmin.JobPostingList.CheckJobPostingList;
 import specs.ContentAdmin.PersonList.CheckPersonList;
 import specs.ContentAdmin.PressReleaseCategories.CheckPressReleaseCategories;
 import specs.ContentAdmin.QuickLinkList.CheckQuickLinkList;
+import specs.EmailAdmin.ManageList.CheckMailingLists;
+import specs.EmailAdmin.Subscribers.CheckMailingListUsers;
 import specs.LoginPage.EnterToAdmin;
 import specs.PressReleases.AddNewPressRelease;
 import specs.Presentations.AddNewPresentation;
@@ -74,7 +76,9 @@ import specs.EmailAdmin.Compose.CheckCompose;
         CheckDepartmentList.class,
         CheckFaqList.class,
         CheckJobPostingList.class,
-        CheckCompose.class
+        CheckCompose.class,
+        CheckMailingLists.class,
+        CheckMailingListUsers.class
         }
 )
 
