@@ -94,6 +94,8 @@ public class Dashboard extends AbstractPageObject {
     private final By manageListMenuItem = By.xpath("//a[contains(text(),'Manage List')]/parent::li");
     private final By subscribersMenuItem = By.xpath("//a[contains(text(),'Subscribers')]/parent::li");
     private final By previewSiteButton = By.linkText("PREVIEW SITE");
+    private final By invalidateCacheButton = By.xpath("//a[contains(@id,'hrefInvalidateCache')]");
+    private final By invalidateCacheMessage = By.className("MessageContainer");
 
     public static final long DEFAULT_PAUSE = 2000;
 
@@ -404,6 +406,20 @@ public class Dashboard extends AbstractPageObject {
         wait.until(ExpectedConditions.visibilityOf(findElement(eventsMenuButton)));
         findElement(eventsMenuButton).click();
         return new Events(getDriver());
+    }
+
+    public Dashboard invalidateCache(){
+        waitForElement(invalidateCacheButton);
+        findElement(invalidateCacheButton).click();
+        return this;
+    }
+
+    public String getInvalidateCacheMessage(){
+        pause(5000);
+        if (!doesElementExist(invalidateCacheMessage)){
+            return "";
+        }
+        return findElement(invalidateCacheMessage).getText();
     }
 
 }
