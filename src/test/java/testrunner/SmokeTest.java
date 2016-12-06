@@ -13,6 +13,7 @@ import specs.ContentAdmin.QuickLinkList.CheckQuickLinkList;
 import specs.LoginPage.EnterToAdmin;
 import specs.PressReleases.AddNewPressRelease;
 import specs.Presentations.AddNewPresentation;
+import specs.PreviewSite.CheckPreviewSite;
 import specs.PublicSite.CheckPublicSite;
 import specs.Events.AddNewEvent;
 import specs.SiteAdmin.AliasList.CheckAliasList;
@@ -46,6 +47,7 @@ import specs.EmailAdmin.Compose.CheckCompose;
         AddNewPresentation.class,
         AddNewEvent.class,
         CheckPublicSite.class,
+        CheckPreviewSite.class,
         CheckUserList.class,
         CheckWorkflowEmailList.class,
         CheckAlertFilterList.class,

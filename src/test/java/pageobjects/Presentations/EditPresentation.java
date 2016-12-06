@@ -39,10 +39,15 @@ public class EditPresentation extends AbstractPageObject {
     public String addNewPresentation(String headline, String date, String hour, String minute, String AMPM, String[] filenames) {
 
         wait.until(ExpectedConditions.visibilityOf(findElement(displayedURL)));
+
+        /*
         String newsPageURL = findElement(displayedURL).getText(); // gives URL like http://kinross.q4web.newtest/news-and-investors/news-releases/press-release-details/
 
         newsPageURL = newsPageURL.substring(0, newsPageURL.lastIndexOf("/"));
         newsPageURL = newsPageURL.substring(0, newsPageURL.lastIndexOf("/")); // substring repetition needed to remove the -details section of URL
+        */
+
+
 
         // filling in mandatory date, time, and headline fields
         findElement(presentationDate).sendKeys(date);
@@ -62,6 +67,8 @@ public class EditPresentation extends AbstractPageObject {
         WebElement elemSrc =  driver.findElement(relatedDocument);
         filenames[1] = presentationFile;
         js.executeScript("arguments[0].setAttribute(arguments[1], arguments[2]);", elemSrc, "value", "files/"+filenames[1]);
+
+        String newsPageURL = findElement(displayedURL).getText();
 
         // adding comments (necessary formality) and submitting
         findElement(updateComments).sendKeys("testing");

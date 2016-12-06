@@ -1,9 +1,6 @@
 package pageobjects.LiveSite;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
 import pageobjects.Dashboard.Dashboard;
@@ -36,7 +33,7 @@ public class LivePresentations extends AbstractPageObject {
         return new Dashboard(getDriver());
     }
 
-    public boolean canFindNewHeadline(String expectedHeadline, boolean desiredState, String[] expectedFilenames){
+    public boolean canFindNewHeadline(String expectedHeadline, boolean desiredState, String[] expectedFilenames) throws InterruptedException {
         WebElement headlines;
         int refreshAttempts = 0;
         boolean foundHeadline = !desiredState;
@@ -55,11 +52,54 @@ public class LivePresentations extends AbstractPageObject {
             time = System.currentTimeMillis();
 
             try {
+                driver.findElement(By.tagName("body")).sendKeys("Keys.ESCAPE");
+                Thread.sleep(1000);
                 driver.navigate().refresh();
             } catch (TimeoutException e) {
                 driver.findElement(By.tagName("body")).sendKeys("Keys.ESCAPE");
             }
 
+            try {
+                driver.findElement(By.tagName("body")).sendKeys("Keys.ESCAPE");
+                headlines = driver.findElement(latestHeadlines);
+
+                System.out.println("Found Head Line: "+headlines.getText());
+                if (!headlines.getText().equals(expectedHeadline)){
+                    foundHeadline = false;
+                    System.out.println("ERROR: Head Line doesn't match.");
+                } else {
+                    foundHeadline = true;
+                }
+
+                String[] foundFilenames = new String[2];
+                foundFilenames[0] = findElement(presentationImage).getAttribute("src");
+                System.out.println("Found image file: "+foundFilenames[0]);
+                if (!foundFilenames[0].contains(expectedFilenames[0])){
+                    foundHeadline = false;
+                    System.out.println("ERROR: Image filename doesn't match.");
+                }
+
+                foundFilenames[1] = findElement(documentDownloadLink).getAttribute("src");
+                System.out.println("Found image file: "+foundFilenames[0]);
+                if (!foundFilenames[0].contains(expectedFilenames[0])){
+                    foundHeadline = false;
+                    System.out.println("ERROR: Attached document filename doesn't match.");
+                }
+
+            } catch (ElementNotFoundException e2) {
+                foundHeadline = false;
+            } catch (TimeoutException e3) {
+                driver.findElement(By.tagName("body")).sendKeys("Keys.ESCAPE");
+                foundHeadline = false;
+            } catch (NoSuchElementException e4) {
+                driver.findElement(By.tagName("body")).sendKeys("Keys.ESCAPE");
+                foundHeadline = false;
+            }
+
+
+
+
+            /*
             headlines = findElement(latestHeadlines);
 
             System.out.println("Found Head Line: "+headlines.getText());
@@ -85,6 +125,8 @@ public class LivePresentations extends AbstractPageObject {
                 foundHeadline = false;
                 System.out.println("ERROR: Attached document filename doesn't match.");
             }
+
+            */
 
         }
 
