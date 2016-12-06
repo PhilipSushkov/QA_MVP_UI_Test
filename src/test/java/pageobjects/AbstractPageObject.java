@@ -7,6 +7,7 @@ import org.openqa.selenium.WebDriver;
 //import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import pageobjects.LoginPage.LoginPage;
 
 public class AbstractPageObject implements PageObject {
 
@@ -19,6 +20,7 @@ public class AbstractPageObject implements PageObject {
             return t.isDisplayed();
         }
     };
+    private final By logoutButton = By.linkText("Logout");
 
     public AbstractPageObject(WebDriver driver) {
         this.driver = driver;
@@ -53,5 +55,11 @@ public class AbstractPageObject implements PageObject {
     public long getScrollPositionY(){
         JavascriptExecutor executor = (JavascriptExecutor) driver;
         return (Long) executor.executeScript("return window.pageYOffset;");
+    }
+
+    public LoginPage logoutFromAdmin(){
+        waitForElement(logoutButton);
+        findElement(logoutButton).click();
+        return new LoginPage(getDriver());
     }
 }
