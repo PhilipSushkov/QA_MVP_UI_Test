@@ -5,7 +5,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import pageobjects.Dashboard.Dashboard;
-import pageobjects.EmailAdmin.Compose;
+import pageobjects.EmailAdmin.Compose.Compose;
 import pageobjects.LoginPage.LoginPage;
 import specs.AbstractSpec;
 

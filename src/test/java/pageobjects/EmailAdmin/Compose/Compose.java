@@ -1,4 +1,4 @@
-package pageobjects.EmailAdmin;
+package pageobjects.EmailAdmin.Compose;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.ElementNotVisibleException;

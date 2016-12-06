@@ -14,7 +14,7 @@ import pageobjects.ContentAdmin.JobPostingList.JobPostingList;
 import pageobjects.ContentAdmin.PersonList.PersonList;
 import pageobjects.ContentAdmin.PressReleaseCategories.PressReleaseCategories;
 import pageobjects.ContentAdmin.QuickLinkList.QuickLinks;
-import pageobjects.EmailAdmin.Compose;
+import pageobjects.EmailAdmin.Compose.Compose;
 import pageobjects.LoginPage.LoginPage;
 import pageobjects.PressReleases.EditPressRelease;
 import pageobjects.PressReleases.PressReleases;
