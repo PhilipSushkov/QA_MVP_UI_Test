@@ -5,6 +5,8 @@ import pageobjects.Dashboard.Dashboard;
 import pageobjects.Page;
 import specs.AbstractSpec;
 
+import static org.junit.Assert.fail;
+
 
 /**
  * Created by philips on 2016-11-02.
@@ -13,6 +15,8 @@ public class LoginPage extends Page {
     private final By emailField = By.id("txtUserName");
     private final By passwordField = By.name("txtPassword");
     private final By loginButton = By.id("btnSubmit");
+    private final By loginErrorMessage = By.id("errLogin");
+    private final By dashboardLabel = By.cssSelector(".AdminContentDiv2 h1"); //this is actually on the dashboard page; used to confirm that login is successful
 
 
     public LoginPage(WebDriver driver) {
@@ -55,6 +59,29 @@ public class LoginPage extends Page {
         //pause(1000L);
         //waitForElementToAppear(loginButton);
 
+    }
+
+    public boolean credentialsWork(String username, String password) throws Exception {
+        waitForElementToAppear(emailField);
+        findElement(emailField).sendKeys(username);
+        findElement(passwordField).sendKeys(password);
+        pause(1000L);
+        retryClick(loginButton);
+
+        pause(5000);
+
+        if (doesElementExist(loginErrorMessage) && findElement(loginErrorMessage).isDisplayed()){
+            findElement(emailField).clear();
+            findElement(passwordField).clear();
+            return false;
+        }
+        else if (doesElementExist(dashboardLabel) && findElement(dashboardLabel).getText().toLowerCase().contains("dashboard")){
+            logoutFromAdmin();
+            return true;
+        }
+        System.out.println("Dashboard label: "+findElement(dashboardLabel).getText());
+        fail("Unexpected login result occurred.");
+        return false;
     }
 
     public String[] sessionID() {
