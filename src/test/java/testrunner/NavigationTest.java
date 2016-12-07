@@ -31,6 +31,7 @@ import specs.SystemAdmin.AlertFilterList.CheckAlertFilterList;
 import specs.SystemAdmin.GenericStorageList.CheckGenericStorageList;
 import specs.SystemAdmin.PDFTemplateEdit.CheckPDFTemplateEdit;
 import specs.SystemAdmin.SiteList.CheckSiteList;
+import specs.SystemAdmin.SiteMaintenance.CheckSiteMaintenance;
 import specs.SystemAdmin.UserGroupList.CheckUserGroupList;
 import specs.SystemAdmin.UserList.CheckUserList;
 import specs.SystemAdmin.WorkflowEmailList.CheckWorkflowEmailList;
@@ -42,13 +43,17 @@ import specs.SystemAdmin.WorkflowEmailList.CheckWorkflowEmailList;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
+    // System Admin
         CheckUserList.class,
-        CheckWorkflowEmailList.class,
         CheckAlertFilterList.class,
         CheckGenericStorageList.class,
         CheckPDFTemplateEdit.class,
+        CheckSiteMaintenance.class,
+        CheckWorkflowEmailList.class,
         CheckSiteList.class,
         CheckUserGroupList.class,
+
+    // Site Admin
         CheckGlobalModuleList.class,
         CheckLayoutDefinitionList.class,
         CheckModuleDefinitionList.class,
@@ -60,6 +65,8 @@ import specs.SystemAdmin.WorkflowEmailList.CheckWorkflowEmailList;
         CheckMobileLinkList.class,
         CheckDomainList.class,
         CheckEditContentAdminPages.class,
+
+    // Content Admin
         CheckFinancialReports.class,
         CheckPressReleaseCategories.class,
         CheckQuickLinkList.class,
@@ -68,6 +75,8 @@ import specs.SystemAdmin.WorkflowEmailList.CheckWorkflowEmailList;
         CheckDepartmentList.class,
         CheckFaqList.class,
         CheckJobPostingList.class,
+
+    // Email Admin
         CheckCompose.class,
         CheckMailingLists.class,
         CheckMailingListUsers.class
