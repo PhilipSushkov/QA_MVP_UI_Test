@@ -33,6 +33,7 @@ public class CheckGenericStorageList extends AbstractSpec {
 
     @After
     public void tearDown() {
+        new Dashboard(driver).logout();
         //driver.quit();
     }
 

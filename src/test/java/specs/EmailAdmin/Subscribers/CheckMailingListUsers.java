@@ -46,6 +46,7 @@ public class CheckMailingListUsers extends AbstractSpec {
 
     @After
     public void tearDown() {
+        new Dashboard(driver).logout();
         //driver.quit();
     }
 

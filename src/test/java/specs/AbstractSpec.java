@@ -111,6 +111,7 @@ public abstract class AbstractSpec {
         System.out.println("Thread id = " + Thread.currentThread().getId());
         System.out.println("Hashcode of webDriver instance = " + LocalDriverManager.getDriver().hashCode());
         */
+
     }
 
     private void setupFirefoxLocalDriver() {

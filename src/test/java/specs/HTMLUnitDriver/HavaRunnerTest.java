@@ -19,7 +19,7 @@ import com.mycila.junit.concurrent.Concurrency;
 import com.mycila.junit.concurrent.ConcurrentJunitRunner;
 
 @RunWith(ConcurrentJunitRunner.class)
-@Concurrency(value = 3)
+@Concurrency(3)
 public class HavaRunnerTest extends AbstractSpec {
 
     @Before
@@ -52,7 +52,7 @@ public class HavaRunnerTest extends AbstractSpec {
     public void Test3() throws Exception {
         WebDriver driver = LocalDriverManager.getDriver();
         //LocalDriverManager.setWebDriver(driver);
-        driver.get("http://www.bbc.com");
+        driver.get("http://www.cnn.com");
         Thread.sleep(2000);
         System.out.println(driver.getTitle());
         driver.quit();

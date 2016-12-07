@@ -1,5 +1,8 @@
 package testrunner;
 
+import com.google.code.tempusfugit.concurrency.annotations.Concurrent;
+import com.mycila.junit.concurrent.Concurrency;
+import com.mycila.junit.concurrent.ConcurrentSuiteRunner;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import specs.ContentAdmin.DepartmentList.CheckDepartmentList;
@@ -11,6 +14,8 @@ import specs.ContentAdmin.PersonList.CheckPersonList;
 import specs.ContentAdmin.PressReleaseCategories.CheckPressReleaseCategories;
 import specs.ContentAdmin.QuickLinkList.CheckQuickLinkList;
 import specs.EmailAdmin.Compose.CheckCompose;
+import specs.EmailAdmin.ManageList.CheckMailingLists;
+import specs.EmailAdmin.Subscribers.CheckMailingListUsers;
 import specs.SiteAdmin.AliasList.CheckAliasList;
 import specs.SiteAdmin.ContentAdminEdit.CheckEditContentAdminPages;
 import specs.SiteAdmin.CssFileList.CheckCssFileList;
@@ -63,7 +68,9 @@ import specs.SystemAdmin.WorkflowEmailList.CheckWorkflowEmailList;
         CheckDepartmentList.class,
         CheckFaqList.class,
         CheckJobPostingList.class,
-        CheckCompose.class
+        CheckCompose.class,
+        CheckMailingLists.class,
+        CheckMailingListUsers.class
 }
 )
 

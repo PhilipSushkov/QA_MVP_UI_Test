@@ -75,7 +75,8 @@ public class AddNewPresentation extends AbstractSpec {
 
     @After
     public void tearDown() {
-        driver.quit();
+        new Dashboard(driver).logout();
+        //driver.quit();
     }
 
 }

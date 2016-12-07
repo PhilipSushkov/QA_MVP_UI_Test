@@ -37,6 +37,7 @@ public class CheckFaqList extends AbstractSpec {
 
     @After
     public void tearDown() {
+        new Dashboard(driver).logout();
         //driver.quit();
     }
 
