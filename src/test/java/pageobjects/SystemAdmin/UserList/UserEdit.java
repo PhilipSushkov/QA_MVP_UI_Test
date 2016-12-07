@@ -12,6 +12,7 @@ public class UserEdit extends AbstractPageObject {
     private final By moduleTitle = By.xpath("//span[contains(@class, 'AdminContent')]/h1/span[contains(@id,'ModuleTitle')]");
     private final By emailField = By.xpath("//input[contains(@id,'txtEmail')]");
     private final By userNameField = By.xpath("//input[contains(@id,'txtUserName')]");
+    private final By changePasswordCheckbox = By.xpath("//input[contains(@id,'chkChangePassword')]");
     private final By passwordField = By.xpath("//input[contains(@id,'txtPassword')]");
     private final By systemAdministratorRole = By.xpath("//td[contains(.,'System Administrator')]/input");
     private final By activeCheckbox = By.xpath("//input[contains(@id,'chkActive')]");
@@ -48,6 +49,14 @@ public class UserEdit extends AbstractPageObject {
     public UserEdit reactivateUser(){
         waitForElement(activeCheckbox);
         checkIfUnchecked(activeCheckbox);
+        return this;
+    }
+
+    public UserEdit changePasswordTo(String password){
+        waitForElement(changePasswordCheckbox);
+        checkIfUnchecked(changePasswordCheckbox);
+        pause(500);
+        findElement(passwordField).sendKeys(password);
         return this;
     }
 
