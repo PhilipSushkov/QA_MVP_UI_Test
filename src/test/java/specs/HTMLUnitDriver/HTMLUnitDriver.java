@@ -67,6 +67,10 @@ public class HTMLUnitDriver {
         //something
     }
 
+    public void change2() throws Exception {
+        //something more
+    }
+
     @Test (priority = 0)
     public void Q4DesktopAuth () throws IOException {
 
