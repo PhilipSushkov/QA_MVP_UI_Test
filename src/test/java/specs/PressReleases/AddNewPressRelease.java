@@ -34,9 +34,11 @@ public class AddNewPressRelease extends AbstractSpec {
     private String min = minF.format(current);
     private String AMPM = AMPMF.format(current);
 
+    private String dashboardURL = null;
+
     @Test
     public void canAddNewPressRelease() throws Exception {
-        String dashboardURL = new Dashboard(driver).getURL();
+        dashboardURL = new Dashboard(driver).getURL();
         String[] filenames = new String[2];
 
         // adding new press release
@@ -70,6 +72,7 @@ public class AddNewPressRelease extends AbstractSpec {
 
     @After
     public void tearDown() {
+        new LivePressReleases(driver).dashboard(dashboardURL);
         new Dashboard(driver).logout();
         //driver.quit();
     }

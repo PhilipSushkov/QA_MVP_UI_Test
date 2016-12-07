@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.After;
+import org.openqa.selenium.By;
 import specs.AbstractSpec;
 import pageobjects.LoginPage.LoginPage;
 import pageobjects.Dashboard.Dashboard;
@@ -14,6 +15,8 @@ import pageobjects.SystemAdmin.WorkflowEmailList.WorkflowEmailList;
  */
 
 public class CheckWorkflowEmailList extends AbstractSpec {
+    final By systemAdminMenuButton = By.xpath("//span[contains(text(),'System Admin')]");
+    final By workflowEmailListMenuItem = By.xpath("//a[contains(text(),'Workflow Email List')]/parent::li");
 
     @Before
     public void setUp() throws Exception {
@@ -25,7 +28,9 @@ public class CheckWorkflowEmailList extends AbstractSpec {
         final String expectedTitle = "Workflow Email List";
         final Integer expectedQuantity = 4;
 
-        Assert.assertNotNull(new Dashboard(driver).openWorkflowEmailListPage().getUrl());
+        new Dashboard(driver).openPage(systemAdminMenuButton, workflowEmailListMenuItem);
+
+        Assert.assertNotNull(new WorkflowEmailList(driver).getUrl());
         Assert.assertEquals("Actual Workflow Email List page Title doesn't match to expected", expectedTitle, new WorkflowEmailList(driver).getTitle());
 
         //System.out.println(new WorkflowEmailList(driver).getDescriptionQuantity().toString());

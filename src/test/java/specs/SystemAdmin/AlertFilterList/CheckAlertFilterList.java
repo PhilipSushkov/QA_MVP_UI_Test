@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.After;
+import org.openqa.selenium.By;
 import specs.AbstractSpec;
 import pageobjects.LoginPage.LoginPage;
 import pageobjects.Dashboard.Dashboard;
@@ -14,6 +15,8 @@ import pageobjects.SystemAdmin.AlertFilterList.AlertFilterList;
  */
 
 public class CheckAlertFilterList extends AbstractSpec {
+    final By systemAdminMenuButton = By.xpath("//span[contains(text(),'System Admin')]");
+    final By alertFilterListMenuItem = By.xpath("//a[contains(text(),'Alert Filter List')]/parent::li");
 
     @Before
     public void setUp() throws Exception {
@@ -25,7 +28,9 @@ public class CheckAlertFilterList extends AbstractSpec {
         final String expectedTitle = "Alert Filter List";
         final Integer expectedQuantity = 4;
 
-        Assert.assertNotNull(new Dashboard(driver).openAlertFilterListPage().getUrl());
+        new Dashboard(driver).openPage(systemAdminMenuButton, alertFilterListMenuItem);
+
+        Assert.assertNotNull(new AlertFilterList(driver).getUrl());
         Assert.assertEquals("Actual Alert Filter List page Title doesn't match to expected", expectedTitle, new AlertFilterList(driver).getTitle());
 
         //System.out.println(new AlertFilterList(driver).getFilterNameQuantity().toString());

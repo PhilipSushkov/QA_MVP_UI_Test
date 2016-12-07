@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.After;
+import org.openqa.selenium.By;
 import specs.AbstractSpec;
 import pageobjects.LoginPage.LoginPage;
 import pageobjects.Dashboard.Dashboard;
@@ -14,6 +15,8 @@ import pageobjects.SystemAdmin.SiteList.SiteList;
  */
 
 public class CheckSiteList extends AbstractSpec {
+    final By systemAdminMenuButton = By.xpath("//span[contains(text(),'System Admin')]");
+    final By siteListMenuItem = By.xpath("//a[contains(text(),'Site List')]/parent::li");
 
     @Before
     public void setUp() throws Exception {
@@ -25,7 +28,9 @@ public class CheckSiteList extends AbstractSpec {
         final String expectedTitle = "Site List";
         final Integer expectedQuantity = 1;
 
-        Assert.assertNotNull(new Dashboard(driver).openSiteListPage().getUrl());
+        new Dashboard(driver).openPage(systemAdminMenuButton, siteListMenuItem);
+
+        Assert.assertNotNull(new SiteList(driver).getUrl());
         Assert.assertEquals("Actual Site List page Title doesn't match to expected", expectedTitle, new SiteList(driver).getTitle());
 
         //System.out.println(new SiteList(driver).getSiteListHeader().toString());

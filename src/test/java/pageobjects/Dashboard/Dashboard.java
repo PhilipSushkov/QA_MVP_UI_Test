@@ -1,10 +1,7 @@
 package pageobjects.Dashboard;
 
 
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoAlertPresentException;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
@@ -67,13 +64,6 @@ public class Dashboard extends AbstractPageObject {
     private final By siteAdminMenuButton = By.xpath("//span[contains(text(),'Site Admin')]");
     private final By emailAdminMenuButton = By.xpath("//span[contains(text(),'Email Admin')]");
     private final By userListMenuItem = By.xpath("//a[contains(text(),'User List')]/parent::li");
-    private final By alertFilterListMenuItem = By.xpath("//a[contains(text(),'Alert Filter List')]/parent::li");
-    private final By genericStorageListMenuItem = By.xpath("//a[contains(text(),'Generic Storage List')]/parent::li");
-    private final By workflowEmailListMenuItem = By.xpath("//a[contains(text(),'Workflow Email List')]/parent::li");
-    private final By pdfTemplateEditMenuItem = By.xpath("//a[contains(text(),'PDF Template Edit')]/parent::li");
-    private final By siteMaintenanceMenuItem = By.xpath("//a[contains(text(),'Site Maintenance')]/parent::li");
-    private final By siteListMenuItem = By.xpath("//a[contains(text(),'Site List')]/parent::li");
-    private final By userGroupListMenuItem = By.xpath("//a[contains(text(),'User Group List')]/parent::li");
     private final By globalModuleListMenuItem = By.xpath("//a[contains(text(),'Global Module List')]/parent::li");
     private final By layoutDefinitionListMenuItem = By.xpath("//a[contains(text(),'Layout Definition List')]/parent::li");
     private final By moduleDefinitionListMenuItem = By.xpath("//a[contains(text(),'Module Definition List')]/parent::li");
@@ -113,7 +103,7 @@ public class Dashboard extends AbstractPageObject {
     private final By passwordChangeError = By.className("ErrorChangePassword");
     private final By closePasswordChangeDialog = By.className("fancybox-close");
 
-    public static final long DEFAULT_PAUSE = 2000;
+    public static final long DEFAULT_PAUSE = 1500;
 
     public Dashboard(WebDriver driver) {
 
@@ -154,68 +144,39 @@ public class Dashboard extends AbstractPageObject {
         return new EditEvent(getDriver());
     }
 
-    public UserList openUserListPage() {
-        action.moveToElement(findElement(systemAdminMenuButton)).perform();
-        wait.until(ExpectedConditions.visibilityOf(findElement(userListMenuItem)));
-        pause(DEFAULT_PAUSE);
-        findElement(userListMenuItem).click();
+    public void openPage(By menuButton,By menuItem) throws Exception {
+
+        for (int i=0; i<3; i++) {
+            try {
+                action.moveToElement(findElement(menuButton)).perform();
+                wait.until(ExpectedConditions.visibilityOf(findElement(menuItem)));
+                Thread.sleep(DEFAULT_PAUSE);
+                findElement(menuItem).click();
+                break;
+            } catch (ElementNotVisibleException e1){
+                System.out.println("Attempts: " + i);
+            } catch (ElementNotFoundException e2) {
+                System.out.println("Attempts: " + i);
+            }
+        }
+    }
+
+    public UserList openUserListPage() throws Exception {
+
+        for (int i=0; i<3; i++) {
+            try {
+                action.moveToElement(findElement(systemAdminMenuButton)).perform();
+                wait.until(ExpectedConditions.visibilityOf(findElement(userListMenuItem)));
+                Thread.sleep(DEFAULT_PAUSE);
+                findElement(userListMenuItem).click();
+                break;
+            } catch (ElementNotVisibleException e1){
+                System.out.println("Attempts: " + i);
+            } catch (ElementNotFoundException e2) {
+                System.out.println("Attempts: " + i);
+            }
+        }
         return new UserList(getDriver());
-    }
-
-    public AlertFilterList openAlertFilterListPage() {
-        action.moveToElement(findElement(systemAdminMenuButton)).perform();
-        wait.until(ExpectedConditions.visibilityOf(findElement(alertFilterListMenuItem)));
-        pause(DEFAULT_PAUSE);
-        findElement(alertFilterListMenuItem).click();
-        return new AlertFilterList(getDriver());
-    }
-
-    public WorkflowEmailList openWorkflowEmailListPage() {
-        action.moveToElement(findElement(systemAdminMenuButton)).perform();
-        wait.until(ExpectedConditions.visibilityOf(findElement(workflowEmailListMenuItem)));
-        pause(DEFAULT_PAUSE);
-        findElement(workflowEmailListMenuItem).click();
-        return new WorkflowEmailList(getDriver());
-    }
-
-    public GenericStorageList openGenericStorageListPage() {
-        action.moveToElement(findElement(systemAdminMenuButton)).perform();
-        wait.until(ExpectedConditions.visibilityOf(findElement(genericStorageListMenuItem)));
-        pause(DEFAULT_PAUSE);
-        findElement(genericStorageListMenuItem).click();
-        return new GenericStorageList(getDriver());
-    }
-
-    public PDFTemplateEdit openPDFTemplateEditPage() {
-        action.moveToElement(findElement(systemAdminMenuButton)).perform();
-        wait.until(ExpectedConditions.visibilityOf(findElement(pdfTemplateEditMenuItem)));
-        pause(DEFAULT_PAUSE);
-        findElement(pdfTemplateEditMenuItem).click();
-        return new PDFTemplateEdit(getDriver());
-    }
-
-    public SiteMaintenance openSiteMaintenancePage() {
-        action.moveToElement(findElement(systemAdminMenuButton)).perform();
-        wait.until(ExpectedConditions.visibilityOf(findElement(siteMaintenanceMenuItem)));
-        pause(DEFAULT_PAUSE);
-        findElement(siteMaintenanceMenuItem).click();
-        return new SiteMaintenance(getDriver());
-    }
-
-    public SiteList openSiteListPage() {
-        action.moveToElement(findElement(systemAdminMenuButton)).perform();
-        wait.until(ExpectedConditions.visibilityOf(findElement(siteListMenuItem)));
-        pause(DEFAULT_PAUSE);
-        findElement(siteListMenuItem).click();
-        return new SiteList(getDriver());
-    }
-
-    public UserGroupList openUserGroupListPage() {
-        action.moveToElement(findElement(systemAdminMenuButton)).perform();
-        wait.until(ExpectedConditions.visibilityOf(findElement(userGroupListMenuItem)));
-        pause(DEFAULT_PAUSE);
-        findElement(userGroupListMenuItem).click();
-        return new UserGroupList(getDriver());
     }
 
     public GlobalModuleList openGlobalModuleListPage() {
@@ -492,7 +453,6 @@ public class Dashboard extends AbstractPageObject {
     }
 
     public LoginPage logout() {
-        //action.moveToElement(findElement(contentAdminMenuButton)).perform();
         wait.until(ExpectedConditions.visibilityOf(findElement(logoutMenuItem)));
         pause(DEFAULT_PAUSE);
         findElement(logoutMenuItem).click();

@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.After;
+import org.openqa.selenium.By;
 import specs.AbstractSpec;
 import pageobjects.LoginPage.LoginPage;
 import pageobjects.Dashboard.Dashboard;
@@ -14,6 +15,8 @@ import pageobjects.SystemAdmin.PDFTemplateEdit.PDFTemplateEdit;
  */
 
 public class CheckPDFTemplateEdit extends AbstractSpec {
+    final By systemAdminMenuButton = By.xpath("//span[contains(text(),'System Admin')]");
+    final By pdfTemplateEditMenuItem = By.xpath("//a[contains(text(),'PDF Template Edit')]/parent::li");
 
     @Before
     public void setUp() throws Exception {
@@ -24,7 +27,9 @@ public class CheckPDFTemplateEdit extends AbstractSpec {
     public void checkPDFTemplateEdit() throws Exception {
         final String expectedTitle = "PDF Template Edit";
 
-        Assert.assertNotNull(new Dashboard(driver).openPDFTemplateEditPage().getUrl());
+        new Dashboard(driver).openPage(systemAdminMenuButton, pdfTemplateEditMenuItem);
+
+        Assert.assertNotNull(new PDFTemplateEdit(driver).getUrl());
 
         Assert.assertEquals("Actual PDF Template Edit page Title doesn't match to expected", expectedTitle, new PDFTemplateEdit(driver).getTitle());
 

@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.After;
+import org.openqa.selenium.By;
 import specs.AbstractSpec;
 import pageobjects.LoginPage.LoginPage;
 import pageobjects.Dashboard.Dashboard;
@@ -13,6 +14,8 @@ import pageobjects.SystemAdmin.GenericStorageList.GenericStorageList;
  * Created by philipsushkov on 2016-11-11.
  */
 public class CheckGenericStorageList extends AbstractSpec {
+    final By systemAdminMenuButton = By.xpath("//span[contains(text(),'System Admin')]");
+    final By genericStorageListMenuItem = By.xpath("//a[contains(text(),'Generic Storage List')]/parent::li");
 
     @Before
     public void setUp() throws Exception {
@@ -24,7 +27,9 @@ public class CheckGenericStorageList extends AbstractSpec {
         final String expectedTitle = "Generic Storage List";
         final Integer expectedSize = 1;
 
-        Assert.assertNotNull(new Dashboard(driver).openGenericStorageListPage().getUrl());
+        new Dashboard(driver).openPage(systemAdminMenuButton, genericStorageListMenuItem);
+
+        Assert.assertNotNull(new GenericStorageList(driver).getUrl());
         Assert.assertEquals("Actual Generic Storage List page Title doesn't match to expected", expectedTitle, new GenericStorageList(driver).getTitle());
 
         System.out.println(new GenericStorageList(driver).getStorageHeaderSize().toString());

@@ -43,11 +43,12 @@ public class AddNewEvent extends AbstractSpec {
     private String hour = hourF.format(current);
     private String min = minF.format(current);
     private String AMPM = AMPMF.format(current);
+    private String dashboardURL = null;
 
     @Test
     public void canAddNewEvent() throws Exception {
 
-        String dashboardURL = new Dashboard(driver).getURL();
+        dashboardURL = new Dashboard(driver).getURL();
         String[] filenames = new String[2];
 
         String newsPageURL = new Dashboard(driver).newEvent().addNewEvent(headline, today, tommorrow, hour, min, AMPM, timeZone, tags, location, filenames);
@@ -81,6 +82,7 @@ public class AddNewEvent extends AbstractSpec {
 
     @After
     public void tearDown() {
+        new LiveEvents(driver).dashboard(dashboardURL);
         new Dashboard(driver).logout();
         //driver.quit();
     }
