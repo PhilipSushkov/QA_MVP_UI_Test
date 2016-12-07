@@ -96,7 +96,6 @@ public class Dashboard extends AbstractPageObject {
     private final By previewSiteButton = By.linkText("PREVIEW SITE");
     private final By invalidateCacheButton = By.xpath("//a[contains(@id,'hrefInvalidateCache')]");
     private final By invalidateCacheMessage = By.className("MessageContainer");
-    private final By logoutMenuItem = By.xpath("//li/a[contains(text(),'Logout')]");
 
     public static final long DEFAULT_PAUSE = 2000;
 
@@ -421,14 +420,6 @@ public class Dashboard extends AbstractPageObject {
             return "";
         }
         return findElement(invalidateCacheMessage).getText();
-    }
-
-    public LoginPage logout() {
-        //action.moveToElement(findElement(contentAdminMenuButton)).perform();
-        wait.until(ExpectedConditions.visibilityOf(findElement(logoutMenuItem)));
-        pause(DEFAULT_PAUSE);
-        findElement(logoutMenuItem).click();
-        return new LoginPage(getDriver());
     }
 
 }
