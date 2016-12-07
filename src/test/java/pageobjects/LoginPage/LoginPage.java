@@ -61,6 +61,15 @@ public class LoginPage extends Page {
 
     }
 
+    public Dashboard loginUser(String username, String password) throws Exception {
+        waitForElementToAppear(emailField);
+        findElement(emailField).sendKeys(username);
+        findElement(passwordField).sendKeys(password);
+        pause(1000L);
+        retryClick(loginButton);
+        return new Dashboard(getDriver());
+    }
+
     public boolean credentialsWork(String username, String password) throws Exception {
         waitForElementToAppear(emailField);
         findElement(emailField).sendKeys(username);

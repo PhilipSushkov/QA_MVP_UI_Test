@@ -1,7 +1,9 @@
 package pageobjects.Dashboard;
 
 
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -48,6 +50,8 @@ import pageobjects.SiteAdmin.LookupList.LookupList;
 import specs.AbstractSpec;
 
 import java.util.ArrayList;
+
+import static org.junit.Assert.fail;
 
 public class Dashboard extends AbstractPageObject {
     Actions action = new Actions(driver);
@@ -96,6 +100,16 @@ public class Dashboard extends AbstractPageObject {
     private final By previewSiteButton = By.linkText("PREVIEW SITE");
     private final By invalidateCacheButton = By.xpath("//a[contains(@id,'hrefInvalidateCache')]");
     private final By invalidateCacheMessage = By.className("MessageContainer");
+    private final By selectAnActionDropdown = By.className("user-manage-ddl");
+    private final By changePasswordButton = By.className("StartChangePassword");
+
+    //within the change password popup
+    private final By oldPasswordField = By.xpath("//input[contains(@id,'txtOldPassword')]");
+    private final By newPasswordField = By.xpath("//input[contains(@id,'txtNewPassword')]");
+    private final By confirmNewPasswordField = By.xpath("//input[contains(@id,'txtConfirmNewPassword')]");
+    private final By resetPasswordButton = By.cssSelector("[value='Reset Password']");
+    private final By passwordChangeError = By.className("ErrorChangePassword");
+    private final By closePasswordChangeDialog = By.className("fancybox-close");
 
     public static final long DEFAULT_PAUSE = 2000;
 
@@ -420,6 +434,59 @@ public class Dashboard extends AbstractPageObject {
             return "";
         }
         return findElement(invalidateCacheMessage).getText();
+    }
+
+    public Dashboard changePassword(String current, String changeTo){
+        waitForElement(selectAnActionDropdown);
+        findElement(selectAnActionDropdown).click();
+        waitForElement(changePasswordButton);
+        findElement(changePasswordButton).click();
+        waitForElement(oldPasswordField);
+        findElement(oldPasswordField).sendKeys(current);
+        findElement(newPasswordField).sendKeys(changeTo);
+        findElement(confirmNewPasswordField).sendKeys(changeTo);
+        findElement(resetPasswordButton).click();
+        pause(3000);
+        return this;
+    }
+
+    // Used for a test in which the "Confirm New Password" is different from the "New Password"
+    public Dashboard changePassword(String oldPassword, String newPassword, String confirmNewPassword){
+        waitForElement(selectAnActionDropdown);
+        findElement(selectAnActionDropdown).click();
+        waitForElement(changePasswordButton);
+        findElement(changePasswordButton).click();
+        waitForElement(oldPasswordField);
+        findElement(oldPasswordField).sendKeys(oldPassword);
+        findElement(newPasswordField).sendKeys(newPassword);
+        findElement(confirmNewPasswordField).sendKeys(confirmNewPassword);
+        findElement(resetPasswordButton).click();
+        pause(3000);
+        return this;
+    }
+
+    public String getPasswordChangeConfirmationAndAccept(){
+        try {
+            Alert confirmation = driver.switchTo().alert();
+            String confirmationText = confirmation.getText();
+            confirmation.accept();
+            driver.switchTo().defaultContent();
+            pause(3000);
+            return confirmationText;
+        }catch (NoAlertPresentException e){
+            fail("Password change confirmation dialog does not appear.");
+            return "";
+        }
+    }
+
+    public String getPasswordChangeErrorMessageAndClose(){
+        if (!doesElementExist(passwordChangeError)){
+            fail("Password change error message does not appear.");
+        }
+        String message = findElement(passwordChangeError).getText();
+        findElement(closePasswordChangeDialog).click();
+        pause(3000);
+        return message;
     }
 
 }
