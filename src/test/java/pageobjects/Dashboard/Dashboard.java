@@ -25,6 +25,7 @@ import pageobjects.ContentAdmin.Events.EditEvent;
 import pageobjects.ContentAdmin.Events.Events;
 import pageobjects.PreviewSite.PreviewSiteHome;
 import pageobjects.SystemAdmin.UserList.UserList;
+import pageobjects.SocialMedia.SocialMediaSummary;
 import specs.AbstractSpec;
 
 import java.util.ArrayList;
@@ -43,6 +44,7 @@ public class Dashboard extends AbstractPageObject {
     private final By eventsMenuButton = By.xpath("//a[contains(text(),'Events')]/parent::li");
     private final By systemAdminMenuButton = By.xpath("//span[contains(text(),'System Admin')]");
     private final By userListMenuItem = By.xpath("//a[contains(text(),'User List')]/parent::li");
+    private final By socialMediaDashboard = By.linkText("Social Media Dashboard");
     private final By previewSiteButton = By.linkText("PREVIEW SITE");
     private final By invalidateCacheButton = By.xpath("//a[contains(@id,'hrefInvalidateCache')]");
     private final By invalidateCacheMessage = By.className("MessageContainer");
@@ -140,6 +142,12 @@ public class Dashboard extends AbstractPageObject {
         wait.until(ExpectedConditions.visibilityOf(findElement(eventsMenuButton)));
         findElement(eventsMenuButton).click();
         return new Events(getDriver());
+    }
+
+    public SocialMediaSummary openSocialMedia(){
+        waitForElement(socialMediaDashboard);
+        findElement(socialMediaDashboard).click();
+        return new SocialMediaSummary(getDriver());
     }
 
     public Dashboard invalidateCache(){
