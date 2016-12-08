@@ -1,11 +1,9 @@
-package pageobjects.PressReleases;
+package pageobjects.ContentAdmin.PressReleases;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.interactions.Actions;
 import pageobjects.AbstractPageObject;
-import pageobjects.PressReleases.PressReleases;
-import org.openqa.selenium.support.ui.Select;
 
 public class EditPressRelease extends AbstractPageObject {
     Actions action = new Actions(driver);

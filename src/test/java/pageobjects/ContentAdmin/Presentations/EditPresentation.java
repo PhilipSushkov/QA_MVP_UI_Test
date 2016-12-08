@@ -1,8 +1,7 @@
-package pageobjects.Presentations;
+package pageobjects.ContentAdmin.Presentations;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.interactions.Actions;
 import pageobjects.AbstractPageObject;
 
 /**

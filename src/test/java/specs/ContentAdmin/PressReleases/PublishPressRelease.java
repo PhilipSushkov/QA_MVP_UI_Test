@@ -1,4 +1,4 @@
-package specs.PressReleases;
+package specs.ContentAdmin.PressReleases;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -7,12 +7,12 @@ import org.junit.After;
 import specs.AbstractSpec;
 import pageobjects.LoginPage.LoginPage;
 import pageobjects.Dashboard.Dashboard;
-import pageobjects.PressReleases.PressReleases;
+import pageobjects.ContentAdmin.PressReleases.PressReleases;
 import pageobjects.LiveSite.LivePressReleases;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class AddNewPressRelease extends AbstractSpec {
+public class PublishPressRelease extends AbstractSpec {
 
     @Before
     public void setUp() throws Exception {

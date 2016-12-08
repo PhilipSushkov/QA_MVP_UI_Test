@@ -17,33 +17,14 @@ import pageobjects.EmailAdmin.Compose.Compose;
 import pageobjects.EmailAdmin.ManageList.MailingLists;
 import pageobjects.EmailAdmin.Subscribers.MailingListUsers;
 import pageobjects.LoginPage.LoginPage;
-import pageobjects.PressReleases.EditPressRelease;
-import pageobjects.PressReleases.PressReleases;
-import pageobjects.Presentations.EditPresentation;
-import pageobjects.Presentations.Presentations;
-import pageobjects.Events.EditEvent;
-import pageobjects.Events.Events;
+import pageobjects.ContentAdmin.PressReleases.EditPressRelease;
+import pageobjects.ContentAdmin.PressReleases.PressReleases;
+import pageobjects.ContentAdmin.Presentations.EditPresentation;
+import pageobjects.ContentAdmin.Presentations.Presentations;
+import pageobjects.ContentAdmin.Events.EditEvent;
+import pageobjects.ContentAdmin.Events.Events;
 import pageobjects.PreviewSite.PreviewSiteHome;
-import pageobjects.SiteAdmin.AliasList.AliasList;
-import pageobjects.SiteAdmin.CssFileList.CssFileList;
-import pageobjects.SiteAdmin.DomainList.DomainList;
-import pageobjects.SiteAdmin.EditContentAdminPages.EditContentAdminPages;
-import pageobjects.SiteAdmin.ExternalFeedList.ExternalFeedList;
-import pageobjects.SiteAdmin.GlobalModuleList.GlobalModuleList;
-import pageobjects.SiteAdmin.IndexContent.IndexContent;
-import pageobjects.SiteAdmin.LayoutDefinitionList.LayoutDefinitionList;
-import pageobjects.SiteAdmin.MobileLinkList.MobileLinkList;
-import pageobjects.SiteAdmin.ModuleDefinitionList.ModuleDefinitionList;
-import pageobjects.SystemAdmin.SiteMaintenance.SiteMaintenance;
-import pageobjects.SystemAdmin.UserGroupList.UserGroupList;
 import pageobjects.SystemAdmin.UserList.UserList;
-import pageobjects.SystemAdmin.AlertFilterList.AlertFilterList;
-import pageobjects.SystemAdmin.GenericStorageList.GenericStorageList;
-import pageobjects.SystemAdmin.WorkflowEmailList.WorkflowEmailList;
-import pageobjects.SystemAdmin.PDFTemplateEdit.PDFTemplateEdit;
-import pageobjects.SystemAdmin.SiteList.SiteList;
-import pageobjects.SiteAdmin.LinkToPageList.LinkToPageList;
-import pageobjects.SiteAdmin.LookupList.LookupList;
 import specs.AbstractSpec;
 
 import java.util.ArrayList;
@@ -61,11 +42,8 @@ public class Dashboard extends AbstractPageObject {
     private final By presentationsMenuButton = By.xpath("//a[contains(text(),'Presentations')]/parent::li");
     private final By eventsMenuButton = By.xpath("//a[contains(text(),'Events')]/parent::li");
     private final By systemAdminMenuButton = By.xpath("//span[contains(text(),'System Admin')]");
-    private final By siteAdminMenuButton = By.xpath("//span[contains(text(),'Site Admin')]");
     private final By emailAdminMenuButton = By.xpath("//span[contains(text(),'Email Admin')]");
     private final By userListMenuItem = By.xpath("//a[contains(text(),'User List')]/parent::li");
-    private final By domainListMenuItem = By.xpath("//a[contains(text(),'Domain List')]/parent::li");
-    private final By editContentAdminPagesMenuItem = By.xpath("//a[contains(text(),'Content Admin Edit')]/parent::li");
     private final By financialReportsMenuItem = By.xpath("//a[contains(text(),'Financial Reports')]/parent::li");
     private final By pressReleaseCategoriesMenuItem = By.xpath("//a[contains(text(),'Press Release Categories')]/parent::li");
     private final By quickLinksMenuItem = By.xpath("//a[contains(text(),'Quick Links')]/parent::li");
@@ -148,13 +126,15 @@ public class Dashboard extends AbstractPageObject {
                 System.out.println("Attempts: " + i);
             } catch (ElementNotFoundException e2) {
                 System.out.println("Attempts: " + i);
+            } catch (TimeoutException e3) {
+                System.out.println("Attempts: " + i);
             }
         }
     }
 
     public UserList openUserListPage() throws Exception {
 
-        for (int i=0; i<3; i++) {
+        for (int i=0; i<ATTEMPTS; i++) {
             try {
                 action.moveToElement(findElement(systemAdminMenuButton)).perform();
                 wait.until(ExpectedConditions.visibilityOf(findElement(userListMenuItem)));

@@ -1,4 +1,4 @@
-package pageobjects.PressReleases;
+package pageobjects.ContentAdmin.PressReleases;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;

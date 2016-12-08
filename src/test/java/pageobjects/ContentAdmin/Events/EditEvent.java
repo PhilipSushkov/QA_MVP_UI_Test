@@ -1,4 +1,4 @@
-package pageobjects.Events;
+package pageobjects.ContentAdmin.Events;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.*;

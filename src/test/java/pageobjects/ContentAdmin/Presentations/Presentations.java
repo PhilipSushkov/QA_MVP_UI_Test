@@ -1,4 +1,4 @@
-package pageobjects.Presentations;
+package pageobjects.ContentAdmin.Presentations;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;

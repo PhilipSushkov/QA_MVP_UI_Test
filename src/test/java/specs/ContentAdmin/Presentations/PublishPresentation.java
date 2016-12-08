@@ -1,4 +1,4 @@
-package specs.Presentations;
+package specs.ContentAdmin.Presentations;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -8,14 +8,14 @@ import pageobjects.LiveSite.LivePresentations;
 import specs.AbstractSpec;
 import pageobjects.LoginPage.LoginPage;
 import pageobjects.Dashboard.Dashboard;
-import pageobjects.Presentations.Presentations;
+import pageobjects.ContentAdmin.Presentations.Presentations;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
  * Created by philipsushkov on 2016-11-08.
  */
-public class AddNewPresentation extends AbstractSpec {
+public class PublishPresentation extends AbstractSpec {
 
     @Before
     public void setUp() throws Exception {

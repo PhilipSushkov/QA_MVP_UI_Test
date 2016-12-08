@@ -1,15 +1,14 @@
-package specs.Events;
+package specs.ContentAdmin.Events;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.After;
-import org.openqa.selenium.By;
 import pageobjects.LiveSite.LiveEvents;
 import specs.AbstractSpec;
 import pageobjects.LoginPage.LoginPage;
 import pageobjects.Dashboard.Dashboard;
-import pageobjects.Events.Events;
+import pageobjects.ContentAdmin.Events.Events;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -17,7 +16,7 @@ import java.util.Date;
  * Created by philipsushkov on 2016-11-09.
  */
 
-public class AddNewEvent extends AbstractSpec {
+public class PublishEvent extends AbstractSpec {
 
 
     @Before
