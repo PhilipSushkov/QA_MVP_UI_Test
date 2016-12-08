@@ -15,8 +15,8 @@ import pageobjects.SystemAdmin.AlertFilterList.AlertFilterList;
  */
 
 public class CheckAlertFilterList extends AbstractSpec {
-    final By systemAdminMenuButton = By.xpath("//span[contains(text(),'System Admin')]");
-    final By alertFilterListMenuItem = By.xpath("//a[contains(text(),'Alert Filter List')]/parent::li");
+    private final By systemAdminMenuButton = By.xpath("//span[contains(text(),'System Admin')]");
+    private final By alertFilterListMenuItem = By.xpath("//a[contains(text(),'Alert Filter List')]/parent::li");
 
     @Before
     public void setUp() throws Exception {

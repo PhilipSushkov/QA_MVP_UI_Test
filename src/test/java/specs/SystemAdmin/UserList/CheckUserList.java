@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.junit.After;
 import org.openqa.selenium.By;
 import specs.AbstractSpec;
+import util.Functions;
 import pageobjects.LoginPage.LoginPage;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.SystemAdmin.UserList.UserList;

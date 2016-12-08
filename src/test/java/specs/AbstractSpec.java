@@ -14,14 +14,16 @@ import org.openqa.selenium.phantomjs.PhantomJSDriverService;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import util.*;
+import util.Functions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import java.io.IOException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
-public abstract class AbstractSpec {
+public abstract class AbstractSpec extends util.Functions {
 
 // IMPORTANT:
 // Determines which environment the test suite will run on but can be overridden by command line
@@ -42,6 +44,8 @@ public abstract class AbstractSpec {
     private static boolean setupIsDone = false;
     private static final Logger LOG = Logger.getLogger(AbstractSpec.class.getName());
     public static String sessionID = null;
+
+    private static final String pathToSystemAdminProp = null;
 
     @Rule
     public TestName testName = new TestName();
@@ -186,4 +190,9 @@ public abstract class AbstractSpec {
     public static void setSessionID(String sessionIDCookie) {
         sessionID = sessionIDCookie;
     }
+
+    public static void setupProperties() throws IOException {
+        ConnectToPropUI("./Configuration/Configuration.properties");
+    }
+
 }
