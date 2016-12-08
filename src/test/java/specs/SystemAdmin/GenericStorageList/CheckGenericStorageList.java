@@ -14,11 +14,14 @@ import pageobjects.SystemAdmin.GenericStorageList.GenericStorageList;
  * Created by philipsushkov on 2016-11-11.
  */
 public class CheckGenericStorageList extends AbstractSpec {
-    final By systemAdminMenuButton = By.xpath("//span[contains(text(),'System Admin')]");
-    final By genericStorageListMenuItem = By.xpath("//a[contains(text(),'Generic Storage List')]/parent::li");
+    private static By systemAdminMenuButton, genericStorageListMenuItem;
+
 
     @Before
     public void setUp() throws Exception {
+        systemAdminMenuButton = By.xpath(propUISystemAdmin.getProperty("btnMenu_SystemAdmin"));
+        genericStorageListMenuItem = By.xpath(propUISystemAdmin.getProperty("itemMenu_GenericStorageList"));
+
         new LoginPage(driver).loginUser();
     }
 
@@ -32,7 +35,7 @@ public class CheckGenericStorageList extends AbstractSpec {
         Assert.assertNotNull(new GenericStorageList(driver).getUrl());
         Assert.assertEquals("Actual Generic Storage List page Title doesn't match to expected", expectedTitle, new GenericStorageList(driver).getTitle());
 
-        System.out.println(new GenericStorageList(driver).getStorageHeaderSize().toString());
+        //System.out.println(new GenericStorageList(driver).getStorageHeaderSize().toString());
         Assert.assertTrue("Actual Storage Header Size is less than expected: "+expectedSize+" or doesn't exist", expectedSize == new GenericStorageList(driver).getStorageHeaderSize() );
     }
 

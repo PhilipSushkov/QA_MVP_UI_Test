@@ -15,11 +15,14 @@ import pageobjects.SystemAdmin.AlertFilterList.AlertFilterList;
  */
 
 public class CheckAlertFilterList extends AbstractSpec {
-    private final By systemAdminMenuButton = By.xpath("//span[contains(text(),'System Admin')]");
-    private final By alertFilterListMenuItem = By.xpath("//a[contains(text(),'Alert Filter List')]/parent::li");
+    private static By systemAdminMenuButton, alertFilterListMenuItem;
+
 
     @Before
     public void setUp() throws Exception {
+        systemAdminMenuButton = By.xpath(propUISystemAdmin.getProperty("btnMenu_SystemAdmin"));
+        alertFilterListMenuItem = By.xpath(propUISystemAdmin.getProperty("itemMenu_AlertFilterList"));
+
         new LoginPage(driver).loginUser();
     }
 

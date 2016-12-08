@@ -9,11 +9,13 @@ import java.util.Properties;
  */
 
 public class Functions {
-    public static Properties propUI;
+    private static Properties propUI;
+    private static String currentDir;
 
     public static Properties ConnectToPropUI(String sPathSharedUIMap) throws IOException {
         propUI = new Properties();
-        propUI.load(new FileInputStream(sPathSharedUIMap));
+        currentDir = System.getProperty("user.dir") + "/src/test/java/specs/";
+        propUI.load(new FileInputStream(currentDir + sPathSharedUIMap));
         return propUI;
     }
 
