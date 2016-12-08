@@ -4,6 +4,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.By;
 import pageobjects.ContentAdmin.DownloadList.DownloadList;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.LoginPage.LoginPage;
@@ -14,6 +15,8 @@ import specs.AbstractSpec;
  */
 
 public class CheckDownloadList extends AbstractSpec {
+    private final By contentAdminMenuButton = By.xpath("//span[contains(text(),'Content Admin')]");
+    private final By downloadListMenuItem = By.xpath("//a[contains(text(),'Download List')]/parent::li");
 
     @Before
     public void setUp() throws Exception {
@@ -25,7 +28,9 @@ public class CheckDownloadList extends AbstractSpec {
         final String expectedTitle = "Download List";
         final Integer expectedQuantity = 3;
 
-        Assert.assertNotNull(new Dashboard(driver).openDownloadList().getUrl());
+        new Dashboard(driver).openPageFromMenu(contentAdminMenuButton, downloadListMenuItem);
+
+        Assert.assertNotNull(new DownloadList(driver).getUrl());
         Assert.assertEquals("Actual Download List page Title doesn't match to expected", expectedTitle, new DownloadList(driver).getTitle());
 
         //System.out.println(new DownloadList(driver).getTitleQuantity().toString());

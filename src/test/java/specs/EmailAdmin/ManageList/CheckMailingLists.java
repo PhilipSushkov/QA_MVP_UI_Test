@@ -4,6 +4,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.By;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.EmailAdmin.ManageList.MailingLists;
 import pageobjects.LoginPage.LoginPage;
@@ -15,6 +16,8 @@ import specs.AbstractSpec;
  */
 
 public class CheckMailingLists extends AbstractSpec {
+    private final By emailAdminMenuButton = By.xpath("//span[contains(text(),'Email Admin')]");
+    private final By manageListMenuItem = By.xpath("//a[contains(text(),'Manage List')]/parent::li");
 
     @Before
     public void setUp() throws Exception {
@@ -26,7 +29,9 @@ public class CheckMailingLists extends AbstractSpec {
         final String expectedTitle = "Mailing Lists";
         final Integer expectedQuantity = 5;
 
-        Assert.assertNotNull(new Dashboard(driver).openMailingLists().getUrl());
+        new Dashboard(driver).openPageFromMenu(emailAdminMenuButton, manageListMenuItem);
+
+        Assert.assertNotNull(new MailingLists(driver).getUrl());
         Assert.assertEquals("Actual Mailing Lists page Title doesn't match to expected", expectedTitle, new MailingLists(driver).getTitle());
 
         //System.out.println(new MailingLists(driver).getTitleQuantity().toString());

@@ -5,6 +5,7 @@ import org.hamcrest.CoreMatchers;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
+import org.openqa.selenium.By;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.LoginPage.LoginPage;
 import pageobjects.SystemAdmin.UserList.UserList;
@@ -13,6 +14,8 @@ import specs.AbstractSpec;
 import java.util.Date;
 
 public class CheckDashboard extends AbstractSpec{
+    private final By systemAdminMenuButton = By.xpath("//span[contains(text(),'System Admin')]");
+    private final By userListMenuItem = By.xpath("//a[contains(text(),'User List')]/parent::li");
 
     @Test
     public void canInvalidateCache() throws Exception {
@@ -37,7 +40,7 @@ public class CheckDashboard extends AbstractSpec{
         Assert.assertTrue("New password "+newPassword+" doesn't work.", new LoginPage(driver).credentialsWork(username, newPassword));
 
         //manually restoring account to original password
-        new LoginPage(driver).loginUser().openUserListPage();
+        new LoginPage(driver).loginUser().openPageFromMenu(systemAdminMenuButton, userListMenuItem);
         new UserList(driver).editUser(new UserList(driver).getIndexOfUsername(username)).changePasswordTo(originalPassword).saveUser();
         Assert.assertTrue("Error restoring password to original value.", new UserList(driver).logoutFromAdmin().credentialsWork(username, originalPassword));
     }

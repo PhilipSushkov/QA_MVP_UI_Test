@@ -42,19 +42,7 @@ public class Dashboard extends AbstractPageObject {
     private final By presentationsMenuButton = By.xpath("//a[contains(text(),'Presentations')]/parent::li");
     private final By eventsMenuButton = By.xpath("//a[contains(text(),'Events')]/parent::li");
     private final By systemAdminMenuButton = By.xpath("//span[contains(text(),'System Admin')]");
-    private final By emailAdminMenuButton = By.xpath("//span[contains(text(),'Email Admin')]");
     private final By userListMenuItem = By.xpath("//a[contains(text(),'User List')]/parent::li");
-    private final By financialReportsMenuItem = By.xpath("//a[contains(text(),'Financial Reports')]/parent::li");
-    private final By pressReleaseCategoriesMenuItem = By.xpath("//a[contains(text(),'Press Release Categories')]/parent::li");
-    private final By quickLinksMenuItem = By.xpath("//a[contains(text(),'Quick Links')]/parent::li");
-    private final By downloadListMenuItem = By.xpath("//a[contains(text(),'Download List')]/parent::li");
-    private final By personListMenuItem = By.xpath("//a[contains(text(),'Person List')]/parent::li");
-    private final By departmentListMenuItem = By.xpath("//a[contains(text(),'Department List')]/parent::li");
-    private final By faqListMenuItem = By.xpath("//a[contains(text(),'Faq List')]/parent::li");
-    private final By jobPostingMenuItem = By.xpath("//a[contains(text(),'Job Posting List')]/parent::li");
-    private final By composeMenuItem = By.xpath("//a[contains(text(),'Compose')]/parent::li");
-    private final By manageListMenuItem = By.xpath("//a[contains(text(),'Manage List')]/parent::li");
-    private final By subscribersMenuItem = By.xpath("//a[contains(text(),'Subscribers')]/parent::li");
     private final By previewSiteButton = By.linkText("PREVIEW SITE");
     private final By invalidateCacheButton = By.xpath("//a[contains(@id,'hrefInvalidateCache')]");
     private final By invalidateCacheMessage = By.className("MessageContainer");
@@ -123,121 +111,13 @@ public class Dashboard extends AbstractPageObject {
                 findElement(menuItem).click();
                 break;
             } catch (ElementNotVisibleException e1){
-                System.out.println("Attempts: " + i);
+                System.out.println("Attempt #: " + i);
             } catch (ElementNotFoundException e2) {
-                System.out.println("Attempts: " + i);
+                System.out.println("Attempt #: " + i);
             } catch (TimeoutException e3) {
-                System.out.println("Attempts: " + i);
+                System.out.println("Attempt #: " + i);
             }
         }
-    }
-
-    public UserList openUserListPage() throws Exception {
-
-        for (int i=0; i<ATTEMPTS; i++) {
-            try {
-                action.moveToElement(findElement(systemAdminMenuButton)).perform();
-                wait.until(ExpectedConditions.visibilityOf(findElement(userListMenuItem)));
-                Thread.sleep(DEFAULT_PAUSE);
-                findElement(userListMenuItem).click();
-                break;
-            } catch (ElementNotVisibleException e1){
-                System.out.println("Attempts: " + i);
-            } catch (ElementNotFoundException e2) {
-                System.out.println("Attempts: " + i);
-            } catch (TimeoutException e3) {
-                System.out.println("Attempts: " + i);
-            }
-        }
-        return new UserList(getDriver());
-    }
-
-    public FinancialReports openFinancialReports() {
-        action.moveToElement(findElement(contentAdminMenuButton)).perform();
-        wait.until(ExpectedConditions.visibilityOf(findElement(financialReportsMenuItem)));
-        pause(DEFAULT_PAUSE);
-        findElement(financialReportsMenuItem).click();
-        return new FinancialReports(getDriver());
-    }
-
-    public PressReleaseCategories openPressReleaseCategories() {
-        action.moveToElement(findElement(contentAdminMenuButton)).perform();
-        wait.until(ExpectedConditions.visibilityOf(findElement(pressReleaseCategoriesMenuItem)));
-        pause(DEFAULT_PAUSE);
-        findElement(pressReleaseCategoriesMenuItem).click();
-        return new PressReleaseCategories(getDriver());
-    }
-
-    public QuickLinks openQuickLinks() {
-        action.moveToElement(findElement(contentAdminMenuButton)).perform();
-        wait.until(ExpectedConditions.visibilityOf(findElement(quickLinksMenuItem)));
-        pause(DEFAULT_PAUSE);
-        findElement(quickLinksMenuItem).click();
-        return new QuickLinks(getDriver());
-    }
-
-    public DownloadList openDownloadList() {
-        action.moveToElement(findElement(contentAdminMenuButton)).perform();
-        wait.until(ExpectedConditions.visibilityOf(findElement(downloadListMenuItem)));
-        pause(DEFAULT_PAUSE);
-        findElement(downloadListMenuItem).click();
-        return new DownloadList(getDriver());
-    }
-
-    public PersonList openPersonList() {
-        action.moveToElement(findElement(contentAdminMenuButton)).perform();
-        wait.until(ExpectedConditions.visibilityOf(findElement(personListMenuItem)));
-        pause(DEFAULT_PAUSE);
-        findElement(personListMenuItem).click();
-        return new PersonList(getDriver());
-    }
-
-    public DepartmentList openDepartmentList() {
-        action.moveToElement(findElement(contentAdminMenuButton)).perform();
-        wait.until(ExpectedConditions.visibilityOf(findElement(departmentListMenuItem)));
-        pause(DEFAULT_PAUSE);
-        findElement(departmentListMenuItem).click();
-        return new DepartmentList(getDriver());
-    }
-
-    public Compose openCompose() {
-        action.moveToElement(findElement(emailAdminMenuButton)).perform();
-        wait.until(ExpectedConditions.visibilityOf(findElement(composeMenuItem)));
-        pause(DEFAULT_PAUSE);
-        findElement(composeMenuItem).click();
-        return new Compose(getDriver());
-    }
-
-    public MailingLists openMailingLists() {
-        action.moveToElement(findElement(emailAdminMenuButton)).perform();
-        wait.until(ExpectedConditions.visibilityOf(findElement(manageListMenuItem)));
-        pause(DEFAULT_PAUSE);
-        findElement(manageListMenuItem).click();
-        return new MailingLists(getDriver());
-    }
-
-    public MailingListUsers openMailingListUsers() {
-        action.moveToElement(findElement(emailAdminMenuButton)).perform();
-        wait.until(ExpectedConditions.visibilityOf(findElement(subscribersMenuItem)));
-        pause(DEFAULT_PAUSE);
-        findElement(subscribersMenuItem).click();
-        return new MailingListUsers(getDriver());
-    }
-
-    public FaqList openFaqList() {
-        action.moveToElement(findElement(contentAdminMenuButton)).perform();
-        wait.until(ExpectedConditions.visibilityOf(findElement(faqListMenuItem)));
-        pause(DEFAULT_PAUSE);
-        findElement(faqListMenuItem).click();
-        return new FaqList(getDriver());
-    }
-
-    public JobPostingList openJobPostingList() {
-        action.moveToElement(findElement(contentAdminMenuButton)).perform();
-        wait.until(ExpectedConditions.visibilityOf(findElement(jobPostingMenuItem)));
-        pause(DEFAULT_PAUSE);
-        findElement(jobPostingMenuItem).click();
-        return new JobPostingList(getDriver());
     }
 
     public PressReleases pressReleases() {

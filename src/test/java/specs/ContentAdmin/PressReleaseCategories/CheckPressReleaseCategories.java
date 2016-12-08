@@ -4,6 +4,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.By;
 import pageobjects.ContentAdmin.PressReleaseCategories.PressReleaseCategories;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.LoginPage.LoginPage;
@@ -14,6 +15,8 @@ import specs.AbstractSpec;
  */
 
 public class CheckPressReleaseCategories extends AbstractSpec {
+    private final By contentAdminMenuButton = By.xpath("//span[contains(text(),'Content Admin')]");
+    private final By pressReleaseCategoriesMenuItem = By.xpath("//a[contains(text(),'Press Release Categories')]/parent::li");
 
     @Before
     public void setUp() throws Exception {
@@ -25,7 +28,9 @@ public class CheckPressReleaseCategories extends AbstractSpec {
         final String expectedTitle = "Press Release Categories";
         final Integer expectedQuantity = 1;
 
-        Assert.assertNotNull(new Dashboard(driver).openPressReleaseCategories().getUrl());
+        new Dashboard(driver).openPageFromMenu(contentAdminMenuButton, pressReleaseCategoriesMenuItem);
+
+        Assert.assertNotNull(new PressReleaseCategories(driver).getUrl());
         Assert.assertEquals("Actual Press Release Categories page Title doesn't match to expected", expectedTitle, new PressReleaseCategories(driver).getTitle());
 
         //System.out.println(new PressReleaseCategories(driver).getCategoryNameQuantity().toString());

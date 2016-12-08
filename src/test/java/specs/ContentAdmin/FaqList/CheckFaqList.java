@@ -4,6 +4,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.By;
 import pageobjects.ContentAdmin.FaqList.FaqList;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.LoginPage.LoginPage;
@@ -14,6 +15,8 @@ import specs.AbstractSpec;
  */
 
 public class CheckFaqList extends AbstractSpec {
+    private final By contentAdminMenuButton = By.xpath("//span[contains(text(),'Content Admin')]");
+    private final By faqListMenuItem = By.xpath("//a[contains(text(),'Faq List')]/parent::li");
 
     @Before
     public void setUp() throws Exception {
@@ -25,7 +28,9 @@ public class CheckFaqList extends AbstractSpec {
         final String expectedTitle = "Faq List";
         final Integer expectedQuantity = 1;
 
-        Assert.assertNotNull(new Dashboard(driver).openFaqList().getUrl());
+        new Dashboard(driver).openPageFromMenu(contentAdminMenuButton, faqListMenuItem);
+
+        Assert.assertNotNull(new FaqList(driver).getUrl());
         Assert.assertEquals("Actual Faq List page Title doesn't match to expected", expectedTitle, new FaqList(driver).getTitle());
 
         //System.out.println(new FaqList(driver).getTitleQuantity().toString());

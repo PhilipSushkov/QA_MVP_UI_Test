@@ -4,6 +4,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.By;
 import pageobjects.ContentAdmin.FinancialReports.FinancialReports;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.LoginPage.LoginPage;
@@ -14,6 +15,8 @@ import specs.AbstractSpec;
  */
 
 public class CheckFinancialReports extends AbstractSpec {
+    private final By contentAdminMenuButton = By.xpath("//span[contains(text(),'Content Admin')]");
+    private final By financialReportsMenuItem = By.xpath("//a[contains(text(),'Financial Reports')]/parent::li");
 
     @Before
     public void setUp() throws Exception {
@@ -25,7 +28,9 @@ public class CheckFinancialReports extends AbstractSpec {
         final String expectedTitle = "Financial Report List";
         final Integer expectedQuantity = 6;
 
-        Assert.assertNotNull(new Dashboard(driver).openFinancialReports().getUrl());
+        new Dashboard(driver).openPageFromMenu(contentAdminMenuButton, financialReportsMenuItem);
+
+        Assert.assertNotNull(new FinancialReports(driver).getUrl());
         Assert.assertEquals("Actual Financial Reports page Title doesn't match to expected", expectedTitle, new FinancialReports(driver).getTitle());
 
         //System.out.println(new FinancialReports(driver).getTitleQuantity().toString());
