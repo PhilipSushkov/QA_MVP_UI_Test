@@ -42,8 +42,6 @@ public class Dashboard extends AbstractPageObject {
     private final By pressReleasesMenuButton = By.xpath("//a[contains(text(),'Press Releases')]/parent::li");
     private final By presentationsMenuButton = By.xpath("//a[contains(text(),'Presentations')]/parent::li");
     private final By eventsMenuButton = By.xpath("//a[contains(text(),'Events')]/parent::li");
-    private final By systemAdminMenuButton = By.xpath("//span[contains(text(),'System Admin')]");
-    private final By userListMenuItem = By.xpath("//a[contains(text(),'User List')]/parent::li");
     private final By socialMediaDashboard = By.linkText("Social Media Dashboard");
     private final By previewSiteButton = By.linkText("PREVIEW SITE");
     private final By invalidateCacheButton = By.xpath("//a[contains(@id,'hrefInvalidateCache')]");
