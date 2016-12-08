@@ -27,7 +27,7 @@ public class CheckPDFTemplateEdit extends AbstractSpec {
     public void checkPDFTemplateEdit() throws Exception {
         final String expectedTitle = "PDF Template Edit";
 
-        new Dashboard(driver).openPage(systemAdminMenuButton, pdfTemplateEditMenuItem);
+        new Dashboard(driver).openPageFromMenu(systemAdminMenuButton, pdfTemplateEditMenuItem);
 
         Assert.assertNotNull(new PDFTemplateEdit(driver).getUrl());
 

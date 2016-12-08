@@ -28,7 +28,7 @@ public class CheckSiteList extends AbstractSpec {
         final String expectedTitle = "Site List";
         final Integer expectedQuantity = 1;
 
-        new Dashboard(driver).openPage(systemAdminMenuButton, siteListMenuItem);
+        new Dashboard(driver).openPageFromMenu(systemAdminMenuButton, siteListMenuItem);
 
         Assert.assertNotNull(new SiteList(driver).getUrl());
         Assert.assertEquals("Actual Site List page Title doesn't match to expected", expectedTitle, new SiteList(driver).getTitle());

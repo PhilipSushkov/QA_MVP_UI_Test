@@ -64,16 +64,6 @@ public class Dashboard extends AbstractPageObject {
     private final By siteAdminMenuButton = By.xpath("//span[contains(text(),'Site Admin')]");
     private final By emailAdminMenuButton = By.xpath("//span[contains(text(),'Email Admin')]");
     private final By userListMenuItem = By.xpath("//a[contains(text(),'User List')]/parent::li");
-    private final By globalModuleListMenuItem = By.xpath("//a[contains(text(),'Global Module List')]/parent::li");
-    private final By layoutDefinitionListMenuItem = By.xpath("//a[contains(text(),'Layout Definition List')]/parent::li");
-    private final By moduleDefinitionListMenuItem = By.xpath("//a[contains(text(),'Module Definition List')]/parent::li");
-    private final By cssFileListMenuItem = By.xpath("//a[contains(text(),'Css File List')]/parent::li");
-    private final By externalFeedListMenuItem = By.xpath("//a[contains(text(),'External Feed List')]/parent::li");
-    private final By indexContentMenuItem = By.xpath("//a[contains(text(),'Index Content')]/parent::li");
-    private final By linkToPageListMenuItem = By.xpath("//a[contains(text(),'Link To Page List')]/parent::li");
-    private final By lookupListMenuItem = By.xpath("//a[contains(text(),'Lookup List')]/parent::li");
-    private final By aliasListMenuItem = By.xpath("//a[contains(text(),'Alias List')]/parent::li");
-    private final By mobileLinkListMenuItem = By.xpath("//a[contains(text(),'Mobile Link List')]/parent::li");
     private final By domainListMenuItem = By.xpath("//a[contains(text(),'Domain List')]/parent::li");
     private final By editContentAdminPagesMenuItem = By.xpath("//a[contains(text(),'Content Admin Edit')]/parent::li");
     private final By financialReportsMenuItem = By.xpath("//a[contains(text(),'Financial Reports')]/parent::li");
@@ -103,7 +93,8 @@ public class Dashboard extends AbstractPageObject {
     private final By passwordChangeError = By.className("ErrorChangePassword");
     private final By closePasswordChangeDialog = By.className("fancybox-close");
 
-    public static final long DEFAULT_PAUSE = 1500;
+    private static final long DEFAULT_PAUSE = 1500;
+    private static final int ATTEMPTS = 3;
 
     public Dashboard(WebDriver driver) {
 
@@ -144,9 +135,9 @@ public class Dashboard extends AbstractPageObject {
         return new EditEvent(getDriver());
     }
 
-    public void openPage(By menuButton,By menuItem) throws Exception {
+    public void openPageFromMenu(By menuButton, By menuItem) throws Exception {
 
-        for (int i=0; i<3; i++) {
+        for (int i=0; i<ATTEMPTS; i++) {
             try {
                 action.moveToElement(findElement(menuButton)).perform();
                 wait.until(ExpectedConditions.visibilityOf(findElement(menuItem)));
@@ -174,105 +165,11 @@ public class Dashboard extends AbstractPageObject {
                 System.out.println("Attempts: " + i);
             } catch (ElementNotFoundException e2) {
                 System.out.println("Attempts: " + i);
+            } catch (TimeoutException e3) {
+                System.out.println("Attempts: " + i);
             }
         }
         return new UserList(getDriver());
-    }
-
-    public GlobalModuleList openGlobalModuleListPage() {
-        action.moveToElement(findElement(siteAdminMenuButton)).perform();
-        wait.until(ExpectedConditions.visibilityOf(findElement(globalModuleListMenuItem)));
-        pause(DEFAULT_PAUSE);
-        findElement(globalModuleListMenuItem).click();
-        return new GlobalModuleList(getDriver());
-    }
-
-    public LayoutDefinitionList openLayoutDefinitionListPage() {
-        action.moveToElement(findElement(siteAdminMenuButton)).perform();
-        wait.until(ExpectedConditions.visibilityOf(findElement(layoutDefinitionListMenuItem)));
-        pause(DEFAULT_PAUSE);
-        findElement(layoutDefinitionListMenuItem).click();
-        return new LayoutDefinitionList(getDriver());
-    }
-
-    public ModuleDefinitionList openModuleDefinitionListPage() {
-        action.moveToElement(findElement(siteAdminMenuButton)).perform();
-        wait.until(ExpectedConditions.visibilityOf(findElement(moduleDefinitionListMenuItem)));
-        pause(DEFAULT_PAUSE);
-        findElement(moduleDefinitionListMenuItem).click();
-        return new ModuleDefinitionList(getDriver());
-    }
-
-    public CssFileList openCssFileListPage() {
-        action.moveToElement(findElement(siteAdminMenuButton)).perform();
-        wait.until(ExpectedConditions.visibilityOf(findElement(cssFileListMenuItem)));
-        pause(DEFAULT_PAUSE);
-        findElement(cssFileListMenuItem).click();
-        return new CssFileList(getDriver());
-    }
-
-    public ExternalFeedList openExternalFeedListPage() {
-        action.moveToElement(findElement(siteAdminMenuButton)).perform();
-        wait.until(ExpectedConditions.visibilityOf(findElement(externalFeedListMenuItem)));
-        pause(DEFAULT_PAUSE);
-        findElement(externalFeedListMenuItem).click();
-        return new ExternalFeedList(getDriver());
-    }
-
-    public IndexContent openIndexContentPage() {
-        action.moveToElement(findElement(siteAdminMenuButton)).perform();
-        wait.until(ExpectedConditions.visibilityOf(findElement(indexContentMenuItem)));
-        pause(DEFAULT_PAUSE);
-        findElement(indexContentMenuItem).click();
-        return new IndexContent(getDriver());
-    }
-
-    public LinkToPageList openLinkToPageListPage() {
-        action.moveToElement(findElement(siteAdminMenuButton)).perform();
-        wait.until(ExpectedConditions.visibilityOf(findElement(linkToPageListMenuItem)));
-        pause(DEFAULT_PAUSE);
-        findElement(linkToPageListMenuItem).click();
-        return new LinkToPageList(getDriver());
-    }
-
-    public LookupList openLookupListPage() {
-        action.moveToElement(findElement(siteAdminMenuButton)).perform();
-        wait.until(ExpectedConditions.visibilityOf(findElement(lookupListMenuItem)));
-        pause(DEFAULT_PAUSE);
-        findElement(lookupListMenuItem).click();
-        return new LookupList(getDriver());
-    }
-
-    public MobileLinkList openMobileLinkListPage() {
-        action.moveToElement(findElement(siteAdminMenuButton)).perform();
-        wait.until(ExpectedConditions.visibilityOf(findElement(mobileLinkListMenuItem)));
-        pause(DEFAULT_PAUSE);
-        findElement(mobileLinkListMenuItem).click();
-        return new MobileLinkList(getDriver());
-    }
-
-    public AliasList openAliasListPage() {
-        action.moveToElement(findElement(siteAdminMenuButton)).perform();
-        wait.until(ExpectedConditions.visibilityOf(findElement(aliasListMenuItem)));
-        pause(DEFAULT_PAUSE);
-        findElement(aliasListMenuItem).click();
-        return new AliasList(getDriver());
-    }
-
-    public DomainList openDomainListPage() {
-        action.moveToElement(findElement(siteAdminMenuButton)).perform();
-        wait.until(ExpectedConditions.visibilityOf(findElement(domainListMenuItem)));
-        pause(DEFAULT_PAUSE);
-        findElement(domainListMenuItem).click();
-        return new DomainList(getDriver());
-    }
-
-    public EditContentAdminPages openEditContentAdminPages() {
-        action.moveToElement(findElement(siteAdminMenuButton)).perform();
-        wait.until(ExpectedConditions.visibilityOf(findElement(editContentAdminPagesMenuItem)));
-        pause(DEFAULT_PAUSE);
-        findElement(editContentAdminPagesMenuItem).click();
-        return new EditContentAdminPages(getDriver());
     }
 
     public FinancialReports openFinancialReports() {

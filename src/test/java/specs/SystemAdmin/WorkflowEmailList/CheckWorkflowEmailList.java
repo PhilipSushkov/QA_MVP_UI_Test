@@ -28,7 +28,7 @@ public class CheckWorkflowEmailList extends AbstractSpec {
         final String expectedTitle = "Workflow Email List";
         final Integer expectedQuantity = 4;
 
-        new Dashboard(driver).openPage(systemAdminMenuButton, workflowEmailListMenuItem);
+        new Dashboard(driver).openPageFromMenu(systemAdminMenuButton, workflowEmailListMenuItem);
 
         Assert.assertNotNull(new WorkflowEmailList(driver).getUrl());
         Assert.assertEquals("Actual Workflow Email List page Title doesn't match to expected", expectedTitle, new WorkflowEmailList(driver).getTitle());

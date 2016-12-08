@@ -4,6 +4,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.By;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.LoginPage.LoginPage;
 import pageobjects.SiteAdmin.DomainList.DomainList;
@@ -14,6 +15,8 @@ import specs.AbstractSpec;
  */
 
 public class CheckDomainList extends AbstractSpec {
+    private final By siteAdminMenuButton = By.xpath("//span[contains(text(),'Site Admin')]");
+    private final By domainListMenuItem = By.xpath("//a[contains(text(),'Domain List')]/parent::li");
 
     @Before
     public void setUp() throws Exception {
@@ -25,7 +28,9 @@ public class CheckDomainList extends AbstractSpec {
         final String expectedTitle = "Domain List";
         final Integer expectedQuantity = 2;
 
-        Assert.assertNotNull(new Dashboard(driver).openDomainListPage().getUrl());
+        new Dashboard(driver).openPageFromMenu(siteAdminMenuButton, domainListMenuItem);
+
+        Assert.assertNotNull(new DomainList(driver).getUrl());
         Assert.assertEquals("Actual Domain List page Title doesn't match to expected", expectedTitle, new DomainList(driver).getTitle());
 
         //System.out.println(new DomainList(driver).getDomainQuantity().toString());

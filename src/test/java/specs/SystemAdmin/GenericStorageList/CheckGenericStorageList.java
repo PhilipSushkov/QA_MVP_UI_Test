@@ -27,7 +27,7 @@ public class CheckGenericStorageList extends AbstractSpec {
         final String expectedTitle = "Generic Storage List";
         final Integer expectedSize = 1;
 
-        new Dashboard(driver).openPage(systemAdminMenuButton, genericStorageListMenuItem);
+        new Dashboard(driver).openPageFromMenu(systemAdminMenuButton, genericStorageListMenuItem);
 
         Assert.assertNotNull(new GenericStorageList(driver).getUrl());
         Assert.assertEquals("Actual Generic Storage List page Title doesn't match to expected", expectedTitle, new GenericStorageList(driver).getTitle());

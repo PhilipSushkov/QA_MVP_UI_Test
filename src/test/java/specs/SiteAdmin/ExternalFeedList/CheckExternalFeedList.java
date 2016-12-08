@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.After;
+import org.openqa.selenium.By;
 import pageobjects.Dashboard.Dashboard;
 import specs.AbstractSpec;
 import pageobjects.LoginPage.LoginPage;
@@ -14,6 +15,8 @@ import pageobjects.SiteAdmin.ExternalFeedList.ExternalFeedList;
  */
 
 public class CheckExternalFeedList extends AbstractSpec {
+    private final By siteAdminMenuButton = By.xpath("//span[contains(text(),'Site Admin')]");
+    private final By externalFeedListMenuItem = By.xpath("//a[contains(text(),'External Feed List')]/parent::li");
 
     @Before
     public void setUp() throws Exception {
@@ -26,7 +29,9 @@ public class CheckExternalFeedList extends AbstractSpec {
         final String expectedTitle = "External Feed List";
         final Integer expectedQuantity = 4;
 
-        Assert.assertNotNull(new Dashboard(driver).openExternalFeedListPage().getUrl());
+        new Dashboard(driver).openPageFromMenu(siteAdminMenuButton, externalFeedListMenuItem);
+
+        Assert.assertNotNull(new ExternalFeedList(driver).getUrl());
         Assert.assertEquals("Actual External Feed List page Title doesn't match to expected", expectedTitle, new ExternalFeedList(driver).getTitle());
 
         System.out.println(new ExternalFeedList(driver).getExternalFeedListQuantity().toString());

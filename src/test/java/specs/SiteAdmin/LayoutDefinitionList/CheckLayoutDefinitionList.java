@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.After;
+import org.openqa.selenium.By;
 import pageobjects.SiteAdmin.LayoutDefinitionList.LayoutDefinitionList;
 import specs.AbstractSpec;
 import pageobjects.LoginPage.LoginPage;
@@ -14,6 +15,8 @@ import pageobjects.Dashboard.Dashboard;
  */
 
 public class CheckLayoutDefinitionList extends AbstractSpec {
+    private final By siteAdminMenuButton = By.xpath("//span[contains(text(),'Site Admin')]");
+    private final By layoutDefinitionListMenuItem = By.xpath("//a[contains(text(),'Layout Definition List')]/parent::li");
 
     @Before
     public void setUp() throws Exception {
@@ -25,7 +28,9 @@ public class CheckLayoutDefinitionList extends AbstractSpec {
         final String expectedTitle = "Layout Definition List";
         final Integer expectedQuantity = 3;
 
-        Assert.assertNotNull(new Dashboard(driver).openLayoutDefinitionListPage().getUrl());
+        new Dashboard(driver).openPageFromMenu(siteAdminMenuButton, layoutDefinitionListMenuItem);
+
+        Assert.assertNotNull(new LayoutDefinitionList(driver).getUrl());
         Assert.assertEquals("Actual Layout Definition List page Title doesn't match to expected", expectedTitle, new LayoutDefinitionList(driver).getTitle());
 
         //System.out.println(new LayoutDefinitionList(driver).getLayoutDefinitionListQuantity().toString());

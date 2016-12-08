@@ -1,8 +1,5 @@
 package testrunner;
 
-import com.google.code.tempusfugit.concurrency.annotations.Concurrent;
-import com.mycila.junit.concurrent.Concurrency;
-import com.mycila.junit.concurrent.ConcurrentSuiteRunner;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import specs.ContentAdmin.DepartmentList.CheckDepartmentList;

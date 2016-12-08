@@ -4,6 +4,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.By;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.LoginPage.LoginPage;
 import pageobjects.SiteAdmin.LookupList.LookupList;
@@ -14,6 +15,8 @@ import specs.AbstractSpec;
  */
 
 public class CheckLookupList extends AbstractSpec {
+    private final By siteAdminMenuButton = By.xpath("//span[contains(text(),'Site Admin')]");
+    private final By lookupListMenuItem = By.xpath("//a[contains(text(),'Lookup List')]/parent::li");
 
     @Before
     public void setUp() throws Exception {
@@ -25,7 +28,9 @@ public class CheckLookupList extends AbstractSpec {
         final String expectedTitle = "Lookup List";
         final Integer expectedQuantity = 150;
 
-        Assert.assertNotNull(new Dashboard(driver).openLookupListPage().getUrl());
+        new Dashboard(driver).openPageFromMenu(siteAdminMenuButton, lookupListMenuItem);
+
+        Assert.assertNotNull(new LookupList(driver).getUrl());
         Assert.assertEquals("Actual Lookup List page Title doesn't match to expected", expectedTitle, new LookupList(driver).getTitle());
 
         Assert.assertNotNull("Lookup Type dropdown list doesn't exist", new LookupList(driver).getLookupListLookupType() );

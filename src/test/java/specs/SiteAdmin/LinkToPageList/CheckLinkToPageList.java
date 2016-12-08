@@ -4,6 +4,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.By;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.LoginPage.LoginPage;
 import pageobjects.SiteAdmin.LinkToPageList.LinkToPageList;
@@ -14,6 +15,8 @@ import specs.AbstractSpec;
  */
 
 public class CheckLinkToPageList extends AbstractSpec {
+    private final By siteAdminMenuButton = By.xpath("//span[contains(text(),'Site Admin')]");
+    private final By linkToPageListMenuItem = By.xpath("//a[contains(text(),'Link To Page List')]/parent::li");
 
     @Before
     public void setUp() throws Exception {
@@ -25,7 +28,9 @@ public class CheckLinkToPageList extends AbstractSpec {
         final String expectedTitle = "Link To Page List";
         final Integer expectedQuantity = 15;
 
-        Assert.assertNotNull(new Dashboard(driver).openLinkToPageListPage().getUrl());
+        new Dashboard(driver).openPageFromMenu(siteAdminMenuButton, linkToPageListMenuItem);
+
+        Assert.assertNotNull(new LinkToPageList(driver).getUrl());
         Assert.assertEquals("Actual Link To Page List page Title doesn't match to expected", expectedTitle, new LinkToPageList(driver).getTitle());
 
         //System.out.println(new LinkToPageList(driver).getLinkToPageListQuantity().toString());

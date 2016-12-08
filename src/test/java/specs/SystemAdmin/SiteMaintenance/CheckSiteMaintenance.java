@@ -27,7 +27,7 @@ public class CheckSiteMaintenance extends AbstractSpec {
     public void checkSiteMaintenance() throws Exception {
         final String expectedTitle = "Site Maintenance";
 
-        new Dashboard(driver).openPage(systemAdminMenuButton, siteMaintenanceMenuItem);
+        new Dashboard(driver).openPageFromMenu(systemAdminMenuButton, siteMaintenanceMenuItem);
 
         Assert.assertNotNull(new SiteMaintenance(driver).getUrl());
 

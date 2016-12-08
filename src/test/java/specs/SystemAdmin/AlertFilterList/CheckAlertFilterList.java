@@ -28,7 +28,7 @@ public class CheckAlertFilterList extends AbstractSpec {
         final String expectedTitle = "Alert Filter List";
         final Integer expectedQuantity = 4;
 
-        new Dashboard(driver).openPage(systemAdminMenuButton, alertFilterListMenuItem);
+        new Dashboard(driver).openPageFromMenu(systemAdminMenuButton, alertFilterListMenuItem);
 
         Assert.assertNotNull(new AlertFilterList(driver).getUrl());
         Assert.assertEquals("Actual Alert Filter List page Title doesn't match to expected", expectedTitle, new AlertFilterList(driver).getTitle());

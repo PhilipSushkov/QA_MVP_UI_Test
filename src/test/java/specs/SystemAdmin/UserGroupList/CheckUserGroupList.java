@@ -28,7 +28,7 @@ public class CheckUserGroupList extends AbstractSpec {
         final String expectedTitle = "User Group List";
         final Integer expectedQuantity = 5;
 
-        new Dashboard(driver).openPage(systemAdminMenuButton, userGroupListMenuItem);
+        new Dashboard(driver).openPageFromMenu(systemAdminMenuButton, userGroupListMenuItem);
 
         Assert.assertNotNull(new UserGroupList(driver).getUrl());
         Assert.assertEquals("Actual User Group List page Title doesn't match to expected", expectedTitle, new UserGroupList(driver).getTitle());

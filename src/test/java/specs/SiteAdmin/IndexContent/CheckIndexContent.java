@@ -4,6 +4,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.By;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.LoginPage.LoginPage;
 import pageobjects.SiteAdmin.IndexContent.IndexContent;
@@ -14,6 +15,8 @@ import specs.AbstractSpec;
  */
 
 public class CheckIndexContent extends AbstractSpec {
+    private final By siteAdminMenuButton = By.xpath("//span[contains(text(),'Site Admin')]");
+    private final By indexContentMenuItem = By.xpath("//a[contains(text(),'Index Content')]/parent::li");
 
     @Before
     public void setUp() throws Exception {
@@ -25,7 +28,9 @@ public class CheckIndexContent extends AbstractSpec {
         final String expectedTitle = "Index Content";
         final Integer expectedQuantity = 20;
 
-        Assert.assertNotNull(new Dashboard(driver).openIndexContentPage().getUrl());
+        new Dashboard(driver).openPageFromMenu(siteAdminMenuButton, indexContentMenuItem);
+
+        Assert.assertNotNull(new IndexContent(driver).getUrl());
         Assert.assertEquals("Actual Index Content page Title doesn't match to expected", expectedTitle, new IndexContent(driver).getTitle());
 
         //System.out.println(new IndexContent(driver).getIndexContentQuantity().toString());

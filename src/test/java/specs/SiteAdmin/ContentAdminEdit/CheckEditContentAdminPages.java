@@ -4,6 +4,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.By;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.LoginPage.LoginPage;
 import pageobjects.SiteAdmin.EditContentAdminPages.EditContentAdminPages;
@@ -14,6 +15,8 @@ import specs.AbstractSpec;
  */
 
 public class CheckEditContentAdminPages extends AbstractSpec {
+    private final By siteAdminMenuButton = By.xpath("//span[contains(text(),'Site Admin')]");
+    private final By editContentAdminPagesMenuItem = By.xpath("//a[contains(text(),'Content Admin Edit')]/parent::li");
 
     @Before
     public void setUp() throws Exception {
@@ -25,7 +28,9 @@ public class CheckEditContentAdminPages extends AbstractSpec {
         final String expectedTitle = "Edit Content Admin Pages";
         final Integer expectedQuantity = 20;
 
-        Assert.assertNotNull(new Dashboard(driver).openEditContentAdminPages().getUrl());
+        new Dashboard(driver).openPageFromMenu(siteAdminMenuButton, editContentAdminPagesMenuItem);
+
+        Assert.assertNotNull(new EditContentAdminPages(driver).getUrl());
         Assert.assertEquals("Actual Content Admin Edit page Title doesn't match to expected", expectedTitle, new EditContentAdminPages(driver).getTitle());
 
         //System.out.println(new ContentAdminEdit(driver).getShowInNavCkbQuantity().toString());

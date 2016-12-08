@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.After;
+import org.openqa.selenium.By;
 import pageobjects.SiteAdmin.GlobalModuleList.GlobalModuleList;
 import specs.AbstractSpec;
 import pageobjects.LoginPage.LoginPage;
@@ -14,6 +15,8 @@ import pageobjects.Dashboard.Dashboard;
  */
 
 public class CheckGlobalModuleList extends AbstractSpec {
+    final By siteAdminMenuButton = By.xpath("//span[contains(text(),'Site Admin')]");
+    final By globalModuleListMenuItem = By.xpath("//a[contains(text(),'Global Module List')]/parent::li");
 
     @Before
     public void setUp() throws Exception {
@@ -25,7 +28,9 @@ public class CheckGlobalModuleList extends AbstractSpec {
         final String expectedTitle = "Global Module List";
         final Integer expectedQuantity = 10;
 
-        Assert.assertNotNull(new Dashboard(driver).openGlobalModuleListPage().getUrl());
+        new Dashboard(driver).openPageFromMenu(siteAdminMenuButton, globalModuleListMenuItem);
+
+        Assert.assertNotNull(new GlobalModuleList(driver).getUrl());
         Assert.assertEquals("Actual Global Module List page Title doesn't match to expected", expectedTitle, new GlobalModuleList(driver).getTitle());
 
         //System.out.println(new GlobalModuleList(driver).getGlobalModuleListQuantity().toString());
