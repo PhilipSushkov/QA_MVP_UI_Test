@@ -7,18 +7,21 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
 
+import static specs.AbstractSpec.propUISystemAdmin;
+
 /**
  * Created by philipsushkov on 2016-11-14.
  */
 
 public class SiteMaintenance extends AbstractPageObject {
-    private final By moduleTitle = By.xpath("//div[contains(@id, 'SiteMaintenanceApp')]/h1/span[contains(@id,'ModuleTitle')]");
-    private final By buttonGoLive = By.xpath("//button[contains(@ng-click, 'goLive()')]");
-    private final By buttonOneTouchButton = By.xpath("//button[contains(@ng-click, 'toggleOneTouch()')]");
-    private final By buttonTwoFactorAuthenticationButton = By.xpath("//button[contains(@ng-click, 'toggleTwoFactorAuthentication()')]");
+    private static By moduleTitle, btnGoLive, btnOneTouch, btnTwoFactorAuthentication;
 
     public SiteMaintenance(WebDriver driver) {
         super(driver);
+        moduleTitle = By.xpath(propUISystemAdmin.getProperty("divModule_Title"));
+        btnGoLive = By.xpath(propUISystemAdmin.getProperty("btn_GoLive"));
+        btnOneTouch = By.xpath(propUISystemAdmin.getProperty("btn_OneTouch"));
+        btnTwoFactorAuthentication = By.xpath(propUISystemAdmin.getProperty("btn_TwoFactorAuthentication"));
     }
 
     public String getUrl() {
@@ -34,8 +37,8 @@ public class SiteMaintenance extends AbstractPageObject {
         WebElement element = null;
 
         try {
-            wait.until(ExpectedConditions.visibilityOf(findElement(buttonGoLive)));
-            element = findElement(buttonGoLive);
+            wait.until(ExpectedConditions.visibilityOf(findElement(btnGoLive)));
+            element = findElement(btnGoLive);
         } catch (ElementNotFoundException e1) {
         } catch (ElementNotVisibleException e2) {
         }
@@ -48,8 +51,8 @@ public class SiteMaintenance extends AbstractPageObject {
         WebElement element = null;
 
         try {
-            wait.until(ExpectedConditions.visibilityOf(findElement(buttonOneTouchButton)));
-            element = findElement(buttonOneTouchButton);
+            wait.until(ExpectedConditions.visibilityOf(findElement(btnOneTouch)));
+            element = findElement(btnOneTouch);
         } catch (ElementNotFoundException e1) {
         } catch (ElementNotVisibleException e2) {
         }
@@ -63,8 +66,8 @@ public class SiteMaintenance extends AbstractPageObject {
         WebElement element = null;
 
         try {
-            wait.until(ExpectedConditions.visibilityOf(findElement(buttonTwoFactorAuthenticationButton)));
-            element = findElement(buttonTwoFactorAuthenticationButton);
+            wait.until(ExpectedConditions.visibilityOf(findElement(btnTwoFactorAuthentication)));
+            element = findElement(btnTwoFactorAuthentication);
         } catch (ElementNotFoundException e1) {
         } catch (ElementNotVisibleException e2) {
         }

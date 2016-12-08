@@ -15,11 +15,13 @@ import pageobjects.SystemAdmin.PDFTemplateEdit.PDFTemplateEdit;
  */
 
 public class CheckPDFTemplateEdit extends AbstractSpec {
-    final By systemAdminMenuButton = By.xpath("//span[contains(text(),'System Admin')]");
-    final By pdfTemplateEditMenuItem = By.xpath("//a[contains(text(),'PDF Template Edit')]/parent::li");
+    private static By systemAdminMenuButton, pdfTemplateEditMenuItem;
 
     @Before
     public void setUp() throws Exception {
+        systemAdminMenuButton = By.xpath(propUISystemAdmin.getProperty("btnMenu_SystemAdmin"));
+        pdfTemplateEditMenuItem = By.xpath(propUISystemAdmin.getProperty("itemMenu_PDFTemplateEdit"));
+
         new LoginPage(driver).loginUser();
     }
 

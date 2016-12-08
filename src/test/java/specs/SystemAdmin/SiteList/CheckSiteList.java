@@ -15,11 +15,13 @@ import pageobjects.SystemAdmin.SiteList.SiteList;
  */
 
 public class CheckSiteList extends AbstractSpec {
-    final By systemAdminMenuButton = By.xpath("//span[contains(text(),'System Admin')]");
-    final By siteListMenuItem = By.xpath("//a[contains(text(),'Site List')]/parent::li");
+    private static By systemAdminMenuButton, siteListMenuItem;
 
     @Before
     public void setUp() throws Exception {
+        systemAdminMenuButton = By.xpath(propUISystemAdmin.getProperty("btnMenu_SystemAdmin"));
+        siteListMenuItem = By.xpath(propUISystemAdmin.getProperty("itemMenu_SiteList"));
+
         new LoginPage(driver).loginUser();
     }
 

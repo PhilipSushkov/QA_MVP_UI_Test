@@ -17,7 +17,7 @@ public class AlertFilterList extends AbstractPageObject {
 
     public AlertFilterList(WebDriver driver) {
         super(driver);
-        moduleTitle = By.xpath(propUISystemAdmin.getProperty("spanModule_Title"));;
+        moduleTitle = By.xpath(propUISystemAdmin.getProperty("spanModule_Title"));
         grid = By.xpath(propUISystemAdmin.getProperty("table_GridFilter"));
         gridFilterName = By.xpath(propUISystemAdmin.getProperty("table_GridItem"));
     }

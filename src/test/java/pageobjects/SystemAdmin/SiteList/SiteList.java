@@ -5,18 +5,21 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
 
+import static specs.AbstractSpec.propUISystemAdmin;
+
 /**
  * Created by philipsushkov on 2016-11-14.
  */
 
 public class SiteList extends AbstractPageObject {
-    private final By moduleTitle = By.xpath("//span[contains(@class, 'AdminContent')]/h1/span[contains(@id,'ModuleTitle')]");
-    private final By grid = By.xpath("//table[contains(@id, 'Sites_dataGrid')]");
-    private final By gridSiteListHeader = By.xpath("//td[contains(@class,'DataGridItemBorder')]");
+    private static By moduleTitle, grid, gridSiteList;
     private final Integer columnsNumber = 7;
 
     public SiteList(WebDriver driver) {
         super(driver);
+        moduleTitle = By.xpath(propUISystemAdmin.getProperty("spanModule_Title"));
+        grid = By.xpath(propUISystemAdmin.getProperty("table_GridSite"));
+        gridSiteList = By.xpath(propUISystemAdmin.getProperty("table_GridItem"));
     }
 
     public String getUrl() {
@@ -30,6 +33,6 @@ public class SiteList extends AbstractPageObject {
 
     public Integer getSiteListQuantity() {
         wait.until(ExpectedConditions.visibilityOf(findElement(grid)));
-        return findElement(grid).findElements(gridSiteListHeader).size()/columnsNumber;
+        return findElement(grid).findElements(gridSiteList).size()/columnsNumber;
     }
 }

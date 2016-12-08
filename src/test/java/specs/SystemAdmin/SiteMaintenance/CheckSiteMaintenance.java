@@ -15,11 +15,13 @@ import pageobjects.Dashboard.Dashboard;
  */
 
 public class CheckSiteMaintenance extends AbstractSpec {
-    final By systemAdminMenuButton = By.xpath("//span[contains(text(),'System Admin')]");
-    final By siteMaintenanceMenuItem = By.xpath("//a[contains(text(),'Site Maintenance')]/parent::li");
+    private static By systemAdminMenuButton, siteMaintenanceMenuItem;
 
     @Before
     public void setUp() throws Exception {
+        systemAdminMenuButton = By.xpath(propUISystemAdmin.getProperty("btnMenu_SystemAdmin"));
+        siteMaintenanceMenuItem = By.xpath(propUISystemAdmin.getProperty("itemMenu_SiteMaintenance"));
+
         new LoginPage(driver).loginUser();
     }
 

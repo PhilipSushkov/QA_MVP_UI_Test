@@ -14,11 +14,6 @@ import static specs.AbstractSpec.propUISystemAdmin;
  */
 
 public class GenericStorageList extends AbstractPageObject {
-    /*
-    private final By moduleTitle = By.xpath("//span[contains(@class, 'AdminContent')]/h1/span[contains(@id,'ModuleTitle')]");
-    private final By grid = By.xpath("//table[contains(@id, 'GenericStorages_dataGrid')]");
-    private final By gridStorageListHeader = By.xpath("//td[contains(@class,'DataGridHeader')]");
-    */
     private static By moduleTitle, grid, gridStorageListHeader;
     private final Integer columnsNumber = 7;
 
