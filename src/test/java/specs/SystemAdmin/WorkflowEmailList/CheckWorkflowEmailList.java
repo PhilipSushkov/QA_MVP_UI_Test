@@ -15,11 +15,13 @@ import pageobjects.SystemAdmin.WorkflowEmailList.WorkflowEmailList;
  */
 
 public class CheckWorkflowEmailList extends AbstractSpec {
-    final By systemAdminMenuButton = By.xpath("//span[contains(text(),'System Admin')]");
-    final By workflowEmailListMenuItem = By.xpath("//a[contains(text(),'Workflow Email List')]/parent::li");
+    private static By systemAdminMenuButton, workflowEmailListMenuItem;
 
     @Before
     public void setUp() throws Exception {
+        systemAdminMenuButton = By.xpath(propUISystemAdmin.getProperty("btnMenu_SystemAdmin"));
+        workflowEmailListMenuItem = By.xpath(propUISystemAdmin.getProperty("itemMenu_WorkflowEmailList"));
+
         new LoginPage(driver).loginUser();
     }
 

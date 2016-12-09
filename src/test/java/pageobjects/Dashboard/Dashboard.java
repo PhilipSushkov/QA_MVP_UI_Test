@@ -111,11 +111,11 @@ public class Dashboard extends AbstractPageObject {
                 findElement(menuItem).click();
                 break;
             } catch (ElementNotVisibleException e1){
-                System.out.println("Attempt #: " + i);
+                System.out.println("Attempt #" + i);
             } catch (ElementNotFoundException e2) {
-                System.out.println("Attempt #: " + i);
+                System.out.println("Attempt #" + i);
             } catch (TimeoutException e3) {
-                System.out.println("Attempt #: " + i);
+                System.out.println("Attempt #" + i);
             }
         }
     }

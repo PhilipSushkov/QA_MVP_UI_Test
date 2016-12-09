@@ -9,24 +9,25 @@ import pageobjects.AbstractPageObject;
 import java.util.List;
 
 import static org.junit.Assert.fail;
+import static specs.AbstractSpec.propUISystemAdmin;
 
 /**
  * Created by philipsushkov on 2016-11-10.
  */
 
 public class UserList extends AbstractPageObject {
-    private final By moduleTitle = By.xpath("//span[contains(@class, 'AdminContent')]/h1/span[contains(@id,'ModuleTitle')]");
-    private final By grid = By.xpath("//table[contains(@id, 'dataGridUsers')]");
-    private final By gridUserName = By.xpath("//td[contains(@class,'DataGridItemBorder')]");
+    private static By moduleTitle, grid, gridUserName, addNewButton, editButton, userName, userActive;
     private final Integer columnsNumber = 4;
-    private final By addNewButton = By.className("ButtonAddNew");
-
-    private final By editButton = By.cssSelector(".DataGridItemBorderLeft input");
-    private final By userName = By.cssSelector(".DataGridItemBorder:nth-child(2)");
-    private final By userActive = By.cssSelector(".DataGridItemBorder:nth-child(4)");
 
     public UserList(WebDriver driver) {
         super(driver);
+        moduleTitle = By.xpath(propUISystemAdmin.getProperty("spanModule_Title"));
+        grid = By.xpath(propUISystemAdmin.getProperty("table_GridUser"));
+        gridUserName = By.xpath(propUISystemAdmin.getProperty("table_GridItem"));
+        addNewButton = By.className(propUISystemAdmin.getProperty("btn_AddNewUser"));
+        editButton = By.cssSelector(propUISystemAdmin.getProperty("btn_EditUser"));
+        userName = By.cssSelector(propUISystemAdmin.getProperty("input_UserName"));
+        userActive = By.cssSelector(propUISystemAdmin.getProperty("chk_UserActive"));
     }
 
     public String getUrl() {

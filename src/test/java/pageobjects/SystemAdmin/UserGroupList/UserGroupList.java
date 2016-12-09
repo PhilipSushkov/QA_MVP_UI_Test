@@ -5,18 +5,21 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
 
+import static specs.AbstractSpec.propUISystemAdmin;
+
 /**
  * Created by philipsushkov on 2016-11-15.
  */
 
 public class UserGroupList extends AbstractPageObject {
-    private final By moduleTitle = By.xpath("//span[contains(@class, 'AdminContent')]/h1/span[contains(@id,'ModuleTitle')]");
-    private final By grid = By.xpath("//table[contains(@id, 'dataGridUserGroups')]");
-    private final By gridUserGroupList = By.xpath("//td[contains(@class,'DataGridItemBorder')]");
+    private static By moduleTitle, grid, gridUserGroup;
     private final Integer columnsNumber = 3;
 
     public UserGroupList(WebDriver driver) {
         super(driver);
+        moduleTitle = By.xpath(propUISystemAdmin.getProperty("spanModule_Title"));
+        grid = By.xpath(propUISystemAdmin.getProperty("table_GridUserGroup"));
+        gridUserGroup = By.xpath(propUISystemAdmin.getProperty("table_GridItem"));
     }
 
     public String getUrl() {
@@ -30,6 +33,6 @@ public class UserGroupList extends AbstractPageObject {
 
     public Integer getUserGroupListQuantity() {
         wait.until(ExpectedConditions.visibilityOf(findElement(grid)));
-        return findElement(grid).findElements(gridUserGroupList).size()/columnsNumber;
+        return findElement(grid).findElements(gridUserGroup).size()/columnsNumber;
     }
 }

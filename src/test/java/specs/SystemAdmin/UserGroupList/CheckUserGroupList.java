@@ -15,11 +15,13 @@ import pageobjects.Dashboard.Dashboard;
  */
 
 public class CheckUserGroupList extends AbstractSpec {
-    final By systemAdminMenuButton = By.xpath("//span[contains(text(),'System Admin')]");
-    final By userGroupListMenuItem = By.xpath("//a[contains(text(),'User Group List')]/parent::li");
+    private static By systemAdminMenuButton, userGroupListMenuItem;
 
     @Before
     public void setUp() throws Exception {
+        systemAdminMenuButton = By.xpath(propUISystemAdmin.getProperty("btnMenu_SystemAdmin"));
+        userGroupListMenuItem = By.xpath(propUISystemAdmin.getProperty("itemMenu_UserGroupList"));
+
         new LoginPage(driver).loginUser();
     }
 
@@ -33,7 +35,7 @@ public class CheckUserGroupList extends AbstractSpec {
         Assert.assertNotNull(new UserGroupList(driver).getUrl());
         Assert.assertEquals("Actual User Group List page Title doesn't match to expected", expectedTitle, new UserGroupList(driver).getTitle());
 
-        System.out.println(new UserGroupList(driver).getUserGroupListQuantity().toString());
+        //System.out.println(new UserGroupList(driver).getUserGroupListQuantity().toString());
         Assert.assertTrue("Actual User Group Quantity is less than expected: "+expectedQuantity, expectedQuantity <= new UserGroupList(driver).getUserGroupListQuantity() );
 
     }

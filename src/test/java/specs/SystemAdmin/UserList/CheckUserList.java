@@ -6,7 +6,6 @@ import org.junit.Test;
 import org.junit.After;
 import org.openqa.selenium.By;
 import specs.AbstractSpec;
-import util.Functions;
 import pageobjects.LoginPage.LoginPage;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.SystemAdmin.UserList.UserList;
@@ -16,11 +15,13 @@ import pageobjects.SystemAdmin.UserList.UserList;
  */
 
 public class CheckUserList extends AbstractSpec {
-    private final By systemAdminMenuButton = By.xpath("//span[contains(text(),'System Admin')]");
-    private final By userListMenuItem = By.xpath("//a[contains(text(),'User List')]/parent::li");
+    private static By systemAdminMenuButton, userListMenuItem;
 
     @Before
     public void setUp() throws Exception {
+        systemAdminMenuButton = By.xpath(propUISystemAdmin.getProperty("btnMenu_SystemAdmin"));
+        userListMenuItem = By.xpath(propUISystemAdmin.getProperty("itemMenu_UserList"));
+
         new LoginPage(driver).loginUser();
     }
 

@@ -9,6 +9,7 @@ import specs.ContentAdmin.Presentations.PublishPresentation;
 import specs.PreviewSite.CheckPreviewSite;
 import specs.PublicSite.CheckPublicSite;
 import specs.ContentAdmin.Events.PublishEvent;
+import specs.SystemAdmin.UserList.CreateNewUser;
 
 /**
  * Created by philips on 2016-11-07.
@@ -22,7 +23,8 @@ import specs.ContentAdmin.Events.PublishEvent;
         PublishEvent.class,
         CheckPublicSite.class,
         CheckPreviewSite.class,
-        CheckDashboard.class
+        CheckDashboard.class,
+        CreateNewUser.class
         }
 )
 
