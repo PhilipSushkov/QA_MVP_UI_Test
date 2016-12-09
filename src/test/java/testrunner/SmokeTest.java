@@ -9,6 +9,7 @@ import specs.ContentAdmin.Presentations.PublishPresentation;
 import specs.PreviewSite.CheckPreviewSite;
 import specs.PublicSite.CheckPublicSite;
 import specs.ContentAdmin.Events.PublishEvent;
+import specs.SocialMedia.CheckLinkedIn;
 import specs.SystemAdmin.UserList.CreateNewUser;
 
 /**
@@ -24,7 +25,8 @@ import specs.SystemAdmin.UserList.CreateNewUser;
         CheckPublicSite.class,
         CheckPreviewSite.class,
         CheckDashboard.class,
-        CreateNewUser.class
+        CreateNewUser.class,
+        CheckLinkedIn.class
         }
 )
 

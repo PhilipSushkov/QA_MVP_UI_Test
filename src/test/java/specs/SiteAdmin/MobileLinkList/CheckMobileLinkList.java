@@ -15,11 +15,13 @@ import specs.AbstractSpec;
  */
 
 public class CheckMobileLinkList extends AbstractSpec {
-    private final By siteAdminMenuButton = By.xpath("//span[contains(text(),'Site Admin')]");
-    private final By mobileLinkListMenuItem = By.xpath("//a[contains(text(),'Mobile Link List')]/parent::li");
+    private static By siteAdminMenuButton, mobileLinkListMenuItem;
 
     @Before
     public void setUp() throws Exception {
+        siteAdminMenuButton = By.xpath(propUISiteAdmin.getProperty("btnMenu_SiteAdmin"));
+        mobileLinkListMenuItem = By.xpath(propUISiteAdmin.getProperty("itemMenu_MobileLinkList"));
+
         new LoginPage(driver).loginUser();
     }
 

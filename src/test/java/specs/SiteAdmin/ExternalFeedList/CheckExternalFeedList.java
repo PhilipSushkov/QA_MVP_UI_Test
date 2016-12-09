@@ -15,11 +15,13 @@ import pageobjects.SiteAdmin.ExternalFeedList.ExternalFeedList;
  */
 
 public class CheckExternalFeedList extends AbstractSpec {
-    private final By siteAdminMenuButton = By.xpath("//span[contains(text(),'Site Admin')]");
-    private final By externalFeedListMenuItem = By.xpath("//a[contains(text(),'External Feed List')]/parent::li");
+    private static By siteAdminMenuButton, externalFeedListMenuItem;
 
     @Before
     public void setUp() throws Exception {
+        siteAdminMenuButton = By.xpath(propUISiteAdmin.getProperty("btnMenu_SiteAdmin"));
+        externalFeedListMenuItem = By.xpath(propUISiteAdmin.getProperty("itemMenu_ExternalFeedList"));
+
         new LoginPage(driver).loginUser();
     }
 

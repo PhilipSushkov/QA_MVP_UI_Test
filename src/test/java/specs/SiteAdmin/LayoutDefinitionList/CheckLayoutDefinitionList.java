@@ -15,11 +15,13 @@ import pageobjects.Dashboard.Dashboard;
  */
 
 public class CheckLayoutDefinitionList extends AbstractSpec {
-    private final By siteAdminMenuButton = By.xpath("//span[contains(text(),'Site Admin')]");
-    private final By layoutDefinitionListMenuItem = By.xpath("//a[contains(text(),'Layout Definition List')]/parent::li");
+    private static By siteAdminMenuButton, layoutDefinitionListMenuItem;
 
     @Before
     public void setUp() throws Exception {
+        siteAdminMenuButton = By.xpath(propUISiteAdmin.getProperty("btnMenu_SiteAdmin"));
+        layoutDefinitionListMenuItem = By.xpath(propUISiteAdmin.getProperty("itemMenu_LayoutDefinitionList"));
+
         new LoginPage(driver).loginUser();
     }
 

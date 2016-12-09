@@ -5,19 +5,21 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
 
+import static specs.AbstractSpec.propUISiteAdmin;
+
 /**
  * Created by philipsushkov on 2016-11-21.
  */
 
 public class AliasList extends AbstractPageObject {
-
-    private final By moduleTitle = By.xpath("//span[contains(@class, 'AdminContent')]/h1/span[contains(@id,'ModuleTitle')]");
-    private final By grid = By.xpath("//table[contains(@id, 'Alias_dataGrid')]");
-    private final By gridAliasList = By.xpath("//td[contains(@class,'DataGridItemBorder')]");
+    private static By moduleTitle, grid, gridAliasList;
     private final Integer columnsNumber = 7;
 
     public AliasList(WebDriver driver) {
         super(driver);
+        moduleTitle = By.xpath(propUISiteAdmin.getProperty("spanModule_Title"));
+        grid = By.xpath(propUISiteAdmin.getProperty("table_GridAlias"));
+        gridAliasList = By.xpath(propUISiteAdmin.getProperty("table_GridItem"));
     }
 
     public String getUrl() {

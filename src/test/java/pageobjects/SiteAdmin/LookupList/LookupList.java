@@ -7,20 +7,22 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
 
+import static specs.AbstractSpec.propUISiteAdmin;
+
 /**
  * Created by philipsushkov on 2016-11-21.
  */
 
 public class LookupList extends AbstractPageObject {
-
-    private final By moduleTitle = By.xpath("//span[contains(@class, 'AdminContent')]/h1/span[contains(@id,'ModuleTitle')]");
-    private final By grid = By.xpath("//table[contains(@id, 'Lookup_dataGrid')]");
-    private final By gridModuleDefinitionList = By.xpath("//td[contains(@class,'DataGridItemBorder')]");
-    private final By selectLookupType = By.xpath("//select[contains(@id, 'LookupType')]");
+    private static By moduleTitle, grid, gridModuleDefinitionList, selectLookupType;
     private final Integer columnsNumber = 8;
 
     public LookupList(WebDriver driver) {
         super(driver);
+        moduleTitle = By.xpath(propUISiteAdmin.getProperty("spanModule_Title"));
+        grid = By.xpath(propUISiteAdmin.getProperty("table_GridLookupList"));
+        gridModuleDefinitionList = By.xpath(propUISiteAdmin.getProperty("table_GridItem"));
+        selectLookupType = By.xpath(propUISiteAdmin.getProperty("select_LookupType"));
     }
 
     public String getUrl() {

@@ -15,11 +15,13 @@ import specs.AbstractSpec;
  */
 
 public class CheckLookupList extends AbstractSpec {
-    private final By siteAdminMenuButton = By.xpath("//span[contains(text(),'Site Admin')]");
-    private final By lookupListMenuItem = By.xpath("//a[contains(text(),'Lookup List')]/parent::li");
+    private static By siteAdminMenuButton, lookupListMenuItem;
 
     @Before
     public void setUp() throws Exception {
+        siteAdminMenuButton = By.xpath(propUISiteAdmin.getProperty("btnMenu_SiteAdmin"));
+        lookupListMenuItem = By.xpath(propUISiteAdmin.getProperty("itemMenu_LookupList"));
+
         new LoginPage(driver).loginUser();
     }
 

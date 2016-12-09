@@ -14,7 +14,7 @@ import specs.EmailAdmin.Compose.CheckCompose;
 import specs.EmailAdmin.ManageList.CheckMailingLists;
 import specs.EmailAdmin.Subscribers.CheckMailingListUsers;
 import specs.SiteAdmin.AliasList.CheckAliasList;
-import specs.SiteAdmin.ContentAdminEdit.CheckEditContentAdminPages;
+import specs.SiteAdmin.ContentAdminEdit.CheckContentAdminEdit;
 import specs.SiteAdmin.CssFileList.CheckCssFileList;
 import specs.SiteAdmin.DomainList.CheckDomainList;
 import specs.SiteAdmin.GlobalModuleList.CheckGlobalModuleList;
@@ -61,7 +61,7 @@ import specs.SystemAdmin.WorkflowEmailList.CheckWorkflowEmailList;
         CheckAliasList.class,
         CheckMobileLinkList.class,
         CheckDomainList.class,
-        CheckEditContentAdminPages.class,
+        CheckContentAdminEdit.class,
 
     // Content Admin
         CheckFinancialReports.class,

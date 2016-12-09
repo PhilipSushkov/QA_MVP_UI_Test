@@ -15,11 +15,13 @@ import specs.AbstractSpec;
  */
 
 public class CheckDomainList extends AbstractSpec {
-    private final By siteAdminMenuButton = By.xpath("//span[contains(text(),'Site Admin')]");
-    private final By domainListMenuItem = By.xpath("//a[contains(text(),'Domain List')]/parent::li");
+    private static By siteAdminMenuButton, domainListMenuItem;
 
     @Before
     public void setUp() throws Exception {
+        siteAdminMenuButton = By.xpath(propUISiteAdmin.getProperty("btnMenu_SiteAdmin"));
+        domainListMenuItem = By.xpath(propUISiteAdmin.getProperty("itemMenu_DomainList"));
+
         new LoginPage(driver).loginUser();
     }
 

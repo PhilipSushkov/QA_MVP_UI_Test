@@ -7,20 +7,22 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
 
+import static specs.AbstractSpec.propUISiteAdmin;
+
 /**
  * Created by philipsushkov on 2016-11-23.
  */
 
 public class DomainList extends AbstractPageObject {
-
-    private final By moduleTitle = By.xpath("//span[contains(@class, 'AdminContent')]/h1/span[contains(@id,'ModuleTitle')]");
-    private final By grid = By.xpath("//table[contains(@id, 'Domain_dataGrid')]");
-    private final By gridDomainList = By.xpath("//td[contains(@class,'DataGridItemBorder')]");
-    private final By hrefDefaultDomain = By.xpath("//span[contains(@class, 'DefaultDomain')]/a[contains(text(),'Public Site Edit')]");
+    private static By moduleTitle, grid, gridDomainList, hrefDefaultDomain;
     private final Integer columnsNumber = 7;
 
     public DomainList(WebDriver driver) {
         super(driver);
+        moduleTitle = By.xpath(propUISiteAdmin.getProperty("spanModule_Title"));
+        grid = By.xpath(propUISiteAdmin.getProperty("table_GridDomain"));
+        gridDomainList = By.xpath(propUISiteAdmin.getProperty("table_GridItem"));
+        hrefDefaultDomain = By.xpath(propUISiteAdmin.getProperty("href_DefaultDomain"));
     }
 
     public String getUrl() {

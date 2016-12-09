@@ -15,13 +15,14 @@ import pageobjects.SiteAdmin.CssFileList.CssFileList;
  */
 
 public class CheckCssFileList extends AbstractSpec {
-    private final By siteAdminMenuButton = By.xpath("//span[contains(text(),'Site Admin')]");
-    private final By cssFileListMenuItem = By.xpath("//a[contains(text(),'Css File List')]/parent::li");
-
+    private static By siteAdminMenuButton, cssFileListMenuItem;
 
     @Before
     public void setUp() throws Exception {
         new LoginPage(driver).loginUser();
+
+        siteAdminMenuButton = By.xpath(propUISiteAdmin.getProperty("btnMenu_SiteAdmin"));
+        cssFileListMenuItem = By.xpath(propUISiteAdmin.getProperty("itemMenu_CssFileList"));
     }
 
     @Test

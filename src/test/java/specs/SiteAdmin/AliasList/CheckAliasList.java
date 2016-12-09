@@ -15,11 +15,13 @@ import specs.AbstractSpec;
  */
 
 public class CheckAliasList extends AbstractSpec {
-    private final By siteAdminMenuButton = By.xpath("//span[contains(text(),'Site Admin')]");
-    private final By aliasListMenuItem = By.xpath("//a[contains(text(),'Alias List')]/parent::li");
+    private static By siteAdminMenuButton, aliasListMenuItem;
 
     @Before
     public void setUp() throws Exception {
+        siteAdminMenuButton = By.xpath(propUISiteAdmin.getProperty("btnMenu_SiteAdmin"));
+        aliasListMenuItem = By.xpath(propUISiteAdmin.getProperty("itemMenu_AliasList"));
+
         new LoginPage(driver).loginUser();
     }
 

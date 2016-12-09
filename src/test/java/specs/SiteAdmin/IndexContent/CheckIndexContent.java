@@ -15,11 +15,12 @@ import specs.AbstractSpec;
  */
 
 public class CheckIndexContent extends AbstractSpec {
-    private final By siteAdminMenuButton = By.xpath("//span[contains(text(),'Site Admin')]");
-    private final By indexContentMenuItem = By.xpath("//a[contains(text(),'Index Content')]/parent::li");
+    private static By siteAdminMenuButton, indexContentMenuItem;
 
     @Before
     public void setUp() throws Exception {
+        siteAdminMenuButton = By.xpath(propUISiteAdmin.getProperty("btnMenu_SiteAdmin"));
+        indexContentMenuItem = By.xpath(propUISiteAdmin.getProperty("itemMenu_IndexContent"));
         new LoginPage(driver).loginUser();
     }
 

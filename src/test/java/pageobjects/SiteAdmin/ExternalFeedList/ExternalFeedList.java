@@ -5,18 +5,21 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
 
+import static specs.AbstractSpec.propUISiteAdmin;
+
 /**
  * Created by philipsushkov on 2016-11-18.
  */
 
 public class ExternalFeedList extends AbstractPageObject {
-    private final By moduleTitle = By.xpath("//span[contains(@class, 'AdminContent')]/h1/span[contains(@id,'ModuleTitle')]");
-    private final By grid = By.xpath("//table[contains(@id, 'dataGridExternalFeeds')]");
-    private final By gridExternalFeedList = By.xpath("//td[contains(@class,'DataGridItemBorder')]");
+    private static By moduleTitle, grid, gridExternalFeedList;
     private final Integer columnsNumber = 7;
 
     public ExternalFeedList(WebDriver driver) {
         super(driver);
+        moduleTitle = By.xpath(propUISiteAdmin.getProperty("spanModule_Title"));
+        grid = By.xpath(propUISiteAdmin.getProperty("table_GridExternalFeed"));
+        gridExternalFeedList = By.xpath(propUISiteAdmin.getProperty("table_GridItem"));
     }
 
     public String getUrl() {

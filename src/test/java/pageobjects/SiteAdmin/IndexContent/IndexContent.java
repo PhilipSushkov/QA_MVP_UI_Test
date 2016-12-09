@@ -7,19 +7,22 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
 
+import static specs.AbstractSpec.propUISiteAdmin;
+
 /**
  * Created by philipsushkov on 2016-11-18.
  */
 
 public class IndexContent extends AbstractPageObject {
-    private final By moduleTitle = By.xpath("//span[contains(@class, 'AdminContent')]/h1[contains(@id,'Title')]");
-    private final By grid = By.xpath("//table[contains(@id, 'dataGridContent')]");
-    private final By gridIndexContent = By.xpath("//td[contains(@class,'DataGridItemBorder')]");
-    private final By dataGridPager = By.xpath("//tr[contains(@class, 'DataGridPager')]");
+    private static By moduleTitle, grid, gridIndexContent, dataGridPager;
     private final Integer columnsNumber = 4;
 
     public IndexContent(WebDriver driver) {
         super(driver);
+        moduleTitle = By.xpath(propUISiteAdmin.getProperty("span_Title"));
+        grid = By.xpath(propUISiteAdmin.getProperty("table_GridIndex"));
+        gridIndexContent = By.xpath(propUISiteAdmin.getProperty("table_GridItem"));
+        dataGridPager = By.xpath(propUISiteAdmin.getProperty("pager_DataGrid"));
     }
 
     public String getUrl() {

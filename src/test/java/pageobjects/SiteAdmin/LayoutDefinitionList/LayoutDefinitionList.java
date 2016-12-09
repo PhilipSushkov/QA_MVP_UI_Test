@@ -7,19 +7,22 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
 
+import static specs.AbstractSpec.propUISiteAdmin;
+
 /**
  * Created by philipsushkov on 2016-11-15.
  */
 
 public class LayoutDefinitionList extends AbstractPageObject {
-    private final By moduleTitle = By.xpath("//span[contains(@class, 'AdminContent')]/h1/span[contains(@id,'ModuleTitle')]");
-    private final By grid = By.xpath("//table[contains(@id, 'LayoutDefinitions_dataGrid')]");
-    private final By gridLayoutDefinitionList = By.xpath("//td[contains(@class,'DataGridItemBorder')]");
-    private final By dataGridPager = By.xpath("//tr[contains(@class, 'DataGridPager')]");
+    private static By moduleTitle, grid, gridLayoutDefinitionList, dataGridPager;
     private final Integer columnsNumber = 7;
 
     public LayoutDefinitionList(WebDriver driver) {
         super(driver);
+        moduleTitle = By.xpath(propUISiteAdmin.getProperty("spanModule_Title"));
+        grid = By.xpath(propUISiteAdmin.getProperty("table_GridLayoutDefinition"));
+        gridLayoutDefinitionList = By.xpath(propUISiteAdmin.getProperty("table_GridItem"));
+        dataGridPager = By.xpath(propUISiteAdmin.getProperty("pager_DataGrid"));
     }
 
     public String getUrl() {

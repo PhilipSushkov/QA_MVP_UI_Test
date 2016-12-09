@@ -5,18 +5,21 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
 
+import static specs.AbstractSpec.propUISiteAdmin;
+
 /**
  * Created by philipsushkov on 2016-11-15.
  */
 
 public class GlobalModuleList extends AbstractPageObject {
-    private final By moduleTitle = By.xpath("//span[contains(@class, 'AdminContent')]/h1/span[contains(@id,'Title')]");
-    private final By grid = By.xpath("//table[contains(@id, 'ModuleInstances')]");
-    private final By gridGlobalModuleList = By.xpath("//td[contains(@class,'DataGridItemBorder')]");
+    private static By moduleTitle, grid, gridGlobalModuleList;
     private final Integer columnsNumber = 6;
 
     public GlobalModuleList(WebDriver driver) {
         super(driver);
+        moduleTitle = By.xpath(propUISiteAdmin.getProperty("span_Title"));
+        grid = By.xpath(propUISiteAdmin.getProperty("table_GridGlobalModule"));
+        gridGlobalModuleList = By.xpath(propUISiteAdmin.getProperty("table_GridItem"));
     }
 
     public String getUrl() {

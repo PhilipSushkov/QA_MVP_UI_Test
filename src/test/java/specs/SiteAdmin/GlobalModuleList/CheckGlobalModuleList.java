@@ -15,11 +15,12 @@ import pageobjects.Dashboard.Dashboard;
  */
 
 public class CheckGlobalModuleList extends AbstractSpec {
-    final By siteAdminMenuButton = By.xpath("//span[contains(text(),'Site Admin')]");
-    final By globalModuleListMenuItem = By.xpath("//a[contains(text(),'Global Module List')]/parent::li");
+    private static By siteAdminMenuButton, globalModuleListMenuItem;
 
     @Before
     public void setUp() throws Exception {
+        siteAdminMenuButton = By.xpath(propUISiteAdmin.getProperty("btnMenu_SiteAdmin"));
+        globalModuleListMenuItem = By.xpath(propUISiteAdmin.getProperty("itemMenu_GlobalModuleList"));
         new LoginPage(driver).loginUser();
     }
 

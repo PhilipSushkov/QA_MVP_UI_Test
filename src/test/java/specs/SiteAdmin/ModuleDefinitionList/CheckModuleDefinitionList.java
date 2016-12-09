@@ -15,12 +15,13 @@ import pageobjects.Dashboard.Dashboard;
  */
 
 public class CheckModuleDefinitionList extends AbstractSpec {
-    final By siteAdminMenuButton = By.xpath("//span[contains(text(),'Site Admin')]");
-    final By moduleDefinitionListMenuItem = By.xpath("//a[contains(text(),'Module Definition List')]/parent::li");
-
+    private static By siteAdminMenuButton, moduleDefinitionListMenuItem;
 
     @Before
     public void setUp() throws Exception {
+        siteAdminMenuButton = By.xpath(propUISiteAdmin.getProperty("btnMenu_SiteAdmin"));
+        moduleDefinitionListMenuItem = By.xpath(propUISiteAdmin.getProperty("itemMenu_ModuleDefinitionList"));
+
         new LoginPage(driver).loginUser();
     }
 

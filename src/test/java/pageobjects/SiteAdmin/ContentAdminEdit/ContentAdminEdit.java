@@ -1,4 +1,4 @@
-package pageobjects.SiteAdmin.EditContentAdminPages;
+package pageobjects.SiteAdmin.ContentAdminEdit;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.ElementNotVisibleException;
@@ -7,20 +7,22 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
 import pageobjects.PageObject;
 
+import static specs.AbstractSpec.propUISiteAdmin;
+
 /**
  * Created by philipsushkov on 2016-11-23.
  */
 
-public class EditContentAdminPages extends AbstractPageObject {
-
-    private final By moduleTitle = By.xpath("//span[contains(@class, 'AdminContent')]/div/h1[contains(text(),'Edit Content Admin Pages')]");
-    private final By grid = By.xpath("//table[contains(@id, 'ContentAdminPages')]");
-    private final By gridTitleList = By.xpath("//td[contains(@class,'DataGridItemBorder')]");
-    private final By gridShowInNav = By.xpath("//tr/td/input[contains(@name,'lblIsVisible')]");
+public class ContentAdminEdit extends AbstractPageObject {
+    private static By moduleTitle, grid, gridTitleList, gridShowInNav;
     private final Integer columnsNumber = 2;
 
-    public EditContentAdminPages(WebDriver driver) {
+    public ContentAdminEdit(WebDriver driver) {
         super(driver);
+        moduleTitle = By.xpath(propUISiteAdmin.getProperty("spanModule_TitleContentAdmin"));
+        grid = By.xpath(propUISiteAdmin.getProperty("table_GridContentAdmin"));
+        gridTitleList = By.xpath(propUISiteAdmin.getProperty("table_GridItem"));
+        gridShowInNav = By.xpath(propUISiteAdmin.getProperty("table_GridShowInNav"));
     }
 
     public String getUrl() {
