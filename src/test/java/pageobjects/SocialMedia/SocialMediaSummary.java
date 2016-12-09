@@ -14,6 +14,7 @@ import static org.junit.Assert.fail;
 public class SocialMediaSummary extends AbstractPageObject {
 
     private final By moduleTitle = By.xpath("//span[contains(@class, 'AdminContent')]/h1/span[contains(@id,'ModuleTitle')]");
+    private final By settingsDialog = By.id("SMSettingBox");
 
     //LinkedIn section
     private final By linkedInLabel = By.xpath("//h3/span[contains(@id,'lblLinkedIn')]");
@@ -39,6 +40,11 @@ public class SocialMediaSummary extends AbstractPageObject {
     public String getTitle() {
         wait.until(ExpectedConditions.visibilityOf(findElement(moduleTitle)));
         return findElement(moduleTitle).getText();
+    }
+
+    public boolean socialTemplatesIsClosed(){
+        waitForElement(settingsDialog);
+        return !findElement(settingsDialog).isDisplayed();
     }
 
     public String getLinkedInStatusMessage(){
@@ -86,6 +92,13 @@ public class SocialMediaSummary extends AbstractPageObject {
         confirmation.accept();
         driver.switchTo().defaultContent();
         return this;
+    }
+
+    public SocialTemplates openLinkedInSettings(){
+        waitForElement(linkedInSettingsButton);
+        findElement(linkedInSettingsButton).click();
+        pause(3000);
+        return new SocialTemplates(getDriver());
     }
 
     public String getLinkedInAccountName(){

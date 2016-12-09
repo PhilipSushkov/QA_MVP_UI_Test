@@ -8,7 +8,10 @@ import org.junit.Test;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.LoginPage.LoginPage;
 import pageobjects.SocialMedia.SocialMediaSummary;
+import pageobjects.SocialMedia.SocialTemplates;
 import specs.AbstractSpec;
+
+import java.util.Date;
 
 /**
  * Created by jasons on 2016-12-07.
@@ -91,6 +94,26 @@ public class CheckLinkedIn extends AbstractSpec{
         Assert.assertEquals("Status message is not properly displayed after de-authorizing LinkedIn account", notSetupMessage, socialMediaSummary.getLinkedInStatusMessage());
         Assert.assertTrue("Settings button is not displayed after de-authorizing LinkedIn account.", socialMediaSummary.linkedInSettingsButtonIsDisplayed());
         Assert.assertTrue("Authorize button is not displayed after de-authorizing LinkedIn account.", socialMediaSummary.linkedInAuthorizeButtonIsDisplayed());
+    }
+
+    @Test
+    public void canModifyLinkedInSettings() throws Exception {
+        SocialTemplates socialTemplates = new Dashboard(driver).openSocialMedia().openLinkedInSettings();
+        Assert.assertTrue("LinkedIn Social Templates screen is not open.", socialTemplates.linkedInSocialTemplatesAreDisplayed());
+        String firstTemplateBefore = socialTemplates.getFirstTemplateText();
+        String firstTemplateAfter = (new Date().getTime()/1000)+": Event starting {Event.StartDate}, for details: {ShortURL}";
+        socialTemplates.editFirstTemplate();
+        Assert.assertTrue("Edit template screen is not open.", socialTemplates.editTemplateIsOpen());
+        Assert.assertEquals("Editable template textbox is different from original value", firstTemplateBefore, socialTemplates.getEditableTemplateText());
+        socialTemplates.editTemplateTo(firstTemplateAfter).saveTemplate();
+        Assert.assertEquals("Template is not set to new value", firstTemplateAfter, socialTemplates.getFirstTemplateText());
+        socialTemplates.closeSocialTemplates().openLinkedInSettings();
+        Assert.assertEquals("Template is not set to new value after closing and re-opening Social Templates", firstTemplateAfter, socialTemplates.getFirstTemplateText());
+
+        // reverting template back to original setting
+        socialTemplates.editFirstTemplate().editTemplateTo(firstTemplateBefore).saveTemplate();
+        Assert.assertEquals("Template has not been reset to original value", firstTemplateBefore, socialTemplates.getFirstTemplateText());
+        Assert.assertTrue("Social Templates has not been closed.", socialTemplates.closeSocialTemplates().socialTemplatesIsClosed());
     }
 
     @After
