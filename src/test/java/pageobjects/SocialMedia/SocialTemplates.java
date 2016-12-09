@@ -26,6 +26,11 @@ public class SocialTemplates extends AbstractPageObject {
         return findElement(settingsDialog).isDisplayed() && findElement(settingsDialogTitle).getText().equals("LinkedIn Social Templates");
     }
 
+    public boolean facebookSocialTemplatesAreDisplayed(){
+        waitForElement(settingsDialogTitle);
+        return findElement(settingsDialog).isDisplayed() && findElement(settingsDialogTitle).getText().equals("Facebook Social Templates");
+    }
+
     public String getFirstTemplateText(){
         waitForElement(templateText);
         return findElement(templateText).getAttribute("value");
