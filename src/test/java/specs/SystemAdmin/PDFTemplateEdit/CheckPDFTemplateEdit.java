@@ -51,7 +51,7 @@ public class CheckPDFTemplateEdit extends AbstractSpec {
 
     @After
     public void tearDown() {
-        dashboard.logout();
+        dashboard.logoutFromAdmin();
         //driver.quit();
     }
 

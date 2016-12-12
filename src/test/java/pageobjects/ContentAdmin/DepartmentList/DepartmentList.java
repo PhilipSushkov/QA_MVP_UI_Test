@@ -8,19 +8,22 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
 import pageobjects.PageObject;
 
+import static specs.AbstractSpec.propUIContentAdmin;
+
 /**
  * Created by philipsushkov on 2016-12-02.
  */
 
 public class DepartmentList extends AbstractPageObject {
-    private final By moduleTitle = By.xpath("//span[contains(@class, 'AdminContent')]/h1/span[contains(@id,'ModuleTitle')]");
-    private final By grid = By.xpath("//table[contains(@id, 'Departments_dataGrid')]");
-    private final By gridDepartmentList = By.xpath("//td[contains(@class,'DataGridItemBorder')]");
-    private final By dataGridPager = By.xpath("//tr[contains(@class, 'DataGridPager')]");
+    private static By moduleTitle, grid, gridDepartmentList, dataGridPager;
     private final Integer columnsNumber = 7;
 
     public DepartmentList(WebDriver driver) {
         super(driver);
+        moduleTitle = By.xpath(propUIContentAdmin.getProperty("span_Title"));
+        grid = By.xpath(propUIContentAdmin.getProperty("table_GridDepartment"));
+        gridDepartmentList = By.xpath(propUIContentAdmin.getProperty("table_GridItem"));
+        dataGridPager = By.xpath(propUIContentAdmin.getProperty("pager_DataGrid"));
     }
 
 

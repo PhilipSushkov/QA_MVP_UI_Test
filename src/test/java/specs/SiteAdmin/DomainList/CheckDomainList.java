@@ -16,13 +16,20 @@ import specs.AbstractSpec;
 
 public class CheckDomainList extends AbstractSpec {
     private static By siteAdminMenuButton, domainListMenuItem;
+    private static LoginPage loginPage;
+    private static Dashboard dashboard;
+    private static DomainList domainList;
 
     @Before
     public void setUp() throws Exception {
         siteAdminMenuButton = By.xpath(propUISiteAdmin.getProperty("btnMenu_SiteAdmin"));
         domainListMenuItem = By.xpath(propUISiteAdmin.getProperty("itemMenu_DomainList"));
 
-        new LoginPage(driver).loginUser();
+        loginPage = new LoginPage(driver);
+        dashboard = new Dashboard(driver);
+        domainList = new DomainList(driver);
+
+        loginPage.loginUser();
     }
 
     @Test
@@ -30,20 +37,20 @@ public class CheckDomainList extends AbstractSpec {
         final String expectedTitle = "Domain List";
         final Integer expectedQuantity = 2;
 
-        new Dashboard(driver).openPageFromMenu(siteAdminMenuButton, domainListMenuItem);
+        dashboard.openPageFromMenu(siteAdminMenuButton, domainListMenuItem);
 
-        Assert.assertNotNull(new DomainList(driver).getUrl());
-        Assert.assertEquals("Actual Domain List page Title doesn't match to expected", expectedTitle, new DomainList(driver).getTitle());
+        Assert.assertNotNull(domainList.getUrl());
+        Assert.assertEquals("Actual Domain List page Title doesn't match to expected", expectedTitle, domainList.getTitle());
 
         //System.out.println(new DomainList(driver).getDomainQuantity().toString());
-        Assert.assertTrue("Actual Domain Quantity is less than expected: "+expectedQuantity, expectedQuantity <= new DomainList(driver).getDomainQuantity() );
-        Assert.assertNotNull("Public Site Link doesn't exist", new DomainList(driver).getHrefPublicSite() );
+        Assert.assertTrue("Actual Domain Quantity is less than expected: "+expectedQuantity, expectedQuantity <= domainList.getDomainQuantity() );
+        Assert.assertNotNull("Public Site Link doesn't exist", domainList.getHrefPublicSite() );
 
     }
 
     @After
     public void tearDown() {
-        new Dashboard(driver).logout();
+        dashboard.logoutFromAdmin();
         //driver.quit();
     }
 

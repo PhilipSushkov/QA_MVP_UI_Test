@@ -49,6 +49,8 @@ public abstract class AbstractSpec extends util.Functions {
     public static Properties propUISystemAdmin;
     private static final String PATHTO_SITEADMIN_PROP = "SiteAdmin/SiteAdminMap.properties";
     public static Properties propUISiteAdmin;
+    private static final String PATHTO_CONTENTADMIN_PROP = "ContentAdmin/ContentAdminMap.properties";
+    public static Properties propUIContentAdmin;
 
     @Rule
     public TestName testName = new TestName();
@@ -199,6 +201,7 @@ public abstract class AbstractSpec extends util.Functions {
     public static void setupPropUI() throws IOException {
         propUISystemAdmin = ConnectToPropUI(PATHTO_SYSTEMADMIN_PROP);
         propUISiteAdmin = ConnectToPropUI(PATHTO_SITEADMIN_PROP);
+        propUIContentAdmin = ConnectToPropUI(PATHTO_CONTENTADMIN_PROP);
     }
 
 }

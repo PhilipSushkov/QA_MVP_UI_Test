@@ -205,10 +205,12 @@ public class Dashboard extends AbstractPageObject {
         return message;
     }
 
+    /*
     public LoginPage logout() {
         wait.until(ExpectedConditions.visibilityOf(findElement(logoutMenuItem)));
         findElement(logoutMenuItem).click();
         return new LoginPage(getDriver());
     }
+    */
 
 }

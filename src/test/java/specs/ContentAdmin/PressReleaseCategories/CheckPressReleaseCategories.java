@@ -40,7 +40,7 @@ public class CheckPressReleaseCategories extends AbstractSpec {
 
     @After
     public void tearDown() {
-        new Dashboard(driver).logout();
+        new Dashboard(driver).logoutFromAdmin();
         //driver.quit();
     }
 

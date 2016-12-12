@@ -16,13 +16,20 @@ import specs.AbstractSpec;
 
 public class CheckAliasList extends AbstractSpec {
     private static By siteAdminMenuButton, aliasListMenuItem;
+    private static LoginPage loginPage;
+    private static Dashboard dashboard;
+    private static AliasList aliasList;
 
     @Before
     public void setUp() throws Exception {
         siteAdminMenuButton = By.xpath(propUISiteAdmin.getProperty("btnMenu_SiteAdmin"));
         aliasListMenuItem = By.xpath(propUISiteAdmin.getProperty("itemMenu_AliasList"));
 
-        new LoginPage(driver).loginUser();
+        loginPage = new LoginPage(driver);
+        dashboard = new Dashboard(driver);
+        aliasList = new AliasList(driver);
+
+        loginPage.loginUser();
     }
 
     @Test
@@ -30,19 +37,19 @@ public class CheckAliasList extends AbstractSpec {
         final String expectedTitle = "Alias List";
         final Integer expectedQuantity = 4;
 
-        new Dashboard(driver).openPageFromMenu(siteAdminMenuButton, aliasListMenuItem);
+        dashboard.openPageFromMenu(siteAdminMenuButton, aliasListMenuItem);
 
-        Assert.assertNotNull(new AliasList(driver).getUrl());
-        Assert.assertEquals("Actual Alias List page Title doesn't match to expected", expectedTitle, new AliasList(driver).getTitle());
+        Assert.assertNotNull(aliasList.getUrl());
+        Assert.assertEquals("Actual Alias List page Title doesn't match to expected", expectedTitle, aliasList.getTitle());
 
         //System.out.println(new AliasList(driver).getAliasListQuantity().toString());
-        Assert.assertTrue("Actual Alias Quantity is less than expected: "+expectedQuantity, expectedQuantity == new AliasList(driver).getAliasListQuantity() );
+        Assert.assertTrue("Actual Alias Quantity is less than expected: "+expectedQuantity, expectedQuantity == aliasList.getAliasListQuantity() );
 
     }
 
     @After
     public void tearDown() {
-        new Dashboard(driver).logout();
+        dashboard.logoutFromAdmin();
         //driver.quit();
     }
 

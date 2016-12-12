@@ -49,7 +49,7 @@ public class CheckUserGroupList extends AbstractSpec {
 
     @After
     public void tearDown() {
-        dashboard.logout();
+        dashboard.logoutFromAdmin();
         //driver.quit();
     }
 

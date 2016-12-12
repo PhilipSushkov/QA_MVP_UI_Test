@@ -16,13 +16,20 @@ import pageobjects.Dashboard.Dashboard;
 
 public class CheckModuleDefinitionList extends AbstractSpec {
     private static By siteAdminMenuButton, moduleDefinitionListMenuItem;
+    private static LoginPage loginPage;
+    private static Dashboard dashboard;
+    private static ModuleDefinitionList moduleDefinitionList;
 
     @Before
     public void setUp() throws Exception {
         siteAdminMenuButton = By.xpath(propUISiteAdmin.getProperty("btnMenu_SiteAdmin"));
         moduleDefinitionListMenuItem = By.xpath(propUISiteAdmin.getProperty("itemMenu_ModuleDefinitionList"));
 
-        new LoginPage(driver).loginUser();
+        loginPage = new LoginPage(driver);
+        dashboard = new Dashboard(driver);
+        moduleDefinitionList = new ModuleDefinitionList(driver);
+
+        loginPage.loginUser();
     }
 
     @Test
@@ -31,20 +38,20 @@ public class CheckModuleDefinitionList extends AbstractSpec {
         final String expectedTitle = "Module Definition List";
         final Integer expectedQuantity = 10;
 
-        new Dashboard(driver).openPageFromMenu(siteAdminMenuButton, moduleDefinitionListMenuItem);
+        dashboard.openPageFromMenu(siteAdminMenuButton, moduleDefinitionListMenuItem);
 
-        Assert.assertNotNull(new ModuleDefinitionList(driver).getUrl());
-        Assert.assertEquals("Actual Module Definition List page Title doesn't match to expected", expectedTitle, new ModuleDefinitionList(driver).getTitle());
+        Assert.assertNotNull(moduleDefinitionList.getUrl());
+        Assert.assertEquals("Actual Module Definition List page Title doesn't match to expected", expectedTitle, moduleDefinitionList.getTitle());
 
         //System.out.println(new ModuleDefinitionList(driver).getModuleDefinitionQuantity().toString());
-        Assert.assertTrue("Actual Module Definition Name Quantity is less than expected: "+expectedQuantity, expectedQuantity <= new ModuleDefinitionList(driver).getModuleDefinitionQuantity() );
-        Assert.assertNotNull("Module Definition pagination doesn't exist", new ModuleDefinitionList(driver).getModuleDefinitionPagination() );
+        Assert.assertTrue("Actual Module Definition Name Quantity is less than expected: "+expectedQuantity, expectedQuantity <= moduleDefinitionList.getModuleDefinitionQuantity() );
+        Assert.assertNotNull("Module Definition pagination doesn't exist", moduleDefinitionList.getModuleDefinitionPagination() );
 
     }
 
     @After
     public void tearDown() {
-        new Dashboard(driver).logout();
+        dashboard.logoutFromAdmin();
         //driver.quit();
     }
 

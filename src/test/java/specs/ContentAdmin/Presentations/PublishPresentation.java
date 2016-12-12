@@ -78,7 +78,7 @@ public class PublishPresentation extends AbstractSpec {
     @After
     public void tearDown() {
         new LivePresentations(driver).dashboard(dashboardURL);
-        new Dashboard(driver).logout();
+        new Dashboard(driver).logoutFromAdmin();
         //driver.quit();
     }
 

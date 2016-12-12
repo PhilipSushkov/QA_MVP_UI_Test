@@ -16,12 +16,20 @@ import pageobjects.Dashboard.Dashboard;
 
 public class CheckGlobalModuleList extends AbstractSpec {
     private static By siteAdminMenuButton, globalModuleListMenuItem;
+    private static LoginPage loginPage;
+    private static Dashboard dashboard;
+    private static GlobalModuleList globalModuleList;
 
     @Before
     public void setUp() throws Exception {
         siteAdminMenuButton = By.xpath(propUISiteAdmin.getProperty("btnMenu_SiteAdmin"));
         globalModuleListMenuItem = By.xpath(propUISiteAdmin.getProperty("itemMenu_GlobalModuleList"));
-        new LoginPage(driver).loginUser();
+
+        loginPage = new LoginPage(driver);
+        dashboard = new Dashboard(driver);
+        globalModuleList = new GlobalModuleList(driver);
+
+        loginPage.loginUser();
     }
 
     @Test
@@ -29,19 +37,19 @@ public class CheckGlobalModuleList extends AbstractSpec {
         final String expectedTitle = "Global Module List";
         final Integer expectedQuantity = 10;
 
-        new Dashboard(driver).openPageFromMenu(siteAdminMenuButton, globalModuleListMenuItem);
+        dashboard.openPageFromMenu(siteAdminMenuButton, globalModuleListMenuItem);
 
-        Assert.assertNotNull(new GlobalModuleList(driver).getUrl());
-        Assert.assertEquals("Actual Global Module List page Title doesn't match to expected", expectedTitle, new GlobalModuleList(driver).getTitle());
+        Assert.assertNotNull(globalModuleList.getUrl());
+        Assert.assertEquals("Actual Global Module List page Title doesn't match to expected", expectedTitle, globalModuleList.getTitle());
 
         //System.out.println(new GlobalModuleList(driver).getGlobalModuleListQuantity().toString());
-        Assert.assertTrue("Actual Module Name Quantity is less than expected: "+expectedQuantity, expectedQuantity <= new GlobalModuleList(driver).getGlobalModuleListQuantity() );
+        Assert.assertTrue("Actual Module Name Quantity is less than expected: "+expectedQuantity, expectedQuantity <= globalModuleList.getGlobalModuleListQuantity() );
 
     }
 
     @After
     public void tearDown() {
-        new Dashboard(driver).logout();
+        dashboard.logoutFromAdmin();
         //driver.quit();
     }
 

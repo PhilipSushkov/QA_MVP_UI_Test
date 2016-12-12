@@ -15,12 +15,21 @@ import specs.AbstractSpec;
  */
 
 public class CheckDepartmentList extends AbstractSpec {
-    private final By contentAdminMenuButton = By.xpath("//span[contains(text(),'Content Admin')]");
-    private final By departmentListMenuItem = By.xpath("//a[contains(text(),'Department List')]/parent::li");
+    private static By contentAdminMenuButton, departmentListMenuItem;
+    private static LoginPage loginPage;
+    private static Dashboard dashboard;
+    private static DepartmentList departmentList;
 
     @Before
     public void setUp() throws Exception {
-        new LoginPage(driver).loginUser();
+        contentAdminMenuButton = By.xpath(propUIContentAdmin.getProperty("btnMenu_ContentAdmin"));
+        departmentListMenuItem = By.xpath(propUIContentAdmin.getProperty("btnMenu_DepartmentList"));
+
+        loginPage = new LoginPage(driver);
+        dashboard = new Dashboard(driver);
+        departmentList = new DepartmentList(driver);
+
+        loginPage.loginUser();
     }
 
     @Test
@@ -28,20 +37,19 @@ public class CheckDepartmentList extends AbstractSpec {
         final String expectedTitle = "Department List";
         final Integer expectedQuantity = 2;
 
-        new Dashboard(driver).openPageFromMenu(contentAdminMenuButton, departmentListMenuItem);
+        dashboard.openPageFromMenu(contentAdminMenuButton, departmentListMenuItem);
 
-        Assert.assertNotNull(new DepartmentList(driver).getUrl());
-        Assert.assertEquals("Actual Department List page Title doesn't match to expected", expectedTitle, new DepartmentList(driver).getTitle());
+        Assert.assertNotNull(departmentList.getUrl());
+        Assert.assertEquals("Actual Department List page Title doesn't match to expected", expectedTitle, departmentList.getTitle());
 
         //System.out.println(new DepartmentList(driver).getTitleQuantity().toString());
-        Assert.assertTrue("Actual Department Name Quantity is less than expected: "+expectedQuantity, expectedQuantity <= new DepartmentList(driver).getTitleQuantity() );
-        //Assert.assertNotNull("Department drop down list doesn't exist", new DepartmentList(driver).getDepartmentList() );
+        Assert.assertTrue("Actual Department Name Quantity is less than expected: "+expectedQuantity, expectedQuantity <= departmentList.getTitleQuantity() );
 
     }
 
     @After
     public void tearDown() {
-        new Dashboard(driver).logout();
+        dashboard.logoutFromAdmin();
         //driver.quit();
     }
 

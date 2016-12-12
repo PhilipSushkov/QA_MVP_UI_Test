@@ -16,13 +16,20 @@ import specs.AbstractSpec;
 
 public class CheckMobileLinkList extends AbstractSpec {
     private static By siteAdminMenuButton, mobileLinkListMenuItem;
+    private static LoginPage loginPage;
+    private static Dashboard dashboard;
+    private static MobileLinkList mobileLinkList;
 
     @Before
     public void setUp() throws Exception {
         siteAdminMenuButton = By.xpath(propUISiteAdmin.getProperty("btnMenu_SiteAdmin"));
         mobileLinkListMenuItem = By.xpath(propUISiteAdmin.getProperty("itemMenu_MobileLinkList"));
 
-        new LoginPage(driver).loginUser();
+        loginPage = new LoginPage(driver);
+        dashboard = new Dashboard(driver);
+        mobileLinkList = new MobileLinkList(driver);
+
+        loginPage.loginUser();
     }
 
     @Test
@@ -33,18 +40,18 @@ public class CheckMobileLinkList extends AbstractSpec {
 
         new Dashboard(driver).openPageFromMenu(siteAdminMenuButton, mobileLinkListMenuItem);
 
-        Assert.assertNotNull(new MobileLinkList(driver).getUrl());
-        Assert.assertEquals("Actual Mobile Link List page Title doesn't match to expected", expectedTitle, new MobileLinkList(driver).getTitle());
+        Assert.assertNotNull(mobileLinkList.getUrl());
+        Assert.assertEquals("Actual Mobile Link List page Title doesn't match to expected", expectedTitle, mobileLinkList.getTitle());
 
         //System.out.println(new MobileLinkList(driver).getMobileLinkListQuantity().toString());
-        Assert.assertTrue("Actual Mobile Link Quantity is less than expected: "+expectedQuantity, expectedQuantity <= new MobileLinkList(driver).getMobileLinkListQuantity() );
-        Assert.assertNotNull("Mobile View pagination doesn't exist", new MobileLinkList(driver).getMobileLinkListPagination() );
+        Assert.assertTrue("Actual Mobile Link Quantity is less than expected: "+expectedQuantity, expectedQuantity <= mobileLinkList.getMobileLinkListQuantity() );
+        Assert.assertNotNull("Mobile View pagination doesn't exist", mobileLinkList.getMobileLinkListPagination() );
 
     }
 
     @After
     public void tearDown() {
-        new Dashboard(driver).logout();
+        dashboard.logoutFromAdmin();
         //driver.quit();
     }
 }

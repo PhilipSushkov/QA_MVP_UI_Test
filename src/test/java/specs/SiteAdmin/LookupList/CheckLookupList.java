@@ -16,13 +16,20 @@ import specs.AbstractSpec;
 
 public class CheckLookupList extends AbstractSpec {
     private static By siteAdminMenuButton, lookupListMenuItem;
+    private static LoginPage loginPage;
+    private static Dashboard dashboard;
+    private static LookupList lookupList;
 
     @Before
     public void setUp() throws Exception {
         siteAdminMenuButton = By.xpath(propUISiteAdmin.getProperty("btnMenu_SiteAdmin"));
         lookupListMenuItem = By.xpath(propUISiteAdmin.getProperty("itemMenu_LookupList"));
 
-        new LoginPage(driver).loginUser();
+        loginPage = new LoginPage(driver);
+        dashboard = new Dashboard(driver);
+        lookupList = new LookupList(driver);
+
+        loginPage.loginUser();
     }
 
     @Test
@@ -30,20 +37,20 @@ public class CheckLookupList extends AbstractSpec {
         final String expectedTitle = "Lookup List";
         final Integer expectedQuantity = 150;
 
-        new Dashboard(driver).openPageFromMenu(siteAdminMenuButton, lookupListMenuItem);
+        dashboard.openPageFromMenu(siteAdminMenuButton, lookupListMenuItem);
 
-        Assert.assertNotNull(new LookupList(driver).getUrl());
-        Assert.assertEquals("Actual Lookup List page Title doesn't match to expected", expectedTitle, new LookupList(driver).getTitle());
+        Assert.assertNotNull(lookupList.getUrl());
+        Assert.assertEquals("Actual Lookup List page Title doesn't match to expected", expectedTitle, lookupList.getTitle());
 
-        Assert.assertNotNull("Lookup Type dropdown list doesn't exist", new LookupList(driver).getLookupListLookupType() );
+        Assert.assertNotNull("Lookup Type dropdown list doesn't exist", lookupList.getLookupListLookupType() );
         //System.out.println(new LookupList(driver).getLookupListQuantity().toString());
-        Assert.assertTrue("Actual Lookup Text Quantity is less than expected: "+expectedQuantity, expectedQuantity <= new LookupList(driver).getLookupListQuantity() );
+        Assert.assertTrue("Actual Lookup Text Quantity is less than expected: "+expectedQuantity, expectedQuantity <= lookupList.getLookupListQuantity() );
 
     }
 
     @After
     public void tearDown() {
-        new Dashboard(driver).logout();
+        dashboard.logoutFromAdmin();
         //driver.quit();
     }
 

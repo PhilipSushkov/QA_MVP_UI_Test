@@ -68,13 +68,17 @@ public class CreateNewUser extends AbstractSpec {
 
         //click on edit icon and check that "User Edit" page opens
         Assert.assertEquals("'User Edit' page is not opened after clicking edit button", expectedEditTitle, userList.editUser(index).getTitle());
+
         //deselect active checkbox and save
         userEdit.deactivateUser().saveUser();
+
         //check that you are returned to user list
         Assert.assertEquals("'User List' page is not opened after clicking 'Save' when editing user", expectedTitle, userList.getTitle());
+
         //check that quick-test appears on user list
         index = userList.getIndexOfUsername(username);
         Assert.assertNotEquals("Username "+username+" does not exist after being edited", -1, index);
+
         //check that quick-test is identified as not being active
         Assert.assertFalse("User is identified as being active after being made inactive.", userList.userIsActive(index));
 
@@ -84,6 +88,7 @@ public class CreateNewUser extends AbstractSpec {
 
         //click on edit icon and check that "User Edit" page opens
         Assert.assertEquals("'User Edit' page is not opened after clicking edit button (2nd time editing)", expectedEditTitle, userList.editUser(index).getTitle());
+
         //reactivate user and save
         userEdit.reactivateUser().saveUser();
 

@@ -86,7 +86,7 @@ public class PublishPressRelease extends AbstractSpec {
     @After
     public void tearDown() {
         new LivePressReleases(driver).dashboard(dashboardURL);
-        new Dashboard(driver).logout();
+        new Dashboard(driver).logoutFromAdmin();
         //driver.quit();
     }
 

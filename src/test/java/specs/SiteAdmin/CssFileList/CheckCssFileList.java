@@ -16,13 +16,20 @@ import pageobjects.SiteAdmin.CssFileList.CssFileList;
 
 public class CheckCssFileList extends AbstractSpec {
     private static By siteAdminMenuButton, cssFileListMenuItem;
+    private static LoginPage loginPage;
+    private static Dashboard dashboard;
+    private static CssFileList cssFileList;
 
     @Before
     public void setUp() throws Exception {
-        new LoginPage(driver).loginUser();
-
         siteAdminMenuButton = By.xpath(propUISiteAdmin.getProperty("btnMenu_SiteAdmin"));
         cssFileListMenuItem = By.xpath(propUISiteAdmin.getProperty("itemMenu_CssFileList"));
+
+        loginPage = new LoginPage(driver);
+        dashboard = new Dashboard(driver);
+        cssFileList = new CssFileList(driver);
+
+        loginPage.loginUser();
     }
 
     @Test
@@ -31,19 +38,19 @@ public class CheckCssFileList extends AbstractSpec {
         final String expectedTitle = "Css File List";
         final Integer expectedQuantity = 2;
 
-        new Dashboard(driver).openPageFromMenu(siteAdminMenuButton, cssFileListMenuItem);
+        dashboard.openPageFromMenu(siteAdminMenuButton, cssFileListMenuItem);
 
-        Assert.assertNotNull(new CssFileList(driver).getUrl());
-        Assert.assertEquals("Actual Css File List page Title doesn't match to expected", expectedTitle, new CssFileList(driver).getTitle());
+        Assert.assertNotNull(cssFileList.getUrl());
+        Assert.assertEquals("Actual Css File List page Title doesn't match to expected", expectedTitle, cssFileList.getTitle());
 
         //System.out.println(new CssFileList(driver).getCssFileListQuantity().toString());
-        Assert.assertTrue("Actual Css Name Quantity is less than expected: "+expectedQuantity, expectedQuantity <= new CssFileList(driver).getCssFileListQuantity() );
+        Assert.assertTrue("Actual Css Name Quantity is less than expected: "+expectedQuantity, expectedQuantity <= cssFileList.getCssFileListQuantity() );
 
     }
 
     @After
     public void tearDown() {
-        new Dashboard(driver).logout();
+        dashboard.logoutFromAdmin();
         //driver.quit();
     }
 

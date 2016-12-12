@@ -15,12 +15,21 @@ import specs.AbstractSpec;
  */
 
 public class CheckDownloadList extends AbstractSpec {
-    private final By contentAdminMenuButton = By.xpath("//span[contains(text(),'Content Admin')]");
-    private final By downloadListMenuItem = By.xpath("//a[contains(text(),'Download List')]/parent::li");
+    private static By contentAdminMenuButton, downloadListMenuItem;
+    private static LoginPage loginPage;
+    private static Dashboard dashboard;
+    private static DownloadList downloadList;
 
     @Before
     public void setUp() throws Exception {
-        new LoginPage(driver).loginUser();
+        contentAdminMenuButton = By.xpath(propUIContentAdmin.getProperty("btnMenu_ContentAdmin"));
+        downloadListMenuItem = By.xpath(propUIContentAdmin.getProperty("btnMenu_DownloadList"));
+
+        loginPage = new LoginPage(driver);
+        dashboard = new Dashboard(driver);
+        downloadList = new DownloadList(driver);
+
+        loginPage.loginUser();
     }
 
     @Test
@@ -28,21 +37,21 @@ public class CheckDownloadList extends AbstractSpec {
         final String expectedTitle = "Download List";
         final Integer expectedQuantity = 3;
 
-        new Dashboard(driver).openPageFromMenu(contentAdminMenuButton, downloadListMenuItem);
+        dashboard.openPageFromMenu(contentAdminMenuButton, downloadListMenuItem);
 
-        Assert.assertNotNull(new DownloadList(driver).getUrl());
-        Assert.assertEquals("Actual Download List page Title doesn't match to expected", expectedTitle, new DownloadList(driver).getTitle());
+        Assert.assertNotNull(downloadList.getUrl());
+        Assert.assertEquals("Actual Download List page Title doesn't match to expected", expectedTitle, downloadList.getTitle());
 
         //System.out.println(new DownloadList(driver).getTitleQuantity().toString());
-        Assert.assertTrue("Actual Download List Title Quantity is less than expected: "+expectedQuantity, expectedQuantity <= new DownloadList(driver).getTitleQuantity() );
-        Assert.assertNotNull("Download List Pagination doesn't exist", new DownloadList(driver).getDownloadListPagination() );
-        Assert.assertNotNull("Filter By Tag field doesn't exist", new DownloadList(driver).getFilterByTag() );
+        Assert.assertTrue("Actual Download List Title Quantity is less than expected: "+expectedQuantity, expectedQuantity <= downloadList.getTitleQuantity() );
+        Assert.assertNotNull("Download List Pagination doesn't exist", downloadList.getDownloadListPagination() );
+        Assert.assertNotNull("Filter By Tag field doesn't exist", downloadList.getFilterByTag() );
 
     }
 
     @After
     public void tearDown() {
-        new Dashboard(driver).logout();
+        dashboard.logoutFromAdmin();
         //driver.quit();
     }
 

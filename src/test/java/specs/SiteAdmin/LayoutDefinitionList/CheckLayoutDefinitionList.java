@@ -16,13 +16,20 @@ import pageobjects.Dashboard.Dashboard;
 
 public class CheckLayoutDefinitionList extends AbstractSpec {
     private static By siteAdminMenuButton, layoutDefinitionListMenuItem;
+    private static LoginPage loginPage;
+    private static Dashboard dashboard;
+    private static LayoutDefinitionList layoutDefinitionList;
 
     @Before
     public void setUp() throws Exception {
         siteAdminMenuButton = By.xpath(propUISiteAdmin.getProperty("btnMenu_SiteAdmin"));
         layoutDefinitionListMenuItem = By.xpath(propUISiteAdmin.getProperty("itemMenu_LayoutDefinitionList"));
 
-        new LoginPage(driver).loginUser();
+        loginPage = new LoginPage(driver);
+        dashboard = new Dashboard(driver);
+        layoutDefinitionList = new LayoutDefinitionList(driver);
+
+        loginPage.loginUser();
     }
 
     @Test
@@ -30,20 +37,20 @@ public class CheckLayoutDefinitionList extends AbstractSpec {
         final String expectedTitle = "Layout Definition List";
         final Integer expectedQuantity = 3;
 
-        new Dashboard(driver).openPageFromMenu(siteAdminMenuButton, layoutDefinitionListMenuItem);
+        dashboard.openPageFromMenu(siteAdminMenuButton, layoutDefinitionListMenuItem);
 
-        Assert.assertNotNull(new LayoutDefinitionList(driver).getUrl());
-        Assert.assertEquals("Actual Layout Definition List page Title doesn't match to expected", expectedTitle, new LayoutDefinitionList(driver).getTitle());
+        Assert.assertNotNull(layoutDefinitionList.getUrl());
+        Assert.assertEquals("Actual Layout Definition List page Title doesn't match to expected", expectedTitle, layoutDefinitionList.getTitle());
 
         //System.out.println(new LayoutDefinitionList(driver).getLayoutDefinitionListQuantity().toString());
-        Assert.assertTrue("Actual Layout Definition Quantity is less than expected: "+expectedQuantity, expectedQuantity == new LayoutDefinitionList(driver).getLayoutDefinitionListQuantity() );
-        Assert.assertNotNull("Layout Definition Pagination doesn't exist", new LayoutDefinitionList(driver).getLayoutDefinitionPagination() );
+        Assert.assertTrue("Actual Layout Definition Quantity is less than expected: "+expectedQuantity, expectedQuantity == layoutDefinitionList.getLayoutDefinitionListQuantity() );
+        Assert.assertNotNull("Layout Definition Pagination doesn't exist", layoutDefinitionList.getLayoutDefinitionPagination() );
 
     }
 
     @After
     public void tearDown() {
-        new Dashboard(driver).logout();
+        dashboard.logoutFromAdmin();
         //driver.quit();
     }
 

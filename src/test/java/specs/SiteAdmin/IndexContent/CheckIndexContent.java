@@ -16,12 +16,20 @@ import specs.AbstractSpec;
 
 public class CheckIndexContent extends AbstractSpec {
     private static By siteAdminMenuButton, indexContentMenuItem;
+    private static LoginPage loginPage;
+    private static Dashboard dashboard;
+    private static IndexContent indexContent;
 
     @Before
     public void setUp() throws Exception {
         siteAdminMenuButton = By.xpath(propUISiteAdmin.getProperty("btnMenu_SiteAdmin"));
         indexContentMenuItem = By.xpath(propUISiteAdmin.getProperty("itemMenu_IndexContent"));
-        new LoginPage(driver).loginUser();
+
+        loginPage = new LoginPage(driver);
+        dashboard = new Dashboard(driver);
+        indexContent = new IndexContent(driver);
+
+        loginPage.loginUser();
     }
 
     @Test
@@ -29,20 +37,20 @@ public class CheckIndexContent extends AbstractSpec {
         final String expectedTitle = "Index Content";
         final Integer expectedQuantity = 20;
 
-        new Dashboard(driver).openPageFromMenu(siteAdminMenuButton, indexContentMenuItem);
+        dashboard.openPageFromMenu(siteAdminMenuButton, indexContentMenuItem);
 
-        Assert.assertNotNull(new IndexContent(driver).getUrl());
-        Assert.assertEquals("Actual Index Content page Title doesn't match to expected", expectedTitle, new IndexContent(driver).getTitle());
+        Assert.assertNotNull(indexContent.getUrl());
+        Assert.assertEquals("Actual Index Content page Title doesn't match to expected", expectedTitle, indexContent.getTitle());
 
         //System.out.println(new IndexContent(driver).getIndexContentQuantity().toString());
-        Assert.assertTrue("Actual Index Quantity is less than expected: "+expectedQuantity, expectedQuantity == new IndexContent(driver).getIndexContentQuantity() );
-        Assert.assertNotNull("Index Content Pagination doesn't exist", new IndexContent(driver).getIndexContentPagination() );
+        Assert.assertTrue("Actual Index Quantity is less than expected: "+expectedQuantity, expectedQuantity == indexContent.getIndexContentQuantity() );
+        Assert.assertNotNull("Index Content Pagination doesn't exist", indexContent.getIndexContentPagination() );
 
     }
 
     @After
     public void tearDown() {
-        new Dashboard(driver).logout();
+        dashboard.logoutFromAdmin();
         //driver.quit();
     }
 

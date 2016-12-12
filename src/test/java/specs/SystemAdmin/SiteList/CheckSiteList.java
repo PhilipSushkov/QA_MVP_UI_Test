@@ -48,7 +48,7 @@ public class CheckSiteList extends AbstractSpec {
 
     @After
     public void tearDown() {
-        dashboard.logout();
+        dashboard.logoutFromAdmin();
         //driver.quit();
     }
 

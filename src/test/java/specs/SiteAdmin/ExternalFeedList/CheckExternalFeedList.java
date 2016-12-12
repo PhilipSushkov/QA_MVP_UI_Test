@@ -16,13 +16,20 @@ import pageobjects.SiteAdmin.ExternalFeedList.ExternalFeedList;
 
 public class CheckExternalFeedList extends AbstractSpec {
     private static By siteAdminMenuButton, externalFeedListMenuItem;
+    private static LoginPage loginPage;
+    private static Dashboard dashboard;
+    private static ExternalFeedList externalFeedList;
 
     @Before
     public void setUp() throws Exception {
         siteAdminMenuButton = By.xpath(propUISiteAdmin.getProperty("btnMenu_SiteAdmin"));
         externalFeedListMenuItem = By.xpath(propUISiteAdmin.getProperty("itemMenu_ExternalFeedList"));
 
-        new LoginPage(driver).loginUser();
+        loginPage = new LoginPage(driver);
+        dashboard = new Dashboard(driver);
+        externalFeedList = new ExternalFeedList(driver);
+
+        loginPage.loginUser();
     }
 
     @Test
@@ -31,19 +38,19 @@ public class CheckExternalFeedList extends AbstractSpec {
         final String expectedTitle = "External Feed List";
         final Integer expectedQuantity = 4;
 
-        new Dashboard(driver).openPageFromMenu(siteAdminMenuButton, externalFeedListMenuItem);
+        dashboard.openPageFromMenu(siteAdminMenuButton, externalFeedListMenuItem);
 
-        Assert.assertNotNull(new ExternalFeedList(driver).getUrl());
-        Assert.assertEquals("Actual External Feed List page Title doesn't match to expected", expectedTitle, new ExternalFeedList(driver).getTitle());
+        Assert.assertNotNull(externalFeedList.getUrl());
+        Assert.assertEquals("Actual External Feed List page Title doesn't match to expected", expectedTitle, externalFeedList.getTitle());
 
-        System.out.println(new ExternalFeedList(driver).getExternalFeedListQuantity().toString());
-        Assert.assertTrue("Actual Description Quantity is less than expected: "+expectedQuantity, expectedQuantity <= new ExternalFeedList(driver).getExternalFeedListQuantity() );
+        System.out.println(externalFeedList.getExternalFeedListQuantity().toString());
+        Assert.assertTrue("Actual Description Quantity is less than expected: "+expectedQuantity, expectedQuantity <= externalFeedList.getExternalFeedListQuantity() );
 
     }
 
     @After
     public void tearDown() {
-        new Dashboard(driver).logout();
+        dashboard.logoutFromAdmin();
         //driver.quit();
     }
 

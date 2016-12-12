@@ -82,7 +82,7 @@ public class PublishEvent extends AbstractSpec {
     @After
     public void tearDown() {
         new LiveEvents(driver).dashboard(dashboardURL);
-        new Dashboard(driver).logout();
+        new Dashboard(driver).logoutFromAdmin();
         //driver.quit();
     }
 
