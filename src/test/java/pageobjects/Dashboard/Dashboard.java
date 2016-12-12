@@ -5,17 +5,6 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
-import pageobjects.ContentAdmin.DepartmentList.DepartmentList;
-import pageobjects.ContentAdmin.DownloadList.DownloadList;
-import pageobjects.ContentAdmin.FaqList.FaqList;
-import pageobjects.ContentAdmin.FinancialReports.FinancialReports;
-import pageobjects.ContentAdmin.JobPostingList.JobPostingList;
-import pageobjects.ContentAdmin.PersonList.PersonList;
-import pageobjects.ContentAdmin.PressReleaseCategories.PressReleaseCategories;
-import pageobjects.ContentAdmin.QuickLinkList.QuickLinks;
-import pageobjects.EmailAdmin.Compose.Compose;
-import pageobjects.EmailAdmin.ManageList.MailingLists;
-import pageobjects.EmailAdmin.Subscribers.MailingListUsers;
 import pageobjects.LoginPage.LoginPage;
 import pageobjects.ContentAdmin.PressReleases.EditPressRelease;
 import pageobjects.ContentAdmin.PressReleases.PressReleases;
@@ -24,7 +13,6 @@ import pageobjects.ContentAdmin.Presentations.Presentations;
 import pageobjects.ContentAdmin.Events.EditEvent;
 import pageobjects.ContentAdmin.Events.Events;
 import pageobjects.PreviewSite.PreviewSiteHome;
-import pageobjects.SystemAdmin.UserList.UserList;
 import pageobjects.SocialMedia.SocialMediaSummary;
 import specs.AbstractSpec;
 
@@ -67,6 +55,7 @@ public class Dashboard extends AbstractPageObject {
         super(driver);
     }
 
+    /*
     public String getURL() throws Exception {
         wait.until(ExpectedConditions.elementToBeClickable(addPressReleaseButton));
         if (AbstractSpec.getSessionID() == null) {
@@ -74,6 +63,7 @@ public class Dashboard extends AbstractPageObject {
         }
         return driver.getCurrentUrl();
     }
+    */
 
     public PreviewSiteHome previewSite() {
         waitForElement(previewSiteButton);
@@ -217,7 +207,6 @@ public class Dashboard extends AbstractPageObject {
 
     public LoginPage logout() {
         wait.until(ExpectedConditions.visibilityOf(findElement(logoutMenuItem)));
-        pause(DEFAULT_PAUSE);
         findElement(logoutMenuItem).click();
         return new LoginPage(getDriver());
     }

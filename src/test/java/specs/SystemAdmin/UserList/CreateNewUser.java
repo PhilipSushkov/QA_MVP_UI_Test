@@ -94,6 +94,7 @@ public class CreateNewUser extends AbstractSpec {
 
         //check that you cannot login to user
         Assert.assertFalse("Known issue - WEB-10649 - Can login with deleted user.", new UserList(driver).logoutFromAdmin().credentialsWork(username, password));
+
     }
 
     @After

@@ -47,7 +47,7 @@ public class PublishEvent extends AbstractSpec {
     @Test
     public void canAddNewEvent() throws Exception {
 
-        dashboardURL = new Dashboard(driver).getURL();
+        dashboardURL = new Dashboard(driver).getUrl();
         String[] filenames = new String[2];
 
         String newsPageURL = new Dashboard(driver).newEvent().addNewEvent(headline, today, tommorrow, hour, min, AMPM, timeZone, tags, location, filenames);

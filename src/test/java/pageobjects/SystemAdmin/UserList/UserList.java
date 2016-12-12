@@ -17,7 +17,7 @@ import static specs.AbstractSpec.propUISystemAdmin;
 
 public class UserList extends AbstractPageObject {
     private static By moduleTitle, grid, gridUserName, addNewButton, editButton, userName, userActive;
-    private final Integer columnsNumber = 4;
+    private final int columnsNumber = 4;
 
     public UserList(WebDriver driver) {
         super(driver);
@@ -30,18 +30,15 @@ public class UserList extends AbstractPageObject {
         userActive = By.cssSelector(propUISystemAdmin.getProperty("chk_UserActive"));
     }
 
-    public String getUrl() {
-        return driver.getCurrentUrl();
-    }
 
     public String getTitle() {
-        wait.until(ExpectedConditions.visibilityOf(findElement(moduleTitle)));
-        return findElement(moduleTitle).getText();
+        waitForElement(moduleTitle);
+        return getText(moduleTitle);
     }
 
     public Integer getUserNameQuantity() {
-        wait.until(ExpectedConditions.visibilityOf(findElement(grid)));
-        return findElement(grid).findElements(gridUserName).size()/columnsNumber;
+        waitForElement(grid);
+        return getGridRowQuantity(findElement(grid).findElements(gridUserName).size(), columnsNumber);
     }
 
     public UserEdit addNewUser(){

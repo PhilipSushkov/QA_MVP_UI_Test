@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.After;
+import org.openqa.selenium.By;
 import specs.AbstractSpec;
 import pageobjects.LoginPage.LoginPage;
 import pageobjects.Dashboard.Dashboard;
@@ -19,6 +20,9 @@ public class PublishPressRelease extends AbstractSpec {
 
         new LoginPage(driver).loginUser();
     }
+
+    private final By contentAdminMenuButton = By.xpath("//span[contains(text(),'Content Admin')]");
+    private final By pressReleasesMenuButton = By.xpath("//a[contains(text(),'Press Releases')]/parent::li");
 
     private Date current = new Date();
     private SimpleDateFormat fullDateF = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
@@ -38,7 +42,7 @@ public class PublishPressRelease extends AbstractSpec {
 
     @Test
     public void canAddNewPressRelease() throws Exception {
-        dashboardURL = new Dashboard(driver).getURL();
+        dashboardURL = new Dashboard(driver).getUrl();
         String[] filenames = new String[2];
 
         // adding new press release
@@ -54,7 +58,10 @@ public class PublishPressRelease extends AbstractSpec {
         Assert.assertTrue(headlineFound);
 
         // changing headline on an existing press release
-        new LivePressReleases(driver).dashboard(dashboardURL).pressReleases().editPressRelease(headline).changeHeadlineTo(headlineV2);
+        new LivePressReleases(driver).dashboard(dashboardURL)
+                .pressReleases()
+                .editPressRelease(headline)
+                .changeHeadlineTo(headlineV2);
 
         // publishing and checking updated press release
         new PressReleases(driver).publishPressRelease(headlineV2);
@@ -63,9 +70,15 @@ public class PublishPressRelease extends AbstractSpec {
         Assert.assertTrue(headlineFound);
 
         // deleting press release, and verifying it is gone
-        new LivePressReleases(driver).dashboard(dashboardURL).pressReleases().editPressRelease(headlineV2).deletePressRelease();
+        new LivePressReleases(driver)
+                .dashboard(dashboardURL)
+                .pressReleases()
+                .editPressRelease(headlineV2)
+                .deletePressRelease();
         new PressReleases(driver).publishPressRelease(headlineV2);
-        headlineFound = new PressReleases(driver).livePressReleases(newsPageURL).canFindNewHeadline(headlineV2, false, filenames);
+        headlineFound = new PressReleases(driver)
+                .livePressReleases(newsPageURL)
+                .canFindNewHeadline(headlineV2, false, filenames);
         Assert.assertFalse(headlineFound);
     }
 

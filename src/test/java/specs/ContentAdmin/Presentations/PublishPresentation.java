@@ -43,7 +43,7 @@ public class PublishPresentation extends AbstractSpec {
     @Test
     public void canAddNewPresentation() throws Exception {
 
-        dashboardURL = new Dashboard(driver).getURL();
+        dashboardURL = new Dashboard(driver).getUrl();
         String[] filenames = new String[2];
 
         String newsPageURL = new Dashboard(driver).newPresentation().addNewPresentation(headline, date, hour, min, AMPM, filenames);

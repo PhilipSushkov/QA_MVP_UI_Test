@@ -16,6 +16,9 @@ import pageobjects.SystemAdmin.AlertFilterList.AlertFilterList;
 
 public class CheckAlertFilterList extends AbstractSpec {
     private static By systemAdminMenuButton, alertFilterListMenuItem;
+    private static LoginPage loginPage;
+    private static Dashboard dashboard;
+    private static AlertFilterList alertFilterList;
 
 
     @Before
@@ -23,7 +26,11 @@ public class CheckAlertFilterList extends AbstractSpec {
         systemAdminMenuButton = By.xpath(propUISystemAdmin.getProperty("btnMenu_SystemAdmin"));
         alertFilterListMenuItem = By.xpath(propUISystemAdmin.getProperty("itemMenu_AlertFilterList"));
 
-        new LoginPage(driver).loginUser();
+        loginPage = new LoginPage(driver);
+        dashboard = new Dashboard(driver);
+        alertFilterList = new AlertFilterList(driver);
+
+        loginPage.loginUser();
     }
 
     @Test
@@ -31,18 +38,18 @@ public class CheckAlertFilterList extends AbstractSpec {
         final String expectedTitle = "Alert Filter List";
         final Integer expectedQuantity = 4;
 
-        new Dashboard(driver).openPageFromMenu(systemAdminMenuButton, alertFilterListMenuItem);
+        dashboard.openPageFromMenu(systemAdminMenuButton, alertFilterListMenuItem);
 
-        Assert.assertNotNull(new AlertFilterList(driver).getUrl());
-        Assert.assertEquals("Actual Alert Filter List page Title doesn't match to expected", expectedTitle, new AlertFilterList(driver).getTitle());
+        Assert.assertNotNull(alertFilterList.getUrl());
+        Assert.assertEquals("Actual Alert Filter List page Title doesn't match to expected", expectedTitle, alertFilterList.getTitle());
 
         //System.out.println(new AlertFilterList(driver).getFilterNameQuantity().toString());
-        Assert.assertTrue("Actual Filter Name Quantity is less than expected: "+expectedQuantity, expectedQuantity <= new AlertFilterList(driver).getFilterNameQuantity() );
+        Assert.assertTrue("Actual Filter Name Quantity is less than expected: "+expectedQuantity, expectedQuantity <= alertFilterList.getFilterNameQuantity() );
     }
 
     @After
     public void tearDown() {
-        new Dashboard(driver).logout();
+        dashboard.logout();
         //driver.quit();
     }
 }

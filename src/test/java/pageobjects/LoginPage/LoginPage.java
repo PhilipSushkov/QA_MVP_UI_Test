@@ -17,6 +17,7 @@ public class LoginPage extends Page {
     private final By loginButton = By.id("btnSubmit");
     private final By loginErrorMessage = By.id("errLogin");
     private final By dashboardLabel = By.cssSelector(".AdminContentDiv2 h1"); //this is actually on the dashboard page; used to confirm that login is successful
+    private final By logoutMenuItem = By.xpath("//li/a[contains(text(),'Logout')]");
 
 
     public LoginPage(WebDriver driver) {
@@ -47,7 +48,7 @@ public class LoginPage extends Page {
 
         pause(1000L);
         retryClick(loginButton);
-        new Dashboard(driver).getURL();
+        new Dashboard(driver).getUrl();
 
         return new Dashboard(getDriver());
 

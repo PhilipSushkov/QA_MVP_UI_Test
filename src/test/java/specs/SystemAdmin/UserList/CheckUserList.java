@@ -16,13 +16,20 @@ import pageobjects.SystemAdmin.UserList.UserList;
 
 public class CheckUserList extends AbstractSpec {
     private static By systemAdminMenuButton, userListMenuItem;
+    private static LoginPage loginPage;
+    private static Dashboard dashboard;
+    private static UserList userList;
 
     @Before
     public void setUp() throws Exception {
         systemAdminMenuButton = By.xpath(propUISystemAdmin.getProperty("btnMenu_SystemAdmin"));
         userListMenuItem = By.xpath(propUISystemAdmin.getProperty("itemMenu_UserList"));
 
-        new LoginPage(driver).loginUser();
+        loginPage = new LoginPage(driver);
+        dashboard = new Dashboard(driver);
+        userList = new UserList(driver);
+
+        loginPage.loginUser();
     }
 
     @Test
@@ -30,19 +37,19 @@ public class CheckUserList extends AbstractSpec {
         final String expectedTitle = "User List";
         final Integer expectedQuantity = 30;
 
-        //Assert.assertNotNull(new Dashboard(driver).openUserListPage().getUrl());
-        new Dashboard(driver).openPageFromMenu(systemAdminMenuButton, userListMenuItem);
-        Assert.assertNotNull(new UserList(driver).getUrl());
-        Assert.assertEquals("Actual User List page Title doesn't match to expected", expectedTitle, new UserList(driver).getTitle());
+        dashboard.openPageFromMenu(systemAdminMenuButton, userListMenuItem);
+
+        Assert.assertNotNull(userList.getUrl());
+        Assert.assertEquals("Actual User List page Title doesn't match to expected", expectedTitle, userList.getTitle());
 
         //System.out.println(new UserList(driver).getUserNameQuantity().toString());
-        Assert.assertTrue("Actual User Name Quantity is less than expected: "+expectedQuantity, expectedQuantity <= new UserList(driver).getUserNameQuantity() );
+        Assert.assertTrue("Actual User Name Quantity is less than expected: "+expectedQuantity, expectedQuantity <= userList.getUserNameQuantity() );
 
     }
 
     @After
     public void tearDown() {
-        new Dashboard(driver).logout();
+        dashboard.logoutFromAdmin();
         //driver.quit();
     }
 

@@ -27,7 +27,7 @@ public class EnterToAdmin extends AbstractSpec {
     public void checkSessionID() throws Exception {
 
         //Get SessionID from Browser Cookies and make assertion
-        new Dashboard(driver).getURL();
+        new Dashboard(driver).getUrl();
         String[] sessionIDCookie = new LoginPage(driver).sessionID();
         //System.out.println(sessionIDCookie[0]+": " +sessionIDCookie[1]);
         Assert.assertNotNull(sessionIDCookie[1]);
