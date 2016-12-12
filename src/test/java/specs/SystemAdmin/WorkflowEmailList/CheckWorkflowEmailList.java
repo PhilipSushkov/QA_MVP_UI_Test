@@ -16,13 +16,20 @@ import pageobjects.SystemAdmin.WorkflowEmailList.WorkflowEmailList;
 
 public class CheckWorkflowEmailList extends AbstractSpec {
     private static By systemAdminMenuButton, workflowEmailListMenuItem;
+    private static LoginPage loginPage;
+    private static Dashboard dashboard;
+    private static WorkflowEmailList workflowEmailList;
 
     @Before
     public void setUp() throws Exception {
         systemAdminMenuButton = By.xpath(propUISystemAdmin.getProperty("btnMenu_SystemAdmin"));
         workflowEmailListMenuItem = By.xpath(propUISystemAdmin.getProperty("itemMenu_WorkflowEmailList"));
 
-        new LoginPage(driver).loginUser();
+        loginPage = new LoginPage(driver);
+        dashboard = new Dashboard(driver);
+        workflowEmailList = new WorkflowEmailList(driver);
+
+        loginPage.loginUser();
     }
 
     @Test
@@ -30,18 +37,18 @@ public class CheckWorkflowEmailList extends AbstractSpec {
         final String expectedTitle = "Workflow Email List";
         final Integer expectedQuantity = 4;
 
-        new Dashboard(driver).openPageFromMenu(systemAdminMenuButton, workflowEmailListMenuItem);
+        dashboard.openPageFromMenu(systemAdminMenuButton, workflowEmailListMenuItem);
 
-        Assert.assertNotNull(new WorkflowEmailList(driver).getUrl());
-        Assert.assertEquals("Actual Workflow Email List page Title doesn't match to expected", expectedTitle, new WorkflowEmailList(driver).getTitle());
+        Assert.assertNotNull(workflowEmailList.getUrl());
+        Assert.assertEquals("Actual Workflow Email List page Title doesn't match to expected", expectedTitle, workflowEmailList.getTitle());
 
         //System.out.println(new WorkflowEmailList(driver).getDescriptionQuantity().toString());
-        Assert.assertTrue("Actual Description Quantity is less than expected: "+expectedQuantity, expectedQuantity < new WorkflowEmailList(driver).getDescriptionQuantity() );
+        Assert.assertTrue("Actual Description Quantity is less than expected: "+expectedQuantity, expectedQuantity < workflowEmailList.getDescriptionQuantity() );
     }
 
     @After
     public void tearDown() {
-        new Dashboard(driver).logout();
+        dashboard.logout();
         //driver.quit();
     }
 

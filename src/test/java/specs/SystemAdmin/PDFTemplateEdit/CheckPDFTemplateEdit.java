@@ -16,35 +16,42 @@ import pageobjects.SystemAdmin.PDFTemplateEdit.PDFTemplateEdit;
 
 public class CheckPDFTemplateEdit extends AbstractSpec {
     private static By systemAdminMenuButton, pdfTemplateEditMenuItem;
+    private static LoginPage loginPage;
+    private static Dashboard dashboard;
+    private static PDFTemplateEdit pdfTemplateEdit;
 
     @Before
     public void setUp() throws Exception {
         systemAdminMenuButton = By.xpath(propUISystemAdmin.getProperty("btnMenu_SystemAdmin"));
         pdfTemplateEditMenuItem = By.xpath(propUISystemAdmin.getProperty("itemMenu_PDFTemplateEdit"));
 
-        new LoginPage(driver).loginUser();
+        loginPage = new LoginPage(driver);
+        dashboard = new Dashboard(driver);
+        pdfTemplateEdit = new PDFTemplateEdit(driver);
+
+        loginPage.loginUser();
     }
 
     @Test
     public void checkPDFTemplateEdit() throws Exception {
         final String expectedTitle = "PDF Template Edit";
 
-        new Dashboard(driver).openPageFromMenu(systemAdminMenuButton, pdfTemplateEditMenuItem);
+        dashboard.openPageFromMenu(systemAdminMenuButton, pdfTemplateEditMenuItem);
 
-        Assert.assertNotNull(new PDFTemplateEdit(driver).getUrl());
+        Assert.assertNotNull(pdfTemplateEdit.getUrl());
 
-        Assert.assertEquals("Actual PDF Template Edit page Title doesn't match to expected", expectedTitle, new PDFTemplateEdit(driver).getTitle());
+        Assert.assertEquals("Actual PDF Template Edit page Title doesn't match to expected", expectedTitle, pdfTemplateEdit.getTitle());
 
         //System.out.println(new PDFTemplateEdit(driver).getHeaderRadEditor().getSize().toString() );
-        Assert.assertNotNull("Header Rad Editor doesn't exist", new PDFTemplateEdit(driver).getHeaderRadEditor() );
-        Assert.assertNotNull("Body Rad Editor doesn't exist", new PDFTemplateEdit(driver).getBodyRadEditor() );
-        Assert.assertNotNull("Footer Rad Editor doesn't exist", new PDFTemplateEdit(driver).getFooterRadEditor() );
+        Assert.assertNotNull("Header Rad Editor doesn't exist", pdfTemplateEdit.getHeaderRadEditor() );
+        Assert.assertNotNull("Body Rad Editor doesn't exist", pdfTemplateEdit.getBodyRadEditor() );
+        Assert.assertNotNull("Footer Rad Editor doesn't exist", pdfTemplateEdit.getFooterRadEditor() );
 
     }
 
     @After
     public void tearDown() {
-        new Dashboard(driver).logout();
+        dashboard.logout();
         //driver.quit();
     }
 

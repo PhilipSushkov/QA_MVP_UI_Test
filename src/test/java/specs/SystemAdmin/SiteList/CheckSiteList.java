@@ -16,13 +16,20 @@ import pageobjects.SystemAdmin.SiteList.SiteList;
 
 public class CheckSiteList extends AbstractSpec {
     private static By systemAdminMenuButton, siteListMenuItem;
+    private static LoginPage loginPage;
+    private static Dashboard dashboard;
+    private static SiteList siteList;
 
     @Before
     public void setUp() throws Exception {
         systemAdminMenuButton = By.xpath(propUISystemAdmin.getProperty("btnMenu_SystemAdmin"));
         siteListMenuItem = By.xpath(propUISystemAdmin.getProperty("itemMenu_SiteList"));
 
-        new LoginPage(driver).loginUser();
+        loginPage = new LoginPage(driver);
+        dashboard = new Dashboard(driver);
+        siteList = new SiteList(driver);
+
+        loginPage.loginUser();
     }
 
     @Test
@@ -30,18 +37,18 @@ public class CheckSiteList extends AbstractSpec {
         final String expectedTitle = "Site List";
         final Integer expectedQuantity = 1;
 
-        new Dashboard(driver).openPageFromMenu(systemAdminMenuButton, siteListMenuItem);
+        dashboard.openPageFromMenu(systemAdminMenuButton, siteListMenuItem);
 
-        Assert.assertNotNull(new SiteList(driver).getUrl());
-        Assert.assertEquals("Actual Site List page Title doesn't match to expected", expectedTitle, new SiteList(driver).getTitle());
+        Assert.assertNotNull(siteList.getUrl());
+        Assert.assertEquals("Actual Site List page Title doesn't match to expected", expectedTitle, siteList.getTitle());
 
         //System.out.println(new SiteList(driver).getSiteListHeader().toString());
-        Assert.assertTrue("Actual Site Quantity is less than expected: "+expectedQuantity, expectedQuantity <= new SiteList(driver).getSiteListQuantity() );
+        Assert.assertTrue("Actual Site Quantity is less than expected: "+expectedQuantity, expectedQuantity <= siteList.getSiteListQuantity() );
     }
 
     @After
     public void tearDown() {
-        new Dashboard(driver).logout();
+        dashboard.logout();
         //driver.quit();
     }
 

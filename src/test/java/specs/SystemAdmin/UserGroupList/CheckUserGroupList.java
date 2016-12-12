@@ -16,13 +16,20 @@ import pageobjects.Dashboard.Dashboard;
 
 public class CheckUserGroupList extends AbstractSpec {
     private static By systemAdminMenuButton, userGroupListMenuItem;
+    private static LoginPage loginPage;
+    private static Dashboard dashboard;
+    private static UserGroupList userGroupList;
 
     @Before
     public void setUp() throws Exception {
         systemAdminMenuButton = By.xpath(propUISystemAdmin.getProperty("btnMenu_SystemAdmin"));
         userGroupListMenuItem = By.xpath(propUISystemAdmin.getProperty("itemMenu_UserGroupList"));
 
-        new LoginPage(driver).loginUser();
+        loginPage = new LoginPage(driver);
+        dashboard = new Dashboard(driver);
+        userGroupList = new UserGroupList(driver);
+
+        loginPage.loginUser();
     }
 
     @Test
@@ -30,19 +37,19 @@ public class CheckUserGroupList extends AbstractSpec {
         final String expectedTitle = "User Group List";
         final Integer expectedQuantity = 5;
 
-        new Dashboard(driver).openPageFromMenu(systemAdminMenuButton, userGroupListMenuItem);
+        dashboard.openPageFromMenu(systemAdminMenuButton, userGroupListMenuItem);
 
-        Assert.assertNotNull(new UserGroupList(driver).getUrl());
-        Assert.assertEquals("Actual User Group List page Title doesn't match to expected", expectedTitle, new UserGroupList(driver).getTitle());
+        Assert.assertNotNull(userGroupList.getUrl());
+        Assert.assertEquals("Actual User Group List page Title doesn't match to expected", expectedTitle, userGroupList.getTitle());
 
         //System.out.println(new UserGroupList(driver).getUserGroupListQuantity().toString());
-        Assert.assertTrue("Actual User Group Quantity is less than expected: "+expectedQuantity, expectedQuantity <= new UserGroupList(driver).getUserGroupListQuantity() );
+        Assert.assertTrue("Actual User Group Quantity is less than expected: "+expectedQuantity, expectedQuantity <= userGroupList.getUserGroupListQuantity() );
 
     }
 
     @After
     public void tearDown() {
-        new Dashboard(driver).logout();
+        dashboard.logout();
         //driver.quit();
     }
 

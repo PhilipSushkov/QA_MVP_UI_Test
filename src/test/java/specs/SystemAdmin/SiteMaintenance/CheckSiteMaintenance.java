@@ -16,35 +16,42 @@ import pageobjects.Dashboard.Dashboard;
 
 public class CheckSiteMaintenance extends AbstractSpec {
     private static By systemAdminMenuButton, siteMaintenanceMenuItem;
+    private static LoginPage loginPage;
+    private static Dashboard dashboard;
+    private static SiteMaintenance siteMaintenance;
 
     @Before
     public void setUp() throws Exception {
         systemAdminMenuButton = By.xpath(propUISystemAdmin.getProperty("btnMenu_SystemAdmin"));
         siteMaintenanceMenuItem = By.xpath(propUISystemAdmin.getProperty("itemMenu_SiteMaintenance"));
 
-        new LoginPage(driver).loginUser();
+        loginPage = new LoginPage(driver);
+        dashboard = new Dashboard(driver);
+        siteMaintenance = new SiteMaintenance(driver);
+
+        loginPage.loginUser();
     }
 
     @Test
     public void checkSiteMaintenance() throws Exception {
         final String expectedTitle = "Site Maintenance";
 
-        new Dashboard(driver).openPageFromMenu(systemAdminMenuButton, siteMaintenanceMenuItem);
+        dashboard.openPageFromMenu(systemAdminMenuButton, siteMaintenanceMenuItem);
 
-        Assert.assertNotNull(new SiteMaintenance(driver).getUrl());
+        Assert.assertNotNull(siteMaintenance.getUrl());
 
-        Assert.assertEquals("Actual PDF Template Edit page Title doesn't match to expected", expectedTitle, new SiteMaintenance(driver).getTitle());
+        Assert.assertEquals("Actual PDF Template Edit page Title doesn't match to expected", expectedTitle, siteMaintenance.getTitle());
 
         //System.out.println(new SiteMaintenance(driver).getGoLiveButton().getText() );
-        Assert.assertNotNull("Go Live Button doesn't exist", new SiteMaintenance(driver).getGoLiveButton() );
-        Assert.assertNotNull("One Touch Button doesn't exist", new SiteMaintenance(driver).getOneTouchButton() );
-        Assert.assertNotNull("Two Factor Authentication Button doesn't exist", new SiteMaintenance(driver).getTwoFactorAuthenticationButton() );
+        Assert.assertNotNull("Go Live Button doesn't exist", siteMaintenance.getGoLiveButton() );
+        Assert.assertNotNull("One Touch Button doesn't exist", siteMaintenance.getOneTouchButton() );
+        Assert.assertNotNull("Two Factor Authentication Button doesn't exist", siteMaintenance.getTwoFactorAuthenticationButton() );
 
     }
 
     @After
     public void tearDown() {
-        new Dashboard(driver).logout();
+        dashboard.logout();
         //driver.quit();
     }
 
