@@ -16,12 +16,21 @@ import specs.AbstractSpec;
  */
 
 public class CheckMailingLists extends AbstractSpec {
-    private final By emailAdminMenuButton = By.xpath("//span[contains(text(),'Email Admin')]");
-    private final By manageListMenuItem = By.xpath("//a[contains(text(),'Manage List')]/parent::li");
+    private static By emailAdminMenuButton, manageListMenuItem;
+    private static LoginPage loginPage;
+    private static Dashboard dashboard;
+    private static MailingLists mailingLists;
 
     @Before
     public void setUp() throws Exception {
-        new LoginPage(driver).loginUser();
+        emailAdminMenuButton = By.xpath(propUIEmailAdmin.getProperty("btnMenu_EmailAdmin"));
+        manageListMenuItem = By.xpath(propUIEmailAdmin.getProperty("btnMenu_ManageList"));
+
+        loginPage = new LoginPage(driver);
+        dashboard = new Dashboard(driver);
+        mailingLists = new MailingLists(driver);
+
+        loginPage.loginUser();
     }
 
     @Test
@@ -29,21 +38,21 @@ public class CheckMailingLists extends AbstractSpec {
         final String expectedTitle = "Mailing Lists";
         final Integer expectedQuantity = 5;
 
-        new Dashboard(driver).openPageFromMenu(emailAdminMenuButton, manageListMenuItem);
+        dashboard.openPageFromMenu(emailAdminMenuButton, manageListMenuItem);
 
-        Assert.assertNotNull(new MailingLists(driver).getUrl());
-        Assert.assertEquals("Actual Mailing Lists page Title doesn't match to expected", expectedTitle, new MailingLists(driver).getTitle());
+        Assert.assertNotNull(mailingLists.getUrl());
+        Assert.assertEquals("Actual Mailing Lists page Title doesn't match to expected", expectedTitle, mailingLists.getTitle());
 
         //System.out.println(new MailingLists(driver).getTitleQuantity().toString());
-        Assert.assertTrue("Actual List Name Quantity is less than expected: "+expectedQuantity, expectedQuantity <= new MailingLists(driver).getTitleQuantity() );
-        Assert.assertNotNull("Search field doesn't exist", new MailingLists(driver).getSearchField() );
-        Assert.assertNotNull("Search button doesn't exist", new MailingLists(driver).getSearchButton() );
+        Assert.assertTrue("Actual List Name Quantity is less than expected: "+expectedQuantity, expectedQuantity <= mailingLists.getTitleQuantity() );
+        Assert.assertNotNull("Search field doesn't exist", mailingLists.getSearchField() );
+        Assert.assertNotNull("Search button doesn't exist", mailingLists.getSearchButton() );
 
     }
 
     @After
     public void tearDown() {
-        new Dashboard(driver).logoutFromAdmin();
+        dashboard.logoutFromAdmin();
         //driver.quit();
     }
 }

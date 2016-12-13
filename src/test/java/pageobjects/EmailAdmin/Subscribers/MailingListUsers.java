@@ -10,29 +10,32 @@ import pageobjects.PageObject;
 
 import java.util.List;
 
+import static specs.AbstractSpec.propUIEmailAdmin;
+
 /**
  * Created by philipsushkov on 2016-12-06.
  */
 
 public class MailingListUsers extends AbstractPageObject {
-
-    private final By moduleTitle = By.xpath("//span[contains(@class, 'AdminContent')]/h1/span[contains(@id,'ModuleTitle')]");
-    private final By grid = By.xpath("//table[contains(@id, 'UsersDataGrid')]");
-    private final By gridEmailAddress = By.xpath("//td[contains(@class,'DataGridItemBorder')]");
-    private final By dataGridPager = By.xpath("//tr[contains(@class, 'DataGridPager')]");
-    private final By inputKeyword = By.xpath("//input[contains(@id, 'txtSearch')]");
-    private final By selectAllLists = By.xpath("//select[contains(@id, 'ddlMailingLists')]");
-    private final By selectAllCategories = By.xpath("//select[contains(@id, 'ddlCategories')]");
-    private final By buttonSearch = By.xpath("//div[contains(@class, 'serachBox')]/input[contains(@id, 'btnSearch')]");
-    private final By linkExportList = By.xpath("//a[contains(@id, 'lnkExport')]");
-    private final By linkSendToList = By.xpath("//a[contains(@id, 'lnkSendToList')]");
-    private final By linkImportList = By.xpath("//a[contains(@id, 'lnkImport')]");
-    private final By linkBulkDelete = By.xpath("//a[contains(@id, 'LinkBulkDelete')]");
-    private final By linkLetterList = By.xpath("//a[contains(@id, 'lnkLetter')]");
+    private static By moduleTitle, grid, gridEmailAddress, dataGridPager, inputKeyword, selectAllLists, selectAllCategories;
+    private static By buttonSearch, linkExportList, linkSendToList, linkImportList, linkBulkDelete, linkLetterList;
     private final Integer columnsNumber = 5;
 
     public MailingListUsers(WebDriver driver) {
         super(driver);
+        moduleTitle = By.xpath(propUIEmailAdmin.getProperty("spanModule_Title"));
+        grid = By.xpath(propUIEmailAdmin.getProperty("table_GridSubscribers"));
+        gridEmailAddress = By.xpath(propUIEmailAdmin.getProperty("table_GridItem"));
+        dataGridPager = By.xpath(propUIEmailAdmin.getProperty("pager_DataGrid"));
+        inputKeyword = By.xpath(propUIEmailAdmin.getProperty("input_Keyword"));
+        selectAllLists = By.xpath(propUIEmailAdmin.getProperty("select_AllLists"));
+        selectAllCategories = By.xpath(propUIEmailAdmin.getProperty("select_AllCategories"));
+        buttonSearch = By.xpath(propUIEmailAdmin.getProperty("button_BoxSearch"));
+        linkExportList = By.xpath(propUIEmailAdmin.getProperty("link_ExportList"));
+        linkSendToList = By.xpath(propUIEmailAdmin.getProperty("link_SendToList"));
+        linkImportList = By.xpath(propUIEmailAdmin.getProperty("link_ImportList"));
+        linkBulkDelete = By.xpath(propUIEmailAdmin.getProperty("link_BulkDelete"));
+        linkLetterList = By.xpath(propUIEmailAdmin.getProperty("link_LetterList"));
     }
 
 

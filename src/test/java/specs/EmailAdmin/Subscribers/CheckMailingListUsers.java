@@ -15,12 +15,21 @@ import specs.AbstractSpec;
  */
 
 public class CheckMailingListUsers extends AbstractSpec {
-    private final By emailAdminMenuButton = By.xpath("//span[contains(text(),'Email Admin')]");
-    private final By subscribersMenuItem = By.xpath("//a[contains(text(),'Subscribers')]/parent::li");
+    private static By emailAdminMenuButton, subscribersMenuItem;
+    private static LoginPage loginPage;
+    private static Dashboard dashboard;
+    private static MailingListUsers mailingListUsers;
 
     @Before
     public void setUp() throws Exception {
-        new LoginPage(driver).loginUser();
+        emailAdminMenuButton = By.xpath(propUIEmailAdmin.getProperty("btnMenu_EmailAdmin"));
+        subscribersMenuItem = By.xpath(propUIEmailAdmin.getProperty("btnMenu_Subscribers"));
+
+        loginPage = new LoginPage(driver);
+        dashboard = new Dashboard(driver);
+        mailingListUsers = new MailingListUsers(driver);
+
+        loginPage.loginUser();
     }
 
     @Test
@@ -28,30 +37,30 @@ public class CheckMailingListUsers extends AbstractSpec {
         final String expectedTitle = "Mailing List Users";
         final Integer expectedQuantity = 15;
 
-        new Dashboard(driver).openPageFromMenu(emailAdminMenuButton, subscribersMenuItem);
+        dashboard.openPageFromMenu(emailAdminMenuButton, subscribersMenuItem);
 
-        Assert.assertNotNull(new MailingListUsers(driver).getUrl());
-        Assert.assertEquals("Actual Mailing List Users page Title doesn't match to expected", expectedTitle, new MailingListUsers(driver).getTitle());
+        Assert.assertNotNull(mailingListUsers.getUrl());
+        Assert.assertEquals("Actual Mailing List Users page Title doesn't match to expected", expectedTitle, mailingListUsers.getTitle());
 
         //System.out.println(new MailingListUsers(driver).getTitleQuantity().toString());
-        Assert.assertTrue("Actual Email Address Quantity is less than expected: "+expectedQuantity, expectedQuantity <= new MailingListUsers(driver).getTitleQuantity() );
-        Assert.assertNotNull("Mailing List Users Pagination doesn't exist", new MailingListUsers(driver).getMailingListUsersPagination() );
+        Assert.assertTrue("Actual Email Address Quantity is less than expected: "+expectedQuantity, expectedQuantity <= mailingListUsers.getTitleQuantity() );
+        Assert.assertNotNull("Mailing List Users Pagination doesn't exist", mailingListUsers.getMailingListUsersPagination() );
 
-        Assert.assertNotNull("Keyword field doesn't exist", new MailingListUsers(driver).getKeywordField() );
-        Assert.assertNotNull("All List selection doesn't exist", new MailingListUsers(driver).getAllListSelect() );
-        Assert.assertNotNull("All Categories selection doesn't exist", new MailingListUsers(driver).getAllCategoriesSelect() );
-        Assert.assertNotNull("Search button doesn't exist", new MailingListUsers(driver).getSearchButton() );
-        Assert.assertNotNull("Export List link doesn't exist", new MailingListUsers(driver).getExportListLink() );
-        Assert.assertNotNull("Send To List link doesn't exist", new MailingListUsers(driver).getSendToListLink() );
-        Assert.assertNotNull("Import List link doesn't exist", new MailingListUsers(driver).getImportListLink() );
-        Assert.assertNotNull("Bulk Delete link doesn't exist", new MailingListUsers(driver).getBulkDeleteLink() );
-        Assert.assertNotNull("Letter List links don't exist", new MailingListUsers(driver).getLetterListLink() );
+        Assert.assertNotNull("Keyword field doesn't exist", mailingListUsers.getKeywordField() );
+        Assert.assertNotNull("All List selection doesn't exist", mailingListUsers.getAllListSelect() );
+        Assert.assertNotNull("All Categories selection doesn't exist", mailingListUsers.getAllCategoriesSelect() );
+        Assert.assertNotNull("Search button doesn't exist", mailingListUsers.getSearchButton() );
+        Assert.assertNotNull("Export List link doesn't exist", mailingListUsers.getExportListLink() );
+        Assert.assertNotNull("Send To List link doesn't exist", mailingListUsers.getSendToListLink() );
+        Assert.assertNotNull("Import List link doesn't exist", mailingListUsers.getImportListLink() );
+        Assert.assertNotNull("Bulk Delete link doesn't exist", mailingListUsers.getBulkDeleteLink() );
+        Assert.assertNotNull("Letter List links don't exist", mailingListUsers.getLetterListLink() );
 
     }
 
     @After
     public void tearDown() {
-        new Dashboard(driver).logoutFromAdmin();
+        dashboard.logoutFromAdmin();
         //driver.quit();
     }
 

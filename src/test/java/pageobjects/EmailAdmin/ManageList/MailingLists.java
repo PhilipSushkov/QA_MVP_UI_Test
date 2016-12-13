@@ -8,21 +8,23 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
 import pageobjects.PageObject;
 
+import static specs.AbstractSpec.propUIEmailAdmin;
+
 /**
  * Created by philipsushkov on 2016-12-06.
  */
 
 public class MailingLists extends AbstractPageObject {
-
-    private final By moduleTitle = By.xpath("//span[contains(@class, 'AdminContent')]/h1/span[contains(@id,'ModuleTitle')]");
-    private final By grid = By.xpath("//table[contains(@id, 'MailingListsDataGrid')]");
-    private final By gridMailingLists = By.xpath("//td[contains(@class,'DataGridItemBorder')]");
-    private final By inputSearch = By.xpath("//input[contains(@id, 'txtSearch')]");
-    private final By buttonSearch = By.xpath("//input[contains(@id, 'btnSearch')]");
+    private static By moduleTitle, grid, gridMailingLists, inputSearch, buttonSearch;
     private final Integer columnsNumber = 5;
 
     public MailingLists(WebDriver driver) {
         super(driver);
+        moduleTitle = By.xpath(propUIEmailAdmin.getProperty("spanModule_Title"));
+        grid = By.xpath(propUIEmailAdmin.getProperty("table_GridManage"));
+        gridMailingLists = By.xpath(propUIEmailAdmin.getProperty("table_GridItem"));
+        inputSearch = By.xpath(propUIEmailAdmin.getProperty("input_Search"));
+        buttonSearch = By.xpath(propUIEmailAdmin.getProperty("button_Search"));
     }
 
 
