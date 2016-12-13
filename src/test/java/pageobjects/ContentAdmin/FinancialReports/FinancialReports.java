@@ -19,7 +19,7 @@ public class FinancialReports extends AbstractPageObject  {
 
     public FinancialReports(WebDriver driver) {
         super(driver);
-        moduleTitle = By.xpath(propUIContentAdmin.getProperty("span_Title"));
+        moduleTitle = By.xpath(propUIContentAdmin.getProperty("spanModule_Title"));
         grid = By.xpath(propUIContentAdmin.getProperty("table_GridFinancial"));
         gridFinancialReports = By.xpath(propUIContentAdmin.getProperty("table_GridItem"));
         dataGridPager = By.xpath(propUIContentAdmin.getProperty("pager_DataGrid"));

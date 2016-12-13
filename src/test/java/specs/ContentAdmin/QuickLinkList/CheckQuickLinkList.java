@@ -15,12 +15,21 @@ import specs.AbstractSpec;
  */
 
 public class CheckQuickLinkList extends AbstractSpec {
-    private final By contentAdminMenuButton = By.xpath("//span[contains(text(),'Content Admin')]");
-    private final By quickLinksMenuItem = By.xpath("//a[contains(text(),'Quick Links')]/parent::li");
+    private static By contentAdminMenuButton, quickLinksMenuItem;
+    private static LoginPage loginPage;
+    private static Dashboard dashboard;
+    private static QuickLinks quickLinks;
 
     @Before
     public void setUp() throws Exception {
-        new LoginPage(driver).loginUser();
+        contentAdminMenuButton = By.xpath(propUIContentAdmin.getProperty("btnMenu_ContentAdmin"));
+        quickLinksMenuItem = By.xpath(propUIContentAdmin.getProperty("btnMenu_QuickLinks"));
+
+        loginPage = new LoginPage(driver);
+        dashboard = new Dashboard(driver);
+        quickLinks = new QuickLinks(driver);
+
+        loginPage.loginUser();
     }
 
     @Test
@@ -28,21 +37,21 @@ public class CheckQuickLinkList extends AbstractSpec {
         final String expectedTitle = "Quick Link List";
         final Integer expectedQuantity = 4;
 
-        new Dashboard(driver).openPageFromMenu(contentAdminMenuButton, quickLinksMenuItem);
+        dashboard.openPageFromMenu(contentAdminMenuButton, quickLinksMenuItem);
 
-        Assert.assertNotNull(new QuickLinks(driver).getUrl());
-        Assert.assertEquals("Actual Quick Link List page Title doesn't match to expected", expectedTitle, new QuickLinks(driver).getTitle());
+        Assert.assertNotNull(quickLinks.getUrl());
+        Assert.assertEquals("Actual Quick Link List page Title doesn't match to expected", expectedTitle, quickLinks.getTitle());
 
         //System.out.println(new FinancialReports(driver).getTitleQuantity().toString());
-        Assert.assertTrue("Actual Quick Link Description Quantity is less than expected: "+expectedQuantity, expectedQuantity <= new QuickLinks(driver).getTitleQuantity() );
-        Assert.assertNotNull("Quick Link Pagination doesn't exist", new QuickLinks(driver).getQuickLinksPagination() );
-        Assert.assertNotNull("Filter By Tag field doesn't exist", new QuickLinks(driver).getFilterByTag() );
+        Assert.assertTrue("Actual Quick Link Description Quantity is less than expected: "+expectedQuantity, expectedQuantity <= quickLinks.getTitleQuantity() );
+        Assert.assertNotNull("Quick Link Pagination doesn't exist", quickLinks.getQuickLinksPagination() );
+        Assert.assertNotNull("Filter By Tag field doesn't exist", quickLinks.getFilterByTag() );
 
     }
 
     @After
     public void tearDown() {
-        new Dashboard(driver).logoutFromAdmin();
+        dashboard.logoutFromAdmin();
         //driver.quit();
     }
 

@@ -19,7 +19,7 @@ public class JobPostingList extends AbstractPageObject {
 
     public JobPostingList(WebDriver driver) {
         super(driver);
-        moduleTitle = By.xpath(propUIContentAdmin.getProperty("span_Title"));
+        moduleTitle = By.xpath(propUIContentAdmin.getProperty("spanModule_Title"));
         grid = By.xpath(propUIContentAdmin.getProperty("table_GridJobPosting"));
         gridJobPostingList = By.xpath(propUIContentAdmin.getProperty("table_GridItem"));
     }

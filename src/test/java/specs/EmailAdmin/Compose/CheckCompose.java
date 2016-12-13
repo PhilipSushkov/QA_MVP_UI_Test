@@ -16,38 +16,46 @@ import specs.AbstractSpec;
  */
 
 public class CheckCompose extends AbstractSpec {
-    private final By emailAdminMenuButton = By.xpath("//span[contains(text(),'Email Admin')]");
-    private final By composeMenuItem = By.xpath("//a[contains(text(),'Compose')]/parent::li");
+    private static By emailAdminMenuButton, composeMenuItem;
+    private static LoginPage loginPage;
+    private static Dashboard dashboard;
+    private static Compose compose;
 
     @Before
     public void setUp() throws Exception {
-        new LoginPage(driver).loginUser();
+        emailAdminMenuButton = By.xpath(propUIEmailAdmin.getProperty("btnMenu_EmailAdmin"));
+        composeMenuItem = By.xpath(propUIEmailAdmin.getProperty("btnMenu_Compose"));
+
+        loginPage = new LoginPage(driver);
+        dashboard = new Dashboard(driver);
+        compose = new Compose(driver);
+
+        loginPage.loginUser();
     }
 
     @Test
     public void checkCompose() throws Exception {
         final String expectedTitle = "Mailing List Messages Admin";
 
-        new Dashboard(driver).openPageFromMenu(emailAdminMenuButton, composeMenuItem);
+        dashboard.openPageFromMenu(emailAdminMenuButton, composeMenuItem);
 
-        Assert.assertNotNull(new Compose(driver).getUrl());
-        Assert.assertEquals("Actual Mailing List Messages Admin page Title doesn't match to expected", expectedTitle, new Compose(driver).getTitle());
+        Assert.assertNotNull(compose.getUrl());
+        Assert.assertEquals("Actual Mailing List Messages Admin page Title doesn't match to expected", expectedTitle, compose.getTitle());
 
-        //System.out.println(new DepartmentList(driver).getTitleQuantity().toString());
-        Assert.assertNotNull("Template drop down list doesn't exist", new Compose(driver).getTemplateList() );
-        Assert.assertNotNull("To drop down list doesn't exist", new Compose(driver).getToList() );
-        Assert.assertNotNull("From field doesn't exist", new Compose(driver).getFromField() );
-        Assert.assertNotNull("Subject field doesn't exist", new Compose(driver).getSubjectField() );
-        Assert.assertNotNull("Body textarea doesn't exist", new Compose(driver).getBodyTextArea() );
-        Assert.assertNotNull("Created By field doesn't exist", new Compose(driver).getCreatedByField() );
-        Assert.assertNotNull("Send Test Email button doesn't exist", new Compose(driver).getSendTestEmailButton() );
-        Assert.assertNotNull("Save button doesn't exist", new Compose(driver).getSaveButton() );
+        Assert.assertNotNull("Template drop down list doesn't exist", compose.getTemplateList() );
+        Assert.assertNotNull("To drop down list doesn't exist", compose.getToList() );
+        Assert.assertNotNull("From field doesn't exist", compose.getFromField() );
+        Assert.assertNotNull("Subject field doesn't exist", compose.getSubjectField() );
+        Assert.assertNotNull("Body textarea doesn't exist", compose.getBodyTextArea() );
+        Assert.assertNotNull("Created By field doesn't exist", compose.getCreatedByField() );
+        Assert.assertNotNull("Send Test Email button doesn't exist", compose.getSendTestEmailButton() );
+        Assert.assertNotNull("Save button doesn't exist", compose.getSaveButton() );
 
     }
 
     @After
     public void tearDown() {
-        new Dashboard(driver).logoutFromAdmin();
+        dashboard.logoutFromAdmin();
         //driver.quit();
     }
 

@@ -8,24 +8,26 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
 import pageobjects.PageObject;
 
+import static specs.AbstractSpec.propUIEmailAdmin;
+
 /**
  * Created by philipsushkov on 2016-12-05.
  */
 
 public class Compose extends AbstractPageObject {
-
-    private final By moduleTitle = By.xpath("//span[contains(@class, 'AdminContent')]/h1/span[contains(@id,'ModuleTitle')]");
-    private final By selectTemplate = By.xpath("//select[contains(@id, 'ddlTemplate')]");
-    private final By selectTo = By.xpath("//select[contains(@id, 'ddlMailingLists')]");
-    private final By inputFrom = By.xpath("//input[contains(@id, 'txtFrom')]");
-    private final By inputSubject = By.xpath("//input[contains(@id, 'txtSubject')]");
-    private final By textareaBodyText = By.xpath("//iframe[contains(@id, 'radBody_contentIframe')]");
-    private final By inputCreatedBy = By.xpath("//input[contains(@id, 'txtCreatedBy')]");
-    private final By buttonSendTestEmail = By.xpath("//input[contains(@id, 'btnSendTestEmail')]");
-    private final By buttonSave = By.xpath("//input[contains(@id, 'btnSave')]");
+    private static By moduleTitle, selectTemplate, selectTo, inputFrom, inputSubject, textareaBodyText, inputCreatedBy, buttonSendTestEmail, buttonSave;
 
     public Compose(WebDriver driver) {
         super(driver);
+        moduleTitle = By.xpath(propUIEmailAdmin.getProperty("spanModule_Title"));
+        selectTemplate = By.xpath(propUIEmailAdmin.getProperty("select_Template"));
+        selectTo = By.xpath(propUIEmailAdmin.getProperty("select_To"));
+        inputFrom = By.xpath(propUIEmailAdmin.getProperty("input_From"));
+        inputSubject = By.xpath(propUIEmailAdmin.getProperty("input_Subject"));
+        textareaBodyText = By.xpath(propUIEmailAdmin.getProperty("textarea_BodyText"));
+        inputCreatedBy = By.xpath(propUIEmailAdmin.getProperty("input_CreatedBy"));
+        buttonSendTestEmail = By.xpath(propUIEmailAdmin.getProperty("button_SendTestEmail"));
+        buttonSave = By.xpath(propUIEmailAdmin.getProperty("button_Save"));
     }
 
 
