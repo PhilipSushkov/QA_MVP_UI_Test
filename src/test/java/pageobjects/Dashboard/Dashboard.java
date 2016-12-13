@@ -5,7 +5,6 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
-import pageobjects.LoginPage.LoginPage;
 import pageobjects.ContentAdmin.PressReleases.EditPressRelease;
 import pageobjects.ContentAdmin.PressReleases.PressReleases;
 import pageobjects.ContentAdmin.Presentations.EditPresentation;
@@ -14,7 +13,6 @@ import pageobjects.ContentAdmin.Events.EditEvent;
 import pageobjects.ContentAdmin.Events.Events;
 import pageobjects.PreviewSite.PreviewSiteHome;
 import pageobjects.SocialMedia.SocialMediaSummary;
-import specs.AbstractSpec;
 
 import java.util.ArrayList;
 
@@ -34,7 +32,7 @@ public class Dashboard extends AbstractPageObject {
     private final By previewSiteButton = By.linkText("PREVIEW SITE");
     private final By invalidateCacheButton = By.xpath("//a[contains(@id,'hrefInvalidateCache')]");
     private final By invalidateCacheMessage = By.className("MessageContainer");
-    private final By logoutMenuItem = By.xpath("//li/a[contains(text(),'Logout')]");
+    //private final By logoutMenuItem = By.xpath("//li/a[contains(text(),'Logout')]");
 
     private final By selectAnActionDropdown = By.className("user-manage-ddl");
     private final By changePasswordButton = By.className("StartChangePassword");

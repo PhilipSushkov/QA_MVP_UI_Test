@@ -5,19 +5,21 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
 
+import static specs.AbstractSpec.propUIContentAdmin;
+
 /**
  * Created by philipsushkov on 2016-11-23.
  */
 
 public class PressReleaseCategories extends AbstractPageObject {
-
-    private final By moduleTitle = By.xpath("//span[contains(@class, 'AdminContent')]/h1/span[contains(@id,'ModuleTitle')]");
-    private final By grid = By.xpath("//table[contains(@id, 'tblPressReleases')]");
-    private final By gridCategoryName = By.xpath("//td[contains(@class,'DataGridItemBorder')]");
+    private static By moduleTitle, grid, gridCategoryName;
     private final Integer columnsNumber = 7;
 
     public PressReleaseCategories(WebDriver driver) {
         super(driver);
+        moduleTitle = By.xpath(propUIContentAdmin.getProperty("span_Title"));
+        grid = By.xpath(propUIContentAdmin.getProperty("table_GridPressReleaseCategories"));
+        gridCategoryName = By.xpath(propUIContentAdmin.getProperty("table_GridItem"));
     }
 
 

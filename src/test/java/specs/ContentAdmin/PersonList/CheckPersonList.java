@@ -15,12 +15,21 @@ import specs.AbstractSpec;
  */
 
 public class CheckPersonList extends AbstractSpec {
-    private final By contentAdminMenuButton = By.xpath("//span[contains(text(),'Content Admin')]");
-    private final By personListMenuItem = By.xpath("//a[contains(text(),'Person List')]/parent::li");
+    private static By contentAdminMenuButton, personListMenuItem;
+    private static LoginPage loginPage;
+    private static Dashboard dashboard;
+    private static PersonList personList;
 
     @Before
     public void setUp() throws Exception {
-        new LoginPage(driver).loginUser();
+        contentAdminMenuButton = By.xpath(propUIContentAdmin.getProperty("btnMenu_ContentAdmin"));
+        personListMenuItem = By.xpath(propUIContentAdmin.getProperty("btnMenu_PersonList"));
+
+        loginPage = new LoginPage(driver);
+        dashboard = new Dashboard(driver);
+        personList = new PersonList(driver);
+
+        loginPage.loginUser();
     }
 
     @Test
@@ -28,21 +37,21 @@ public class CheckPersonList extends AbstractSpec {
         final String expectedTitle = "Person List";
         final Integer expectedQuantity = 1;
 
-        new Dashboard(driver).openPageFromMenu(contentAdminMenuButton, personListMenuItem);
+        dashboard.openPageFromMenu(contentAdminMenuButton, personListMenuItem);
 
-        Assert.assertNotNull(new PersonList(driver).getUrl());
-        Assert.assertEquals("Actual Person List page Title doesn't match to expected", expectedTitle, new PersonList(driver).getTitle());
+        Assert.assertNotNull(personList.getUrl());
+        Assert.assertEquals("Actual Person List page Title doesn't match to expected", expectedTitle, personList.getTitle());
 
         //System.out.println(new PersonList(driver).getTitleQuantity().toString());
-        Assert.assertTrue("Actual Person List Name Quantity is less than expected: "+expectedQuantity, expectedQuantity <= new PersonList(driver).getTitleQuantity() );
+        Assert.assertTrue("Actual Person List Name Quantity is less than expected: "+expectedQuantity, expectedQuantity <= personList.getTitleQuantity() );
         //Assert.assertNotNull("Person List Pagination doesn't exist", new PersonList(driver).getQuickLinksPagination() );
-        Assert.assertNotNull("Department drop down list doesn't exist", new PersonList(driver).getDepartmentList() );
+        Assert.assertNotNull("Department drop down list doesn't exist", personList.getDepartmentList() );
 
     }
 
     @After
     public void tearDown() {
-        new Dashboard(driver).logoutFromAdmin();
+        dashboard.logoutFromAdmin();
         //driver.quit();
     }
 

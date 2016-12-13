@@ -16,12 +16,21 @@ import specs.AbstractSpec;
  */
 
 public class CheckJobPostingList extends AbstractSpec {
-    private final By contentAdminMenuButton = By.xpath("//span[contains(text(),'Content Admin')]");
-    private final By jobPostingMenuItem = By.xpath("//a[contains(text(),'Job Posting List')]/parent::li");
+    private static By contentAdminMenuButton, jobPostingMenuItem;
+    private static LoginPage loginPage;
+    private static Dashboard dashboard;
+    private static JobPostingList jobPostingList;
 
     @Before
     public void setUp() throws Exception {
-        new LoginPage(driver).loginUser();
+        contentAdminMenuButton = By.xpath(propUIContentAdmin.getProperty("btnMenu_ContentAdmin"));
+        jobPostingMenuItem = By.xpath(propUIContentAdmin.getProperty("btnMenu_JobPosting"));
+
+        loginPage = new LoginPage(driver);
+        dashboard = new Dashboard(driver);
+        jobPostingList = new JobPostingList(driver);
+
+        loginPage.loginUser();
     }
 
     @Test
@@ -29,19 +38,19 @@ public class CheckJobPostingList extends AbstractSpec {
         final String expectedTitle = "Job Posting List";
         final Integer expectedQuantity = 3;
 
-        new Dashboard(driver).openPageFromMenu(contentAdminMenuButton, jobPostingMenuItem);
+        dashboard.openPageFromMenu(contentAdminMenuButton, jobPostingMenuItem);
 
-        Assert.assertNotNull(new JobPostingList(driver).getUrl());
-        Assert.assertEquals("Actual Job Posting List page Title doesn't match to expected", expectedTitle, new JobPostingList(driver).getTitle());
+        Assert.assertNotNull(jobPostingList.getUrl());
+        Assert.assertEquals("Actual Job Posting List page Title doesn't match to expected", expectedTitle, jobPostingList.getTitle());
 
         //System.out.println(new JobPostingList(driver).getTitleQuantity().toString());
-        Assert.assertTrue("Actual Job Posting Title Quantity is less than expected: "+expectedQuantity, expectedQuantity <= new JobPostingList(driver).getTitleQuantity() );
+        Assert.assertTrue("Actual Job Posting Title Quantity is less than expected: "+expectedQuantity, expectedQuantity <= jobPostingList.getTitleQuantity() );
 
     }
 
     @After
     public void tearDown() {
-        new Dashboard(driver).logoutFromAdmin();
+        dashboard.logoutFromAdmin();
         //driver.quit();
     }
 

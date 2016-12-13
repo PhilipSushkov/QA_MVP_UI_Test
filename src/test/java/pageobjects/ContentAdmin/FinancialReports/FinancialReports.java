@@ -7,20 +7,23 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
 
+import static specs.AbstractSpec.propUIContentAdmin;
+
 /**
  * Created by philipsushkov on 2016-11-23.
  */
 
 public class FinancialReports extends AbstractPageObject  {
-    private final By moduleTitle = By.xpath("//span[contains(@class, 'AdminContent')]/h1/span[contains(@id,'ModuleTitle')]");
-    private final By grid = By.xpath("//table[contains(@id, 'AnnualQuarterlyReports_dataGrid')]");
-    private final By gridFinancialReports = By.xpath("//td[contains(@class,'DataGridItemBorder')]");
-    private final By dataGridPager = By.xpath("//tr[contains(@class, 'DataGridPager')]");
-    private final By inputFilterByTag = By.xpath("//input[contains(@id, 'TagSelection_txtTags')]");
+    private static By moduleTitle, grid, gridFinancialReports, dataGridPager, inputFilterByTag;
     private final Integer columnsNumber = 8;
 
     public FinancialReports(WebDriver driver) {
         super(driver);
+        moduleTitle = By.xpath(propUIContentAdmin.getProperty("span_Title"));
+        grid = By.xpath(propUIContentAdmin.getProperty("table_GridFinancial"));
+        gridFinancialReports = By.xpath(propUIContentAdmin.getProperty("table_GridItem"));
+        dataGridPager = By.xpath(propUIContentAdmin.getProperty("pager_DataGrid"));
+        inputFilterByTag = By.xpath(propUIContentAdmin.getProperty("input_FilterByTag"));
     }
 
 

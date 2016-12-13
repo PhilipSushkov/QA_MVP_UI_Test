@@ -7,19 +7,21 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
 
+import static specs.AbstractSpec.propUIContentAdmin;
+
 /**
  * Created by philipsushkov on 2016-12-05.
  */
 
 public class JobPostingList extends AbstractPageObject {
-
-    private final By moduleTitle = By.xpath("//span[contains(@class, 'AdminContent')]/h1/span[contains(@id,'ModuleTitle')]");
-    private final By grid = By.xpath("//table[contains(@id, 'JobPostings_dataGrid')]");
-    private final By gridJobPostingList = By.xpath("//td[contains(@class,'DataGridItemBorder')]");
+    private static By moduleTitle, grid, gridJobPostingList;
     private final Integer columnsNumber = 7;
 
     public JobPostingList(WebDriver driver) {
         super(driver);
+        moduleTitle = By.xpath(propUIContentAdmin.getProperty("span_Title"));
+        grid = By.xpath(propUIContentAdmin.getProperty("table_GridJobPosting"));
+        gridJobPostingList = By.xpath(propUIContentAdmin.getProperty("table_GridItem"));
     }
 
 

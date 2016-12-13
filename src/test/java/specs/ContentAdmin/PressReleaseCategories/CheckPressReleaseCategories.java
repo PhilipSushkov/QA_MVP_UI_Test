@@ -15,12 +15,21 @@ import specs.AbstractSpec;
  */
 
 public class CheckPressReleaseCategories extends AbstractSpec {
-    private final By contentAdminMenuButton = By.xpath("//span[contains(text(),'Content Admin')]");
-    private final By pressReleaseCategoriesMenuItem = By.xpath("//a[contains(text(),'Press Release Categories')]/parent::li");
+    private static By contentAdminMenuButton, pressReleaseCategoriesMenuItem;
+    private static LoginPage loginPage;
+    private static Dashboard dashboard;
+    private static PressReleaseCategories pressReleaseCategories;
 
     @Before
     public void setUp() throws Exception {
-        new LoginPage(driver).loginUser();
+        contentAdminMenuButton = By.xpath(propUIContentAdmin.getProperty("btnMenu_ContentAdmin"));
+        pressReleaseCategoriesMenuItem = By.xpath(propUIContentAdmin.getProperty("btnMenu_PressReleaseCategories"));
+
+        loginPage = new LoginPage(driver);
+        dashboard = new Dashboard(driver);
+        pressReleaseCategories = new PressReleaseCategories(driver);
+
+        loginPage.loginUser();
     }
 
     @Test
@@ -28,19 +37,19 @@ public class CheckPressReleaseCategories extends AbstractSpec {
         final String expectedTitle = "Press Release Categories";
         final Integer expectedQuantity = 1;
 
-        new Dashboard(driver).openPageFromMenu(contentAdminMenuButton, pressReleaseCategoriesMenuItem);
+        dashboard.openPageFromMenu(contentAdminMenuButton, pressReleaseCategoriesMenuItem);
 
-        Assert.assertNotNull(new PressReleaseCategories(driver).getUrl());
-        Assert.assertEquals("Actual Press Release Categories page Title doesn't match to expected", expectedTitle, new PressReleaseCategories(driver).getTitle());
+        Assert.assertNotNull(pressReleaseCategories.getUrl());
+        Assert.assertEquals("Actual Press Release Categories page Title doesn't match to expected", expectedTitle, pressReleaseCategories.getTitle());
 
         //System.out.println(new PressReleaseCategories(driver).getCategoryNameQuantity().toString());
-        Assert.assertTrue("Actual Category Name Quantity is less than expected: "+expectedQuantity, expectedQuantity <= new PressReleaseCategories(driver).getCategoryNameQuantity() );
+        Assert.assertTrue("Actual Category Name Quantity is less than expected: "+expectedQuantity, expectedQuantity <= pressReleaseCategories.getCategoryNameQuantity() );
 
     }
 
     @After
     public void tearDown() {
-        new Dashboard(driver).logoutFromAdmin();
+        dashboard.logoutFromAdmin();
         //driver.quit();
     }
 
