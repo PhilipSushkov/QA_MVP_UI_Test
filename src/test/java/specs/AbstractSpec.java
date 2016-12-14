@@ -122,11 +122,13 @@ public abstract class AbstractSpec extends util.Functions {
 
     private void setupChromeLocalDriver() {
 
+        /*
         driver = new ChromeDriver();
         driver.manage().timeouts().implicitlyWait(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
         driver.manage().timeouts().pageLoadTimeout(20, TimeUnit.SECONDS); //Increased to 20 to perhaps reduce timeouts?
         driver.manage().window().setSize(new Dimension(1400, 1400));
         driver.get(desktopUrl.toString());
+        */
 
         /*
         driver = LocalDriverFactory.createInstance();
@@ -134,6 +136,10 @@ public abstract class AbstractSpec extends util.Functions {
         System.out.println("Thread id = " + Thread.currentThread().getId());
         System.out.println("Hashcode of webDriver instance = " + LocalDriverManager.getDriver().hashCode());
         */
+
+        System.out.println("Thread id = " + Thread.currentThread().getId());
+        System.out.println("Hashcode of webDriver instance = " + LocalDriverManager.getDriver().hashCode());
+        driver = LocalDriverManager.getDriver();
 
     }
 

@@ -1,9 +1,10 @@
 package specs.SystemAdmin.PDFTemplateEdit;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.After;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+import org.testng.Assert;
+
 import org.openqa.selenium.By;
 import specs.AbstractSpec;
 import pageobjects.LoginPage.LoginPage;
@@ -20,7 +21,7 @@ public class CheckPDFTemplateEdit extends AbstractSpec {
     private static Dashboard dashboard;
     private static PDFTemplateEdit pdfTemplateEdit;
 
-    @Before
+    @BeforeTest
     public void setUp() throws Exception {
         systemAdminMenuButton = By.xpath(propUISystemAdmin.getProperty("btnMenu_SystemAdmin"));
         pdfTemplateEditMenuItem = By.xpath(propUISystemAdmin.getProperty("itemMenu_PDFTemplateEdit"));
@@ -40,16 +41,16 @@ public class CheckPDFTemplateEdit extends AbstractSpec {
 
         Assert.assertNotNull(pdfTemplateEdit.getUrl());
 
-        Assert.assertEquals("Actual PDF Template Edit page Title doesn't match to expected", expectedTitle, pdfTemplateEdit.getTitle());
+        Assert.assertEquals(pdfTemplateEdit.getTitle(), expectedTitle, "Actual PDF Template Edit page Title doesn't match to expected");
 
         //System.out.println(new PDFTemplateEdit(driver).getHeaderRadEditor().getSize().toString() );
-        Assert.assertNotNull("Header Rad Editor doesn't exist", pdfTemplateEdit.getHeaderRadEditor() );
-        Assert.assertNotNull("Body Rad Editor doesn't exist", pdfTemplateEdit.getBodyRadEditor() );
-        Assert.assertNotNull("Footer Rad Editor doesn't exist", pdfTemplateEdit.getFooterRadEditor() );
+        Assert.assertNotNull(pdfTemplateEdit.getHeaderRadEditor(), "Header Rad Editor doesn't exist");
+        Assert.assertNotNull(pdfTemplateEdit.getBodyRadEditor(), "Body Rad Editor doesn't exist");
+        Assert.assertNotNull(pdfTemplateEdit.getFooterRadEditor(), "Footer Rad Editor doesn't exist");
 
     }
 
-    @After
+    @AfterTest
     public void tearDown() {
         dashboard.logoutFromAdmin();
         //driver.quit();

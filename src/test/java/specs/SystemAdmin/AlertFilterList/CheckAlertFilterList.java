@@ -1,12 +1,5 @@
 package specs.SystemAdmin.AlertFilterList;
 
-/*
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.After;
-*/
-
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
