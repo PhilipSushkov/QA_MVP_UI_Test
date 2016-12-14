@@ -1,10 +1,18 @@
 package specs;
 
 import org.apache.commons.lang.RandomStringUtils;
+/*
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TestName;
+*/
+
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+import org.testng.Assert;
+
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
@@ -54,10 +62,12 @@ public abstract class AbstractSpec extends util.Functions {
     private static final String PATHTO_EMAILADMIN_PROP = "EmailAdmin/EmailAdminMap.properties";
     public static Properties propUIEmailAdmin;
 
+    /*
     @Rule
     public TestName testName = new TestName();
+    */
 
-    @Before
+    @BeforeTest
     public void init() throws Exception {
         if (!setupIsDone) {
             setupEnvironment();
@@ -86,7 +96,7 @@ public abstract class AbstractSpec extends util.Functions {
                 setupChromeLocalDriver();
                 break;
             case PRODUCTION:
-                setupWebDriver();
+                //setupWebDriver();
                 break;
         }
 
@@ -135,6 +145,7 @@ public abstract class AbstractSpec extends util.Functions {
 
     }
 
+    /*
     private void setupWebDriver() throws Exception {
         String testMethodName = testName.getMethodName();
 
@@ -155,8 +166,9 @@ public abstract class AbstractSpec extends util.Functions {
         driver.get(desktopUrl.toString());
 
     }
+    */
 
-    @After
+    @AfterTest
     public void teardownWebDriver() throws Exception {
 
         /*
