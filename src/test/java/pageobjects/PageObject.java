@@ -17,6 +17,7 @@ public interface PageObject {
 
     final class ElementNotFoundException extends RuntimeException {
         private ElementNotFoundException(String message, Throwable cause) {
+
             super(message, cause);
         }
     }
