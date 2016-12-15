@@ -90,6 +90,7 @@ public class Dashboard extends AbstractPageObject {
     }
 
     public void openPageFromMenu(By menuButton, By menuItem) throws Exception {
+        wait.until(ExpectedConditions.visibilityOf(findElement(menuButton)));
 
         for (int i=0; i<ATTEMPTS; i++) {
             try {

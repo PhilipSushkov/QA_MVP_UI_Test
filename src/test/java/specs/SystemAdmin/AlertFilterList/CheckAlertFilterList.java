@@ -48,6 +48,20 @@ public class CheckAlertFilterList extends AbstractSpec {
         Assert.assertTrue(expectedQuantity <= alertFilterList.getFilterNameQuantity(), "Actual Filter Name Quantity is less than expected: "+expectedQuantity);
     }
 
+    @Test
+    public void checkAlertFilterList2() throws Exception {
+        final String expectedTitle = "Alert Filter List";
+        final Integer expectedQuantity = 4;
+
+        dashboard.openPageFromMenu(systemAdminMenuButton, alertFilterListMenuItem);
+
+        Assert.assertNotNull(alertFilterList.getUrl());
+        Assert.assertEquals(alertFilterList.getTitle(), expectedTitle, "Actual Alert Filter List page Title doesn't match to expected");
+
+        //System.out.println(new AlertFilterList(driver).getFilterNameQuantity().toString());
+        Assert.assertTrue(expectedQuantity <= alertFilterList.getFilterNameQuantity(), "Actual Filter Name Quantity is less than expected: "+expectedQuantity);
+    }
+
     @AfterTest
     public void tearDown() {
         dashboard.logoutFromAdmin();

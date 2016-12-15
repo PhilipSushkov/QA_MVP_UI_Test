@@ -50,6 +50,23 @@ public class CheckPDFTemplateEdit extends AbstractSpec {
 
     }
 
+    @Test
+    public void checkPDFTemplateEdit2() throws Exception {
+        final String expectedTitle = "PDF Template Edit";
+
+        dashboard.openPageFromMenu(systemAdminMenuButton, pdfTemplateEditMenuItem);
+
+        Assert.assertNotNull(pdfTemplateEdit.getUrl());
+
+        Assert.assertEquals(pdfTemplateEdit.getTitle(), expectedTitle, "Actual PDF Template Edit page Title doesn't match to expected");
+
+        //System.out.println(new PDFTemplateEdit(driver).getHeaderRadEditor().getSize().toString() );
+        Assert.assertNotNull(pdfTemplateEdit.getHeaderRadEditor(), "Header Rad Editor doesn't exist");
+        Assert.assertNotNull(pdfTemplateEdit.getBodyRadEditor(), "Body Rad Editor doesn't exist");
+        Assert.assertNotNull(pdfTemplateEdit.getFooterRadEditor(), "Footer Rad Editor doesn't exist");
+
+    }
+
     @AfterTest
     public void tearDown() {
         dashboard.logoutFromAdmin();

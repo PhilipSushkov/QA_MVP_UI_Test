@@ -1,13 +1,6 @@
 package specs;
 
 import org.apache.commons.lang.RandomStringUtils;
-/*
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.rules.TestName;
-*/
-
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -48,7 +41,7 @@ public abstract class AbstractSpec extends util.Functions {
 
     public static URL desktopUrl;
     public static BrowserStackCapability browser;
-    protected static WebDriver driver;
+    protected WebDriver driver;
     private static boolean setupIsDone = false;
     private static final Logger LOG = Logger.getLogger(AbstractSpec.class.getName());
     public static String sessionID = null;
@@ -122,24 +115,21 @@ public abstract class AbstractSpec extends util.Functions {
 
     private void setupChromeLocalDriver() {
 
-        /*
+
         driver = new ChromeDriver();
         driver.manage().timeouts().implicitlyWait(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
         driver.manage().timeouts().pageLoadTimeout(20, TimeUnit.SECONDS); //Increased to 20 to perhaps reduce timeouts?
         driver.manage().window().setSize(new Dimension(1400, 1400));
         driver.get(desktopUrl.toString());
-        */
+
 
         /*
         driver = LocalDriverFactory.createInstance();
         LocalDriverManager.setWebDriver(driver);
         System.out.println("Thread id = " + Thread.currentThread().getId());
         System.out.println("Hashcode of webDriver instance = " + LocalDriverManager.getDriver().hashCode());
+        LocalDriverManager.getDriver().get(desktopUrl.toString());
         */
-
-        System.out.println("Thread id = " + Thread.currentThread().getId());
-        System.out.println("Hashcode of webDriver instance = " + LocalDriverManager.getDriver().hashCode());
-        driver = LocalDriverManager.getDriver();
 
     }
 

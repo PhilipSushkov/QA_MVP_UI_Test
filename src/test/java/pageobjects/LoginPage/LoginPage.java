@@ -1,6 +1,7 @@
 package pageobjects.LoginPage;
 
 import org.openqa.selenium.*;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.Page;
 import specs.AbstractSpec;
@@ -28,6 +29,19 @@ public class LoginPage extends Page {
 
         waitForElementToAppear(emailField);
 
+        findElement(emailField).sendKeys("philips");
+        findElement(passwordField).sendKeys("qwerty@01");
+
+        pause(1000L);
+        retryClick(loginButton);
+        pause(2000);
+
+        waitForElement(logoutMenuItem);
+
+        new Dashboard(driver).getUrl();
+
+        return new Dashboard(getDriver());
+
         /*
         if (AbstractSpec.getSessionID() != null) {
             System.out.println(AbstractSpec.getSessionID());
@@ -42,15 +56,6 @@ public class LoginPage extends Page {
             new Dashboard(driver).getURL();
         }
         */
-
-        findElement(emailField).sendKeys("admintest");
-        findElement(passwordField).sendKeys("qwerty@01");
-
-        pause(1000L);
-        retryClick(loginButton);
-        new Dashboard(driver).getUrl();
-
-        return new Dashboard(getDriver());
 
         //JavascriptExecutor js = (JavascriptExecutor) driver;
         //WebElement elemSrc =  driver.findElement(passwordField);

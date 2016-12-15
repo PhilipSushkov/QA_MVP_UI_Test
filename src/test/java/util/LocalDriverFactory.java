@@ -14,8 +14,8 @@ import specs.AbstractSpec;
 public class LocalDriverFactory {
     public static WebDriver createInstance() {
         WebDriver driver = null;
-        driver = new FirefoxDriver();
-        return driver;
+        //driver = new ChromeDriver();
+        //return driver;
 
         /*
         if (AbstractSpec.browser.getBrowserType() != null) {
@@ -23,7 +23,7 @@ public class LocalDriverFactory {
         }
         */
 
-        /*
+
         if (AbstractSpec.browser.getBrowserType() == BrowserType.FIREFOX) {
             driver = new FirefoxDriver();
             return driver;
@@ -43,7 +43,7 @@ public class LocalDriverFactory {
             driver = new FirefoxDriver();
             return driver;
         }
-        */
+
 
     }
 
