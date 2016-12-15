@@ -1,9 +1,10 @@
 package specs.SiteAdmin.IndexContent;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+import org.testng.Assert;
+
 import org.openqa.selenium.By;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.LoginPage.LoginPage;
@@ -20,7 +21,7 @@ public class CheckIndexContent extends AbstractSpec {
     private static Dashboard dashboard;
     private static IndexContent indexContent;
 
-    @Before
+    @BeforeTest
     public void setUp() throws Exception {
         siteAdminMenuButton = By.xpath(propUISiteAdmin.getProperty("btnMenu_SiteAdmin"));
         indexContentMenuItem = By.xpath(propUISiteAdmin.getProperty("itemMenu_IndexContent"));
@@ -40,15 +41,15 @@ public class CheckIndexContent extends AbstractSpec {
         dashboard.openPageFromMenu(siteAdminMenuButton, indexContentMenuItem);
 
         Assert.assertNotNull(indexContent.getUrl());
-        Assert.assertEquals("Actual Index Content page Title doesn't match to expected", expectedTitle, indexContent.getTitle());
+        Assert.assertEquals(indexContent.getTitle(), expectedTitle, "Actual Index Content page Title doesn't match to expected");
 
         //System.out.println(new IndexContent(driver).getIndexContentQuantity().toString());
-        Assert.assertTrue("Actual Index Quantity is less than expected: "+expectedQuantity, expectedQuantity == indexContent.getIndexContentQuantity() );
-        Assert.assertNotNull("Index Content Pagination doesn't exist", indexContent.getIndexContentPagination() );
+        Assert.assertTrue(expectedQuantity == indexContent.getIndexContentQuantity(), "Actual Index Quantity is less than expected: "+expectedQuantity);
+        Assert.assertNotNull(indexContent.getIndexContentPagination(), "Index Content Pagination doesn't exist");
 
     }
 
-    @After
+    @AfterTest
     public void tearDown() {
         dashboard.logoutFromAdmin();
         //driver.quit();

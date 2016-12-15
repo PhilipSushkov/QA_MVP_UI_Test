@@ -1,7 +1,6 @@
 package pageobjects.LoginPage;
 
 import org.openqa.selenium.*;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.Page;
 import specs.AbstractSpec;

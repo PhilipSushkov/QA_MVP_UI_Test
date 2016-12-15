@@ -47,20 +47,6 @@ public class CheckGenericStorageList extends AbstractSpec {
         Assert.assertTrue(expectedSize == genericStorageList.getStorageHeaderSize(), "Actual Storage Header Size is less than expected: "+expectedSize+" or doesn't exist");
     }
 
-    @Test
-    public void checkGenericStorageList2() throws Exception {
-        final String expectedTitle = "Generic Storage List";
-        final Integer expectedSize = 1;
-
-        dashboard.openPageFromMenu(systemAdminMenuButton, genericStorageListMenuItem);
-
-        Assert.assertNotNull(genericStorageList.getUrl());
-        Assert.assertEquals(genericStorageList.getTitle(), expectedTitle, "Actual Generic Storage List page Title doesn't match to expected");
-
-        //System.out.println(new GenericStorageList(driver).getStorageHeaderSize().toString());
-        Assert.assertTrue(expectedSize == genericStorageList.getStorageHeaderSize(), "Actual Storage Header Size is less than expected: "+expectedSize+" or doesn't exist");
-    }
-
     @AfterTest
     public void tearDown() {
         dashboard.logoutFromAdmin();

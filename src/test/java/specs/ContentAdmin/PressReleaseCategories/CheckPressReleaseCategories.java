@@ -1,9 +1,10 @@
 package specs.ContentAdmin.PressReleaseCategories;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+import org.testng.Assert;
+
 import org.openqa.selenium.By;
 import pageobjects.ContentAdmin.PressReleaseCategories.PressReleaseCategories;
 import pageobjects.Dashboard.Dashboard;
@@ -20,7 +21,7 @@ public class CheckPressReleaseCategories extends AbstractSpec {
     private static Dashboard dashboard;
     private static PressReleaseCategories pressReleaseCategories;
 
-    @Before
+    @BeforeTest
     public void setUp() throws Exception {
         contentAdminMenuButton = By.xpath(propUIContentAdmin.getProperty("btnMenu_ContentAdmin"));
         pressReleaseCategoriesMenuItem = By.xpath(propUIContentAdmin.getProperty("btnMenu_PressReleaseCategories"));
@@ -40,14 +41,14 @@ public class CheckPressReleaseCategories extends AbstractSpec {
         dashboard.openPageFromMenu(contentAdminMenuButton, pressReleaseCategoriesMenuItem);
 
         Assert.assertNotNull(pressReleaseCategories.getUrl());
-        Assert.assertEquals("Actual Press Release Categories page Title doesn't match to expected", expectedTitle, pressReleaseCategories.getTitle());
+        Assert.assertEquals(pressReleaseCategories.getTitle(), expectedTitle, "Actual Press Release Categories page Title doesn't match to expected");
 
         //System.out.println(new PressReleaseCategories(driver).getCategoryNameQuantity().toString());
-        Assert.assertTrue("Actual Category Name Quantity is less than expected: "+expectedQuantity, expectedQuantity <= pressReleaseCategories.getCategoryNameQuantity() );
+        Assert.assertTrue(expectedQuantity <= pressReleaseCategories.getCategoryNameQuantity(), "Actual Category Name Quantity is less than expected: "+expectedQuantity);
 
     }
 
-    @After
+    @AfterTest
     public void tearDown() {
         dashboard.logoutFromAdmin();
         //driver.quit();

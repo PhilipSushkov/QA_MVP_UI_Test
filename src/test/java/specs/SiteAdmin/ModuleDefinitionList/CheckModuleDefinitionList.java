@@ -1,9 +1,10 @@
 package specs.SiteAdmin.ModuleDefinitionList;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.After;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+import org.testng.Assert;
+
 import org.openqa.selenium.By;
 import pageobjects.SiteAdmin.ModuleDefinitionList.ModuleDefinitionList;
 import specs.AbstractSpec;
@@ -20,7 +21,7 @@ public class CheckModuleDefinitionList extends AbstractSpec {
     private static Dashboard dashboard;
     private static ModuleDefinitionList moduleDefinitionList;
 
-    @Before
+    @BeforeTest
     public void setUp() throws Exception {
         siteAdminMenuButton = By.xpath(propUISiteAdmin.getProperty("btnMenu_SiteAdmin"));
         moduleDefinitionListMenuItem = By.xpath(propUISiteAdmin.getProperty("itemMenu_ModuleDefinitionList"));
@@ -41,15 +42,15 @@ public class CheckModuleDefinitionList extends AbstractSpec {
         dashboard.openPageFromMenu(siteAdminMenuButton, moduleDefinitionListMenuItem);
 
         Assert.assertNotNull(moduleDefinitionList.getUrl());
-        Assert.assertEquals("Actual Module Definition List page Title doesn't match to expected", expectedTitle, moduleDefinitionList.getTitle());
+        Assert.assertEquals(moduleDefinitionList.getTitle(), expectedTitle, "Actual Module Definition List page Title doesn't match to expected");
 
         //System.out.println(new ModuleDefinitionList(driver).getModuleDefinitionQuantity().toString());
-        Assert.assertTrue("Actual Module Definition Name Quantity is less than expected: "+expectedQuantity, expectedQuantity <= moduleDefinitionList.getModuleDefinitionQuantity() );
-        Assert.assertNotNull("Module Definition pagination doesn't exist", moduleDefinitionList.getModuleDefinitionPagination() );
+        Assert.assertTrue(expectedQuantity <= moduleDefinitionList.getModuleDefinitionQuantity(), "Actual Module Definition Name Quantity is less than expected: "+expectedQuantity);
+        Assert.assertNotNull(moduleDefinitionList.getModuleDefinitionPagination(), "Module Definition pagination doesn't exist");
 
     }
 
-    @After
+    @AfterTest
     public void tearDown() {
         dashboard.logoutFromAdmin();
         //driver.quit();

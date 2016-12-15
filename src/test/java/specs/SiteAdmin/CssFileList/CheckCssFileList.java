@@ -1,9 +1,10 @@
 package specs.SiteAdmin.CssFileList;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.After;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+import org.testng.Assert;
+
 import org.openqa.selenium.By;
 import pageobjects.Dashboard.Dashboard;
 import specs.AbstractSpec;
@@ -20,7 +21,7 @@ public class CheckCssFileList extends AbstractSpec {
     private static Dashboard dashboard;
     private static CssFileList cssFileList;
 
-    @Before
+    @BeforeTest
     public void setUp() throws Exception {
         siteAdminMenuButton = By.xpath(propUISiteAdmin.getProperty("btnMenu_SiteAdmin"));
         cssFileListMenuItem = By.xpath(propUISiteAdmin.getProperty("itemMenu_CssFileList"));
@@ -41,14 +42,14 @@ public class CheckCssFileList extends AbstractSpec {
         dashboard.openPageFromMenu(siteAdminMenuButton, cssFileListMenuItem);
 
         Assert.assertNotNull(cssFileList.getUrl());
-        Assert.assertEquals("Actual Css File List page Title doesn't match to expected", expectedTitle, cssFileList.getTitle());
+        Assert.assertEquals(cssFileList.getTitle(), expectedTitle, "Actual Css File List page Title doesn't match to expected");
 
         //System.out.println(new CssFileList(driver).getCssFileListQuantity().toString());
-        Assert.assertTrue("Actual Css Name Quantity is less than expected: "+expectedQuantity, expectedQuantity <= cssFileList.getCssFileListQuantity() );
+        Assert.assertTrue(expectedQuantity <= cssFileList.getCssFileListQuantity(), "Actual Css Name Quantity is less than expected: "+expectedQuantity);
 
     }
 
-    @After
+    @AfterTest
     public void tearDown() {
         dashboard.logoutFromAdmin();
         //driver.quit();

@@ -1,9 +1,10 @@
 package specs.SiteAdmin.ContentAdminEdit;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+import org.testng.Assert;
+
 import org.openqa.selenium.By;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.LoginPage.LoginPage;
@@ -20,7 +21,7 @@ public class CheckContentAdminEdit extends AbstractSpec {
     private static Dashboard dashboard;
     private static ContentAdminEdit contentAdminEdit;
 
-    @Before
+    @BeforeTest
     public void setUp() throws Exception {
         siteAdminMenuButton = By.xpath(propUISiteAdmin.getProperty("btnMenu_SiteAdmin"));
         contentAdminEditMenuItem = By.xpath(propUISiteAdmin.getProperty("itemMenu_ContentAdminEdit"));
@@ -40,15 +41,15 @@ public class CheckContentAdminEdit extends AbstractSpec {
         dashboard.openPageFromMenu(siteAdminMenuButton, contentAdminEditMenuItem);
 
         Assert.assertNotNull(contentAdminEdit.getUrl());
-        Assert.assertEquals("Actual Content Admin Edit page Title doesn't match to expected", expectedTitle, contentAdminEdit.getTitle());
+        Assert.assertEquals(contentAdminEdit.getTitle(), expectedTitle, "Actual Content Admin Edit page Title doesn't match to expected");
 
         //System.out.println(new ContentAdminEdit(driver).getShowInNavCkbQuantity().toString());
-        Assert.assertTrue("Actual Content Admin Title Quantity is less than expected: "+expectedQuantity, expectedQuantity <= contentAdminEdit.getDomainQuantity() );
-        Assert.assertTrue("Actual Show In Nav Checkboxes Quantity is less than expected: "+expectedQuantity+" or doesn't exist", expectedQuantity <= contentAdminEdit.getShowInNavCkbQuantity() );
+        Assert.assertTrue(expectedQuantity <= contentAdminEdit.getDomainQuantity(), "Actual Content Admin Title Quantity is less than expected: "+expectedQuantity);
+        Assert.assertTrue(expectedQuantity <= contentAdminEdit.getShowInNavCkbQuantity(), "Actual Show In Nav Checkboxes Quantity is less than expected: "+expectedQuantity+" or doesn't exist");
 
     }
 
-    @After
+    @AfterTest
     public void tearDown() {
         dashboard.logoutFromAdmin();
         //driver.quit();

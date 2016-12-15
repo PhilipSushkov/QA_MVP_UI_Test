@@ -1,9 +1,10 @@
 package specs.ContentAdmin.Presentations;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.After;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+import org.testng.Assert;
+
 import pageobjects.LiveSite.LivePresentations;
 import specs.AbstractSpec;
 import pageobjects.LoginPage.LoginPage;
@@ -17,7 +18,7 @@ import java.util.Date;
  */
 public class PublishPresentation extends AbstractSpec {
 
-    @Before
+    @BeforeTest
     public void setUp() throws Exception {
         new LoginPage(driver).loginUser();
     }
@@ -75,7 +76,7 @@ public class PublishPresentation extends AbstractSpec {
     }
 
 
-    @After
+    @AfterTest
     public void tearDown() {
         new LivePresentations(driver).dashboard(dashboardURL);
         new Dashboard(driver).logoutFromAdmin();

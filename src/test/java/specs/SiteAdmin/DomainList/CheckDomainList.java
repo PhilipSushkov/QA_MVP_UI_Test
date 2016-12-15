@@ -1,9 +1,10 @@
 package specs.SiteAdmin.DomainList;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+import org.testng.Assert;
+
 import org.openqa.selenium.By;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.LoginPage.LoginPage;
@@ -20,7 +21,7 @@ public class CheckDomainList extends AbstractSpec {
     private static Dashboard dashboard;
     private static DomainList domainList;
 
-    @Before
+    @BeforeTest
     public void setUp() throws Exception {
         siteAdminMenuButton = By.xpath(propUISiteAdmin.getProperty("btnMenu_SiteAdmin"));
         domainListMenuItem = By.xpath(propUISiteAdmin.getProperty("itemMenu_DomainList"));
@@ -43,12 +44,12 @@ public class CheckDomainList extends AbstractSpec {
         Assert.assertEquals("Actual Domain List page Title doesn't match to expected", expectedTitle, domainList.getTitle());
 
         //System.out.println(new DomainList(driver).getDomainQuantity().toString());
-        Assert.assertTrue("Actual Domain Quantity is less than expected: "+expectedQuantity, expectedQuantity <= domainList.getDomainQuantity() );
-        Assert.assertNotNull("Public Site Link doesn't exist", domainList.getHrefPublicSite() );
+        Assert.assertTrue(expectedQuantity <= domainList.getDomainQuantity(), "Actual Domain Quantity is less than expected: "+expectedQuantity);
+        Assert.assertNotNull(domainList.getHrefPublicSite(), "Public Site Link doesn't exist");
 
     }
 
-    @After
+    @AfterTest
     public void tearDown() {
         dashboard.logoutFromAdmin();
         //driver.quit();

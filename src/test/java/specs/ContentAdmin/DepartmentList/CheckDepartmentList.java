@@ -1,9 +1,10 @@
 package specs.ContentAdmin.DepartmentList;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+import org.testng.Assert;
+
 import org.openqa.selenium.By;
 import pageobjects.ContentAdmin.DepartmentList.DepartmentList;
 import pageobjects.Dashboard.Dashboard;
@@ -20,7 +21,7 @@ public class CheckDepartmentList extends AbstractSpec {
     private static Dashboard dashboard;
     private static DepartmentList departmentList;
 
-    @Before
+    @BeforeTest
     public void setUp() throws Exception {
         contentAdminMenuButton = By.xpath(propUIContentAdmin.getProperty("btnMenu_ContentAdmin"));
         departmentListMenuItem = By.xpath(propUIContentAdmin.getProperty("btnMenu_DepartmentList"));
@@ -40,14 +41,14 @@ public class CheckDepartmentList extends AbstractSpec {
         dashboard.openPageFromMenu(contentAdminMenuButton, departmentListMenuItem);
 
         Assert.assertNotNull(departmentList.getUrl());
-        Assert.assertEquals("Actual Department List page Title doesn't match to expected", expectedTitle, departmentList.getTitle());
+        Assert.assertEquals(departmentList.getTitle(), expectedTitle, "Actual Department List page Title doesn't match to expected");
 
         //System.out.println(new DepartmentList(driver).getTitleQuantity().toString());
-        Assert.assertTrue("Actual Department Name Quantity is less than expected: "+expectedQuantity, expectedQuantity <= departmentList.getTitleQuantity() );
+        Assert.assertTrue(expectedQuantity <= departmentList.getTitleQuantity(), "Actual Department Name Quantity is less than expected: "+expectedQuantity);
 
     }
 
-    @After
+    @AfterTest
     public void tearDown() {
         dashboard.logoutFromAdmin();
         //driver.quit();

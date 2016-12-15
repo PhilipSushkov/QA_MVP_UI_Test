@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Web CMS Suite Creation" parallel="tests" thread-count="6">
+    <test name="CreateNewUser">
+        <classes>
+            <class name="specs.SystemAdmin.UserList.CreateNewUser" />
+        </classes>
+    </test>
+    <test name="PublishPresentation">
+        <classes>
+            <class name="specs.ContentAdmin.Presentations.PublishPresentation" />
+        </classes>
+    </test>
+    <test name="PublishPressRelease">
+        <classes>
+            <class name="specs.ContentAdmin.PressReleases.PublishPressRelease" />
+        </classes>
+    </test>
+</suite>

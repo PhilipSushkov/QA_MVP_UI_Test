@@ -1,9 +1,10 @@
 package specs.SiteAdmin.ExternalFeedList;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.After;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+import org.testng.Assert;
+
 import org.openqa.selenium.By;
 import pageobjects.Dashboard.Dashboard;
 import specs.AbstractSpec;
@@ -20,7 +21,7 @@ public class CheckExternalFeedList extends AbstractSpec {
     private static Dashboard dashboard;
     private static ExternalFeedList externalFeedList;
 
-    @Before
+    @BeforeTest
     public void setUp() throws Exception {
         siteAdminMenuButton = By.xpath(propUISiteAdmin.getProperty("btnMenu_SiteAdmin"));
         externalFeedListMenuItem = By.xpath(propUISiteAdmin.getProperty("itemMenu_ExternalFeedList"));
@@ -41,14 +42,14 @@ public class CheckExternalFeedList extends AbstractSpec {
         dashboard.openPageFromMenu(siteAdminMenuButton, externalFeedListMenuItem);
 
         Assert.assertNotNull(externalFeedList.getUrl());
-        Assert.assertEquals("Actual External Feed List page Title doesn't match to expected", expectedTitle, externalFeedList.getTitle());
+        Assert.assertEquals(expectedTitle, externalFeedList.getTitle(), "Actual External Feed List page Title doesn't match to expected");
 
         System.out.println(externalFeedList.getExternalFeedListQuantity().toString());
-        Assert.assertTrue("Actual Description Quantity is less than expected: "+expectedQuantity, expectedQuantity <= externalFeedList.getExternalFeedListQuantity() );
+        Assert.assertTrue(expectedQuantity <= externalFeedList.getExternalFeedListQuantity(), "Actual Description Quantity is less than expected: "+expectedQuantity);
 
     }
 
-    @After
+    @AfterTest
     public void tearDown() {
         dashboard.logoutFromAdmin();
         //driver.quit();

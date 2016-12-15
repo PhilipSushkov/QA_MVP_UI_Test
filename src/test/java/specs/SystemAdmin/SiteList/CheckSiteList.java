@@ -47,20 +47,6 @@ public class CheckSiteList extends AbstractSpec {
         Assert.assertTrue(expectedQuantity <= siteList.getSiteListQuantity(), "Actual Site Quantity is less than expected: "+expectedQuantity);
     }
 
-    @Test
-    public void checkSiteList2() throws Exception {
-        final String expectedTitle = "Site List";
-        final Integer expectedQuantity = 1;
-
-        dashboard.openPageFromMenu(systemAdminMenuButton, siteListMenuItem);
-
-        Assert.assertNotNull(siteList.getUrl());
-        Assert.assertEquals(siteList.getTitle(), expectedTitle, "Actual Site List page Title doesn't match to expected");
-
-        //System.out.println(new SiteList(driver).getSiteListHeader().toString());
-        Assert.assertTrue(expectedQuantity <= siteList.getSiteListQuantity(), "Actual Site Quantity is less than expected: "+expectedQuantity);
-    }
-
     @AfterTest
     public void tearDown() {
         dashboard.logoutFromAdmin();

@@ -1,10 +1,10 @@
 package specs.ContentAdmin.PressReleases;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.After;
-import org.openqa.selenium.By;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+import org.testng.Assert;
+
 import specs.AbstractSpec;
 import pageobjects.LoginPage.LoginPage;
 import pageobjects.Dashboard.Dashboard;
@@ -14,15 +14,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class PublishPressRelease extends AbstractSpec {
-
-    @Before
-    public void setUp() throws Exception {
-
-        new LoginPage(driver).loginUser();
-    }
-
-    private final By contentAdminMenuButton = By.xpath("//span[contains(text(),'Content Admin')]");
-    private final By pressReleasesMenuButton = By.xpath("//a[contains(text(),'Press Releases')]/parent::li");
 
     private Date current = new Date();
     private SimpleDateFormat fullDateF = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
@@ -39,6 +30,15 @@ public class PublishPressRelease extends AbstractSpec {
     private String AMPM = AMPMF.format(current);
 
     private String dashboardURL = null;
+
+    @BeforeTest
+    public void setUp() throws Exception {
+
+        new LoginPage(driver).loginUser();
+    }
+
+    //private final By contentAdminMenuButton = By.xpath("//span[contains(text(),'Content Admin')]");
+    //private final By pressReleasesMenuButton = By.xpath("//a[contains(text(),'Press Releases')]/parent::li");
 
     @Test
     public void canAddNewPressRelease() throws Exception {
@@ -83,7 +83,7 @@ public class PublishPressRelease extends AbstractSpec {
     }
 
 
-    @After
+    @AfterTest
     public void tearDown() {
         new LivePressReleases(driver).dashboard(dashboardURL);
         new Dashboard(driver).logoutFromAdmin();
