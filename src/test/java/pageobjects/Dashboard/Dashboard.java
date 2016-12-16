@@ -17,40 +17,48 @@ import pageobjects.SocialMedia.SocialMediaSummary;
 import java.util.ArrayList;
 
 import static org.junit.Assert.fail;
+import static specs.AbstractSpec.propUICommon;
+import static specs.AbstractSpec.propUIContentAdmin;
+
 
 public class Dashboard extends AbstractPageObject {
     Actions action = new Actions(driver);
-
-    private final By addPressReleaseButton = By.xpath("//a[contains(@id,'hrefPressReleases')]");
-    private final By addPresentationButton = By.xpath("//a[contains(@id,'hrefPresentations')]");
-    private final By addEventButton = By.xpath("//a[contains(@id,'hrefEvents')]");
-    private final By contentAdminMenuButton = By.xpath("//span[contains(text(),'Content Admin')]");
-    private final By pressReleasesMenuButton = By.xpath("//a[contains(text(),'Press Releases')]/parent::li");
-    private final By presentationsMenuButton = By.xpath("//a[contains(text(),'Presentations')]/parent::li");
-    private final By eventsMenuButton = By.xpath("//a[contains(text(),'Events')]/parent::li");
-    private final By socialMediaDashboard = By.linkText("Social Media Dashboard");
-    private final By previewSiteButton = By.linkText("PREVIEW SITE");
-    private final By invalidateCacheButton = By.xpath("//a[contains(@id,'hrefInvalidateCache')]");
-    private final By invalidateCacheMessage = By.className("MessageContainer");
-    //private final By logoutMenuItem = By.xpath("//li/a[contains(text(),'Logout')]");
-
-    private final By selectAnActionDropdown = By.className("user-manage-ddl");
-    private final By changePasswordButton = By.className("StartChangePassword");
-
-    //within the change password popup
-    private final By oldPasswordField = By.xpath("//input[contains(@id,'txtOldPassword')]");
-    private final By newPasswordField = By.xpath("//input[contains(@id,'txtNewPassword')]");
-    private final By confirmNewPasswordField = By.xpath("//input[contains(@id,'txtConfirmNewPassword')]");
-    private final By resetPasswordButton = By.cssSelector("[value='Reset Password']");
-    private final By passwordChangeError = By.className("ErrorChangePassword");
-    private final By closePasswordChangeDialog = By.className("fancybox-close");
+    private static By addPressReleaseButton, addPresentationButton, addEventButton, contentAdminMenuButton, pressReleasesMenuButton;
+    private static By presentationsMenuButton, eventsMenuButton, socialMediaDashboard, previewSiteButton, invalidateCacheButton;
+    private static By invalidateCacheMessage, selectAnActionDropdown, changePasswordButton, oldPasswordField;
+    private static By newPasswordField, confirmNewPasswordField, resetPasswordButton, passwordChangeError, closePasswordChangeDialog;
 
     private static final long DEFAULT_PAUSE = 1500;
     private static final int ATTEMPTS = 3;
 
     public Dashboard(WebDriver driver) {
-
         super(driver);
+
+        addPressReleaseButton = By.xpath(propUICommon.getProperty("btn_AddPressRelease"));
+        addPresentationButton = By.xpath(propUICommon.getProperty("btn_AddPresentation"));
+        addEventButton = By.xpath(propUICommon.getProperty("btn_AddEvent"));
+        previewSiteButton = By.linkText(propUICommon.getProperty("btn_PreviewSite"));
+        socialMediaDashboard = By.linkText(propUICommon.getProperty("btnMenu_SocialMedia"));
+
+        contentAdminMenuButton = By.xpath(propUIContentAdmin.getProperty("btnMenu_ContentAdmin"));
+        pressReleasesMenuButton = By.xpath(propUIContentAdmin.getProperty("btnMenu_PressReleases"));
+        presentationsMenuButton = By.xpath(propUIContentAdmin.getProperty("btnMenu_Presentations"));
+        eventsMenuButton = By.xpath(propUIContentAdmin.getProperty("btnMenu_Events"));
+
+        invalidateCacheButton = By.xpath(propUICommon.getProperty("btn_InvalidateCache"));
+        invalidateCacheMessage = By.xpath(propUICommon.getProperty("msg_InvalidateCache"));
+
+        selectAnActionDropdown = By.className(propUICommon.getProperty("select_AnAction"));
+        changePasswordButton = By.className(propUICommon.getProperty("btn_ChangePassword"));
+
+        // Within the change password popup
+        oldPasswordField = By.xpath(propUICommon.getProperty("input_OldPassword"));
+        newPasswordField = By.xpath(propUICommon.getProperty("input_NewPassword"));
+        confirmNewPasswordField = By.xpath(propUICommon.getProperty("input_ConfirmNewPassword"));
+        resetPasswordButton = By.cssSelector(propUICommon.getProperty("btn_ResetPassword"));
+        passwordChangeError = By.xpath(propUICommon.getProperty("msg_PasswordChange"));
+        closePasswordChangeDialog = By.xpath(propUICommon.getProperty("btn_ClosePasswordChangeDialog"));
+
     }
 
     /*
@@ -140,11 +148,11 @@ public class Dashboard extends AbstractPageObject {
     public Dashboard invalidateCache(){
         waitForElement(invalidateCacheButton);
         findElement(invalidateCacheButton).click();
+        pause(5000);
         return this;
     }
 
     public String getInvalidateCacheMessage(){
-        pause(5000);
         if (!doesElementExist(invalidateCacheMessage)){
             return "";
         }
@@ -160,8 +168,10 @@ public class Dashboard extends AbstractPageObject {
         findElement(oldPasswordField).sendKeys(current);
         findElement(newPasswordField).sendKeys(changeTo);
         findElement(confirmNewPasswordField).sendKeys(changeTo);
-        findElement(resetPasswordButton).click();
-        pause(3000);
+        pause(2000);
+        //findElement(resetPasswordButton).click();
+        retryClick(findElement(resetPasswordButton));
+        pause(2000);
         return this;
     }
 
@@ -175,8 +185,10 @@ public class Dashboard extends AbstractPageObject {
         findElement(oldPasswordField).sendKeys(oldPassword);
         findElement(newPasswordField).sendKeys(newPassword);
         findElement(confirmNewPasswordField).sendKeys(confirmNewPassword);
-        findElement(resetPasswordButton).click();
-        pause(3000);
+        pause(2000);
+        //findElement(resetPasswordButton).click();
+        retryClick(findElement(resetPasswordButton));
+        pause(2000);
         return this;
     }
 
@@ -186,7 +198,7 @@ public class Dashboard extends AbstractPageObject {
             String confirmationText = confirmation.getText();
             confirmation.accept();
             driver.switchTo().defaultContent();
-            pause(3000);
+            pause(2000);
             return confirmationText;
         }catch (NoAlertPresentException e){
             fail("Password change confirmation dialog does not appear.");
@@ -195,12 +207,15 @@ public class Dashboard extends AbstractPageObject {
     }
 
     public String getPasswordChangeErrorMessageAndClose(){
+        pause(2000);
+        waitForElement(passwordChangeError);
         if (!doesElementExist(passwordChangeError)){
             fail("Password change error message does not appear.");
         }
         String message = findElement(passwordChangeError).getText();
-        findElement(closePasswordChangeDialog).click();
-        pause(3000);
+        //findElement(closePasswordChangeDialog).click();
+        retryClick(findElement(closePasswordChangeDialog));
+        pause(2000);
         return message;
     }
 

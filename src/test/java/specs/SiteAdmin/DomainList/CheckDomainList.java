@@ -41,7 +41,7 @@ public class CheckDomainList extends AbstractSpec {
         dashboard.openPageFromMenu(siteAdminMenuButton, domainListMenuItem);
 
         Assert.assertNotNull(domainList.getUrl());
-        Assert.assertEquals("Actual Domain List page Title doesn't match to expected", expectedTitle, domainList.getTitle());
+        Assert.assertEquals(domainList.getTitle(), expectedTitle, "Actual Domain List page Title doesn't match to expected");
 
         //System.out.println(new DomainList(driver).getDomainQuantity().toString());
         Assert.assertTrue(expectedQuantity <= domainList.getDomainQuantity(), "Actual Domain Quantity is less than expected: "+expectedQuantity);

@@ -15,11 +15,6 @@ import util.LocalDriverManager;
 
 import org.junit.Before;
 
-import com.mycila.junit.concurrent.Concurrency;
-import com.mycila.junit.concurrent.ConcurrentJunitRunner;
-
-@RunWith(ConcurrentJunitRunner.class)
-@Concurrency(3)
 public class HavaRunnerTest extends AbstractSpec {
 
     @Before

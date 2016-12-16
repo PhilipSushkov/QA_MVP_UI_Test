@@ -2,7 +2,7 @@ package testrunner;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
-import specs.Dashboard.CheckDashboard;
+import specs.Dashboard.CheckChangePassword;
 import specs.LoginPage.EnterToAdmin;
 import specs.ContentAdmin.PressReleases.PublishPressRelease;
 import specs.ContentAdmin.Presentations.PublishPresentation;
@@ -24,7 +24,7 @@ import specs.SystemAdmin.UserList.CreateNewUser;
         PublishEvent.class,
         CheckPublicSite.class,
         CheckPreviewSite.class,
-        CheckDashboard.class,
+        CheckChangePassword.class,
         CreateNewUser.class,
         CheckLinkedIn.class
         }

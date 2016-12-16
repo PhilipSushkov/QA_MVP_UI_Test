@@ -31,14 +31,13 @@ public class CheckUserList extends AbstractSpec {
         userList = new UserList(driver);
 
         loginPage.loginUser();
+        dashboard.openPageFromMenu(systemAdminMenuButton, userListMenuItem);
     }
 
     @Test
     public void checkUserList() throws Exception {
         final String expectedTitle = "User List";
         final Integer expectedQuantity = 30;
-
-        dashboard.openPageFromMenu(systemAdminMenuButton, userListMenuItem);
 
         Assert.assertNotNull(userList.getUrl());
         Assert.assertEquals(userList.getTitle(), expectedTitle, "Actual User List page Title doesn't match to expected");

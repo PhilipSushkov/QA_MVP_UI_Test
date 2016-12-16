@@ -4,6 +4,7 @@ import org.openqa.selenium.*;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.Page;
 import specs.AbstractSpec;
+import util.Functions;
 
 import static org.junit.Assert.fail;
 
@@ -25,10 +26,12 @@ public class LoginPage extends Page {
     }
 
     public Dashboard loginUser() throws Exception {
+        int randNum = 0;
+        randNum = Functions.randInt(0, 9);
 
         waitForElementToAppear(emailField);
 
-        findElement(emailField).sendKeys("philips");
+        findElement(emailField).sendKeys("admintest"+randNum);
         findElement(passwordField).sendKeys("qwerty@01");
 
         pause(1000L);

@@ -41,7 +41,7 @@ public class CheckGlobalModuleList extends AbstractSpec {
         dashboard.openPageFromMenu(siteAdminMenuButton, globalModuleListMenuItem);
 
         Assert.assertNotNull(globalModuleList.getUrl());
-        Assert.assertEquals(globalModuleList.getTitle(), "Actual Global Module List page Title doesn't match to expected", expectedTitle);
+        Assert.assertEquals(globalModuleList.getTitle(), expectedTitle, "Actual Global Module List page Title doesn't match to expected");
 
         //System.out.println(new GlobalModuleList(driver).getGlobalModuleListQuantity().toString());
         Assert.assertTrue(expectedQuantity <= globalModuleList.getGlobalModuleListQuantity(), "Actual Module Name Quantity is less than expected: "+expectedQuantity);
