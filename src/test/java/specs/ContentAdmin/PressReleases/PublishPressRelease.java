@@ -40,7 +40,6 @@ public class PublishPressRelease extends AbstractSpec {
     //private final By contentAdminMenuButton = By.xpath("//span[contains(text(),'Content Admin')]");
     //private final By pressReleasesMenuButton = By.xpath("//a[contains(text(),'Press Releases')]/parent::li");
 
-    /*
     @Test
     public void canAddNewPressRelease() throws Exception {
         dashboardURL = new Dashboard(driver).getUrl();
@@ -82,7 +81,6 @@ public class PublishPressRelease extends AbstractSpec {
                 .canFindNewHeadline(headlineV2, false, filenames);
         Assert.assertFalse(headlineFound);
     }
-    */
 
     @AfterTest
     public void tearDown() {
