@@ -64,6 +64,11 @@
             <class name="specs.SystemAdmin.WorkflowEmailList.CheckWorkflowEmailEdit" />
         </classes>
     </test>
+    <test name="CheckUserGroupEdit">
+        <classes>
+            <class name="specs.SystemAdmin.UserGroupList.CheckUserGroupEdit" />
+        </classes>
+    </test>
 
 
     <!-- Site Admin part -->
