@@ -59,6 +59,11 @@
             <class name="specs.SystemAdmin.GenericStorageList.CheckGenericStorageEdit" />
         </classes>
     </test>
+    <test name="CheckWorkflowEmailEdit">
+        <classes>
+            <class name="specs.SystemAdmin.WorkflowEmailList.CheckWorkflowEmailEdit" />
+        </classes>
+    </test>
 
 
     <!-- Site Admin part -->
