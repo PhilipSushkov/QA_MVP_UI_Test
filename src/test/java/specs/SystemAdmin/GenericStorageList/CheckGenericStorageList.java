@@ -14,6 +14,7 @@ import pageobjects.SystemAdmin.GenericStorageList.GenericStorageList;
 /**
  * Created by philipsushkov on 2016-11-11.
  */
+
 public class CheckGenericStorageList extends AbstractSpec {
     private static By systemAdminMenuButton, genericStorageListMenuItem;
     private static LoginPage loginPage;

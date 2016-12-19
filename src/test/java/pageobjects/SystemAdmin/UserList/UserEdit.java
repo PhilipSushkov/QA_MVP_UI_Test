@@ -1,14 +1,21 @@
 package pageobjects.SystemAdmin.UserList;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
+
+import static specs.AbstractSpec.propUISystemAdmin;
 
 /**
  * Created by jasons on 2016-12-05.
  */
 public class UserEdit extends AbstractPageObject {
+    private static By moduleTitle, emailField, userNameField, changePasswordCheckbox, passwordField;
+    private static By systemAdministratorRole, activeCheckbox, saveButton, deleteButton;
+    /*
     private final By moduleTitle = By.xpath("//span[contains(@class, 'AdminContent')]/h1/span[contains(@id,'ModuleTitle')]");
     private final By emailField = By.xpath("//input[contains(@id,'txtEmail')]");
     private final By userNameField = By.xpath("//input[contains(@id,'txtUserName')]");
@@ -18,14 +25,24 @@ public class UserEdit extends AbstractPageObject {
     private final By activeCheckbox = By.xpath("//input[contains(@id,'chkActive')]");
     private final By saveButton = By.cssSelector("[value=Save]");
     private final By deleteButton = By.cssSelector("[value=Delete]");
+    */
 
     public UserEdit(WebDriver driver) {
         super(driver);
+        moduleTitle = By.xpath(propUISystemAdmin.getProperty("spanModule_Title"));
+        emailField = By.xpath(propUISystemAdmin.getProperty("input_Email"));
+        userNameField = By.xpath(propUISystemAdmin.getProperty("input_UserName2"));
+        changePasswordCheckbox = By.xpath(propUISystemAdmin.getProperty("chk_ChangePassword"));
+        passwordField = By.xpath(propUISystemAdmin.getProperty("input_Password"));
+        systemAdministratorRole = By.xpath(propUISystemAdmin.getProperty("chk_SystemAdmin"));
+        activeCheckbox = By.xpath(propUISystemAdmin.getProperty("chk_Active"));
+        saveButton = By.cssSelector(propUISystemAdmin.getProperty("btn_Save"));
+        deleteButton = By.cssSelector(propUISystemAdmin.getProperty("btn_Delete"));
     }
 
     public String getTitle() {
-        wait.until(ExpectedConditions.visibilityOf(findElement(moduleTitle)));
-        return findElement(moduleTitle).getText();
+        waitForElement(moduleTitle);
+        return getText(moduleTitle);
     }
 
     public UserEdit fillNewUser(String username, String password){
@@ -70,5 +87,31 @@ public class UserEdit extends AbstractPageObject {
         waitForElement(deleteButton);
         findElement(deleteButton).click();
         return new UserList(getDriver());
+    }
+
+    public WebElement getEmailInput() {
+        WebElement element = null;
+
+        try {
+            wait.until(ExpectedConditions.visibilityOf(findElement(emailField)));
+            element = findElement(emailField);
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        }
+
+        return element;
+    }
+
+    public WebElement getSaveButton() {
+        WebElement element = null;
+
+        try {
+            wait.until(ExpectedConditions.visibilityOf(findElement(saveButton)));
+            element = findElement(saveButton);
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        }
+
+        return element;
     }
 }

@@ -24,13 +24,9 @@ public class PDFTemplateEdit extends AbstractPageObject {
         frameFooterRadEditor = By.xpath(propUISystemAdmin.getProperty("frame_FooterRadEditor"));
     }
 
-    public String getUrl() {
-        return driver.getCurrentUrl();
-    }
-
     public String getTitle() {
-        wait.until(ExpectedConditions.visibilityOf(findElement(moduleTitle)));
-        return findElement(moduleTitle).getText();
+        waitForElement(moduleTitle);
+        return getText(moduleTitle);
     }
 
     public WebElement getHeaderRadEditor() {

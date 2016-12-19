@@ -44,6 +44,13 @@
         </classes>
     </test>
 
+    <test name="CheckUserEdit">
+        <classes>
+            <class name="specs.SystemAdmin.UserList.CheckUserEdit" />
+        </classes>
+    </test>
+
+
     <!-- Site Admin part -->
     <test name="CheckAliasList">
         <classes>
@@ -106,6 +113,7 @@
         </classes>
     </test>
 
+
     <!-- Content Admin part -->
     <test name="CheckDepartmentList">
         <classes>
@@ -147,6 +155,7 @@
             <class name="specs.ContentAdmin.QuickLinkList.CheckQuickLinkList" />
         </classes>
     </test>
+
 
     <!-- Email Admin part -->
     <test name="CheckCompose">

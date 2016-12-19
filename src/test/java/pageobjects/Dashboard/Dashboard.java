@@ -97,6 +97,7 @@ public class Dashboard extends AbstractPageObject {
         return new EditEvent(getDriver());
     }
 
+    /*
     public void openPageFromMenu(By menuButton, By menuItem) throws Exception {
         wait.until(ExpectedConditions.visibilityOf(findElement(menuButton)));
 
@@ -116,6 +117,7 @@ public class Dashboard extends AbstractPageObject {
             }
         }
     }
+    */
 
     public PressReleases pressReleases() {
         action.moveToElement(findElement(contentAdminMenuButton)).perform();
@@ -169,7 +171,6 @@ public class Dashboard extends AbstractPageObject {
         findElement(newPasswordField).sendKeys(changeTo);
         findElement(confirmNewPasswordField).sendKeys(changeTo);
         pause(2000);
-        //findElement(resetPasswordButton).click();
         retryClick(findElement(resetPasswordButton));
         pause(2000);
         return this;
@@ -186,7 +187,6 @@ public class Dashboard extends AbstractPageObject {
         findElement(newPasswordField).sendKeys(newPassword);
         findElement(confirmNewPasswordField).sendKeys(confirmNewPassword);
         pause(2000);
-        //findElement(resetPasswordButton).click();
         retryClick(findElement(resetPasswordButton));
         pause(2000);
         return this;
