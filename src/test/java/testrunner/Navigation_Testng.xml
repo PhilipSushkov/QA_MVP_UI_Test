@@ -49,6 +49,11 @@
             <class name="specs.SystemAdmin.UserList.CheckUserEdit" />
         </classes>
     </test>
+    <test name="CheckAlertFilterEdit">
+        <classes>
+            <class name="specs.SystemAdmin.AlertFilterList.CheckAlertFilterEdit" />
+        </classes>
+    </test>
 
 
     <!-- Site Admin part -->

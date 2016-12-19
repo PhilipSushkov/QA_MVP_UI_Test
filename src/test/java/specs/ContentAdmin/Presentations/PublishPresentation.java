@@ -41,13 +41,14 @@ public class PublishPresentation extends AbstractSpec {
     private String dashboardURL = null;
 
 
+    /*
     @Test
     public void canAddNewPresentation() throws Exception {
 
         dashboardURL = new Dashboard(driver).getUrl();
         String[] filenames = new String[2];
 
-        String newsPageURL = new Dashboard(driver).newPresentation().addNewPresentation(headline, date, hour, min, AMPM, filenames);
+        //String newsPageURL = new Dashboard(driver).newPresentation().addNewPresentation(headline, date, hour, min, AMPM, filenames);
         Assert.assertNotNull(newsPageURL);
 
         // publishing presentation
@@ -74,7 +75,7 @@ public class PublishPresentation extends AbstractSpec {
         Assert.assertFalse(headlineFound);
 
     }
-
+    */
 
     @AfterTest
     public void tearDown() {

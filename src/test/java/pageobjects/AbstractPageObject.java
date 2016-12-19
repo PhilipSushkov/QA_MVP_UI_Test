@@ -77,6 +77,23 @@ public class AbstractPageObject implements PageObject {
         return size/columnsNumber;
     }
 
+    public void openPageFromCommonTasks(By taskLink) throws Exception {
+        waitForElement(taskLink);
+
+        for (int i=0; i<ATTEMPTS; i++) {
+            try {
+                findElement(taskLink).click();
+                break;
+            } catch (ElementNotVisibleException e1){
+                System.out.println("Attempt #" + i);
+            } catch (ElementNotFoundException e2) {
+                System.out.println("Attempt #" + i);
+            } catch (TimeoutException e3) {
+                System.out.println("Attempt #" + i);
+            }
+        }
+    }
+
     public void openPageFromMenu(By menuButton, By menuItem) throws Exception {
         Actions action = new Actions(driver);
         wait.until(ExpectedConditions.visibilityOf(findElement(menuButton)));

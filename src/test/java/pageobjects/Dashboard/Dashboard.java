@@ -79,6 +79,7 @@ public class Dashboard extends AbstractPageObject {
         return new PreviewSiteHome(getDriver());
     }
 
+    /*
     public EditPressRelease newPressRelease() {
         wait.until(ExpectedConditions.elementToBeClickable(addPressReleaseButton));
         findElement(addPressReleaseButton).click();
@@ -96,6 +97,7 @@ public class Dashboard extends AbstractPageObject {
         findElement(addEventButton).click();
         return new EditEvent(getDriver());
     }
+    */
 
     /*
     public void openPageFromMenu(By menuButton, By menuItem) throws Exception {

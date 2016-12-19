@@ -36,8 +36,8 @@ public class UserEdit extends AbstractPageObject {
         passwordField = By.xpath(propUISystemAdmin.getProperty("input_Password"));
         systemAdministratorRole = By.xpath(propUISystemAdmin.getProperty("chk_SystemAdmin"));
         activeCheckbox = By.xpath(propUISystemAdmin.getProperty("chk_Active"));
-        saveButton = By.cssSelector(propUISystemAdmin.getProperty("btn_Save"));
-        deleteButton = By.cssSelector(propUISystemAdmin.getProperty("btn_Delete"));
+        saveButton = By.xpath(propUISystemAdmin.getProperty("btn_Save"));
+        deleteButton = By.xpath(propUISystemAdmin.getProperty("btn_Delete"));
     }
 
     public String getTitle() {
@@ -93,7 +93,7 @@ public class UserEdit extends AbstractPageObject {
         WebElement element = null;
 
         try {
-            wait.until(ExpectedConditions.visibilityOf(findElement(emailField)));
+            waitForElement(emailField);
             element = findElement(emailField);
         } catch (ElementNotFoundException e1) {
         } catch (ElementNotVisibleException e2) {
@@ -106,7 +106,7 @@ public class UserEdit extends AbstractPageObject {
         WebElement element = null;
 
         try {
-            wait.until(ExpectedConditions.visibilityOf(findElement(saveButton)));
+            waitForElement(saveButton);
             element = findElement(saveButton);
         } catch (ElementNotFoundException e1) {
         } catch (ElementNotVisibleException e2) {
