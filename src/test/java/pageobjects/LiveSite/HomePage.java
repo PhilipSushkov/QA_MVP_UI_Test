@@ -6,29 +6,49 @@ import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import pageobjects.AbstractPageObject;
 
+import static specs.AbstractSpec.propUIPublicSite;
+
 /**
  * Created by jasons on 2016-11-07.
  */
 public class HomePage extends AbstractPageObject {
 
-    private final By Q4Logo = By.className("ClientLogo");
-    private final By versionNumber = By.className("Version");
-    private final By stockInformation = By.linkText("Stock Information");
-    private final By stockInformationTitle = By.xpath("//h1[contains(@id,'ModuleTitle')]");
-    private final By financialReports = By.linkText("Financial Reports");
-    private final By pressReleases = By.linkText("Press Releases");
-    private final By events = By.linkText("Events");
-    private final By presentations = By.linkText("Presentations");
-    private final By secFilings = By.linkText("SEC Filings");
-    private final By boardOfDirectors = By.linkText("Board of Directors");
-    private final By rssFeeds = By.linkText("RSS Feeds");
-    private final By siteMap = By.linkText("Site Map");
-    private final By emailAlerts = By.linkText("Email Alerts");
-    private final By investmentCalculator = By.linkText("Investment Calculator");
-    private final By faq = By.linkText("FAQ");
+    private final By Q4Logo;
+    private final By versionNumber;
+    private final By stockInformation;
+    private final By stockInformationTitle;
+    private final By financialReports;
+    private final By pressReleases;
+    private final By events;
+    private final By presentations;
+    private final By secFilings;
+    private final By boardOfDirectors;
+    private final By rssFeeds;
+    private final By siteMap;
+    private final By emailAlerts;
+    private final By investmentCalculator;
+    private final By faq;
     
     public HomePage(WebDriver driver) {
         super(driver);
+
+
+
+        Q4Logo = By.className(propUIPublicSite.getProperty("Q4Logo"));
+        versionNumber = By.className(propUIPublicSite.getProperty("versionNumber"));
+        stockInformation = By.linkText(propUIPublicSite.getProperty("stockInformation"));
+        stockInformationTitle = By.xpath(propUIPublicSite.getProperty("stockInformationTitle"));
+        financialReports = By.linkText(propUIPublicSite.getProperty("financialReports"));
+        pressReleases = By.linkText(propUIPublicSite.getProperty("pressReleases"));
+        events = By.linkText(propUIPublicSite.getProperty("events"));
+        presentations = By.linkText(propUIPublicSite.getProperty("presentations"));
+        secFilings = By.linkText(propUIPublicSite.getProperty("secFilings"));
+        boardOfDirectors = By.linkText(propUIPublicSite.getProperty("boardOfDirectors"));
+        rssFeeds = By.linkText(propUIPublicSite.getProperty("rssFeeds"));
+        siteMap = By.linkText(propUIPublicSite.getProperty("siteMap"));
+        emailAlerts = By.linkText(propUIPublicSite.getProperty("emailAlerts"));
+        investmentCalculator = By.linkText(propUIPublicSite.getProperty("investmentCalculator"));
+        faq = By.linkText(propUIPublicSite.getProperty("faq"));
     }
 
     public boolean logoIsPresent(){

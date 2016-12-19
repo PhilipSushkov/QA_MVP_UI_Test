@@ -1,31 +1,43 @@
 package pageobjects.LiveSite;
 
 import org.openqa.selenium.*;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
 import pageobjects.Dashboard.Dashboard;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import static specs.AbstractSpec.propUIPublicSite;
+
 /**
  * Created by philipsushkov on 2016-11-08.
  */
 public class LivePresentations extends AbstractPageObject {
 
-    private final By latestHeadlines = By.xpath("//h1[contains(@class,'ModuleDetailHeadline')]/span[contains(@class,'ModuleDetailHeadlineText')]");
-    //private final By latestHeadlineLinks = By.xpath("//a[contains(@id,'hrefDownload')][span]");
-    private final By presentationTitle = By.className("ModuleHeadline");
-    private final By presentationDate = By.className("ModuleDate");
-    private final By presentationLink = By.partialLinkText("View this Presentation");
-    private final By yearLink = By.className("ModuleYearLink");
+    private final By latestHeadlines;
+    private final By latestHeadlineLinks;
+    private final By presentationTitle;
+    private final By presentationDate;
+    private final By presentationLink;
+    private final By yearLink;
 
     // elements on page of loaded presentation
-    private final By presentationImage = By.xpath("//div[@class='ModuleBody']//img");
-    private final By documentDownloadLink = By.xpath("//a[contains(@id,'hrefDocument')]");
+    private final By presentationImage;
+    private final By documentDownloadLink;
 
     public LivePresentations(WebDriver driver) {
         super(driver);
+        latestHeadlines = By.xpath(propUIPublicSite.getProperty("latestHeadlines"));
+        latestHeadlineLinks = By.xpath(propUIPublicSite.getProperty("latestHeadlineLinks"));
+        presentationTitle = By.className(propUIPublicSite.getProperty("presentationTitle"));
+        presentationDate = By.className(propUIPublicSite.getProperty("presentationDate"));
+        presentationLink = By.partialLinkText(propUIPublicSite.getProperty("presentationLink"));
+        yearLink = By.className(propUIPublicSite.getProperty("yearLink"));
+
+        // elements on page of loaded presentation
+        presentationImage = By.xpath(propUIPublicSite.getProperty("presentationImage"));
+        documentDownloadLink = By.xpath(propUIPublicSite.getProperty("documentDownloadLink"));
+
     }
 
     public Dashboard dashboard(String url) {

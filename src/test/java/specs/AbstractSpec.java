@@ -1,21 +1,19 @@
 package specs;
 
 import org.apache.commons.lang.RandomStringUtils;
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.Test;
-import org.testng.Assert;
-
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.phantomjs.PhantomJSDriverService;
-import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
-import util.*;
+import org.openqa.selenium.phantomjs.PhantomJSDriverService;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import util.BrowserStackCapability;
+import util.BrowserType;
+import util.EnvironmentType;
 
 import java.io.IOException;
 import java.net.URL;
@@ -56,7 +54,8 @@ public abstract class AbstractSpec extends util.Functions {
     public static Properties propUIEmailAdmin;
     private static final String PATHTO_COMMON_PROP = "Common.properties";
     public static Properties propUICommon;
-
+    private static final String PATHTO_PUBLICSITE_PROP = "PublicSite/PublicSite.properties";
+    public static Properties propUIPublicSite;
     /*
     @Rule
     public TestName testName = new TestName();
@@ -216,6 +215,8 @@ public abstract class AbstractSpec extends util.Functions {
         propUIContentAdmin = ConnectToPropUI(PATHTO_CONTENTADMIN_PROP);
         propUIEmailAdmin = ConnectToPropUI(PATHTO_EMAILADMIN_PROP);
         propUICommon = ConnectToPropUI(PATHTO_COMMON_PROP);
+        propUIPublicSite = ConnectToPropUI(PATHTO_PUBLICSITE_PROP);
+
     }
 
 }

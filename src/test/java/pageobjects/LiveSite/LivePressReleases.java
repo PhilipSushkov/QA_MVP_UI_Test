@@ -11,19 +11,27 @@ import pageobjects.Dashboard.Dashboard;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import static specs.AbstractSpec.propUIPublicSite;
+
 public class LivePressReleases extends AbstractPageObject{
 
-    private final By latestHeadlines = By.xpath("//a[contains(@id,'hrefHeadline')][span]");
-    private final By pressReleaseDate = By.className("ModuleDate");
-    private final By yearLink = By.className("ModuleYearLink");
+    private final By latestHeadlines_PressRelease;
+    private final By pressReleaseDate;
+    private final By yearLink_PressRelease;
 
     // elements on page of loaded press release
-    private final By pressReleaseImage = By.xpath("//div[@class='ModuleBody']//img");
-    private final By documentDownloadLink = By.xpath("//a[contains(@id,'hrefDownload')]");
+    private final By pressReleaseImage;
+    private final By documentDownloadLink_PressRelease;
 
     public LivePressReleases(WebDriver driver) {
-
         super(driver);
+        latestHeadlines_PressRelease = By.xpath(propUIPublicSite.getProperty("latestHeadlines_PressRelease"));
+        pressReleaseDate = By.className(propUIPublicSite.getProperty("pressReleaseDate"));
+        yearLink_PressRelease = By.className(propUIPublicSite.getProperty("yearLink_PressRelease"));
+
+        // elements on page of loaded press release
+        pressReleaseImage = By.xpath(propUIPublicSite.getProperty("pressReleaseImage"));
+        documentDownloadLink_PressRelease = By.xpath(propUIPublicSite.getProperty("documentDownloadLink_PressRelease"));
     }
 
     public Dashboard dashboard(String url) {
@@ -55,7 +63,7 @@ public class LivePressReleases extends AbstractPageObject{
                 driver.findElement(By.tagName("body")).sendKeys("Keys.ESCAPE");
             }
 
-            headlines = findElements(latestHeadlines);
+            headlines = findElements(latestHeadlines_PressRelease);
 
             for (int i=0; i<headlines.size(); i++){
                 System.out.println("HEADLINE: "+headlines.get(i).getText());
@@ -76,7 +84,7 @@ public class LivePressReleases extends AbstractPageObject{
                             foundHeadline = false;
                             System.out.println("ERROR: Image filename doesn't match.");
                         }
-                        foundFilenames[1] = findElements(documentDownloadLink).get(0).getAttribute("href");
+                        foundFilenames[1] = findElements(documentDownloadLink_PressRelease).get(0).getAttribute("href");
                         foundFilenames[1] = foundFilenames[1].substring(foundFilenames[1].indexOf("files/")+6);
                         System.out.println("Found attached document: "+foundFilenames[1]);
                         if (!foundFilenames[1].equals(expectedFilenames[1])){
@@ -98,12 +106,12 @@ public class LivePressReleases extends AbstractPageObject{
     // NEW METHODS CREATED FOR PUBLIC SITE SMOKE TEST
 
     public boolean pressReleasesAreDisplayed(){
-        return doesElementExist(latestHeadlines) && findElement(latestHeadlines).isDisplayed();
+        return doesElementExist(latestHeadlines_PressRelease) && findElement(latestHeadlines_PressRelease).isDisplayed();
     }
 
     public boolean pressReleasesAreAllFromYear(String year){
         boolean allFromYear = true;
-        List<WebElement> headlines = findElements(latestHeadlines);
+        List<WebElement> headlines = findElements(latestHeadlines_PressRelease);
         List<WebElement> pressReleaseDates = findElements(pressReleaseDate);
         for (int i=0; i<pressReleaseDates.size(); i++){
             if (!pressReleaseDates.get(i).getText().contains(year)){
@@ -115,7 +123,7 @@ public class LivePressReleases extends AbstractPageObject{
     }
 
     public void switchYearTo(String year){
-        List<WebElement> yearLinks = findElements(yearLink);
+        List<WebElement> yearLinks = findElements(yearLink_PressRelease);
         for (int i=0; i<yearLinks.size(); i++){
             if (yearLinks.get(i).getText().equals(year)){
                 yearLinks.get(i).click();
@@ -125,10 +133,10 @@ public class LivePressReleases extends AbstractPageObject{
     }
 
     public void openFirstPressRelease(){
-        findElement(latestHeadlines).click();
+        findElement(latestHeadlines_PressRelease).click();
     }
 
     public boolean pressReleaseIsOpen(){
-        return doesElementExist(documentDownloadLink) && findElement(documentDownloadLink).isDisplayed();
+        return doesElementExist(documentDownloadLink_PressRelease) && findElement(documentDownloadLink_PressRelease).isDisplayed();
     }
 }

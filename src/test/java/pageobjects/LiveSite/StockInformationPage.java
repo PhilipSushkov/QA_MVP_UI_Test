@@ -11,56 +11,101 @@ import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Locale;
 
+import static specs.AbstractSpec.propUIPublicSite;
+
 /**
  * Created by jasons on 2016-11-07.
  */
 public class StockInformationPage extends AbstractPageObject {
 
-    private final By stockChartXignite = By.className("highcharts-container");
-    private final By stockChartXigniteGridArea = By.cssSelector(".highcharts-background+rect");
-    private final By timeRangeButtonXignite = By.className("highcharts-button");
-    private final By chartXigniteSlider = By.cssSelector(".highcharts-navigator rect");
-    private final By chartXigniteTooltip = By.className("highcharts-tooltip");
+    private static By stockChartXignite;
 
-    private final By stockQuote = By.className("StockQuoteContainer");
-    private final By stockQuotePrice = By.className("Price");
-    private final By stockQuoteChange = By.cssSelector(".ChangeLabel:last-child");
-    private final By stockQuoteVolume = By.cssSelector(".StockData.Volume");
-    private final By stockQuotePChange = By.cssSelector(".PChangeLabel:last-child");
-    private final By stockQuoteDayHigh = By.cssSelector(".StockData.High");
-    private final By stockQuote52WeekHigh = By.cssSelector(".StockData.WeekHigh");
-    private final By stockQuoteDayLow = By.cssSelector(".StockData.Low");
-    private final By stockQuote52WeekLow = By.cssSelector(".StockData.WeekLow");
-    private final By stockQuoteTodayOpen = By.cssSelector(".StockData.TodaysOpen");
-    private final By stockQuotePreviousClose = By.cssSelector(".StockData.PreviousClose");
 
-    private final By stockChartTickertechFrame = By.id("stock-chart-frame");
-    private final By stockChartTickertech = By.cssSelector("[name=ctchart]");
-    private final By timeRangeButtonTickertech = By.cssSelector("[href*=handleMouseClick]");
-    private final By chartByButtonTickertech = By.cssSelector("[href*=chartPrice]");
-    private final By chartTypeButtonTickertech = By.cssSelector("[href*=clickType]");
-    private final By compareStock = By.cssSelector("[name=compare]");
-    private final By dowCheckbox = By.cssSelector("[name=comparedji]");
-    private final By nasdaqCheckbox = By.cssSelector("[name=comparecomp]");
-    private final By spCheckbox = By.cssSelector("[name=comparespx]");
-    private final By russellCheckbox = By.cssSelector("[name=comparerut]");
-    private final By tickertechCompareButton = By.cssSelector("[type=submit]");
+    private final By stockChartXigniteGridArea;
+    private final By timeRangeButtonXignite;
+    private final By chartXigniteSlider;
+    private final By chartXigniteTooltip;
 
-    private final By historicalQuotes = By.className("StockHistorical");
-    private final By historicalHigh = By.cssSelector(".StockHistorical .High");
-    private final By historicalLow = By.cssSelector(".StockHistorical .Low");
-    private final By historicalVolume = By.cssSelector(".StockHistorical .Volume");
-    private final By historicalOpen = By.cssSelector(".StockHistorical .TodaysOpen");
-    private final By historicalLast = By.cssSelector(".StockHistorical .PreviousClose");
-    private final By historicalMonthSelector = By.xpath("//select[contains(@id,'ddlMonth')]");
-    private final By historicalDaySelector = By.xpath("//select[contains(@id,'ddlDay')]");
-    private final By historicalYearSelector = By.xpath("//select[contains(@id,'ddlYear')]");
-    private final By lookupButton = By.xpath("//input[contains(@id,'btnLookup')]");
+    private final By stockQuote;
+    private final By stockQuotePrice;
+    private final By stockQuoteChange;
+    private final By stockQuoteVolume;  //TODO remove all the By.cssSelector stuffs
+    private final By stockQuotePChange;
+    private final By stockQuoteDayHigh;
+    private final By stockQuote52WeekHigh;
+    private final By stockQuoteDayLow;
+    private final By stockQuote52WeekLow;
+    private final By stockQuoteTodayOpen;
+    private final By stockQuotePreviousClose;
+
+    private final By stockChartTickertechFrame;
+    private final By stockChartTickertech;
+    private final By timeRangeButtonTickertech;
+    private final By chartByButtonTickertech;
+    private final By chartTypeButtonTickertech;
+    private final By compareStock;
+    private final By dowCheckbox;
+    private final By nasdaqCheckbox;
+    private final By spCheckbox;
+    private final By russellCheckbox;
+    private final By tickertechCompareButton;
+
+    private final By historicalQuotes;
+    private final By historicalHigh;
+    private final By historicalLow;
+    private final By historicalVolume;
+    private final By historicalOpen;
+    private final By historicalLast;
+    private final By historicalMonthSelector;
+    private final By historicalDaySelector;
+    private final By historicalYearSelector;
+    private final By lookupButton;
 
     Actions actions = new Actions(driver);
 
     public StockInformationPage(WebDriver driver) {
         super(driver);
+        stockChartXignite = By.className(propUIPublicSite.getProperty("stockChartXignite"));
+        stockChartXigniteGridArea = By.cssSelector(propUIPublicSite.getProperty("stockChartXigniteGridArea"));
+        timeRangeButtonXignite = By.className (propUIPublicSite.getProperty("timeRangeButtonXignite"));
+        chartXigniteSlider = By.cssSelector (propUIPublicSite.getProperty("chartXigniteSlider"));
+        chartXigniteTooltip = By.className (propUIPublicSite.getProperty("chartXigniteTooltip"));
+
+        stockQuote = By.className(propUIPublicSite.getProperty("stockQuote"));
+        stockQuotePrice = By.className(propUIPublicSite.getProperty("stockQuotePrice"));
+        stockQuoteChange = By.cssSelector(propUIPublicSite.getProperty("stockQuoteChange"));
+        stockQuoteVolume = By.cssSelector(propUIPublicSite.getProperty("stockQuoteVolume"));
+        stockQuotePChange = By.cssSelector(propUIPublicSite.getProperty("stockQuotePChange"));
+        stockQuoteDayHigh = By.cssSelector(propUIPublicSite.getProperty("stockQuoteDayHigh"));
+        stockQuote52WeekHigh = By.cssSelector(propUIPublicSite.getProperty("stockQuote52WeekHigh"));
+        stockQuoteDayLow = By.cssSelector (propUIPublicSite.getProperty("stockQuoteDayLow"));
+        stockQuote52WeekLow = By.cssSelector (propUIPublicSite.getProperty("stockQuote52WeekLow"));
+        stockQuoteTodayOpen = By.cssSelector (propUIPublicSite.getProperty("stockQuoteTodayOpen"));
+        stockQuotePreviousClose = By.cssSelector (propUIPublicSite.getProperty("stockQuotePreviousClose"));
+
+        stockChartTickertechFrame = By.id (propUIPublicSite.getProperty("stockChartTickertechFrame"));
+        stockChartTickertech = By.cssSelector (propUIPublicSite.getProperty("stockChartTickertech"));
+        timeRangeButtonTickertech = By.cssSelector (propUIPublicSite.getProperty("timeRangeButtonTickertech"));
+        chartByButtonTickertech = By.cssSelector (propUIPublicSite.getProperty("chartByButtonTickertech"));
+        chartTypeButtonTickertech = By.cssSelector (propUIPublicSite.getProperty("chartTypeButtonTickertech"));
+        compareStock = By.cssSelector (propUIPublicSite.getProperty("compareStock"));
+        dowCheckbox = By.cssSelector (propUIPublicSite.getProperty("dowCheckbox"));
+        nasdaqCheckbox = By.cssSelector (propUIPublicSite.getProperty("nasdaqCheckbox"));
+        spCheckbox = By.cssSelector (propUIPublicSite.getProperty("spCheckbox"));
+        russellCheckbox = By.cssSelector (propUIPublicSite.getProperty("russellCheckbox"));
+        tickertechCompareButton = By.cssSelector (propUIPublicSite.getProperty("tickertechCompareButton"));
+
+        historicalQuotes = By.className (propUIPublicSite.getProperty("historicalQuotes"));
+        historicalHigh = By.cssSelector (propUIPublicSite.getProperty("historicalHigh"));
+        historicalLow = By.cssSelector (propUIPublicSite.getProperty("historicalLow"));
+        historicalVolume = By.cssSelector (propUIPublicSite.getProperty("historicalVolume"));
+        historicalOpen = By.cssSelector (propUIPublicSite.getProperty("historicalOpen"));
+        historicalLast = By.cssSelector (propUIPublicSite.getProperty("historicalLast"));
+        historicalMonthSelector = By.xpath (propUIPublicSite.getProperty("historicalMonthSelector"));
+        historicalDaySelector = By.xpath (propUIPublicSite.getProperty("historicalDaySelector"));
+        historicalYearSelector = By.xpath (propUIPublicSite.getProperty("historicalYearSelector"));
+        lookupButton = By.xpath (propUIPublicSite.getProperty("lookupButton"));
+
     }
 
     // XIGNITE STOCK CHART METHODS

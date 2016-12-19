@@ -4,16 +4,20 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import pageobjects.AbstractPageObject;
 
+import static specs.AbstractSpec.propUIPublicSite;
+
 /**
  * Created by jasons on 2016-11-11.
  */
 public class BoardOfDirectorsPage extends AbstractPageObject {
 
-    private final By person = By.className("PersonContainer");
-    private final By biographicalInformation = By.className("PersonDescription");
+    private final By person;
+    private final By biographicalInformation;
 
     public BoardOfDirectorsPage(WebDriver driver) {
         super(driver);
+        person = By.className(propUIPublicSite.getProperty("person"));
+        biographicalInformation = By.className(propUIPublicSite.getProperty("biographicalInformation"));
     }
 
     public boolean peopleAreDisplayed(){

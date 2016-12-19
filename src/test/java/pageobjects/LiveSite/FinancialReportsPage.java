@@ -7,15 +7,18 @@ import pageobjects.AbstractPageObject;
 
 import java.util.List;
 
+import static specs.AbstractSpec.propUIPublicSite;
+
 /**
  * Created by jasons on 2016-11-09.
  */
 public class FinancialReportsPage extends AbstractPageObject {
 
-    private final By reportTitle = By.className("ReportLink");
+    private final By reportTitle;
 
     public FinancialReportsPage(WebDriver driver) {
         super(driver);
+        reportTitle = By.className(propUIPublicSite.getProperty("reportTitle"));
     }
 
     public boolean financialReportsAreDisplayed(){

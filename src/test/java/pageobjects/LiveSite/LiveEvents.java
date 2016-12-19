@@ -12,23 +12,34 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
+import static specs.AbstractSpec.propUIPublicSite;
+
 /**
  * Created by philipsushkov on 2016-11-09.
  */
 public class LiveEvents extends AbstractPageObject {
 
-    private final By headline = By.xpath("//h1[contains(@class,'ModuleDetailHeadline')]");
-    private final By eventTitle = By.className("ModuleHeadlineLink");
-    private final By eventDate = By.className("ModuleDate");
-    private final By pastEvents = By.linkText("Past Events");
+    private final By headline;
+    private final By eventTitle;
+    private final By eventDate;
+    private final By pastEvents;
 
     // elements on page of loaded event
-    private final By eventImage = By.xpath("//div[@class='ModuleBody']//img");
-    private final By eventDetailsModule = By.className("ModuleEventDetails");
-    private final By eventDateRange = By.className("ModuleDate");
+    private final By eventImage;
+    private final By eventDetailsModule;
+    private final By eventDateRange;
 
     public LiveEvents(WebDriver driver) {
         super(driver);
+        headline = By.xpath(propUIPublicSite.getProperty("headline"));
+        eventTitle = By.className(propUIPublicSite.getProperty("eventTitle"));
+        eventDate = By.className(propUIPublicSite.getProperty("eventDate"));
+        pastEvents = By.linkText(propUIPublicSite.getProperty("pastEvents"));
+
+        // elements on page of loaded event
+        eventImage = By.xpath(propUIPublicSite.getProperty("eventImage"));
+        eventDetailsModule = By.className(propUIPublicSite.getProperty("eventDetailsModule"));
+        eventDateRange = By.className(propUIPublicSite.getProperty("eventDateRange"));
     }
 
     public Dashboard dashboard(String url) {
