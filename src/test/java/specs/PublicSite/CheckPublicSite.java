@@ -28,7 +28,7 @@ public class CheckPublicSite extends AbstractSpec {
 
     /** Changes necessary to make include removing all the "new XXX(drivers).YYY with a declaration, instead, in the @Before
      and replacing it in all pieces of code. DONE
-      Second changes include making a .properties file including ALL the selectors. THEN making them all do the .property thing
+      Second changes include making a .properties file including ALL the selectors. THEN making them all do the .property thing. DONE
      Last is switching this to testNG*/
 
     private static StockInformationPage stockInformationPage;
@@ -131,66 +131,93 @@ public class CheckPublicSite extends AbstractSpec {
         Assert.assertEquals(stockInformationPage.getStockPreviousClose(), stockQuote.getPreviousClose().doubleValue()
                 , 0.01, "Stock previous close isn't accurate");
     }
-     /*
-    @Test
-    public void stockChartTickertechWorks() { //TODO find an assertThat equivalent in TestNG
 
+    @Test
+    public void stockChartTickertechWorks() {
         try {
             //go to stock information page and check that chart is present
-            Assert.assertTrue("Tickertech stock chart is not displayed." homePage.selectStockInformationFromMenu().stockChartTickertechIsDisplayed());
+            Assert.assertTrue(homePage.selectStockInformationFromMenu().stockChartTickertechIsDisplayed()
+                    , "Tickertech stock chart is not displayed." );
             //cycle through time periods and check that chart changes accordingly
             stockInformationPage.switchChartTickertechTo1Month();
-            Assert.assertThat("Tickertech chart isn't displaying 1 month period" stockInformationPage.getTickertechSRC(), containsString("period=1m&"));
+            Assert.assertTrue(stockInformationPage.getTickertechSRC().contains("period=1m&"),
+                    "Tickertech chart isn't displaying 1 month period" );
             stockInformationPage.switchChartTickertechTo1Quarter();
-            Assert.assertThat("Tickertech chart isn't displaying 1 quarter period" stockInformationPage.getTickertechSRC(), containsString("period=1q&"));
+            Assert.assertTrue(stockInformationPage.getTickertechSRC().contains("period=1q&")
+                    , "Tickertech chart isn't displaying 1 quarter period");
             stockInformationPage.switchChartTickertechTo1Year();
-            Assert.assertThat("Tickertech chart isn't displaying 1 year period" stockInformationPage.getTickertechSRC(), containsString("period=1y&"));
+            Assert.assertTrue(stockInformationPage.getTickertechSRC().contains("period=1y&")
+                    , "Tickertech chart isn't displaying 1 year period");
             //try switching to % change and check that chart changes accordingly
             stockInformationPage.switchChartTickertechToPChange();
-            Assert.assertThat("Tickertech chart isn't displaying % change" stockInformationPage.getTickertechSRC(), containsString("period=1yp&"));
+            Assert.assertTrue(stockInformationPage.getTickertechSRC().contains("period=1yp&")
+                    , "Tickertech chart isn't displaying % change");
             //try switching back to price and check that chart changes accordingly
             stockInformationPage.switchChartTickertechToPrice();
-            Assert.assertThat("Tickertech chart isn't displaying price" stockInformationPage.getTickertechSRC(), containsString("period=1y&"));
+            Assert.assertTrue(stockInformationPage.getTickertechSRC().contains("period=1y&")
+                    , "Tickertech chart isn't displaying price");
             //cycle though chart types and check that chart changes accordingly
             stockInformationPage.switchChartTickertechToFillToPrevClose();
-            Assert.assertThat("Tickertech chart isn't displaying fill to prev. close type" stockInformationPage.getTickertechSRC(), containsString("fillBelowLine=prev&"));
+            Assert.assertTrue(stockInformationPage.getTickertechSRC().contains("fillBelowLine=prev&")
+                    , "Tickertech chart isn't displaying fill to prev. close type");
             stockInformationPage.switchChartTickertechToLine();
-            Assert.assertThat("Tickertech chart isn't displaying line type" stockInformationPage.getTickertechSRC(), containsString("fillBelowLine=no&"));
-            Assert.assertThat("Tickertech chart isn't displaying line type" stockInformationPage.getTickertechSRC(), containsString("type=line&"));
-            Assert.assertThat("Tickertech chart isn't displaying line type" stockInformationPage.getTickertechSRC(), containsString("showHighsLows=no&"));
+            Assert.assertTrue(stockInformationPage.getTickertechSRC().contains("fillBelowLine=no&")
+                    , "Tickertech chart isn't displaying line type");
+            Assert.assertTrue(stockInformationPage.getTickertechSRC().contains("type=line&")
+                    , "Tickertech chart isn't displaying line type");
+            Assert.assertTrue(stockInformationPage.getTickertechSRC().contains("showHighsLows=no&")
+                    , "Tickertech chart isn't displaying line type");
             stockInformationPage.switchChartTickertechToPoint();
-            Assert.assertThat("Tickertech chart isn't displaying point type" stockInformationPage.getTickertechSRC(), containsString("type=point&"));
-            Assert.assertThat("Tickertech chart isn't displaying point type" stockInformationPage.getTickertechSRC(), containsString("showHighsLows=yes&"));
+            Assert.assertTrue(stockInformationPage.getTickertechSRC().contains("type=point&")
+                    , "Tickertech chart isn't displaying point type");
+            Assert.assertTrue(stockInformationPage.getTickertechSRC().contains("showHighsLows=yes&")
+                    , "Tickertech chart isn't displaying point type");
             stockInformationPage.switchChartTickertechToBar();
-            Assert.assertThat("Tickertech chart isn't displaying bar type" stockInformationPage.getTickertechSRC(), containsString("type=bar&"));
-            Assert.assertThat("Tickertech chart isn't displaying bar type" stockInformationPage.getTickertechSRC(), containsString("showHighsLows=no&"));
+            Assert.assertTrue(stockInformationPage.getTickertechSRC().contains("type=bar&")
+                    , "Tickertech chart isn't displaying bar type");
+            Assert.assertTrue(stockInformationPage.getTickertechSRC().contains("showHighsLows=no&")
+                    , "Tickertech chart isn't displaying bar type" );
             stockInformationPage.switchChartTickertechToCandleStick();
-            Assert.assertThat("Tickertech chart isn't displaying candle stick type" stockInformationPage.getTickertechSRC(), containsString("type=candle&"));
+            Assert.assertTrue(stockInformationPage.getTickertechSRC().contains("type=candle&")
+                    , "Tickertech chart isn't displaying candle stick type" );
             stockInformationPage.switchChartTickertechToMountain();
-            Assert.assertThat("Tickertech chart isn't displaying mountain type" stockInformationPage.getTickertechSRC(), containsString("fillBelowLine=yes&"));
-            Assert.assertThat("Tickertech chart isn't displaying mountain type" stockInformationPage.getTickertechSRC(), containsString("type=line&"));
+            Assert.assertTrue(stockInformationPage.getTickertechSRC().contains("fillBelowLine=yes&")
+                    , "Tickertech chart isn't displaying mountain type" );
+            Assert.assertTrue(stockInformationPage.getTickertechSRC().contains("type=line&")
+                    , "Tickertech chart isn't displaying mountain type" );
             //select one or more indices/stocks and check that chart changes accordingly
-            stockInformationPage.tickertechCompareVs("" true, false, true, false); // comparing with Dow and S&P
-            Assert.assertThat("Tickertech chart isn't comparing with indices properly" stockInformationPage.getTickertechSRC(), containsString("showVolumeTable=no&"));
-            Assert.assertThat("Tickertech chart isn't comparing with indices properly" stockInformationPage.getTickertechSRC(), containsString("showLegendTable=yes&"));
-            Assert.assertThat("Tickertech chart isn't comparing with indices properly" stockInformationPage.getTickertechSRC(), containsString("period=1yp&"));
-            Assert.assertThat("Tickertech chart isn't comparing with indices properly" stockInformationPage.getTickertechSRC(), containsString("fillBelowLine=no&"));
-            Assert.assertThat("Tickertech chart isn't displaying Dow and S&P only" stockInformationPage.getTickertechSRC(), containsString("symbols=TXRH,$DJI,SPX&"));
-            stockInformationPage.tickertechCompareVs("" true, true, true, true); // comparing with all four indices
-            Assert.assertThat("Tickertech chart isn't displaying all four indices" stockInformationPage.getTickertechSRC(), containsString("symbols=TXRH,$DJI,COMP,SPX,RUT&"));
-            stockInformationPage.tickertechCompareVs("" false, true, false, false); // comparing with Nasdaq
-            Assert.assertThat("Tickertech chart isn't displaying Nasdaq only" stockInformationPage.getTickertechSRC(), containsString("symbols=TXRH,COMP&"));
-            stockInformationPage.tickertechCompareVs("AAPL" false, true, false, false); // comparing with AAPL and Nasdaq
-            Assert.assertThat("Tickertech chart isn't displaying AAPL and Nasdaq only" stockInformationPage.getTickertechSRC(), containsString("symbols=TXRH,AAPL,COMP&"));
+            stockInformationPage.tickertechCompareVs("",true, false, true, false);
+            // ^^^ comparing with Dow and S&P
+            Assert.assertTrue(stockInformationPage.getTickertechSRC().contains("showVolumeTable=no&")
+                    , "Tickertech chart isn't comparing with indices properly");
+            Assert.assertTrue(stockInformationPage.getTickertechSRC().contains("showLegendTable=yes&")
+                    , "Tickertech chart isn't comparing with indices properly");
+            Assert.assertTrue(stockInformationPage.getTickertechSRC().contains("period=1yp&")
+                    , "Tickertech chart isn't comparing with indices properly");
+            Assert.assertTrue(stockInformationPage.getTickertechSRC().contains("fillBelowLine=no&")
+                    , "Tickertech chart isn't comparing with indices properly");
+            Assert.assertTrue(stockInformationPage.getTickertechSRC().contains("symbols=TXRH,$DJI,SPX&")
+                    , "Tickertech chart isn't displaying Dow and S&P only");
+            stockInformationPage.tickertechCompareVs("", true, true, true, true);
+            // ^^^ comparing with all four indices
+            Assert.assertTrue(stockInformationPage.getTickertechSRC().contains("symbols=TXRH,$DJI,COMP,SPX,RUT&")
+                    , "Tickertech chart isn't displaying all four indices");
+            stockInformationPage.tickertechCompareVs("", false, true, false, false);
+            // ^^^ comparing with Nasdaq
+            Assert.assertTrue(stockInformationPage.getTickertechSRC().contains("symbols=TXRH,COMP&")
+                    , "Tickertech chart isn't displaying Nasdaq only");
+            stockInformationPage.tickertechCompareVs("AAPL", false, true, false, false);
+            // ^^^ comparing with AAPL and Nasdaq
+            Assert.assertTrue(stockInformationPage.getTickertechSRC().contains("symbols=TXRH,AAPL,COMP&")
+                    , "Tickertech chart isn't displaying AAPL and Nasdaq only");
 
-        }catch (TimeoutException e)
-        {
+        }
+        catch (TimeoutException e){
             e.printStackTrace();
             driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
         }
-
     }
-     */
+
     @Test
     public void historicalQuotesWork(){
         try{
@@ -235,7 +262,8 @@ public class CheckPublicSite extends AbstractSpec {
             Calendar lastTradingDay = stockInformationPage.getCurrentDate();
             HistoricalQuote lastTradingDayQuotes;
             try {
-                lastTradingDayQuotes = YahooFinance.get("TXRH").getHistory(lastTradingDay, lastTradingDay, Interval.DAILY).get(0);
+                lastTradingDayQuotes = YahooFinance.get("TXRH").getHistory(lastTradingDay, lastTradingDay
+                        , Interval.DAILY).get(0);
             } catch (IOException e) {
                 fail("Problem retrieving last trading day stock data from Yahoo Finance.");
                 return;
@@ -244,8 +272,9 @@ public class CheckPublicSite extends AbstractSpec {
                     , 0.01, "Last trading day high isn't accurate");
             Assert.assertEquals(stockInformationPage.getHistoricalLow(), lastTradingDayQuotes.getLow().doubleValue()
                     , 0.01, "Last trading day low isn't accurate");
-            Assert.assertEquals(stockInformationPage.getHistoricalVolume(), lastTradingDayQuotes.getVolume().doubleValue()
-                    , 5000, "Last trading day volume isn't accurate");
+            Assert.assertEquals(stockInformationPage.getHistoricalVolume()
+                    , lastTradingDayQuotes.getVolume().doubleValue()
+                    , 10000, "Last trading day volume isn't accurate");
             Assert.assertEquals(stockInformationPage.getHistoricalOpen(), lastTradingDayQuotes.getOpen().doubleValue()
                     , 0.01, "Last trading day opening price isn't accurate");
             Assert.assertEquals(stockInformationPage.getHistoricalLast(), lastTradingDayQuotes.getClose().doubleValue()
@@ -537,8 +566,6 @@ public class CheckPublicSite extends AbstractSpec {
         Assert.assertEquals(faqPage.clickBackToTop().getScrollPositionY(), 0
                 , "Page does not scroll back up after clicking 'back to top'");
     }
-
-
 
 
 
