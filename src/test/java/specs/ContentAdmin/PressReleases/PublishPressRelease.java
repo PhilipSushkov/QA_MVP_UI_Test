@@ -1,10 +1,12 @@
 package specs.ContentAdmin.PressReleases;
 
+import org.openqa.selenium.By;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import org.testng.Assert;
 
+import pageobjects.ContentAdmin.PressReleases.EditPressRelease;
 import specs.AbstractSpec;
 import pageobjects.LoginPage.LoginPage;
 import pageobjects.Dashboard.Dashboard;
@@ -14,6 +16,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class PublishPressRelease extends AbstractSpec {
+    private static By btn_AddPressRelease;
+    private static LoginPage loginPage;
+    private static Dashboard dashboard;
+    private static PressReleases pressReleases;
+    private static EditPressRelease editPressRelease;
+    private static LivePressReleases livePressRelease;
 
     private Date current = new Date();
     private SimpleDateFormat fullDateF = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
@@ -33,50 +41,56 @@ public class PublishPressRelease extends AbstractSpec {
 
     @BeforeTest
     public void setUp() throws Exception {
+        btn_AddPressRelease = By.xpath(propUICommon.getProperty("btn_AddPressRelease"));
 
-        new LoginPage(driver).loginUser();
+        loginPage = new LoginPage(driver);
+        dashboard = new Dashboard(driver);
+        pressReleases = new PressReleases(driver);
+        editPressRelease = new EditPressRelease(driver);
+        livePressRelease = new LivePressReleases(driver);
+
+        loginPage.loginUser();
     }
-
-    //private final By contentAdminMenuButton = By.xpath("//span[contains(text(),'Content Admin')]");
-    //private final By pressReleasesMenuButton = By.xpath("//a[contains(text(),'Press Releases')]/parent::li");
 
     @Test
     public void canAddNewPressRelease() throws Exception {
-        dashboardURL = new Dashboard(driver).getUrl();
+        dashboardURL = dashboard.getUrl();
         String[] filenames = new String[2];
 
+        dashboard.openPageFromCommonTasks(btn_AddPressRelease);
+
         // adding new press release
-        String newsPageURL = new Dashboard(driver).newPressRelease().addNewPressRelease(headline, date, hour, min, AMPM, filenames);
+        String newsPageURL = editPressRelease.addNewPressRelease(headline, date, hour, min, AMPM, filenames);
         Assert.assertNotNull(newsPageURL);
 
         // publishing press release
-        new PressReleases(driver).publishPressRelease(headline);
+        pressReleases.publishPressRelease(headline);
 
         // checking press release on live site
         System.out.println("Looking for headline: " + headline);
-        boolean headlineFound = new PressReleases(driver).livePressReleases(newsPageURL).canFindNewHeadline(headline, true, filenames);
+        boolean headlineFound = pressReleases.livePressReleases(newsPageURL).canFindNewHeadline(headline, true, filenames);
         Assert.assertTrue(headlineFound);
 
         // changing headline on an existing press release
-        new LivePressReleases(driver).dashboard(dashboardURL)
+        livePressRelease.dashboard(dashboardURL)
                 .pressReleases()
                 .editPressRelease(headline)
                 .changeHeadlineTo(headlineV2);
 
         // publishing and checking updated press release
-        new PressReleases(driver).publishPressRelease(headlineV2);
+        pressReleases.publishPressRelease(headlineV2);
         System.out.println("Looking for headline: " + headlineV2);
-        headlineFound = new PressReleases(driver).livePressReleases(newsPageURL).canFindNewHeadline(headlineV2, true, filenames);
+        headlineFound = pressReleases.livePressReleases(newsPageURL).canFindNewHeadline(headlineV2, true, filenames);
         Assert.assertTrue(headlineFound);
 
         // deleting press release, and verifying it is gone
-        new LivePressReleases(driver)
+        livePressRelease
                 .dashboard(dashboardURL)
                 .pressReleases()
                 .editPressRelease(headlineV2)
                 .deletePressRelease();
-        new PressReleases(driver).publishPressRelease(headlineV2);
-        headlineFound = new PressReleases(driver)
+        pressReleases.publishPressRelease(headlineV2);
+        headlineFound = pressReleases
                 .livePressReleases(newsPageURL)
                 .canFindNewHeadline(headlineV2, false, filenames);
         Assert.assertFalse(headlineFound);
@@ -84,8 +98,8 @@ public class PublishPressRelease extends AbstractSpec {
 
     @AfterTest
     public void tearDown() {
-        new LivePressReleases(driver).dashboard(dashboardURL);
-        new Dashboard(driver).logoutFromAdmin();
+        livePressRelease.dashboard(dashboardURL);
+        dashboard.logoutFromAdmin();
         //driver.quit();
     }
 

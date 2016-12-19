@@ -64,7 +64,7 @@ public class PublishEvent extends AbstractSpec {
     @Test
     public void canAddNewEvent() throws Exception {
 
-        dashboardURL = new Dashboard(driver).getUrl();
+        dashboardURL = dashboard.getUrl();
         String[] filenames = new String[2];
 
         dashboard.openPageFromCommonTasks(addEventButton);
