@@ -54,6 +54,11 @@
             <class name="specs.SystemAdmin.AlertFilterList.CheckAlertFilterEdit" />
         </classes>
     </test>
+    <test name="CheckGenericStorageEdit">
+        <classes>
+            <class name="specs.SystemAdmin.GenericStorageList.CheckGenericStorageEdit" />
+        </classes>
+    </test>
 
 
     <!-- Site Admin part -->
