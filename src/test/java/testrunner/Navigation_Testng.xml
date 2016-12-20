@@ -168,6 +168,11 @@
             <class name="specs.SiteAdmin.LookupList.CheckLookupEdit" />
         </classes>
     </test>
+    <test name="CheckAliasEdit">
+        <classes>
+            <class name="specs.SiteAdmin.AliasList.CheckAliasEdit" />
+        </classes>
+    </test>
 
 
     <!-- Content Admin part -->
