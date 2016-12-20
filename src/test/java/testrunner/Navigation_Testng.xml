@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="Web CMS Suite Navigation" parallel="tests" thread-count="5">
+<suite name="Web CMS Suite Navigation" parallel="tests" thread-count="6">
 
     <!-- System Admin part -->
     <test name="CheckAlertFilterList">
@@ -151,6 +151,11 @@
     <test name="CheckCssFileEdit">
         <classes>
             <class name="specs.SiteAdmin.CssFileList.CheckCssFileEdit" />
+        </classes>
+    </test>
+    <test name="CheckExternalFeedList">
+        <classes>
+            <class name="specs.SiteAdmin.ExternalFeedList.CheckExternalFeedEdit" />
         </classes>
     </test>
 
