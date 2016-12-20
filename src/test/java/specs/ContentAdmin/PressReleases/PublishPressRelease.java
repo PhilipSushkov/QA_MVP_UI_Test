@@ -16,7 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class PublishPressRelease extends AbstractSpec {
-    private static By btn_AddPressRelease;
+    private static By addPressReleaseButton, contentAdminMenuButton, pressReleasesMenuButton;;
     private static LoginPage loginPage;
     private static Dashboard dashboard;
     private static PressReleases pressReleases;
@@ -41,7 +41,9 @@ public class PublishPressRelease extends AbstractSpec {
 
     @BeforeTest
     public void setUp() throws Exception {
-        btn_AddPressRelease = By.xpath(propUICommon.getProperty("btn_AddPressRelease"));
+        addPressReleaseButton = By.xpath(propUICommon.getProperty("btn_AddPressRelease"));
+        contentAdminMenuButton = By.xpath(propUIContentAdmin.getProperty("btnMenu_ContentAdmin"));
+        pressReleasesMenuButton = By.xpath(propUIContentAdmin.getProperty("btnMenu_PressReleases"));
 
         loginPage = new LoginPage(driver);
         dashboard = new Dashboard(driver);
@@ -57,7 +59,7 @@ public class PublishPressRelease extends AbstractSpec {
         dashboardURL = dashboard.getUrl();
         String[] filenames = new String[2];
 
-        dashboard.openPageFromCommonTasks(btn_AddPressRelease);
+        dashboard.openPageFromCommonTasks(addPressReleaseButton);
 
         // adding new press release
         String newsPageURL = editPressRelease.addNewPressRelease(headline, date, hour, min, AMPM, filenames);
@@ -72,10 +74,8 @@ public class PublishPressRelease extends AbstractSpec {
         Assert.assertTrue(headlineFound);
 
         // changing headline on an existing press release
-        livePressRelease.dashboard(dashboardURL)
-                .pressReleases()
-                .editPressRelease(headline)
-                .changeHeadlineTo(headlineV2);
+        livePressRelease.dashboard(dashboardURL).openPageFromMenu(contentAdminMenuButton, pressReleasesMenuButton);
+        pressReleases.editPressRelease(headline).changeHeadlineTo(headlineV2);
 
         // publishing and checking updated press release
         pressReleases.publishPressRelease(headlineV2);
@@ -84,11 +84,8 @@ public class PublishPressRelease extends AbstractSpec {
         Assert.assertTrue(headlineFound);
 
         // deleting press release, and verifying it is gone
-        livePressRelease
-                .dashboard(dashboardURL)
-                .pressReleases()
-                .editPressRelease(headlineV2)
-                .deletePressRelease();
+        livePressRelease.dashboard(dashboardURL).openPageFromMenu(contentAdminMenuButton, pressReleasesMenuButton);
+        pressReleases.editPressRelease(headlineV2).deletePressRelease();
         pressReleases.publishPressRelease(headlineV2);
         headlineFound = pressReleases
                 .livePressReleases(newsPageURL)

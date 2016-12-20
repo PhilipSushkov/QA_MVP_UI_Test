@@ -19,7 +19,7 @@ import java.util.Date;
  * Created by philipsushkov on 2016-11-08.
  */
 public class PublishPresentation extends AbstractSpec {
-    private static By addPresentationButton;
+    private static By addPresentationButton, contentAdminMenuButton, presentationsMenuItem;
     private static LoginPage loginPage;
     private static Dashboard dashboard;
     private static Presentations presentations;
@@ -29,6 +29,8 @@ public class PublishPresentation extends AbstractSpec {
     @BeforeTest
     public void setUp() throws Exception {
         addPresentationButton = By.xpath(propUICommon.getProperty("btn_AddPresentation"));
+        contentAdminMenuButton = By.xpath(propUIContentAdmin.getProperty("btnMenu_ContentAdmin"));
+        presentationsMenuItem = By.xpath(propUIContentAdmin.getProperty("btnMenu_Presentations"));
 
         loginPage = new LoginPage(driver);
         dashboard = new Dashboard(driver);
@@ -77,7 +79,8 @@ public class PublishPresentation extends AbstractSpec {
         Assert.assertTrue(headlineFound);
 
         // changing headline on an existing presentation
-        livePresentations.dashboard(dashboardURL).presentations().editPresentation(headline).changeHeadlineTo(headlineV2);
+        livePresentations.dashboard(dashboardURL).openPageFromMenu(contentAdminMenuButton, presentationsMenuItem);
+        presentations.editPresentation(headline).changeHeadlineTo(headlineV2);
 
         // publishing and checking updated presentation
         presentations.publishPresentation(headlineV2);
@@ -86,7 +89,8 @@ public class PublishPresentation extends AbstractSpec {
         Assert.assertTrue(headlineFound);
 
         // deleting presentation, and verifying it is gone
-        livePresentations.dashboard(dashboardURL).presentations().editPresentation(headlineV2).deletePresentation();
+        livePresentations.dashboard(dashboardURL).openPageFromMenu(contentAdminMenuButton, presentationsMenuItem);
+        presentations.editPresentation(headlineV2).deletePresentation();
         presentations.publishPresentation(headlineV2);
         headlineFound = presentations.livePresentations(newsPageURL).canFindNewHeadline(headlineV2, false, filenames);
         Assert.assertFalse(headlineFound);

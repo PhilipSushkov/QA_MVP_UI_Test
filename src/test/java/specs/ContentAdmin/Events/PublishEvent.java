@@ -20,7 +20,7 @@ import java.util.Date;
  */
 
 public class PublishEvent extends AbstractSpec {
-    private static By addEventButton;
+    private static By addEventButton, contentAdminMenuButton, eventsMenuItem;
     private static LoginPage loginPage;
     private static Dashboard dashboard;
     private static Events events;
@@ -31,6 +31,8 @@ public class PublishEvent extends AbstractSpec {
     @BeforeTest
     public void setUp() throws Exception {
         addEventButton = By.xpath(propUICommon.getProperty("btn_AddEvent"));
+        contentAdminMenuButton = By.xpath(propUIContentAdmin.getProperty("btnMenu_ContentAdmin"));
+        eventsMenuItem = By.xpath(propUIContentAdmin.getProperty("btnMenu_Events"));
 
         loginPage = new LoginPage(driver);
         dashboard = new Dashboard(driver);
@@ -83,7 +85,8 @@ public class PublishEvent extends AbstractSpec {
         Assert.assertTrue(headlineFound);
 
         // changing headline on an existing event
-        liveEvens.dashboard(dashboardURL).events().clickEditEventButton(headline).changeHeadlineTo(headlineV2);
+        liveEvens.dashboard(dashboardURL).openPageFromMenu(contentAdminMenuButton, eventsMenuItem);
+        events.clickEditEventButton(headline).changeHeadlineTo(headlineV2);
 
         // publishing and checking updated event
         events.publishEvent(headlineV2);
@@ -92,7 +95,8 @@ public class PublishEvent extends AbstractSpec {
         Assert.assertTrue(headlineFound);
 
         // deleting event, and verifying it is gone
-        liveEvens.dashboard(dashboardURL).events().clickEditEventButton(headlineV2).deleteEvent();
+        liveEvens.dashboard(dashboardURL).openPageFromMenu(contentAdminMenuButton, eventsMenuItem);
+        events.clickEditEventButton(headlineV2).deleteEvent();
         events.publishEvent(headlineV2);
         headlineFound = events.liveEvents(newsPageURL).canFindNewHeadline(headlineV2, false, filenames);
         Assert.assertFalse(headlineFound);
