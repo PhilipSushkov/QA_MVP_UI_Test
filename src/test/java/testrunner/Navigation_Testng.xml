@@ -143,9 +143,14 @@
             <class name="specs.SiteAdmin.LayoutDefinitionList.CheckLayoutDefinitionEdit" />
         </classes>
     </test>
-    <test name="CheckLayoutDefinitionEdit">
+    <test name="CheckModuleDefinitionEdit">
         <classes>
-            <class name="specs.SiteAdmin.LayoutDefinitionList.CheckLayoutDefinitionEdit" />
+            <class name="specs.SiteAdmin.ModuleDefinitionList.CheckModuleDefinitionEdit" />
+        </classes>
+    </test>
+    <test name="CheckCssFileEdit">
+        <classes>
+            <class name="specs.SiteAdmin.CssFileList.CheckCssFileEdit" />
         </classes>
     </test>
 
