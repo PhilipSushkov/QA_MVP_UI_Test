@@ -138,6 +138,16 @@
             <class name="specs.SiteAdmin.GlobalModuleList.CheckGlobalModuleEdit" />
         </classes>
     </test>
+    <test name="CheckLayoutDefinitionEdit">
+        <classes>
+            <class name="specs.SiteAdmin.LayoutDefinitionList.CheckLayoutDefinitionEdit" />
+        </classes>
+    </test>
+    <test name="CheckLayoutDefinitionEdit">
+        <classes>
+            <class name="specs.SiteAdmin.LayoutDefinitionList.CheckLayoutDefinitionEdit" />
+        </classes>
+    </test>
 
 
     <!-- Content Admin part -->
