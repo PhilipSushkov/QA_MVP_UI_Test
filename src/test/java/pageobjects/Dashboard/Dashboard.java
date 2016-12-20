@@ -2,7 +2,6 @@ package pageobjects.Dashboard;
 
 
 import org.openqa.selenium.*;
-import org.openqa.selenium.interactions.Actions;
 import pageobjects.AbstractPageObject;
 import pageobjects.PreviewSite.PreviewSiteHome;
 import pageobjects.SocialMedia.SocialMediaSummary;

@@ -44,10 +44,10 @@ public class CheckExternalFeedEdit extends AbstractSpec {
         Assert.assertEquals(externalFeedEdit.getTitle(), expectedTitle, "Actual External Feed Edit page Title doesn't match to expected");
 
         Assert.assertNotNull(externalFeedEdit.getFeedSelect(), "Feed select doesn't exist");
-        Assert.assertNotNull(externalFeedEdit.getTagListInput(), "Tag List input doesn't exist");
+        Assert.assertNotNull(externalFeedEdit.getTagListInput(), "Tag List field doesn't exist");
         Assert.assertNotNull(externalFeedEdit.getLanguageSelect(), "Language select doesn't exist");
         Assert.assertNotNull(externalFeedEdit.getCategorySelect(), "Category select doesn't exist");
-        Assert.assertNotNull(externalFeedEdit.getCompIdInput(), "CompId input doesn't exist");
+        Assert.assertNotNull(externalFeedEdit.getCompIdInput(), "CompId field doesn't exist");
         Assert.assertNotNull(externalFeedEdit.getActiveCheckbox(), "Active Checkbox doesn't exist");
         Assert.assertNotNull(externalFeedEdit.getSaveButton(), "Save Button doesn't exist");
     }
