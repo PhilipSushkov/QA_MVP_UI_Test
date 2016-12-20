@@ -133,6 +133,12 @@
         </classes>
     </test>
 
+    <test name="CheckGlobalModuleEdit">
+        <classes>
+            <class name="specs.SiteAdmin.GlobalModuleList.CheckGlobalModuleEdit" />
+        </classes>
+    </test>
+
 
     <!-- Content Admin part -->
     <test name="CheckDepartmentList">
