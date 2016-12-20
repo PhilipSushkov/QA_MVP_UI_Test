@@ -14,13 +14,9 @@ import static specs.AbstractSpec.propUICommon;
 
 
 public class Dashboard extends AbstractPageObject {
-    Actions action = new Actions(driver);
     private static By socialMediaDashboard, previewSiteButton, invalidateCacheButton;
     private static By invalidateCacheMessage, selectAnActionDropdown, changePasswordButton, oldPasswordField;
     private static By newPasswordField, confirmNewPasswordField, resetPasswordButton, passwordChangeError, closePasswordChangeDialog;
-
-    private static final long DEFAULT_PAUSE = 1500;
-    private static final int ATTEMPTS = 3;
 
     public Dashboard(WebDriver driver) {
         super(driver);

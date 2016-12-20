@@ -153,9 +153,14 @@
             <class name="specs.SiteAdmin.CssFileList.CheckCssFileEdit" />
         </classes>
     </test>
-    <test name="CheckExternalFeedList">
+    <test name="CheckExternalFeedEdit">
         <classes>
             <class name="specs.SiteAdmin.ExternalFeedList.CheckExternalFeedEdit" />
+        </classes>
+    </test>
+    <test name="CheckLinkToPageEdit">
+        <classes>
+            <class name="specs.SiteAdmin.LinkToPageList.CheckLinkToPageEdit" />
         </classes>
     </test>
 
