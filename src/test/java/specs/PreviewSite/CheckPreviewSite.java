@@ -13,6 +13,8 @@ import static org.junit.Assert.fail;
  */
 public class CheckPreviewSite extends AbstractSpec {
 
+    //// THERE SHOULD BE ONE TEST HERE FOR EVERY TEST ON CheckPublicSite.java \\\\
+
     private CheckPublicSite publicTests = new CheckPublicSite();
 
     @Before

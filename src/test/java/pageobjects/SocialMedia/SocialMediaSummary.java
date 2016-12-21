@@ -132,6 +132,7 @@ public class SocialMediaSummary extends AbstractPageObject {
         return findElement(linkedInCompany).getText();
     }
 
+    // checks that a number of followers of at least zero is displayed
     public boolean numberOfLinkedInFollowersIsDisplayed(){
         if (!doesElementExist(linkedInFollowers) || !findElement(linkedInFollowers).isDisplayed()){
             fail("Number of LinkedIn followers is not displayed.");
@@ -143,6 +144,7 @@ public class SocialMediaSummary extends AbstractPageObject {
         }
     }
 
+    // returns image file path containing /unchecked.png (red X; not setup), /checked.png (green checkmark; setup), or /disabled.png (grey checkmark; disabled)
     public String getLinkedInStatusIndicator(){
         if (!doesElementExist(linkedInStatusIndicator) || !findElement(linkedInStatusIndicator).isDisplayed()){
             fail("LinkedIn status indicator is not displayed.");
@@ -189,13 +191,16 @@ public class SocialMediaSummary extends AbstractPageObject {
         return new FacebookLogin(getDriver());
     }
 
-    public FacebookLogin reAuthorizeFacebookAccount(){
-        // deleting Facebook session cookie so that you are not logged in to Facebook
+    // This deletes the Facebook session cookie (named "xs") in order to undo the login that occurred during the authorization process
+    public SocialMediaSummary logoutFromFacebook(){
         String currentURL = driver.getCurrentUrl();
-        driver.get("https://www.facebook.com");
+        driver.get("https://www.facebook.com"); //need to navigate to facebook.com because WebDriver can only delete cookies from current domain
         driver.manage().deleteCookieNamed("xs");
         driver.get(currentURL);
+        return this;
+    }
 
+    public FacebookLogin reAuthorizeFacebookAccount(){
         waitForElement(facebookReAuthorizeButton);
         findElement(facebookReAuthorizeButton).click();
         return new FacebookLogin(getDriver());
@@ -250,6 +255,7 @@ public class SocialMediaSummary extends AbstractPageObject {
         return findElement(facebookPage).getText();
     }
 
+    // checks that a number of fans of at least zero is displayed
     public boolean numberOfFacebookFansIsDisplayed(){
         if (!doesElementExist(facebookFans) || !findElement(facebookFans).isDisplayed()){
             fail("Number of Facebook fans is not displayed.");
@@ -261,6 +267,7 @@ public class SocialMediaSummary extends AbstractPageObject {
         }
     }
 
+    // returns image file path containing /unchecked.png (red X; not setup), /checked.png (green checkmark; setup), or /disabled.png (grey checkmark; disabled)
     public String getFacebookStatusIndicator(){
         if (!doesElementExist(facebookStatusIndicator) || !findElement(facebookStatusIndicator).isDisplayed()){
             fail("Facebook status indicator is not displayed.");

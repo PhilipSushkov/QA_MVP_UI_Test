@@ -47,6 +47,7 @@ public class UserList extends AbstractPageObject {
         return new UserEdit(getDriver());
     }
 
+    // returns position (starting from 0) that username appears; returns -1 if username does not appear
     public int getIndexOfUsername(String desiredUsername){
         waitForElement(userName);
         List<WebElement> usernames = findElements(userName);

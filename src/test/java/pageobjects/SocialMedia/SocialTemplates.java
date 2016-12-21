@@ -42,6 +42,7 @@ public class SocialTemplates extends AbstractPageObject {
         return this;
     }
 
+    // checks that the editable template text is displayed
     public boolean editTemplateIsOpen(){
         waitForElement(editableTemplateText);
         return findElement(editableTemplateText).isDisplayed();

@@ -38,19 +38,19 @@ public class CreateNewUser extends AbstractSpec {
     public void canAddEditAndDeleteUser() throws Exception {
         final String expectedTitle = "User List";
         final String expectedEditTitle = "User Edit";
-        final String username = "quick-test-" + (new Date().getTime()/1000);
+        final String username = "quick-test-" + (new Date().getTime()/1000); //adds Unix timestamp to username
         final String password = "q4pass1234!";
 
         dashboard.openPageFromMenu(systemAdminMenuButton, userListMenuItem);
         Assert.assertEquals(userList.getTitle(), expectedTitle, "Actual User List page Title doesn't match to expected");
 
-        //check that username quick-test does not exist
+        //check that username does not exist
         Assert.assertEquals(userList.getIndexOfUsername(username), -1, "Username "+username+" already exists");
 
         //click on "Add New" and check that "User Edit" page opens
         Assert.assertEquals(userList.addNewUser().getTitle(), expectedEditTitle, "'User Edit' page is not opened after clicking 'Add New'");
 
-        //add quicktest user with email, username, password, "System Administrator" role and save
+        //create new user with email, username, password, "System Administrator" role and save
         userEdit.fillNewUser(username, password).saveUser();
 
         //check that you are returned to user list
@@ -65,7 +65,7 @@ public class CreateNewUser extends AbstractSpec {
 
         //check that you can login to user
         Assert.assertTrue(userList.logoutFromAdmin().credentialsWork(username, password), "Cannot login with newly created user.");
-        loginPage.loginUser().openPageFromMenu(systemAdminMenuButton, userListMenuItem);
+        loginPage.loginUser().openPageFromMenu(systemAdminMenuButton, userListMenuItem); // returning to user list page
 
         //click on edit icon and check that "User Edit" page opens
         Assert.assertEquals(userList.editUser(index).getTitle(), expectedEditTitle, "'User Edit' page is not opened after clicking edit button");
@@ -98,7 +98,7 @@ public class CreateNewUser extends AbstractSpec {
         loginPage.loginUser().openPageFromMenu(systemAdminMenuButton, userListMenuItem);
 
         //click on edit icon and check that "User Edit" page opens
-        Assert.assertEquals(userList.editUser(index).getTitle(), expectedEditTitle, "'User Edit' page is not opened after clicking edit button (2nd time editing)");
+        Assert.assertEquals(userList.editUser(index).getTitle(), expectedEditTitle, "'User Edit' page is not opened after clicking edit button (3rd time editing)");
 
         //click on delete
         userEdit.deleteUser();

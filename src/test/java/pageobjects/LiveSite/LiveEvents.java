@@ -127,16 +127,17 @@ public class LiveEvents extends AbstractPageObject {
         for (int i=0; i<eventDates.size(); i++){
             Date date;
             try {
-                date = format.parse(eventDates.get(i).getText()+" 23:59:59");
+                date = format.parse(eventDates.get(i).getText()+" 23:59:59"); // any event that occurred today counts as upcoming
             }catch (ParseException e){
                 System.out.println("Event with title: "+eventTitles.get(i).getText()+"\n\thas invalid date: "+eventDates.get(i).getText());
                 return false;
             }
             if (date.before(current)){
+                // if event started before today, open event page to check that end date is today or later (in which case it still counts as upcoming)
                 System.out.println("Checking end date of event with title: "+eventTitles.get(i).getText());
                 eventTitles.get(i).click();
                 String dateRange = findElement(eventDateRange).getText();
-                dateRange = dateRange.substring(dateRange.indexOf("to")+3);
+                dateRange = dateRange.substring(dateRange.indexOf("to")+3); // only taking ending date
                 Date endDate;
                 try {
                     endDate = format.parse(dateRange+" 23:59:59");
@@ -145,9 +146,11 @@ public class LiveEvents extends AbstractPageObject {
                     return false;
                 }
                 if (endDate.before(current)){
+                    // if end date is before today, THEN the event should not be upcoming
                     System.out.println("Event has non-upcoming end date: "+dateRange);
                     allUpcoming = false;
                 }
+                // returning to Events page after checking end date
                 driver.navigate().back();
                 eventTitles = findElements(eventTitle);
                 eventDates = findElements(eventDate);

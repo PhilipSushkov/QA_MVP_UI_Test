@@ -127,13 +127,13 @@ public class StockInformationPage extends AbstractPageObject {
     }
 
     public int getChartXigniteSliderXStart(){
-        return Integer.parseInt(findElement(chartXigniteSlider).getAttribute("x"));
+        return Integer.parseInt(findElement(chartXigniteSlider).getAttribute("x")); //how far from the left side of the chart is the left end of the date slider (only useful as a relative measure)
     }
 
     public boolean canHoverOverChartXignite(){
-        actions.clickAndHold(findElement(stockChartXigniteGridArea)).perform();
+        actions.clickAndHold(findElement(stockChartXigniteGridArea)).perform(); //clickAndHold needed so that cursor is still there when getAttribute is run
         pause(5000L);//ADD a WAIT FOR THE ATTRIBUTE "TRANSFORM" TO NOT BE -9999 perhaps? replace with pause
-        return !findElement(chartXigniteTooltip).getAttribute("transform").contains("-9999");
+        return !findElement(chartXigniteTooltip).getAttribute("transform").contains("-9999"); //transform attribute contains "-9999" when hovertext is not visible
     }
 
     // STOCK QUOTE METHODS
@@ -422,6 +422,7 @@ public class StockInformationPage extends AbstractPageObject {
         return valuesArePresent;
     }
 
+    // returns all the historical quote values as strings
     public String[] getHistoricalQuote(){
         return new String[] {
                 findElement(historicalHigh).getText(),
@@ -442,6 +443,7 @@ public class StockInformationPage extends AbstractPageObject {
         findElement(lookupButton).click();
     }
 
+    // returns the date that is historical quote is from
     public Calendar getCurrentDate(){
         Select monthDropdown = new Select(findElement(historicalMonthSelector));
         Select dayDropdown = new Select(findElement(historicalDaySelector));

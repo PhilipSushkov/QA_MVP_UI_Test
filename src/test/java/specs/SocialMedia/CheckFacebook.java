@@ -25,6 +25,7 @@ public class CheckFacebook extends AbstractSpec{
 
     @Test
     public void canConnectFacebookAccount() throws Exception {
+        // This test assumes that Facebook account is not currently setup and that you are not logged in to Facebook
         String expectedTitle = "Social Media Summary";
         String selectCompanyMessage = "Select the Facebook Page you want to link.";
         String notSetupMessage = "Facebook Account is not setup. Click the Authorize button below to add your Facebook account.";
@@ -71,6 +72,7 @@ public class CheckFacebook extends AbstractSpec{
         Assert.assertTrue("Disable button is not present after enabling Facebook account.", socialMediaSummary.facebookDisableButtonIsDisplayed());
 
         // re-authorizing Facebook account
+        socialMediaSummary.logoutFromFacebook(); // authorization process causes you to be logged in to Facebook; this deletes the Facebook session cookie to undo this
         socialMediaSummary.reAuthorizeFacebookAccount().allowAccessTo(facebookEmail, facebookPassword);
         Assert.assertEquals("You are not returned to summary page after re-authorizing Facebook account", expectedTitle, socialMediaSummary.getTitle());
         Assert.assertEquals("Select company status message is not properly displayed after re-authorizing", selectCompanyMessage, socialMediaSummary.getFacebookStatusMessage());
@@ -102,10 +104,14 @@ public class CheckFacebook extends AbstractSpec{
         Assert.assertTrue("Facebook Social Templates screen is not open.", socialTemplates.facebookSocialTemplatesAreDisplayed());
         String firstTemplateBefore = socialTemplates.getFirstTemplateText();
         String firstTemplateAfter = (new Date().getTime()/1000)+": Event starting {Event.StartDate}, for details: {ShortURL}";
+
+        // changing the first template to new value and saving it
         socialTemplates.editFirstTemplate();
         Assert.assertTrue("Edit template screen is not open.", socialTemplates.editTemplateIsOpen());
         Assert.assertEquals("Editable template textbox is different from original value", firstTemplateBefore, socialTemplates.getEditableTemplateText());
         socialTemplates.editTemplateTo(firstTemplateAfter).saveTemplate();
+
+        //checking that the template has been changed (including after closing and reopening the settings screen)
         Assert.assertEquals("Template is not set to new value", firstTemplateAfter, socialTemplates.getFirstTemplateText());
         socialTemplates.closeSocialTemplates().openFacebookSettings();
         Assert.assertEquals("Template is not set to new value after closing and re-opening Social Templates", firstTemplateAfter, socialTemplates.getFirstTemplateText());

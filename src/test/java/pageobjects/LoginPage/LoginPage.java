@@ -69,6 +69,7 @@ public class LoginPage extends Page {
 
     }
 
+    // alternative login method for using a different username and password (use only with valid credentials)
     public Dashboard loginUser(String username, String password) throws Exception {
         waitForElementToAppear(emailField);
         findElement(emailField).sendKeys(username);
@@ -78,6 +79,12 @@ public class LoginPage extends Page {
         return new Dashboard(getDriver());
     }
 
+    /*
+        Checks whether you can login with a given username and password
+        If login is successful, it will log out and then return true
+        If error message is presented, it will clear the fields and then return false
+        NOTE: Repeatedly running this method with incorrect passwords may result in the account becoming temporarily locked out
+     */
     public boolean credentialsWork(String username, String password) throws Exception {
         waitForElementToAppear(emailField);
         findElement(emailField).sendKeys(username);
@@ -87,11 +94,13 @@ public class LoginPage extends Page {
 
         pause(5000);
 
+        // checks if login error message is present
         if (doesElementExist(loginErrorMessage) && findElement(loginErrorMessage).isDisplayed()){
             findElement(emailField).clear();
             findElement(passwordField).clear();
             return false;
         }
+        // checks if dashboard has been loaded
         else if (doesElementExist(dashboardLabel) && findElement(dashboardLabel).getText().toLowerCase().contains("dashboard")){
             logoutFromAdmin();
             return true;

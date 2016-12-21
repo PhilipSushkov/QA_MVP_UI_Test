@@ -24,6 +24,7 @@ public class CheckLinkedIn extends AbstractSpec{
     }
 
     @Test
+    // This test assumes that LinkedIn account is not currently setup and that you are not logged in to LinkedIn
     public void canConnectLinkedInAccount() throws Exception {
         String expectedTitle = "Social Media Summary";
         String selectCompanyMessage = "Select the Company page you want to link";
@@ -102,10 +103,14 @@ public class CheckLinkedIn extends AbstractSpec{
         Assert.assertTrue("LinkedIn Social Templates screen is not open.", socialTemplates.linkedInSocialTemplatesAreDisplayed());
         String firstTemplateBefore = socialTemplates.getFirstTemplateText();
         String firstTemplateAfter = (new Date().getTime()/1000)+": Event starting {Event.StartDate}, for details: {ShortURL}";
+
+        // changing the first template to new value and saving it
         socialTemplates.editFirstTemplate();
         Assert.assertTrue("Edit template screen is not open.", socialTemplates.editTemplateIsOpen());
         Assert.assertEquals("Editable template textbox is different from original value", firstTemplateBefore, socialTemplates.getEditableTemplateText());
         socialTemplates.editTemplateTo(firstTemplateAfter).saveTemplate();
+
+        //checking that the template has been changed (including after closing and reopening the settings screen)
         Assert.assertEquals("Template is not set to new value", firstTemplateAfter, socialTemplates.getFirstTemplateText());
         socialTemplates.closeSocialTemplates().openLinkedInSettings();
         Assert.assertEquals("Template is not set to new value after closing and re-opening Social Templates", firstTemplateAfter, socialTemplates.getFirstTemplateText());

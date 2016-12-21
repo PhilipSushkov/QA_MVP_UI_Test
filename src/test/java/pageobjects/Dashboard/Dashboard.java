@@ -68,15 +68,18 @@ public class Dashboard extends AbstractPageObject {
     }
 
     public Dashboard changePassword(String current, String changeTo){
+        // opening the change password dialog box
         waitForElement(selectAnActionDropdown);
         findElement(selectAnActionDropdown).click();
         waitForElement(changePasswordButton);
         findElement(changePasswordButton).click();
+        // entering old password and twice entering new password
         waitForElement(oldPasswordField);
         findElement(oldPasswordField).sendKeys(current);
         findElement(newPasswordField).sendKeys(changeTo);
         findElement(confirmNewPasswordField).sendKeys(changeTo);
         pause(2000);
+        // submitting password change
         retryClick(findElement(resetPasswordButton));
         pause(2000);
         return this;
@@ -98,11 +101,13 @@ public class Dashboard extends AbstractPageObject {
         return this;
     }
 
+    // returns the message shown in the password change confirmation alert and closes the alert
+    // fails the test if no alert is present
     public String getPasswordChangeConfirmationAndAccept(){
         try {
             Alert confirmation = driver.switchTo().alert();
             String confirmationText = confirmation.getText();
-            confirmation.accept();
+            confirmation.accept(); // closes the alert
             driver.switchTo().defaultContent();
             pause(2000);
             return confirmationText;
@@ -112,6 +117,8 @@ public class Dashboard extends AbstractPageObject {
         }
     }
 
+    // returns the password change error message and closes the password change dialog box
+    // fails the test if no error message is present
     public String getPasswordChangeErrorMessageAndClose(){
         pause(2000);
         waitForElement(passwordChangeError);

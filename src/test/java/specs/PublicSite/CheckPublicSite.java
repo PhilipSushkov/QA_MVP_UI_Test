@@ -25,6 +25,8 @@ import static org.testng.Assert.fail;
 public class CheckPublicSite extends AbstractSpec {
     private final String Q4WebVersionNumber = "4.3.0.61";
 
+    //// WHEN ADDING A TEST TO THIS CLASS, ADD A ENTRY TO IT IN CheckPreviewSite.java \\\\
+
 
     /** Changes necessary to make include removing all the "new XXX(drivers).YYY with a declaration, instead, in the @Before
      and replacing it in all pieces of code. DONE
@@ -70,41 +72,46 @@ public class CheckPublicSite extends AbstractSpec {
 
     @Test
     public void stockChartXigniteWorks(){
+        // going to Stock Information page and checking that Xignite stock chart appears
         Assert.assertTrue(homePage.selectStockInformationFromMenu().stockChartXigniteIsDisplayed()
                 , "Xignite stock chart is not displayed.");
 
+        // trying to switch time range and checking that the longer the time range, the earlier the start of the range displayed (x position of left side of slider)
         stockInformationPage.switchChartXigniteTo1Month();
         int xStart1Month = stockInformationPage.getChartXigniteSliderXStart();
         stockInformationPage.switchChartXigniteTo1Quarter();
         int xStart1Quarter = stockInformationPage.getChartXigniteSliderXStart();
         stockInformationPage.switchChartXigniteTo1Year();
         int xStart1Year = stockInformationPage.getChartXigniteSliderXStart();
-
         Assert.assertTrue(xStart1Month>xStart1Quarter && xStart1Quarter>xStart1Year
                 , "Xignite stock chart period is not switching properly.\nxStart1Year="+xStart1Year+
                         "\nxStart1Quarter="+xStart1Quarter+"\nxStart1Month="+xStart1Month);
 
+        // checking that hovering over the chart causes hovertext to appear
         Assert.assertTrue(stockInformationPage.canHoverOverChartXignite()
                 , "Hovering over Xignite chart doesn't work.");
     }
 
     @Test
     public void stockQuoteWorks(){
+        // going to Stock Information page and checking that the stock quote module is displayed
         Assert.assertTrue(homePage.selectStockInformationFromMenu().stockQuoteIsDisplayed()
                 , "Stock quote is not displayed.");
 
+        // checking that all stock quote values are present and doing basic validation (like checking that stock prices are above zero)
         Assert.assertTrue(stockInformationPage.stockQuoteValuesArePresent()
                 , "One or more stock quote values are missing or invalid.");
     }
 
     @Test
     public void stockQuoteValuesAreAccurate() throws TimeoutException{
-
+        // going to Stock Information page and checking that the stock quote module is displayed
         Assert.assertTrue(homePage.selectStockInformationFromMenu().stockQuoteIsDisplayed()
                 , "Stock quote is not displayed.");
 
         driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
 
+        // fetching stock quotes from Yahoo
         StockQuote stockQuote;
         try {
             stockQuote = YahooFinance.get("TXRH").getQuote(false);
@@ -112,6 +119,7 @@ public class CheckPublicSite extends AbstractSpec {
             fail("Problem retrieving stock data from Yahoo Finance.");
             return;
         }
+        // checking that displayed stock quote values are close to values from Yahoo
         Assert.assertEquals(stockInformationPage.getStockPrice(),stockQuote.getPrice().doubleValue()
                 , 0.25, "Stock price isn't accurate");
         Assert.assertEquals(stockInformationPage.getStockChange(), stockQuote.getChange().doubleValue()
@@ -130,10 +138,31 @@ public class CheckPublicSite extends AbstractSpec {
                 , 0.01, "Stock today's open isn't accurate");
         Assert.assertEquals(stockInformationPage.getStockPreviousClose(), stockQuote.getPreviousClose().doubleValue()
                 , 0.01, "Stock previous close isn't accurate");
+        // Accuracy of volume is not checked due to the wide tolerance (in the hundreds of thousands) that would be needed to account for delayed values.
     }
 
     @Test
     public void stockChartTickertechWorks() {
+        /*
+            The actual chart in the Tickertech module is a single image file that is loaded from Tickertech's website
+            with its URL containing all the parameters that affect the chart. This test extracts these parameters from
+            the URL in order to confirm that clicking various things results in the right chart being requested from Tickertech.
+            PARAMETERS (the ones that change when modifying the chart):
+                period: 1m, 1q, 1y, 5y, 1mp, 1qp, 1yp, 5yp (p if chart set to % change)
+                fillBelowLine (Chart type): yes (mountain), prev (fill to prev. close), no (line, point, bar, candle stick)
+                type (Chart type): line (mountain, fill to prev. close, line), point (point), bar (bar), candle (candle stick)
+                showHighsLows (Chart type): no (mountain, fill to prev. close, line, bar, candle stick), yes (point)
+                showVolumeTable: no if comparing
+                showLegendTable: yes if comparing
+                symbols: TXRH (not comparing)
+        		         TXRH,$DJI (comparing with Dow)
+		                 TXRH,$DJI,COMP (comparing with Dow and Nasdaq)
+        		         TXRH,$DJI,COMP,SPX (comparing with Dow, Nasdaq, and S&P)
+		                 TXRH,$DJI,COMP,SPX,RUT (comparing with all)
+        		         TXRH,COMP,RUT (comparing with Nasdaq and Russell)
+                Note: candle stick can’t be used with % change
+                Note: upon activating compare, chart switches to % change and line
+        */
         try {
             //go to stock information page and check that chart is present
             Assert.assertTrue(homePage.selectStockInformationFromMenu().stockChartTickertechIsDisplayed()
@@ -220,6 +249,7 @@ public class CheckPublicSite extends AbstractSpec {
 
     @Test
     public void historicalQuotesWork(){
+        // going to Stock Information page and checking that historical quotes module appears
         try{
            Assert.assertTrue(homePage.selectStockInformationFromMenu().historicalQuotesAreDisplayed()
                    , "Historical quotes are not displayed.");
@@ -227,19 +257,24 @@ public class CheckPublicSite extends AbstractSpec {
            driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
         }
 
+        // checking that all stock quote values are present and doing basic validation (like checking that stock prices are above zero)
         try {
            Assert.assertTrue(stockInformationPage.historicalQuoteValuesArePresent()
                    , "One or more historical quote values are missing or invalid.");
         }catch (TimeoutException e){
             driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
         }
-        try {
-            String[] lastDayQuotes = stockInformationPage.getHistoricalQuote();
-            stockInformationPage.changeQuoteDate();
 
+        //
+        try {
+            String[] lastDayQuotes = stockInformationPage.getHistoricalQuote(); // saving values currently displayed
+            stockInformationPage.changeQuoteDate(); // changing to an earlier date
+
+            // revalidating the new values
             Assert.assertTrue(stockInformationPage.historicalQuoteValuesArePresent()
                     ,"One or more historical quote values are missing or invalid after changing date.");
 
+            // checking that all the values have changed
             String[] olderDayQuotes = stockInformationPage.getHistoricalQuote();
             for (int i = 0; i < olderDayQuotes.length; i++) {
                 Assert.assertFalse(olderDayQuotes[i].equals(lastDayQuotes[i])
@@ -255,12 +290,14 @@ public class CheckPublicSite extends AbstractSpec {
     @Test
     public void historicalQuoteValuesAreAccurate() {
         try {
+            // going to Stock Information page and checking that historical quotes module appears
             Assert.assertTrue(homePage.selectStockInformationFromMenu().historicalQuotesAreDisplayed()
             , "Historical quotes are not displayed." );
 
             // checking historical values from last trading day
-            Calendar lastTradingDay = stockInformationPage.getCurrentDate();
+            Calendar lastTradingDay = stockInformationPage.getCurrentDate(); //getting date from date dropdowns in module
             HistoricalQuote lastTradingDayQuotes;
+            // fetching data from Yahoo
             try {
                 lastTradingDayQuotes = YahooFinance.get("TXRH").getHistory(lastTradingDay, lastTradingDay
                         , Interval.DAILY).get(0);
@@ -268,6 +305,7 @@ public class CheckPublicSite extends AbstractSpec {
                 fail("Problem retrieving last trading day stock data from Yahoo Finance.");
                 return;
             }
+            // comparing Yahoo data with displayed values
             Assert.assertEquals(stockInformationPage.getHistoricalHigh(), lastTradingDayQuotes.getHigh().doubleValue()
                     , 0.01, "Last trading day high isn't accurate");
             Assert.assertEquals(stockInformationPage.getHistoricalLow(), lastTradingDayQuotes.getLow().doubleValue()
@@ -282,14 +320,16 @@ public class CheckPublicSite extends AbstractSpec {
 
             // checking historical values from older day
             stockInformationPage.changeQuoteDate();
-            Calendar olderDay = stockInformationPage.getCurrentDate();
+            Calendar olderDay = stockInformationPage.getCurrentDate(); //getting date from date dropdowns in module
             HistoricalQuote olderDayQuotes;
+            // fetching data from Yahoo
             try {
                 olderDayQuotes = YahooFinance.get("TXRH").getHistory(olderDay, olderDay, Interval.DAILY).get(0);
             } catch (IOException e) {
                 fail("Problem retrieving older day stock data from Yahoo Finance.");
                 return;
             }
+            // comparing Yahoo data with displayed values
             Assert.assertEquals(stockInformationPage.getHistoricalHigh(), olderDayQuotes.getHigh().doubleValue()
                     ,0.01, "Older day high isn't accurate");
 
@@ -314,31 +354,38 @@ public class CheckPublicSite extends AbstractSpec {
 
     @Test
     public void financialReportsWork(){
+        // going to Financial Reports page and checking that at least one report is displayed
         try {
             Assert.assertTrue(homePage.selectFinancialReportsFromMenu().financialReportsAreDisplayed()
                     , "Financial reports are not displayed.");
         }catch (TimeoutException e){
             driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
         }
+        // checking that all report titles are valid links
         Assert.assertTrue(financialReportsPage.reportTitlesAreLinks()
                 , "One or more financial report titles are not links.");
+        // checking that at least one report title links to a .pdf file
         Assert.assertTrue(financialReportsPage.pdfLinkIsPresent()
                 , "No financial reports links to a .pdf file.");
     }
 
     @Test
     public void pressReleasesWork(){
-       try {
-           Assert.assertTrue(homePage.selectPressReleasesFromMenu().pressReleasesAreDisplayed()
+       // going to Press Releases page and checking that at least one press release is displayed
+        try {
+            Assert.assertTrue(homePage.selectPressReleasesFromMenu().pressReleasesAreDisplayed()
                    , "Press releases are not displayed.");
-       }catch (TimeoutException e) {
-           driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
-       }
+        }catch (TimeoutException e) {
+            driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
+        }
+        // checking that all press releases displayed are from the current year
         Assert.assertTrue(livePressReleases.pressReleasesAreAllFromYear(Year.now().toString())
                 , "One or more displayed press releases are not from the current year.");
+        // switching year to 2015 and checking that all press releases displayed are from 2015
         livePressReleases.switchYearTo("2015");
         Assert.assertTrue(livePressReleases.pressReleasesAreAllFromYear("2015")
                 , "One or more displayed press releases are not from the selected year (2015).");
+        // clicking the first headline and checking the the opened press release has a download link
         try {
             livePressReleases.openFirstPressRelease();
         }catch (TimeoutException e){
@@ -350,14 +397,17 @@ public class CheckPublicSite extends AbstractSpec {
 
     @Test
     public void eventsWork(){
+        // going to Events page and checking that at least one event is displayed
         try {
             Assert.assertTrue(homePage.selectEventsFromMenu().eventsAreDisplayed()
                     ,"Upcoming events are not displayed.");
         }catch (TimeoutException e){
             driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
         }
+        // checking that all displayed events take place today or in the future
         Assert.assertTrue(liveEvents.allEventsAreUpcoming()
                 , "One or more events displayed are not upcoming.");
+        // clicking Past Events button and checking that at least one event is displayed and all displayed events are in the past
         liveEvents.switchToPastEvents();
         Assert.assertTrue(liveEvents.eventsAreDisplayed(), "Past events are not displayed.");
         try {
@@ -365,13 +415,12 @@ public class CheckPublicSite extends AbstractSpec {
         }catch (TimeoutException e){
             driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
         }
-
+        // opening the first event and checking that the Events Details module is displayed
         try{
               liveEvents.openFirstEvent();
         }catch (TimeoutException e){
              driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
         }
-
         try{
             Assert.assertTrue(liveEvents.eventIsOpen(), "Event details have not been loaded.");
         }catch (TimeoutException e)
@@ -382,48 +431,59 @@ public class CheckPublicSite extends AbstractSpec {
 
     @Test
     public void presentationsWork(){
+        // going to Presentations page and checking that at least one presentation is displayed
         try{
             Assert.assertTrue(homePage.selectPresentationsFromMenu().presentationsAreDisplayed()
                     , "Presentations are not displayed.");
         } catch(TimeoutException e){
             driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
         }
+        // checking that all presentations displayed are from the current year
         Assert.assertTrue(livePresentations.presentationsAreAllFromYear(Year.now().toString())
                 , "One or more displayed presentations are not from the current year.");
+        // switching year to 2015 and checking that all presentations displayed are from 2015
         livePresentations.switchYearTo("2015");
         Assert.assertTrue(livePresentations.presentationsAreAllFromYear("2015")
                 , "One or more displayed presentations are not from the selected year (2015).");
+        // checking that all presentation links are valid links
         Assert.assertTrue(livePresentations.presentationLinksAreLinks()
                 , "One or more presentation links are not links.");
+        // checking that at least one link links to a .pdf file
         Assert.assertTrue(livePresentations.pdfLinkIsPresent()
                 ,"No presentations link to a .pdf file.");
     }
 
     @Test
     public void secFilingsWork(){
+        // going to SEC Filings page and checking that at least one filing is displayed
         try {
             Assert.assertTrue(homePage.selectSECFilingsFromMenu().filingsAreDisplayed()
                     ,"SEC filings are not displayed.");
         }catch (TimeoutException e){
             driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
         }
+        // checking that all filings displayed are from the current year
         Assert.assertTrue(secFilingsPage.filingsAreAllFromYear(Year.now().toString())
                 , "One or more displayed filings are not from the current year.");
+        // switching year to 2015 and checking that all filings displayed are from 2015
         secFilingsPage.switchYearTo("2015");
         Assert.assertTrue(secFilingsPage.filingsAreAllFromYear("2015")
                 , "One or more displayed filings are not from the selected year (2015).");
+        // checking that all the PDF icons link to a .pdf file
         Assert.assertTrue(secFilingsPage.pdfIconsLinkToPDF()
                 , "One or more pdf icons do not link to a .pdf file.");
     }
 
     @Test
     public void peopleWork(){
+        // going to Board of Directors page and checking that at least one person is displayed
         try {
             Assert.assertTrue(homePage.selectBoardOfDirectorsFromMenu().peopleAreDisplayed()
                     , "People are not displayed." );
         }catch (TimeoutException e){
             driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
         }
+        // checking that biographical information is displayed for every person
         Assert.assertTrue(boardOfDirectorsPage.peopleHaveBiographicalInformation()
                 , "One or more people do not have biographical information.");
     }
@@ -528,23 +588,31 @@ public class CheckPublicSite extends AbstractSpec {
         String comparedSymbol = "AAPL";
         LocalDate startDate = LocalDate.of(2016, Month.APRIL, 4);
         LocalDate endDate = LocalDate.of(2016, Month.OCTOBER, 28);
+        // going to Investment Calculator page and checking that the investment calculator is displayed
         InvestmentCalculatorPage investmentCalculatorPage = homePage.selectInvestmentCalculatorFromMenu();
         Assert.assertTrue(investmentCalculatorPage.investmentCalculatorExists()
                 , "Investment Calculator is not displayed.");
+        // performing calculation of $100 investment from startDate to endDate and checking that the growth chart is displayed
         Assert.assertTrue(investmentCalculatorPage.performSampleCalculation(startDate, endDate).growthChartIsPresent()
                 , "Growth chart is not displayed after clicking calculate.");
+        // checking that the table header has the expected symbol
         Assert.assertTrue(investmentCalculatorPage.resultsIncludeSymbol(symbol)
                 , "Expected symbol is not present." );
+        // checking whether hovering over the chart produces hovertext
         Assert.assertTrue(investmentCalculatorPage.canHoverOverGrowthChart()
                 , "Cannot hover over the growth chart." );
+        // checking whether values in table are present and properly formatted
         Assert.assertTrue(investmentCalculatorPage.growthDataIsValid(), "Invalid growth data is displayed." );
+        // checking whether the displayed starting and ending dates are correct
         Assert.assertEquals(investmentCalculatorPage.getStartDate(), startDate, "Start date does not match" );
-
         Assert.assertEquals(investmentCalculatorPage.getEndDate(), endDate, "End date does not match");
+        // clicking the close button and checking that results are no longer displayed
         Assert.assertFalse(investmentCalculatorPage.closeResults().resultsAreOpen()
                 , "Results area is not closed.");
+        // adding comparedSymbol to compare with, recalculating, and checking that the growth chart is displayed
         Assert.assertTrue(investmentCalculatorPage.recalculateAndCompareTo(comparedSymbol).growthChartIsPresent()
                 , "Recalculation with compare to other symbol doesn't work." );
+        // checking that the table header includes both the original and the compared to symbols
         Assert.assertTrue(investmentCalculatorPage.resultsIncludeSymbol(symbol)
                 , "Expected symbol is not present after recalculating." );
         Assert.assertTrue(investmentCalculatorPage.resultsIncludeSymbol(comparedSymbol)
@@ -553,16 +621,22 @@ public class CheckPublicSite extends AbstractSpec {
 
     @Test
     public void faqPageWorks(){
+        // going to FAQ page and checking that at least one question is displayed at the top of the page
         FAQPage faqPage = homePage.selectFAQFromMenu();
         int numQuestionsTop = faqPage.getNumQuestionsTop();
         Assert.assertTrue(numQuestionsTop > 0, "No questions are displayed at top of page." );
+        // checking that the same number of questions are displayed at the top of the page as are displayed below
         int numQuestionsBelow = faqPage.getNumQuestionsBelow();
         Assert.assertEquals(numQuestionsBelow, numQuestionsTop
      ,"Number of questions displayed at below is different from number of questions displayed at top of page");
+        // checking that there is an answer for every question
         int numAnswers = faqPage.getNumAnswers();
         Assert.assertEquals(numAnswers, numQuestionsBelow, "There is not an answer for every question");
+        // clicking on the first question (on the top of the page) and checking that the page scrolls down to that question below
+        // this may not work if the vertical distance between the first question below and the bottom of the page is less than the window height
         Assert.assertEquals(faqPage.clickFirstQuestion().getScrollPositionY(), faqPage.getFirstQuestionY()
                 , "Page does not scroll down after clicking question");
+        // clicking on "back to top" and checking that the page scrolls back up to the top
         Assert.assertEquals(faqPage.clickBackToTop().getScrollPositionY(), 0
                 , "Page does not scroll back up after clicking 'back to top'");
     }

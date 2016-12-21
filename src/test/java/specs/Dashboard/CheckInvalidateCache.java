@@ -32,6 +32,8 @@ public class CheckInvalidateCache extends AbstractSpec {
         final String expectedMessage = "Cache is invalidated successfully";
 
         //System.out.println(dashboard.invalidateCache().getInvalidateCacheMessage());
+
+        // clicking Invalidate Cache button and checking that cache invalidated message appears
         dashboard.invalidateCache();
         Assert.assertEquals(dashboard.getInvalidateCacheMessage(), expectedMessage, "Invalidate cache message is not displayed");
     }
