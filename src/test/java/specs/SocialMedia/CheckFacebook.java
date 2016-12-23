@@ -1,10 +1,10 @@
 package specs.SocialMedia;
 
-import org.hamcrest.CoreMatchers;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+import org.testng.Assert;
+
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.LoginPage.LoginPage;
 import pageobjects.SocialMedia.SocialMediaSummary;
@@ -18,7 +18,7 @@ import java.util.Date;
  */
 public class CheckFacebook extends AbstractSpec{
 
-    @Before
+    @BeforeTest
     public void setUp() throws Exception {
         new LoginPage(driver).loginUser();
     }
@@ -34,95 +34,119 @@ public class CheckFacebook extends AbstractSpec{
         String facebookName = "Yaroslav Api";
         String facebookCompany = "Q4 Web Test";
         SocialMediaSummary socialMediaSummary = new Dashboard(driver).openSocialMedia();
-        Assert.assertEquals("Actual Social Media Summary page title doesn't match to expected", expectedTitle, socialMediaSummary.getTitle());
-        Assert.assertThat("Red X is not displayed at start of test (Facebook account not setup state expected)",
+
+        Assert.assertEquals(socialMediaSummary.getTitle(), expectedTitle,"Actual Social Media Summary page title doesn't match to expected");
+
+        /* Assert.assertThat("Red X is not displayed at start of test (Facebook account not setup state expected)",
                 socialMediaSummary.getFacebookStatusIndicator(),
-                CoreMatchers.containsString("/unchecked.png"));
+                CoreMatchers.containsString("/unchecked.png")); */
+        Assert.assertTrue(socialMediaSummary.getFacebookStatusIndicator().contains("/unchecked.png"),
+                "Red X is not displayed at start of test (Facebook account not setup state expected)");
 
         // authorizing Facebook account
         socialMediaSummary.authorizeFacebookAccount().allowAccessTo(facebookEmail, facebookPassword);
-        Assert.assertEquals("You are not returned to summary page after authorizing Facebook account", expectedTitle, socialMediaSummary.getTitle());
-        Assert.assertEquals("Select company status message is not properly displayed", selectCompanyMessage, socialMediaSummary.getFacebookStatusMessage());
+        Assert.assertEquals(socialMediaSummary.getTitle(),expectedTitle,"You are not returned to summary page after authorizing Facebook account");
+        Assert.assertEquals(socialMediaSummary.getFacebookStatusMessage(),selectCompanyMessage,"Select company status message is not properly displayed");
+
         socialMediaSummary.chooseFirstFacebookPage();
-        Assert.assertEquals("Incorrect account name is displayed", facebookName, socialMediaSummary.getFacebookAccountName());
-        Assert.assertEquals("Incorrect company name is displayed", facebookCompany, socialMediaSummary.getFacebookPage());
-        Assert.assertTrue("Number of followers is improperly displayed.", socialMediaSummary.numberOfFacebookFansIsDisplayed());
-        Assert.assertThat("Green checkmark is not displayed after authorizing Facebook account",
+        Assert.assertEquals(socialMediaSummary.getFacebookAccountName(),facebookName,"Incorrect account name is displayed");
+        Assert.assertEquals(socialMediaSummary.getFacebookPage(),facebookCompany,"Incorrect company name is displayed");
+        Assert.assertTrue(socialMediaSummary.numberOfFacebookFansIsDisplayed(),"Number of followers is improperly displayed.");
+
+        /* Assert.assertThat("Green checkmark is not displayed after authorizing Facebook account",
                 socialMediaSummary.getFacebookStatusIndicator(),
-                CoreMatchers.containsString("/checked.png"));
-        Assert.assertTrue("Settings button is not displayed after authorizing Facebook account.", socialMediaSummary.facebookSettingsButtonIsDisplayed());
-        Assert.assertTrue("De-Authorize button is not displayed after authorizing Facebook account", socialMediaSummary.facebookDeAuthorizeButtonIsDisplayed());
-        Assert.assertTrue("Disable button is not displayed after authorizing Facebook account", socialMediaSummary.facebookDisableButtonIsDisplayed());
-        Assert.assertTrue("Re-Authorize button is not displayed after authorizing Facebook account", socialMediaSummary.facebookReAuthorizeButtonIsDisplayed());
+                CoreMatchers.containsString("/checked.png")); */
+        Assert.assertTrue(socialMediaSummary.getFacebookStatusIndicator().contains("/checked.png"),
+                "Green checkmark is not displayed after authorizing Facebook account");
+
+        Assert.assertTrue(socialMediaSummary.facebookSettingsButtonIsDisplayed(),"Settings button is not displayed after authorizing Facebook account.");
+        Assert.assertTrue(socialMediaSummary.facebookDeAuthorizeButtonIsDisplayed(),"De-Authorize button is not displayed after authorizing Facebook account");
+        Assert.assertTrue(socialMediaSummary.facebookDisableButtonIsDisplayed(),"Disable button is not displayed after authorizing Facebook account");
+        Assert.assertTrue(socialMediaSummary.facebookReAuthorizeButtonIsDisplayed(),"Re-Authorize button is not displayed after authorizing Facebook account");
 
         // disabling Facebook account
         socialMediaSummary.disableFacebookAccount();
-        Assert.assertThat("Grey checkmark is not displayed after disabling Facebook account",
+
+        /*Assert.assertThat("Grey checkmark is not displayed after disabling Facebook account",
                 socialMediaSummary.getFacebookStatusIndicator(),
-                CoreMatchers.containsString("/disabled.png"));
-        Assert.assertFalse("Disable button is still present after disabling Facebook account.", socialMediaSummary.facebookDisableButtonIsDisplayed());
-        Assert.assertTrue("Enable button is not present after disabling Facebook account.", socialMediaSummary.facebookEnableButtonIsDisplayed());
+                CoreMatchers.containsString("/disabled.png"));*/
+        Assert.assertTrue(socialMediaSummary.getFacebookStatusIndicator().contains("/disabled.png"),
+                "Grey checkmark is not displayed after disabling Facebook account");
+        Assert.assertFalse(socialMediaSummary.facebookDisableButtonIsDisplayed(),"Disable button is still present after disabling Facebook account.");
+        Assert.assertTrue(socialMediaSummary.facebookEnableButtonIsDisplayed(),"Enable button is not present after disabling Facebook account.");
 
         // enabling Facebook account
         socialMediaSummary.enableFacebookAccount();
-        Assert.assertThat("Green checkmark is not displayed after enabling Facebook account",
+        /* Assert.assertThat("Green checkmark is not displayed after enabling Facebook account",
                 socialMediaSummary.getFacebookStatusIndicator(),
-                CoreMatchers.containsString("/checked.png"));
-        Assert.assertFalse("Enable button is still present after enabling Facebook account.", socialMediaSummary.facebookEnableButtonIsDisplayed());
-        Assert.assertTrue("Disable button is not present after enabling Facebook account.", socialMediaSummary.facebookDisableButtonIsDisplayed());
+                CoreMatchers.containsString("/checked.png")); */
+        Assert.assertTrue(socialMediaSummary.getFacebookStatusIndicator().contains("/checked.png"),
+                "Green checkmark is not displayed after enabling Facebook account");
+
+        Assert.assertFalse(socialMediaSummary.facebookEnableButtonIsDisplayed(),"Enable button is still present after enabling Facebook account.");
+        Assert.assertTrue(socialMediaSummary.facebookDisableButtonIsDisplayed(),"Disable button is not present after enabling Facebook account.");
 
         // re-authorizing Facebook account
         socialMediaSummary.logoutFromFacebook(); // authorization process causes you to be logged in to Facebook; this deletes the Facebook session cookie to undo this
         socialMediaSummary.reAuthorizeFacebookAccount().allowAccessTo(facebookEmail, facebookPassword);
-        Assert.assertEquals("You are not returned to summary page after re-authorizing Facebook account", expectedTitle, socialMediaSummary.getTitle());
-        Assert.assertEquals("Select company status message is not properly displayed after re-authorizing", selectCompanyMessage, socialMediaSummary.getFacebookStatusMessage());
+
+        Assert.assertEquals(socialMediaSummary.getTitle(),expectedTitle,"You are not returned to summary page after re-authorizing Facebook account");
+        Assert.assertEquals(socialMediaSummary.getFacebookStatusMessage(),selectCompanyMessage,"Select company status message is not properly displayed after re-authorizing");
         socialMediaSummary.chooseFirstFacebookPage();
-        Assert.assertEquals("Incorrect account name is displayed after re-authorizing", facebookName, socialMediaSummary.getFacebookAccountName());
-        Assert.assertEquals("Incorrect company name is displayed after re-authorizing", facebookCompany, socialMediaSummary.getFacebookPage());
-        Assert.assertTrue("Number of followers is improperly displayed after re-authorizing.", socialMediaSummary.numberOfFacebookFansIsDisplayed());
-        Assert.assertThat("Green checkmark is not displayed after re-authorizing Facebook account",
+
+        Assert.assertEquals(socialMediaSummary.getFacebookAccountName(),facebookName,"Incorrect account name is displayed after re-authorizing");
+        Assert.assertEquals(socialMediaSummary.getFacebookPage(),facebookCompany,"Incorrect company name is displayed after re-authorizing");
+        Assert.assertTrue(socialMediaSummary.numberOfFacebookFansIsDisplayed(),"Number of followers is improperly displayed after re-authorizing.");
+
+        /* Assert.assertThat("Green checkmark is not displayed after re-authorizing Facebook account",
                 socialMediaSummary.getFacebookStatusIndicator(),
-                CoreMatchers.containsString("/checked.png"));
-        Assert.assertTrue("Settings button is not displayed after re-authorizing Facebook account.", socialMediaSummary.facebookSettingsButtonIsDisplayed());
-        Assert.assertTrue("De-Authorize button is not displayed after re-authorizing Facebook account", socialMediaSummary.facebookDeAuthorizeButtonIsDisplayed());
-        Assert.assertTrue("Disable button is not displayed after re-authorizing Facebook account", socialMediaSummary.facebookDisableButtonIsDisplayed());
-        Assert.assertTrue("Re-Authorize button is not displayed after re-authorizing Facebook account", socialMediaSummary.facebookReAuthorizeButtonIsDisplayed());
+                CoreMatchers.containsString("/checked.png")); */
+        Assert.assertTrue(socialMediaSummary.getFacebookStatusIndicator().contains("/checked.png"),
+                "Green checkmark is not displayed after re-authorizing Facebook account");
+
+        Assert.assertTrue(socialMediaSummary.facebookSettingsButtonIsDisplayed(),"Settings button is not displayed after re-authorizing Facebook account.");
+        Assert.assertTrue(socialMediaSummary.facebookDeAuthorizeButtonIsDisplayed(),"De-Authorize button is not displayed after re-authorizing Facebook account");
+        Assert.assertTrue(socialMediaSummary.facebookDisableButtonIsDisplayed(),"Disable button is not displayed after re-authorizing Facebook account");
+        Assert.assertTrue(socialMediaSummary.facebookReAuthorizeButtonIsDisplayed(),"Re-Authorize button is not displayed after re-authorizing Facebook account");
 
         // de-authorizing Facebook account
         socialMediaSummary.deAuthorizeFacebookAccount();
-        Assert.assertThat("Red X is not displayed after de-authorizing Facebook account",
+        /* Assert.assertThat("Red X is not displayed after de-authorizing Facebook account",
                 socialMediaSummary.getFacebookStatusIndicator(),
-                CoreMatchers.containsString("/unchecked.png"));
-        Assert.assertEquals("Status message is not properly displayed after de-authorizing Facebook account", notSetupMessage, socialMediaSummary.getFacebookStatusMessage());
-        Assert.assertTrue("Settings button is not displayed after de-authorizing Facebook account.", socialMediaSummary.facebookSettingsButtonIsDisplayed());
-        Assert.assertTrue("Authorize button is not displayed after de-authorizing Facebook account.", socialMediaSummary.facebookAuthorizeButtonIsDisplayed());
+                CoreMatchers.containsString("/unchecked.png")); */
+        Assert.assertTrue(socialMediaSummary.getFacebookStatusIndicator().contains("/unchecked.png"),
+                "Red X is not displayed after de-authorizing Facebook account");
+
+        Assert.assertEquals(socialMediaSummary.getFacebookStatusMessage(),notSetupMessage,"Status message is not properly displayed after de-authorizing Facebook account");
+        Assert.assertTrue(socialMediaSummary.facebookSettingsButtonIsDisplayed(),"Settings button is not displayed after de-authorizing Facebook account.");
+        Assert.assertTrue(socialMediaSummary.facebookAuthorizeButtonIsDisplayed(),"Authorize button is not displayed after de-authorizing Facebook account.");
     }
 
     @Test
     public void canModifyFacebookSettings() throws Exception {
         SocialTemplates socialTemplates = new Dashboard(driver).openSocialMedia().openFacebookSettings();
-        Assert.assertTrue("Facebook Social Templates screen is not open.", socialTemplates.facebookSocialTemplatesAreDisplayed());
+        Assert.assertTrue(socialTemplates.facebookSocialTemplatesAreDisplayed(),"Facebook Social Templates screen is not open.");
         String firstTemplateBefore = socialTemplates.getFirstTemplateText();
         String firstTemplateAfter = (new Date().getTime()/1000)+": Event starting {Event.StartDate}, for details: {ShortURL}";
 
         // changing the first template to new value and saving it
         socialTemplates.editFirstTemplate();
-        Assert.assertTrue("Edit template screen is not open.", socialTemplates.editTemplateIsOpen());
-        Assert.assertEquals("Editable template textbox is different from original value", firstTemplateBefore, socialTemplates.getEditableTemplateText());
+        Assert.assertTrue(socialTemplates.editTemplateIsOpen(),"Edit template screen is not open.");
+        Assert.assertEquals(socialTemplates.getEditableTemplateText(), firstTemplateBefore,"Editable template textbox is different from original value");
         socialTemplates.editTemplateTo(firstTemplateAfter).saveTemplate();
 
         //checking that the template has been changed (including after closing and reopening the settings screen)
-        Assert.assertEquals("Template is not set to new value", firstTemplateAfter, socialTemplates.getFirstTemplateText());
+        Assert.assertEquals(socialTemplates.getFirstTemplateText(), firstTemplateAfter,"Template is not set to new value");
         socialTemplates.closeSocialTemplates().openFacebookSettings();
-        Assert.assertEquals("Template is not set to new value after closing and re-opening Social Templates", firstTemplateAfter, socialTemplates.getFirstTemplateText());
+        Assert.assertEquals(socialTemplates.getFirstTemplateText(), firstTemplateAfter,"Template is not set to new value after closing and re-opening Social Templates");
 
         // reverting template back to original setting
         socialTemplates.editFirstTemplate().editTemplateTo(firstTemplateBefore).saveTemplate();
-        Assert.assertEquals("Template has not been reset to original value", firstTemplateBefore, socialTemplates.getFirstTemplateText());
-        Assert.assertTrue("Social Templates has not been closed.", socialTemplates.closeSocialTemplates().socialTemplatesIsClosed());
+        Assert.assertEquals(socialTemplates.getFirstTemplateText(), firstTemplateBefore,"Template has not been reset to original value");
+        Assert.assertTrue(socialTemplates.closeSocialTemplates().socialTemplatesIsClosed(),"Social Templates has not been closed.");
     }
 
-    @After
+    @AfterTest
     public void tearDown() {
         //driver.quit();
     }

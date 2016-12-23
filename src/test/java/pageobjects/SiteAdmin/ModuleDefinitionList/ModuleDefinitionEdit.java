@@ -13,8 +13,8 @@ import static specs.AbstractSpec.propUISiteAdmin;
  */
 
 public class ModuleDefinitionEdit extends AbstractPageObject {
-    private static By moduleTitle, friendlyNameField, qualifiedPathField, linkToEditPageSelect, linkToListPageSelect;
-    private static By linkToAdminPageSelect, activeCheckbox, saveAndSubmitButton;
+    private static By moduleTitle, friendlyNameField, qualifiedPathField, linkToEditPageSelect;
+    private static By linkToListPageSelect, linkToAdminPageSelect, activeCheckbox, saveAndSubmitButton;
 
     public ModuleDefinitionEdit(WebDriver driver) {
         super(driver);

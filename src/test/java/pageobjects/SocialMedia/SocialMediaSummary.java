@@ -7,49 +7,56 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
 
 import static org.junit.Assert.fail;
+import static specs.AbstractSpec.propUISocialMedia;
 
 /**
  * Created by jasons on 2016-12-07.
  */
 public class SocialMediaSummary extends AbstractPageObject {
-
-    private final By moduleTitle = By.xpath("//span[contains(@class, 'AdminContent')]/h1/span[contains(@id,'ModuleTitle')]");
-    private final By settingsDialog = By.id("SMSettingBox");
-
-    // LinkedIn section
-    private final By linkedInStatusIndicator = By.cssSelector(".LinkedIn .ActiveAccount");
-        //css -> background-image contains /unchecked.png (if not setup), /checked.png (if setup), or /disabled.png (if disabled)
-    private final By linkedInStatusMessage = By.xpath("//span[contains(@id,'lblLinkedInMessage')]");
-    private final By linkedInAccountName = By.cssSelector(".LinkedIn .ProfileLink");
-    private final By linkedInCompany = By.xpath("//a[contains(@id,'hpLinkedInCompany')]");
-    private final By linkedInFollowers = By.xpath("//span[contains(@id,'lblLinkedInCompanyFollowers')]");
-    private final By linkedInAuthorizeButton = By.cssSelector(".LinkedIn [value=Authorize]");
-    private final By linkedInDeAuthorizeButton = By.cssSelector(".LinkedIn .DeAuthorize");
-    private final By linkedInDisableButton = By.cssSelector(".LinkedIn [value=Disable]");
-    private final By linkedInEnableButton = By.cssSelector(".LinkedIn [value=Enable]");
-    private final By linkedInReAuthorizeButton = By.cssSelector(".LinkedIn [value=Re-Authorize]");
-    private final By linkedInSettingsButton = By.cssSelector(".LinkedIn .Settings");
-    private final By linkedInCompanyRadioSelector = By.xpath("//input[contains(@id,'rblLinkedInCompanyList')]");
-    private final By linkedInCompanySelectButton = By.cssSelector(".LinkedIn [value=Select]");
-
-    // Facebook section
-    private final By facebookStatusIndicator = By.cssSelector(".Facebook .ActiveAccount");
-    //css -> background-image contains /unchecked.png (if not setup), /checked.png (if setup), or /disabled.png (if disabled)
-    private final By facebookStatusMessage = By.xpath("//span[contains(@id,'lblFacebookMessage')]");
-    private final By facebookAccountName = By.cssSelector(".Facebook .ProfileLink");
-    private final By facebookPage = By.xpath("//a[contains(@id,'hpFacebookPage')]");
-    private final By facebookFans = By.xpath("//span[contains(@id,'lblFacebookLikesCount')]");
-    private final By facebookAuthorizeButton = By.cssSelector(".Facebook [value=Authorize]");
-    private final By facebookDeAuthorizeButton = By.cssSelector(".Facebook .DeAuthorize");
-    private final By facebookDisableButton = By.cssSelector(".Facebook [value=Disable]");
-    private final By facebookEnableButton = By.cssSelector(".Facebook [value=Enable]");
-    private final By facebookReAuthorizeButton = By.cssSelector(".Facebook [value=Re-Authorize]");
-    private final By facebookSettingsButton = By.cssSelector(".Facebook .Settings");
-    private final By facebookPageRadioSelector = By.xpath("//input[contains(@id,'rblFacebookPages')]");
-    private final By facebookPageSelectButton = By.cssSelector(".Facebook [value=Select]");
+    private static By moduleTitle, settingsDialog, linkedInStatusIndicator, linkedInStatusMessage, linkedInAccountName;
+    private static By linkedInCompany, linkedInFollowers, linkedInAuthorizeButton, linkedInDeAuthorizeButton;
+    private static By linkedInDisableButton, linkedInEnableButton, linkedInReAuthorizeButton, linkedInSettingsButton, linkedInCompanyRadioSelector;
+    private static By linkedInCompanySelectButton, facebookStatusIndicator, facebookStatusMessage, facebookAccountName;
+    private static By facebookPage, facebookFans, facebookAuthorizeButton, facebookDeAuthorizeButton, facebookDisableButton;
+    private static By facebookEnableButton, facebookReAuthorizeButton, facebookSettingsButton, facebookPageRadioSelector, facebookPageSelectButton;
 
     public SocialMediaSummary(WebDriver driver) {
         super(driver);
+
+        moduleTitle = By.xpath(propUISocialMedia.getProperty("spanModule_Title"));
+        settingsDialog = By.id(propUISocialMedia.getProperty("box_SettingsDialog"));
+
+        // LinkedIn section
+        linkedInStatusIndicator = By.cssSelector(propUISocialMedia.getProperty("linkedIn_StatusInd"));
+        //css -> background-image contains /unchecked.png (if not setup), /checked.png (if setup), or /disabled.png (if disabled)
+        linkedInStatusMessage = By.xpath(propUISocialMedia.getProperty("msg_linkedInStatus"));
+        linkedInAccountName = By.cssSelector(propUISocialMedia.getProperty("linkedIn_AccountName"));
+        linkedInCompany = By.xpath(propUISocialMedia.getProperty("linkedIn_Company"));
+        linkedInFollowers = By.xpath(propUISocialMedia.getProperty("linkedIn_Followers"));
+        linkedInAuthorizeButton = By.cssSelector(propUISocialMedia.getProperty("btn_linkedIn_Authorize"));
+        linkedInDeAuthorizeButton = By.cssSelector(propUISocialMedia.getProperty("btn_linkedInDeAuthorize"));
+        linkedInDisableButton = By.cssSelector(propUISocialMedia.getProperty("btn_linkedInDisable"));
+        linkedInEnableButton = By.cssSelector(propUISocialMedia.getProperty("btn_linkedInEnable"));
+        linkedInReAuthorizeButton = By.cssSelector(propUISocialMedia.getProperty("btn_linkedInReAuthorize"));
+        linkedInSettingsButton = By.cssSelector(propUISocialMedia.getProperty("btn_linkedInSettings"));
+        linkedInCompanyRadioSelector = By.xpath(propUISocialMedia.getProperty("sel_linkedInCompanyRadio"));
+        linkedInCompanySelectButton = By.cssSelector(propUISocialMedia.getProperty("btn_linkedInCompanySelect"));
+
+        // Facebook section
+        facebookStatusIndicator = By.cssSelector(propUISocialMedia.getProperty("facebook_StatusInd"));
+        //css -> background-image contains /unchecked.png (if not setup), /checked.png (if setup), or /disabled.png (if disabled)
+        facebookStatusMessage = By.xpath(propUISocialMedia.getProperty("msg_facebook_Status"));
+        facebookAccountName = By.cssSelector(propUISocialMedia.getProperty("facebook_AccountName"));
+        facebookPage = By.xpath(propUISocialMedia.getProperty("facebook_Page"));
+        facebookFans = By.xpath(propUISocialMedia.getProperty("facebook_Fans"));
+        facebookAuthorizeButton = By.cssSelector(propUISocialMedia.getProperty("btn_facebook_Authorize"));
+        facebookDeAuthorizeButton = By.cssSelector(propUISocialMedia.getProperty("btn_facebook_DeAuthorize"));
+        facebookDisableButton = By.cssSelector(propUISocialMedia.getProperty("btn_facebook_Disable"));
+        facebookEnableButton = By.cssSelector(propUISocialMedia.getProperty("btn_facebook_Enable"));
+        facebookReAuthorizeButton = By.cssSelector(propUISocialMedia.getProperty("btn_facebook_ReAuthorize"));
+        facebookSettingsButton = By.cssSelector(propUISocialMedia.getProperty("btn_facebook_Settings"));
+        facebookPageRadioSelector = By.xpath(propUISocialMedia.getProperty("sel_facebook_PageRadio"));
+        facebookPageSelectButton = By.cssSelector(propUISocialMedia.getProperty("btn_facebook_PageSelect"));
     }
 
     public String getTitle() {

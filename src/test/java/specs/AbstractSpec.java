@@ -52,10 +52,12 @@ public abstract class AbstractSpec extends util.Functions {
     public static Properties propUIContentAdmin;
     private static final String PATHTO_EMAILADMIN_PROP = "EmailAdmin/EmailAdminMap.properties";
     public static Properties propUIEmailAdmin;
-    private static final String PATHTO_COMMON_PROP = "Common.properties";
+    private static final String PATHTO_COMMON_PROP = "CommonMap.properties";
     public static Properties propUICommon;
-    private static final String PATHTO_PUBLICSITE_PROP = "PublicSite/PublicSite.properties";
+    private static final String PATHTO_PUBLICSITE_PROP = "PublicSite/PublicSiteMap.properties";
     public static Properties propUIPublicSite;
+    private static final String PATHTO_SOCIALMEDIA_PROP = "SocialMedia/SocialMediaMap.properties";
+    public static Properties propUISocialMedia;
     /*
     @Rule
     public TestName testName = new TestName();
@@ -216,7 +218,7 @@ public abstract class AbstractSpec extends util.Functions {
         propUIEmailAdmin = ConnectToPropUI(PATHTO_EMAILADMIN_PROP);
         propUICommon = ConnectToPropUI(PATHTO_COMMON_PROP);
         propUIPublicSite = ConnectToPropUI(PATHTO_PUBLICSITE_PROP);
-
+        propUISocialMedia = ConnectToPropUI(PATHTO_SOCIALMEDIA_PROP);
     }
 
 }
