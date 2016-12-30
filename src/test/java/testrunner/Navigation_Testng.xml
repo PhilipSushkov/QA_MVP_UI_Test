@@ -239,4 +239,9 @@
             <class name="specs.EmailAdmin.Templates.CheckTemplateList" />
         </classes>
     </test>
+    <test name="CheckMailingListMessagesView">
+        <classes>
+            <class name="specs.EmailAdmin.MailingListMessages.CheckMailingListMessagesView" />
+        </classes>
+    </test>
 </suite>
