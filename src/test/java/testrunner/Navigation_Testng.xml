@@ -249,4 +249,9 @@
             <class name="specs.EmailAdmin.SystemMessages.CheckSystemMessageList" />
         </classes>
     </test>
+    <test name="CheckEmailAlertList">
+        <classes>
+            <class name="specs.EmailAdmin.EmailAlertList.CheckEmailAlertList" />
+        </classes>
+    </test>
 </suite>
