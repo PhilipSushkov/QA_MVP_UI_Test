@@ -254,4 +254,9 @@
             <class name="specs.EmailAdmin.EmailAlertList.CheckEmailAlertList" />
         </classes>
     </test>
+    <test name="CheckCategoryList">
+        <classes>
+            <class name="specs.EmailAdmin.CategoryList.CheckCategoryList" />
+        </classes>
+    </test>
 </suite>

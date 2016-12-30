@@ -35,7 +35,7 @@ public class CheckTemplateList extends AbstractSpec {
     }
 
     @Test
-    public void checkMailingListUsers() throws Exception {
+    public void checkTemplateList() throws Exception {
         final String expectedTitle = "Template Edit";
         final Integer expectedQuantity = 10;
 

@@ -33,7 +33,7 @@ public class CheckSystemMessageList extends AbstractSpec {
     }
 
     @Test
-    public void checkCompose() throws Exception {
+    public void checkSystemMessageList() throws Exception {
         final String expectedTitle = "Mailing List System Message List";
         final Integer expectedQuantity = 5;
 

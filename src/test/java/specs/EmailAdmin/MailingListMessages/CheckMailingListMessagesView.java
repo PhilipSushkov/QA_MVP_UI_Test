@@ -34,7 +34,7 @@ public class CheckMailingListMessagesView extends AbstractSpec {
     }
 
     @Test
-    public void checkCompose() throws Exception {
+    public void checkMailingListMessagesView() throws Exception {
         final String expectedTitle = "Mailing List Messages View";
         final Integer expectedQuantity = 1;
 
