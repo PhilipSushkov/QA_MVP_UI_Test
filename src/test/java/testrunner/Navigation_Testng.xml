@@ -244,4 +244,9 @@
             <class name="specs.EmailAdmin.MailingListMessages.CheckMailingListMessagesView" />
         </classes>
     </test>
+    <test name="CheckSystemMessageList">
+        <classes>
+            <class name="specs.EmailAdmin.SystemMessages.CheckSystemMessageList" />
+        </classes>
+    </test>
 </suite>
