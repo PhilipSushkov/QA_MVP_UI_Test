@@ -226,6 +226,11 @@
             <class name="specs.ContentAdmin.QuickLinkList.CheckQuickLinkList" />
         </classes>
     </test>
+    <test name="CheckEventWebcastList">
+        <classes>
+            <class name="specs.ContentAdmin.Events.CheckEventWebcastList" />
+        </classes>
+    </test>
 
     <test name="CheckFinancialReportEdit">
         <classes>
