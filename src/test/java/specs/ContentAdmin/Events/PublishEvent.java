@@ -6,7 +6,8 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import org.testng.Assert;
 
-import pageobjects.ContentAdmin.Events.EditEvent;
+//import pageobjects.ContentAdmin.Events.EditEvent;
+import pageobjects.ContentAdmin.Events.EventWebcastEdit;
 import pageobjects.LiveSite.LiveEvents;
 import specs.AbstractSpec;
 import pageobjects.LoginPage.LoginPage;
@@ -24,7 +25,7 @@ public class PublishEvent extends AbstractSpec {
     private static LoginPage loginPage;
     private static Dashboard dashboard;
     private static Events events;
-    private static EditEvent editEvent;
+    private static EventWebcastEdit editEvent;
     private static LiveEvents liveEvens;
 
 
@@ -37,7 +38,7 @@ public class PublishEvent extends AbstractSpec {
         loginPage = new LoginPage(driver);
         dashboard = new Dashboard(driver);
         events = new Events(driver);
-        editEvent = new EditEvent(driver);
+        editEvent = new EventWebcastEdit(driver);
         liveEvens = new LiveEvents(driver);
 
         loginPage.loginUser();

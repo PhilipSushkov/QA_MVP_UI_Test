@@ -1,9 +1,6 @@
 package pageobjects.ContentAdmin.FinancialReports;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.ElementNotVisibleException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import pageobjects.AbstractPageObject;
 
 import static specs.AbstractSpec.propUIContentAdmin;
@@ -47,6 +44,7 @@ public class FinancialReportEdit extends AbstractPageObject {
             element = findElement(reportYearSelect);
         } catch (ElementNotFoundException e1) {
         } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
         }
 
         return element;
@@ -60,6 +58,7 @@ public class FinancialReportEdit extends AbstractPageObject {
             element = findElement(reportTypeSelect);
         } catch (ElementNotFoundException e1) {
         } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
         }
 
         return element;
@@ -73,6 +72,7 @@ public class FinancialReportEdit extends AbstractPageObject {
             element = findElement(coverImageInput);
         } catch (ElementNotFoundException e1) {
         } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
         }
 
         return element;
@@ -86,6 +86,7 @@ public class FinancialReportEdit extends AbstractPageObject {
             element = findElement(filingDateInput);
         } catch (ElementNotFoundException e1) {
         } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
         }
 
         return element;
@@ -99,6 +100,7 @@ public class FinancialReportEdit extends AbstractPageObject {
             element = findElement(tagsInput);
         } catch (ElementNotFoundException e1) {
         } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
         }
 
         return element;
@@ -112,6 +114,7 @@ public class FinancialReportEdit extends AbstractPageObject {
             element = findElement(activeCheckbox);
         } catch (ElementNotFoundException e1) {
         } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
         }
 
         return element;
@@ -125,6 +128,7 @@ public class FinancialReportEdit extends AbstractPageObject {
             element = findElement(addNewRelatedDocLink);
         } catch (ElementNotFoundException e1) {
         } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
         }
 
         return element;
@@ -138,6 +142,7 @@ public class FinancialReportEdit extends AbstractPageObject {
             element = findElement(documentsTable);
         } catch (ElementNotFoundException e1) {
         } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
         }
 
         return element;
@@ -151,6 +156,7 @@ public class FinancialReportEdit extends AbstractPageObject {
             element = findElement(saveOrderImage);
         } catch (ElementNotFoundException e1) {
         } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
         }
 
         return element;
@@ -164,6 +170,7 @@ public class FinancialReportEdit extends AbstractPageObject {
             element = findElement(saveAndSubmitButton);
         } catch (ElementNotFoundException e1) {
         } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
         }
 
         return element;

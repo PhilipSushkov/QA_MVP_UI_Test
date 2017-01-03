@@ -37,7 +37,7 @@ public class CheckFinancialReportEdit extends AbstractSpec {
     }
 
     @Test
-    public void checkDomainEdit() throws Exception {
+    public void checkFinancialReportEdit() throws Exception {
         final String expectedTitle = "Financial Report Edit";
 
         Assert.assertNotNull(financialReportEdit.getUrl());

@@ -34,7 +34,7 @@ public class CheckEventWebcastList extends AbstractSpec {
     }
 
     @Test
-    public void checkFinancialReports() throws Exception {
+    public void checkEventWebcastList() throws Exception {
         final String expectedTitle = "Event / Webcast List";
         final Integer expectedQuantity = 10;
 
