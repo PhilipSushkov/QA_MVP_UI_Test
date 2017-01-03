@@ -26,7 +26,7 @@ public class CheckAliasEdit extends AbstractSpec {
     public void setUp() throws Exception {
         siteAdminMenuButton = By.xpath(propUISiteAdmin.getProperty("btnMenu_SiteAdmin"));
         aliasListMenuItem = By.xpath(propUISiteAdmin.getProperty("itemMenu_AliasList"));
-        userAddNewLink = By.xpath(propUISystemAdmin.getProperty("input_AddNew"));
+        userAddNewLink = By.xpath(propUISiteAdmin.getProperty("input_AddNew"));
 
         loginPage = new LoginPage(driver);
         dashboard = new Dashboard(driver);

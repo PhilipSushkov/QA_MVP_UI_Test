@@ -26,7 +26,7 @@ public class CheckLayoutDefinitionEdit extends AbstractSpec {
     public void setUp() throws Exception {
         siteAdminMenuButton = By.xpath(propUISiteAdmin.getProperty("btnMenu_SiteAdmin"));
         layoutDefinitionListMenuItem = By.xpath(propUISiteAdmin.getProperty("itemMenu_LayoutDefinitionList"));
-        userAddNewLink = By.xpath(propUISystemAdmin.getProperty("input_AddNew"));
+        userAddNewLink = By.xpath(propUISiteAdmin.getProperty("input_AddNew"));
 
         loginPage = new LoginPage(driver);
         dashboard = new Dashboard(driver);

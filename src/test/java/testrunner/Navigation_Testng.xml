@@ -227,6 +227,12 @@
         </classes>
     </test>
 
+    <test name="CheckFinancialReportEdit">
+        <classes>
+            <class name="specs.ContentAdmin.FinancialReports.CheckFinancialReportEdit" />
+        </classes>
+    </test>
+
 
     <!-- Email Admin part -->
     <test name="CheckCompose">
