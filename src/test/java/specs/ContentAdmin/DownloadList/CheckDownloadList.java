@@ -47,7 +47,8 @@ public class CheckDownloadList extends AbstractSpec {
         Assert.assertTrue(expectedQuantity <= downloadList.getTitleQuantity(), "Actual Download List Title Quantity is less than expected: "+expectedQuantity);
         Assert.assertNotNull(downloadList.getDownloadListPagination(), "Download List Pagination doesn't exist");
         Assert.assertNotNull(downloadList.getFilterByTag(), "Filter By Tag field doesn't exist");
-
+        Assert.assertNotNull(downloadList.getGeneralSelect(), "General select doesn't exist");
+        Assert.assertNotNull(downloadList.getPublishButton(), "Publish button doesn't exist");
     }
 
     @AfterTest

@@ -1,9 +1,6 @@
 package pageobjects.ContentAdmin.DownloadList;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.ElementNotVisibleException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
 
@@ -14,7 +11,7 @@ import static specs.AbstractSpec.propUIContentAdmin;
  */
 
 public class DownloadList extends AbstractPageObject {
-    private static By moduleTitle, grid, gridDownloadList, dataGridPager, inputFilterByTag;
+    private static By moduleTitle, grid, gridDownloadList, dataGridPager, inputFilterByTag, generalSelect, publishButton;
     private final Integer columnsNumber = 8;
 
     public DownloadList(WebDriver driver) {
@@ -24,22 +21,18 @@ public class DownloadList extends AbstractPageObject {
         gridDownloadList = By.xpath(propUIContentAdmin.getProperty("table_GridItem"));
         dataGridPager = By.xpath(propUIContentAdmin.getProperty("pager_DataGrid"));
         inputFilterByTag = By.xpath(propUIContentAdmin.getProperty("input_FilterByTag"));
+        generalSelect = By.xpath(propUIContentAdmin.getProperty("select_General"));
+        publishButton = By.xpath(propUIContentAdmin.getProperty("btn_Publish"));
     }
-
-
-    public String getUrl() {
-        return driver.getCurrentUrl();
-    }
-
 
     public String getTitle() {
-        wait.until(ExpectedConditions.visibilityOf(findElement(moduleTitle)) );
-        return findElement(moduleTitle).getText();
+        waitForElement(moduleTitle);
+        return getText(moduleTitle);
     }
 
 
     public Integer getTitleQuantity() {
-        wait.until(ExpectedConditions.visibilityOf(findElement(grid)) );
+        waitForElement(grid);
         return findElement(grid).findElements(gridDownloadList).size()/columnsNumber;
     }
 
@@ -48,10 +41,11 @@ public class DownloadList extends AbstractPageObject {
         WebElement element = null;
 
         try {
-            wait.until(ExpectedConditions.visibilityOf(findElement(dataGridPager)));
+            waitForElement(dataGridPager);
             element = findElement(dataGridPager);
         } catch (ElementNotFoundException e1) {
         } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
         }
 
         return element;
@@ -62,10 +56,39 @@ public class DownloadList extends AbstractPageObject {
         WebElement element = null;
 
         try {
-            wait.until(ExpectedConditions.visibilityOf(findElement(inputFilterByTag)));
+            waitForElement(inputFilterByTag);
             element = findElement(inputFilterByTag);
         } catch (ElementNotFoundException e1) {
         } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
+        }
+
+        return element;
+    }
+
+    public WebElement getGeneralSelect() {
+        WebElement element = null;
+
+        try {
+            waitForElement(generalSelect);
+            element = findElement(generalSelect);
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
+        }
+
+        return element;
+    }
+
+    public WebElement getPublishButton() {
+        WebElement element = null;
+
+        try {
+            waitForElement(publishButton);
+            element = findElement(publishButton);
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
         }
 
         return element;
