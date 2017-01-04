@@ -52,7 +52,7 @@ public class CheckQuickLinkEdit extends AbstractSpec {
 
         Assert.assertTrue(quickLinkEdit.getChkBoxSet(), "Checkbox elements don't exist");
 
-        //Assert.assertTrue(quickLinkEdit.getQuickLinkPagesSet(), "Quick Link Pages elements don't exist");
+        Assert.assertTrue(quickLinkEdit.getQuickLinkPagesSet(), "Quick Link Pages elements don't exist");
 
         Assert.assertNotNull(quickLinkEdit.getSaveAndSubmitButton(), "Save And Submit button doesn't exist");
     }

@@ -236,6 +236,11 @@
             <class name="specs.ContentAdmin.Presentations.CheckPresentationList" />
         </classes>
     </test>
+    <test name="CheckGlossaryList">
+        <classes>
+            <class name="specs.ContentAdmin.Glossary.CheckGlossaryList" />
+        </classes>
+    </test>
 
     <test name="CheckFinancialReportEdit">
         <classes>

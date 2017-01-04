@@ -11,8 +11,8 @@ import static specs.AbstractSpec.propUIContentAdmin;
 
 public class QuickLinkEdit extends AbstractPageObject {
     private static By moduleTitle, descriptionInput, urlInput, textInput, tagsInput;
-    private static By typeExternalRadio, typeInternalRadio, typeEmailRadio, typeDocumentRadio;
-    private static By linkToNewCheckbox, activeCheckbox, saveAndSubmitButton;
+    private static By typeExternalRadio, typeInternalRadio, typeEmailRadio, typeDocumentRadio, saveAndSubmitButton;
+    private static By quickLinkPagesLink, linkToNewCheckbox, activeCheckbox, gridPagesTable, publishButton;
 
     public QuickLinkEdit(WebDriver driver) {
         super(driver);
@@ -22,10 +22,14 @@ public class QuickLinkEdit extends AbstractPageObject {
         textInput = By.xpath(propUIContentAdmin.getProperty("input_Text"));
         tagsInput = By.xpath(propUIContentAdmin.getProperty("input_Tags"));
 
-        typeExternalRadio = By.xpath(propUIContentAdmin.getProperty("rdo_typeExternal"));
-        typeInternalRadio = By.xpath(propUIContentAdmin.getProperty("rdo_typeInternal"));
-        typeEmailRadio = By.xpath(propUIContentAdmin.getProperty("rdo_typeEmail"));
-        typeDocumentRadio = By.xpath(propUIContentAdmin.getProperty("rdo_typeDocument"));
+        typeExternalRadio = By.xpath(propUIContentAdmin.getProperty("rdo_TypeExternal"));
+        typeInternalRadio = By.xpath(propUIContentAdmin.getProperty("rdo_TypeInternal"));
+        typeEmailRadio = By.xpath(propUIContentAdmin.getProperty("rdo_TypeEmail"));
+        typeDocumentRadio = By.xpath(propUIContentAdmin.getProperty("rdo_TypeDocument"));
+
+        quickLinkPagesLink = By.xpath(propUIContentAdmin.getProperty("href_QuickLinkPages"));
+        gridPagesTable = By.xpath(propUIContentAdmin.getProperty("table_GridPages"));
+        publishButton = By.xpath(propUIContentAdmin.getProperty("btn_Publish"));
 
         linkToNewCheckbox = By.xpath(propUIContentAdmin.getProperty("chk_LinkToNew"));
         activeCheckbox = By.xpath(propUIContentAdmin.getProperty("chk_Active"));
@@ -135,6 +139,31 @@ public class QuickLinkEdit extends AbstractPageObject {
         }
 
         return timeSet;
+    }
+
+    public Boolean getQuickLinkPagesSet() {
+        Boolean quickLinkPages = false;
+
+        try {
+            waitForElement(quickLinkPagesLink);
+            findElement(quickLinkPagesLink).click();
+
+            waitForElement(gridPagesTable);
+            findElement(gridPagesTable);
+
+            waitForElement(publishButton);
+            findElement(publishButton);
+
+            findElement(quickLinkPagesLink).click();
+            waitForElement(quickLinkPagesLink);
+
+            quickLinkPages = true;
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
+        }
+
+        return quickLinkPages;
     }
 
 
