@@ -6,7 +6,7 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import org.testng.Assert;
 
-import pageobjects.ContentAdmin.Presentations.EditPresentation;
+import pageobjects.ContentAdmin.Presentations.PresentationEdit;
 import pageobjects.LiveSite.LivePresentations;
 import specs.AbstractSpec;
 import pageobjects.LoginPage.LoginPage;
@@ -23,7 +23,7 @@ public class PublishPresentation extends AbstractSpec {
     private static LoginPage loginPage;
     private static Dashboard dashboard;
     private static Presentations presentations;
-    private static EditPresentation editPresentation;
+    private static PresentationEdit presentationEdit;
     private static LivePresentations livePresentations;
 
     @BeforeTest
@@ -35,7 +35,7 @@ public class PublishPresentation extends AbstractSpec {
         loginPage = new LoginPage(driver);
         dashboard = new Dashboard(driver);
         presentations = new Presentations(driver);
-        editPresentation = new EditPresentation(driver);
+        presentationEdit = new PresentationEdit(driver);
         livePresentations = new LivePresentations(driver);
 
         loginPage.loginUser();
@@ -67,7 +67,7 @@ public class PublishPresentation extends AbstractSpec {
 
         dashboard.openPageFromCommonTasks(addPresentationButton);
 
-        String newsPageURL = editPresentation.addNewPresentation(headline, date, hour, min, AMPM, filenames);
+        String newsPageURL = presentationEdit.addNewPresentation(headline, date, hour, min, AMPM, filenames);
         Assert.assertNotNull(newsPageURL);
 
         // publishing presentation

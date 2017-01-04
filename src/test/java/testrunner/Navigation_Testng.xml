@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="Web CMS Suite Navigation" parallel="tests" thread-count="7">
+<suite name="Web CMS Suite Navigation" parallel="tests" thread-count="6">
 
     <!-- System Admin part -->
     <test name="CheckAlertFilterList">
@@ -245,6 +245,11 @@
     <test name="CheckEventWebcastEdit">
         <classes>
             <class name="specs.ContentAdmin.Events.CheckEventWebcastEdit" />
+        </classes>
+    </test>
+    <test name="CheckPresentationEdit">
+        <classes>
+            <class name="specs.ContentAdmin.Presentations.CheckPresentationEdit" />
         </classes>
     </test>
 

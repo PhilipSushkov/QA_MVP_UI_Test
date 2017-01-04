@@ -116,10 +116,10 @@ public class Presentations extends AbstractPageObject {
         return new LivePresentations(getDriver());
     }
 
-    public EditPresentation editPresentation(String headline){
+    public PresentationEdit editPresentation(String headline){
         By pressReleaseEditButton = By.xpath("//td[contains(text(),'"+headline+"')]/preceding-sibling::td/input[contains(@id,'imgEdit')]");
         findElement(pressReleaseEditButton).click();
-        return new EditPresentation(getDriver());
+        return new PresentationEdit(getDriver());
     }
 
 

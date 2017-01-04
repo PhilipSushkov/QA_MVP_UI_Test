@@ -21,6 +21,7 @@ public class EventWebcastEdit extends AbstractPageObject {
     private static By addNewSpeakersLink, speakerNameInput, speakerPositionInput, cancelSpeakerButton;
     private static By addNewAttachmentsLink, attachmentTitleInput, attachmentTypeListSelect, attachmentPathInput, cancelAttachmentButton;
     private static By textArea, seoNameLiteral, updateComments, deleteButton;
+
     private final String imageFile = "Q4Touch_LtBlue.png";
 
     public EventWebcastEdit(WebDriver driver) {
