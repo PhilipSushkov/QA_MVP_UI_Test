@@ -267,6 +267,11 @@
             <class name="specs.ContentAdmin.QuickLinkList.CheckQuickLinkEdit" />
         </classes>
     </test>
+    <test name="CheckGlossaryEdit">
+        <classes>
+            <class name="specs.ContentAdmin.Glossary.CheckGlossaryEdit" />
+        </classes>
+    </test>
 
 
     <!-- Email Admin part -->
