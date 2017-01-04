@@ -272,6 +272,11 @@
             <class name="specs.ContentAdmin.Glossary.CheckGlossaryEdit" />
         </classes>
     </test>
+    <test name="CheckDownloadEdit">
+        <classes>
+            <class name="specs.ContentAdmin.DownloadList.CheckDownloadEdit" />
+        </classes>
+    </test>
 
 
     <!-- Email Admin part -->

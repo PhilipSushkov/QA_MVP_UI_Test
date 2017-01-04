@@ -179,10 +179,10 @@ public class PresentationEdit extends AbstractPageObject {
 
         try {
             waitForElement(thumbnailPathImage);
-            findElements(thumbnailPathImage);
+            findElement(thumbnailPathImage);
 
             waitForElement(thumbnailPathInput);
-            findElements(thumbnailPathInput);
+            findElement(thumbnailPathInput);
 
             thumbnailSet = true;
         } catch (ElementNotFoundException e1) {
