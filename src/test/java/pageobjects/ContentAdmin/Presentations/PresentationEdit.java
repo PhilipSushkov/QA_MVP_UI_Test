@@ -11,7 +11,7 @@ import static specs.AbstractSpec.propUIContentAdmin;
  */
 public class PresentationEdit extends AbstractPageObject {
     private static By moduleTitle, dateInput, timeHHSelect, timeMMSelect, timeAMSelect, saveAndSubmitButton;
-    private static By titleInput, yourPageuUrlLabel, changeUrlLink, tagsInput, radEditorFrame, presentationFileInput;
+    private static By titleInput, yourPageUrlLabel, changeUrlLink, tagsInput, radEditorFrame, presentationFileInput;
     private static By urlOverrideInput, thumbnailPathImage, thumbnailPathInput;
     private static By sendSlideShareCheckbox, openLinkCheckbox, exlLatestPagesCheckbox, activeCheckbox;
     private static By switchToHtml, textArea, seoNameLiteral, updateComments, deleteButton;
@@ -36,7 +36,7 @@ public class PresentationEdit extends AbstractPageObject {
         timeAMSelect = By.xpath(propUIContentAdmin.getProperty("select_PresentationTimeAM"));
 
         titleInput = By.xpath(propUIContentAdmin.getProperty("input_Title"));
-        yourPageuUrlLabel = By.id(propUIContentAdmin.getProperty("label_YourPageuUrl"));
+        yourPageUrlLabel = By.id(propUIContentAdmin.getProperty("label_YourPageUrl"));
         changeUrlLink = By.xpath(propUIContentAdmin.getProperty("href_ChangeUrl"));
         tagsInput = By.xpath(propUIContentAdmin.getProperty("input_Tags"));
         radEditorFrame = By.xpath(propUIContentAdmin.getProperty("frame_RadEditor"));
@@ -108,8 +108,8 @@ public class PresentationEdit extends AbstractPageObject {
         WebElement element = null;
 
         try {
-            waitForElement(yourPageuUrlLabel);
-            element = findElement(yourPageuUrlLabel);
+            waitForElement(yourPageUrlLabel);
+            element = findElement(yourPageUrlLabel);
         } catch (ElementNotFoundException e1) {
         } catch (ElementNotVisibleException e2) {
         } catch (TimeoutException e3) {
@@ -267,7 +267,7 @@ public class PresentationEdit extends AbstractPageObject {
 
     public String addNewPresentation(String headline, String date, String hour, String minute, String AMPM, String[] filenames) {
 
-        wait.until(ExpectedConditions.visibilityOf(findElement(yourPageuUrlLabel)));
+        wait.until(ExpectedConditions.visibilityOf(findElement(yourPageUrlLabel)));
 
         /*
         String newsPageURL = findElement(displayedURL).getText(); // gives URL like http://kinross.q4web.newtest/news-and-investors/news-releases/press-release-details/
@@ -294,7 +294,7 @@ public class PresentationEdit extends AbstractPageObject {
         filenames[1] = presentationFile;
         js.executeScript("arguments[0].setAttribute(arguments[1], arguments[2]);", elemSrc, "value", "files/"+filenames[1]);
 
-        String newsPageURL = findElement(yourPageuUrlLabel).getText();
+        String newsPageURL = findElement(yourPageUrlLabel).getText();
 
         // adding comments (necessary formality) and submitting
         findElement(updateComments).sendKeys("testing");

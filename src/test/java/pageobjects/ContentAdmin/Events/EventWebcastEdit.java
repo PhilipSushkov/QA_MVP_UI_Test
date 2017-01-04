@@ -15,7 +15,7 @@ public class EventWebcastEdit extends AbstractPageObject {
     private static By moduleTitle, eventBtnWrap, webcastParticipantsBtnWrap, saveAndSubmitButton;
     private static By startDateInput, startTimeHHSelect, startTimeMMSelect, startTimeAMSelect, startTimeZoneSelect;
     private static By endDateInput, endTimeHHSelect, endTimeMMSelect, endTimeAMSelect;
-    private static By titleInput, yourPageuUrlLabel, changeUrlLink, tagsInput, locationInput, switchToHtml, radEditorFrame;
+    private static By titleInput, yourPageUrlLabel, changeUrlLink, tagsInput, locationInput, switchToHtml, radEditorFrame;
     private static By isWebcastCheckbox, openLinkCheckbox, exlLatestPagesCheckbox, activeCheckbox;
     private static By urlOverrideInput, relatedPressReleaseSelect, relatedFinancialReportSelect, financialPeriodQSelect, financialPeriodYSelect, relatedPresentationsSelect, relatedWebcastInput;
     private static By addNewSpeakersLink, speakerNameInput, speakerPositionInput, cancelSpeakerButton;
@@ -43,7 +43,7 @@ public class EventWebcastEdit extends AbstractPageObject {
         endTimeAMSelect = By.xpath(propUIContentAdmin.getProperty("select_EndTimeAM"));
 
         titleInput = By.xpath(propUIContentAdmin.getProperty("input_Title"));
-        yourPageuUrlLabel = By.id(propUIContentAdmin.getProperty("label_YourPageuUrl"));
+        yourPageUrlLabel = By.id(propUIContentAdmin.getProperty("label_YourPageUrl"));
         changeUrlLink = By.xpath(propUIContentAdmin.getProperty("href_ChangeUrl"));
         tagsInput = By.xpath(propUIContentAdmin.getProperty("input_Tags"));
         locationInput = By.xpath(propUIContentAdmin.getProperty("input_Location"));
@@ -208,8 +208,8 @@ public class EventWebcastEdit extends AbstractPageObject {
         WebElement element = null;
 
         try {
-            waitForElement(yourPageuUrlLabel);
-            element = findElement(yourPageuUrlLabel);
+            waitForElement(yourPageUrlLabel);
+            element = findElement(yourPageUrlLabel);
         } catch (ElementNotFoundException e1) {
         } catch (ElementNotVisibleException e2) {
         } catch (TimeoutException e3) {
@@ -411,7 +411,7 @@ public class EventWebcastEdit extends AbstractPageObject {
 
     public String addNewEvent(String headline, String date, String tommorrow, String hour, String minute, String AMPM, String timeZone, String tags, String location, String[] filenames) {
 
-        wait.until(ExpectedConditions.visibilityOf(findElement(yourPageuUrlLabel)));
+        wait.until(ExpectedConditions.visibilityOf(findElement(yourPageUrlLabel)));
 
 
         findElement(startDateInput).sendKeys(date);
@@ -438,7 +438,7 @@ public class EventWebcastEdit extends AbstractPageObject {
         wait.until(ExpectedConditions.visibilityOf(findElement(seoNameLiteral)));
 
         // gives URL like http://chicagotest.q4web.com/English/Investors/Events/Event-Details/{year}/Test-Event---AAAA
-        String newsPageURL = findElement(yourPageuUrlLabel).getText();
+        String newsPageURL = findElement(yourPageUrlLabel).getText();
 
         // adding comments (necessary formality) and submitting
         findElement(updateComments).sendKeys("testing");

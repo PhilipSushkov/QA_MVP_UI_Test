@@ -10,7 +10,6 @@ import static specs.AbstractSpec.propUIContentAdmin;
  */
 
 public class PressReleaseCategoryEdit extends AbstractPageObject {
-
     private static By moduleTitle, categoryNameInput, linkToPageSelect, defaultCheckbox, activeCheckbox, saveAndSubmitButton;
 
     public PressReleaseCategoryEdit(WebDriver driver) {
