@@ -6,7 +6,6 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import org.testng.Assert;
 
-//import pageobjects.ContentAdmin.Events.EditEvent;
 import pageobjects.ContentAdmin.Events.EventWebcastEdit;
 import pageobjects.LiveSite.LiveEvents;
 import specs.AbstractSpec;

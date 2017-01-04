@@ -346,8 +346,7 @@ public class EventWebcastEdit extends AbstractPageObject {
     public Boolean getSpeakersSet() {
         Boolean speakersSet = false;
 
-        //try {
-            //System.out.println(findElement(By.xpath("//a[contains(text(), 'Add New')]/parent::div/parent::h2/parent::div[contains(@ng-controller, 'Speaker')]")).getText());
+        try {
             waitForElement(addNewSpeakersLink);
             findElement(addNewSpeakersLink).click();
 
@@ -361,10 +360,10 @@ public class EventWebcastEdit extends AbstractPageObject {
             waitForElement(addNewSpeakersLink);
 
             speakersSet = true;
-        /* } catch (ElementNotFoundException e1) {
+        } catch (ElementNotFoundException e1) {
         } catch (ElementNotVisibleException e2) {
         } catch (TimeoutException e3) {
-        } */
+        }
 
         return speakersSet;
     }

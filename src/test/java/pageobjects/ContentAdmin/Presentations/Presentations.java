@@ -1,24 +1,75 @@
 package pageobjects.ContentAdmin.Presentations;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.LiveSite.LivePresentations;
 import pageobjects.AbstractPageObject;
 
 import java.util.concurrent.TimeUnit;
+import static specs.AbstractSpec.propUIContentAdmin;
 
 /**
  * Created by philipsushkov on 2016-11-08.
  */
 public class Presentations extends AbstractPageObject {
-    private final By publishButton = By.xpath("//input[contains(@id,'Presentations_btnPublish')]");
+    private static By moduleTitle, grid, gridPresentationList, dataGridPager, inputFilterByTag, publishButton;
+    private final Integer columnsNumber = 8;
 
     public Presentations(WebDriver driver) {
         super(driver);
+        moduleTitle = By.xpath(propUIContentAdmin.getProperty("spanModule_Title"));
+        grid = By.xpath(propUIContentAdmin.getProperty("table_GridPresentationList"));
+        gridPresentationList = By.xpath(propUIContentAdmin.getProperty("table_GridItem"));
+        dataGridPager = By.xpath(propUIContentAdmin.getProperty("pager_DataGrid"));
+        inputFilterByTag = By.xpath(propUIContentAdmin.getProperty("input_FilterByTag"));
+        publishButton = By.xpath(propUIContentAdmin.getProperty("btn_PublishPresentation"));
     }
 
+    public String getUrl() {
+        return driver.getCurrentUrl();
+    }
+
+
+    public String getTitle() {
+        waitForElement(moduleTitle);
+        return getText(moduleTitle);
+    }
+
+
+    public Integer getTitleQuantity() {
+        wait.until(ExpectedConditions.visibilityOf(findElement(grid)) );
+        return findElement(grid).findElements(gridPresentationList).size()/columnsNumber;
+    }
+
+
+    public WebElement getPresentationListPagination() {
+        WebElement element = null;
+
+        try {
+            wait.until(ExpectedConditions.visibilityOf(findElement(dataGridPager)));
+            element = findElement(dataGridPager);
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
+        }
+
+        return element;
+    }
+
+
+    public WebElement getFilterByTag() {
+        WebElement element = null;
+
+        try {
+            wait.until(ExpectedConditions.visibilityOf(findElement(inputFilterByTag)));
+            element = findElement(inputFilterByTag);
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
+        }
+
+        return element;
+    }
 
     public Presentations publishPresentation(String headline) {
 
@@ -46,7 +97,6 @@ public class Presentations extends AbstractPageObject {
         return new Presentations(getDriver());
     }
 
-
     public LivePresentations livePresentations(String url) {
 
         driver.manage().timeouts().pageLoadTimeout(20, TimeUnit.SECONDS);
@@ -71,5 +121,7 @@ public class Presentations extends AbstractPageObject {
         findElement(pressReleaseEditButton).click();
         return new EditPresentation(getDriver());
     }
+
+
 
 }

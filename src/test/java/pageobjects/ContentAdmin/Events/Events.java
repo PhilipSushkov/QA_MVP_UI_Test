@@ -12,8 +12,7 @@ import static specs.AbstractSpec.propUIContentAdmin;
  * Created by philipsushkov on 2016-11-09.
  */
 public class Events extends AbstractPageObject {
-    private final By publishButton = By.xpath("//input[contains(@id,'Events_btnPublish')]");
-    private static By moduleTitle, grid, gridEventWebcastList, dataGridPager, inputFilterByTag;
+    private static By moduleTitle, grid, gridEventWebcastList, dataGridPager, inputFilterByTag, publishButton;
     private final Integer columnsNumber = 8;
 
     public Events(WebDriver driver) {
@@ -23,6 +22,7 @@ public class Events extends AbstractPageObject {
         gridEventWebcastList = By.xpath(propUIContentAdmin.getProperty("table_GridItem"));
         dataGridPager = By.xpath(propUIContentAdmin.getProperty("pager_DataGrid"));
         inputFilterByTag = By.xpath(propUIContentAdmin.getProperty("input_FilterByTag"));
+        publishButton = By.xpath(propUIContentAdmin.getProperty("btn_PublishEvent"));
     }
 
     public String getUrl() {
@@ -50,6 +50,7 @@ public class Events extends AbstractPageObject {
             element = findElement(dataGridPager);
         } catch (ElementNotFoundException e1) {
         } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
         }
 
         return element;
@@ -64,6 +65,7 @@ public class Events extends AbstractPageObject {
             element = findElement(inputFilterByTag);
         } catch (ElementNotFoundException e1) {
         } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
         }
 
         return element;
@@ -116,9 +118,9 @@ public class Events extends AbstractPageObject {
     }
 
 
-    public EditEvent clickEditEventButton(String headline){
+    public EventWebcastEdit clickEditEventButton(String headline){
         By pressReleaseEditButton = By.xpath("//td[contains(text(),'"+headline+"')]/preceding-sibling::td/input[contains(@id,'imgEdit')]");
         findElement(pressReleaseEditButton).click();
-        return new EditEvent(getDriver());
+        return new EventWebcastEdit(getDriver());
     }
 }

@@ -231,10 +231,20 @@
             <class name="specs.ContentAdmin.Events.CheckEventWebcastList" />
         </classes>
     </test>
+    <test name="CheckPresentationList">
+        <classes>
+            <class name="specs.ContentAdmin.Presentations.CheckPresentationList" />
+        </classes>
+    </test>
 
     <test name="CheckFinancialReportEdit">
         <classes>
             <class name="specs.ContentAdmin.FinancialReports.CheckFinancialReportEdit" />
+        </classes>
+    </test>
+    <test name="CheckEventWebcastEdit">
+        <classes>
+            <class name="specs.ContentAdmin.Events.CheckEventWebcastEdit" />
         </classes>
     </test>
 

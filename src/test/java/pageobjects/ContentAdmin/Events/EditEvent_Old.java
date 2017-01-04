@@ -8,7 +8,7 @@ import pageobjects.AbstractPageObject;
 /**
  * Created by philipsushkov on 2016-11-09.
  */
-public class EditEvent extends AbstractPageObject {
+public class EditEvent_Old extends AbstractPageObject {
 
     private final By displayedURL = By.id("PageUrl");
     private final By seoNameLiteral = By.id("seoNameLiteral");
@@ -33,7 +33,7 @@ public class EditEvent extends AbstractPageObject {
     private final By deleteButton = By.xpath("//input[contains(@id,'btnDelete')]");
     private final By saveAndSubmit = By.xpath("//input[contains(@id,'btnSaveAndSubmit')]");
 
-    public EditEvent(WebDriver driver) {
+    public EditEvent_Old(WebDriver driver) {
         super(driver);
     }
 
