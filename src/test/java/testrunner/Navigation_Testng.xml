@@ -252,6 +252,11 @@
             <class name="specs.ContentAdmin.Presentations.CheckPresentationEdit" />
         </classes>
     </test>
+    <test name="CheckPressReleaseCategoryEdit">
+        <classes>
+            <class name="specs.ContentAdmin.PressReleaseCategories.CheckPressReleaseCategoryEdit" />
+        </classes>
+    </test>
 
 
     <!-- Email Admin part -->
