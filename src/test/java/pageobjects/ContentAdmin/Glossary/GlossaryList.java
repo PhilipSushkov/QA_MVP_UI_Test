@@ -4,7 +4,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
 import pageobjects.PageObject;
 
@@ -26,20 +25,15 @@ public class GlossaryList extends AbstractPageObject {
         dataGridPager = By.xpath(propUIContentAdmin.getProperty("pager_DataGrid"));
     }
 
-
-    public String getUrl() {
-        return driver.getCurrentUrl();
-    }
-
-
     public String getTitle() {
-        wait.until(ExpectedConditions.visibilityOf(findElement(moduleTitle)) );
-        return findElement(moduleTitle).getText();
+        waitForElement(moduleTitle);
+        return getText(moduleTitle);
     }
 
 
     public Integer getTitleQuantity() {
-        wait.until(ExpectedConditions.visibilityOf(findElement(grid)) );
+        //wait.until(ExpectedConditions.visibilityOf(findElement(grid)) );
+        waitForElement(grid);
         return findElement(grid).findElements(gridGlossaryList).size()/columnsNumber;
     }
 
@@ -48,7 +42,8 @@ public class GlossaryList extends AbstractPageObject {
         WebElement element = null;
 
         try {
-            wait.until(ExpectedConditions.visibilityOf(findElement(dataGridPager)));
+            //wait.until(ExpectedConditions.visibilityOf(findElement(dataGridPager)));
+            waitForElement(dataGridPager);
             element = findElement(dataGridPager);
         } catch (PageObject.ElementNotFoundException e1) {
         } catch (ElementNotVisibleException e2) {
