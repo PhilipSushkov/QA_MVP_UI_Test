@@ -1,9 +1,6 @@
 package pageobjects.LiveSite;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
 import pageobjects.Dashboard.Dashboard;
@@ -15,6 +12,8 @@ import static specs.AbstractSpec.propUIPublicSite;
 
 public class LivePressReleases extends AbstractPageObject{
 
+    private final By latestHeadlines;
+    private final By latestHeadlineLinks;
     private final By latestHeadlines_PressRelease;
     private final By pressReleaseDate;
     private final By yearLink_PressRelease;
@@ -25,6 +24,8 @@ public class LivePressReleases extends AbstractPageObject{
 
     public LivePressReleases(WebDriver driver) {
         super(driver);
+        latestHeadlines = By.xpath(propUIPublicSite.getProperty("latestHeadlines"));
+        latestHeadlineLinks = By.xpath(propUIPublicSite.getProperty("latestHeadlineLinks"));
         latestHeadlines_PressRelease = By.xpath(propUIPublicSite.getProperty("latestHeadlines_PressRelease"));
         pressReleaseDate = By.className(propUIPublicSite.getProperty("pressReleaseDate"));
         yearLink_PressRelease = By.className(propUIPublicSite.getProperty("yearLink_PressRelease"));
@@ -39,7 +40,7 @@ public class LivePressReleases extends AbstractPageObject{
         return new Dashboard(getDriver());
     }
 
-    public boolean canFindNewHeadline(String expectedHeadline, boolean desiredState, String[] expectedFilenames){
+    public boolean canFindNewHeadline2(String expectedHeadline, boolean desiredState, String[] expectedFilenames){
         List<WebElement> headlines;
         List<WebElement> headlineLinks;
         int refreshAttempts = 0;
@@ -100,6 +101,73 @@ public class LivePressReleases extends AbstractPageObject{
             }
         }
 
+        return foundHeadline;
+    }
+
+
+    public boolean canFindNewHeadline(String expectedHeadline, boolean desiredState, String[] expectedFilenames) throws InterruptedException {
+        WebElement headlines;
+        int refreshAttempts = 0;
+        boolean foundHeadline = !desiredState;
+        long startTime = System.currentTimeMillis();
+        long time = System.currentTimeMillis();
+
+        driver.manage().timeouts().pageLoadTimeout(20, TimeUnit.SECONDS);
+
+        while (foundHeadline!=desiredState && time-startTime<120000){
+            try{Thread.sleep(5000);}
+            catch(InterruptedException e){
+                e.printStackTrace();
+            }
+            refreshAttempts++;
+            System.out.println("Now performing refresh "+refreshAttempts);
+            time = System.currentTimeMillis();
+
+            try {
+                driver.findElement(By.tagName("body")).sendKeys("Keys.ESCAPE");
+                Thread.sleep(1000);
+                driver.navigate().refresh();
+            } catch (TimeoutException e) {
+                driver.findElement(By.tagName("body")).sendKeys("Keys.ESCAPE");
+            }
+
+            try {
+                driver.findElement(By.tagName("body")).sendKeys("Keys.ESCAPE");
+                headlines = driver.findElement(latestHeadlines);
+
+                System.out.println("Found Head Line: "+headlines.getText());
+                if (!headlines.getText().equals(expectedHeadline)){
+                    foundHeadline = false;
+                    System.out.println("ERROR: Head Line doesn't match.");
+                } else {
+                    foundHeadline = true;
+                }
+
+                String[] foundFilenames = new String[2];
+                foundFilenames[0] = findElement(pressReleaseImage).getAttribute("src");
+                System.out.println("Found image file: "+foundFilenames[0]);
+                if (!foundFilenames[0].contains(expectedFilenames[0])){
+                    foundHeadline = false;
+                    System.out.println("ERROR: Image filename doesn't match.");
+                }
+
+                foundFilenames[1] = findElement(documentDownloadLink_PressRelease).getAttribute("src");
+                System.out.println("Found image file: "+foundFilenames[0]);
+                if (!foundFilenames[0].contains(expectedFilenames[0])){
+                    foundHeadline = false;
+                    System.out.println("ERROR: Attached document filename doesn't match.");
+                }
+
+            } catch (ElementNotFoundException e2) {
+                foundHeadline = false;
+            } catch (TimeoutException e3) {
+                driver.findElement(By.tagName("body")).sendKeys("Keys.ESCAPE");
+                foundHeadline = false;
+            } catch (NoSuchElementException e4) {
+                driver.findElement(By.tagName("body")).sendKeys("Keys.ESCAPE");
+                foundHeadline = false;
+            }
+        }
         return foundHeadline;
     }
 

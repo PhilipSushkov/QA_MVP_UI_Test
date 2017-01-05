@@ -1,6 +1,7 @@
 package pageobjects.ContentAdmin.PressReleases;
 
 import org.openqa.selenium.*;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.LiveSite.LivePressReleases;
 import pageobjects.AbstractPageObject;
 
@@ -77,12 +78,12 @@ public class PressReleases extends AbstractPageObject {
         return element;
     }
 
-    public EditPressRelease editPressRelease(String headline){
+    public PressReleaseEdit editPressRelease(String headline){
         By pressReleaseEditButton = By.xpath("//td[contains(text(),'"+headline+"')]/preceding-sibling::td/input[contains(@id,'imgEdit')]");
 
         findElement(pressReleaseEditButton).click();
 
-        return new EditPressRelease(getDriver());
+        return new PressReleaseEdit(getDriver());
     }
 
     public LivePressReleases livePressReleases(String url) {
@@ -110,16 +111,16 @@ public class PressReleases extends AbstractPageObject {
 
         try {
             pressReleaseCheckbox = By.xpath("//td[contains(text(),'" + headline + "')]/following-sibling::td/input[contains(@id,'chkWorkflow')]");
-            //wait.until(ExpectedConditions.visibilityOf(findElement(pressReleaseCheckbox)));
-            waitForElement(pressReleaseCheckbox);
+            wait.until(ExpectedConditions.visibilityOf(findElement(pressReleaseCheckbox)));
+            //waitForElement(pressReleaseCheckbox);
         } catch (ElementNotFoundException e1) {
             pressReleaseCheckbox = By.xpath("//td[contains(text(),'" + headline + "')]/following-sibling::td/span/input[contains(@id,'chkWorkflow')]");
-            //wait.until(ExpectedConditions.visibilityOf(findElement(pressReleaseCheckbox)));
-            waitForElement(pressReleaseCheckbox);
+            wait.until(ExpectedConditions.visibilityOf(findElement(pressReleaseCheckbox)));
+            //waitForElement(pressReleaseCheckbox);
         }
 
         //wait.until(ExpectedConditions.visibilityOf(findElement(pressReleaseCheckbox)));
-        waitForElement(pressReleaseCheckbox);
+        //waitForElement(pressReleaseCheckbox);
         findElement(pressReleaseCheckbox).click();
 
         //waiting 1 second for publish button to activate

@@ -6,7 +6,7 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import org.testng.Assert;
 
-import pageobjects.ContentAdmin.PressReleases.EditPressRelease;
+import pageobjects.ContentAdmin.PressReleases.PressReleaseEdit;
 import specs.AbstractSpec;
 import pageobjects.LoginPage.LoginPage;
 import pageobjects.Dashboard.Dashboard;
@@ -20,7 +20,7 @@ public class PublishPressRelease extends AbstractSpec {
     private static LoginPage loginPage;
     private static Dashboard dashboard;
     private static PressReleases pressReleases;
-    private static EditPressRelease editPressRelease;
+    private static PressReleaseEdit pressReleaseEdit;
     private static LivePressReleases livePressRelease;
 
     private Date current = new Date();
@@ -48,7 +48,7 @@ public class PublishPressRelease extends AbstractSpec {
         loginPage = new LoginPage(driver);
         dashboard = new Dashboard(driver);
         pressReleases = new PressReleases(driver);
-        editPressRelease = new EditPressRelease(driver);
+        pressReleaseEdit = new PressReleaseEdit(driver);
         livePressRelease = new LivePressReleases(driver);
 
         loginPage.loginUser();
@@ -62,7 +62,7 @@ public class PublishPressRelease extends AbstractSpec {
         dashboard.openPageFromCommonTasks(addPressReleaseButton);
 
         // adding new press release
-        String newsPageURL = editPressRelease.addNewPressRelease(headline, date, hour, min, AMPM, filenames);
+        String newsPageURL = pressReleaseEdit.addNewPressRelease(headline, date, hour, min, AMPM, filenames);
         Assert.assertNotNull(newsPageURL);
 
         // publishing press release

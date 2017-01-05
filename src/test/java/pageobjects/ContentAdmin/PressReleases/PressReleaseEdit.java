@@ -1,55 +1,46 @@
-package pageobjects.ContentAdmin.Presentations;
+package pageobjects.ContentAdmin.PressReleases;
 
 import org.openqa.selenium.*;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
 
 import static specs.AbstractSpec.propUIContentAdmin;
 
-/**
- * Created by philipsushkov on 2016-11-08.
- */
-
-public class PresentationEdit extends AbstractPageObject {
+public class PressReleaseEdit extends AbstractPageObject {
     private static By moduleTitle, dateInput, timeHHSelect, timeMMSelect, timeAMSelect, saveAndSubmitButton;
-    private static By titleInput, yourPageUrlLabel, changeUrlLink, tagsInput, radEditorFrame, presentationFileInput;
-    private static By urlOverrideInput, thumbnailPathImage, thumbnailPathInput;
-    private static By sendSlideShareCheckbox, openLinkCheckbox, exlLatestPagesCheckbox, activeCheckbox;
-    private static By addNewSpeakersLink, speakerNameInput, speakerPositionInput, cancelSpeakerButton;
+    private static By headlineInput, yourPageUrlLabel, changeUrlLink, categorySelect, tagsInput, radEditorFrame;
+    private static By relatedDocInput, relatedProjSelect, urlOverrideInput, thumbnailPathImage, thumbnailPathInput;
+    private static By openLinkCheckbox, exlLatestPagesCheckbox, activeCheckbox;
     private static By switchToHtml, textArea, seoNameLiteral, updateComments, deleteButton;
 
     private final String imageFile = "Q4Touch_LtBlue.png";
-    private final String presentationFile = "bitcoin.pdf";
+    private final String relatedFile = "bitcoin.pdf";
 
-    public PresentationEdit(WebDriver driver) {
+    public PressReleaseEdit(WebDriver driver) {
         super(driver);
         moduleTitle = By.xpath(propUIContentAdmin.getProperty("spanModule_Title"));
 
-        dateInput = By.xpath(propUIContentAdmin.getProperty("input_PresentationDate"));
-        timeHHSelect = By.xpath(propUIContentAdmin.getProperty("select_PresentationTimeHH"));
-        timeMMSelect = By.xpath(propUIContentAdmin.getProperty("select_PresentationTimeMM"));
-        timeAMSelect = By.xpath(propUIContentAdmin.getProperty("select_PresentationTimeAM"));
+        dateInput = By.xpath(propUIContentAdmin.getProperty("input_PressReleaseDate"));
+        timeHHSelect = By.xpath(propUIContentAdmin.getProperty("select_PressReleaseTimeHH"));
+        timeMMSelect = By.xpath(propUIContentAdmin.getProperty("select_PressReleaseTimeMM"));
+        timeAMSelect = By.xpath(propUIContentAdmin.getProperty("select_PressReleaseTimeAM"));
 
-        titleInput = By.xpath(propUIContentAdmin.getProperty("input_Title"));
+        headlineInput = By.xpath(propUIContentAdmin.getProperty("input_Headline"));
         yourPageUrlLabel = By.id(propUIContentAdmin.getProperty("label_YourPageUrl"));
         changeUrlLink = By.xpath(propUIContentAdmin.getProperty("href_ChangeUrl"));
+        categorySelect = By.xpath(propUIContentAdmin.getProperty("input_Category"));
         tagsInput = By.xpath(propUIContentAdmin.getProperty("input_Tags"));
         radEditorFrame = By.xpath(propUIContentAdmin.getProperty("frame_RadEditor"));
-        presentationFileInput = By.xpath(propUIContentAdmin.getProperty("input_PresentationFile"));
-        urlOverrideInput = By.xpath(propUIContentAdmin.getProperty("input_UrlOverride"));
+        relatedDocInput = By.xpath(propUIContentAdmin.getProperty("input_RelatedDoc"));
 
         thumbnailPathImage = By.xpath(propUIContentAdmin.getProperty("img_ThumbnailPath"));
         thumbnailPathInput = By.xpath(propUIContentAdmin.getProperty("input_ThumbnailPath"));
 
-        sendSlideShareCheckbox = By.xpath(propUIContentAdmin.getProperty("chk_SendToSlideShare"));
+        relatedProjSelect = By.xpath(propUIContentAdmin.getProperty("select_RelatedProj"));
+        urlOverrideInput = By.xpath(propUIContentAdmin.getProperty("input_UrlOverride"));
+
         openLinkCheckbox = By.xpath(propUIContentAdmin.getProperty("chk_OpenLink"));
         exlLatestPagesCheckbox = By.xpath(propUIContentAdmin.getProperty("chk_ExlLatestPages"));
         activeCheckbox = By.xpath(propUIContentAdmin.getProperty("chk_Active"));
-
-        addNewSpeakersLink = By.xpath(propUIContentAdmin.getProperty("href_AddNewSpeakers"));
-        speakerNameInput = By.xpath(propUIContentAdmin.getProperty("input_SpeakerName"));
-        speakerPositionInput = By.xpath(propUIContentAdmin.getProperty("input_SpeakerPosition"));
-        cancelSpeakerButton = By.xpath(propUIContentAdmin.getProperty("btn_SpeakerCancel"));
 
         switchToHtml = By.className(propUIContentAdmin.getProperty("html_SwitchTo"));
         textArea = By.tagName(propUIContentAdmin.getProperty("frame_Textarea"));
@@ -94,8 +85,8 @@ public class PresentationEdit extends AbstractPageObject {
         WebElement element = null;
 
         try {
-            waitForElement(titleInput);
-            element = findElement(titleInput);
+            waitForElement(headlineInput);
+            element = findElement(headlineInput);
         } catch (ElementNotFoundException e1) {
         } catch (ElementNotVisibleException e2) {
         } catch (TimeoutException e3) {
@@ -132,6 +123,20 @@ public class PresentationEdit extends AbstractPageObject {
         return element;
     }
 
+    public WebElement getCategorySelect() {
+        WebElement element = null;
+
+        try {
+            waitForElement(categorySelect);
+            element = findElement(categorySelect);
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
+        }
+
+        return element;
+    }
+
     public WebElement getTagsInput() {
         WebElement element = null;
 
@@ -160,12 +165,12 @@ public class PresentationEdit extends AbstractPageObject {
         return element;
     }
 
-    public WebElement getPresentationFileInput() {
+    public WebElement getRelatedDocInput() {
         WebElement element = null;
 
         try {
-            waitForElement(presentationFileInput);
-            element = findElements(presentationFileInput).get(0);
+            waitForElement(relatedDocInput);
+            element = findElement(relatedDocInput);
         } catch (ElementNotFoundException e1) {
         } catch (ElementNotVisibleException e2) {
         } catch (TimeoutException e3) {
@@ -193,6 +198,20 @@ public class PresentationEdit extends AbstractPageObject {
         return thumbnailSet;
     }
 
+    public WebElement getRelatedProjSelect() {
+        WebElement element = null;
+
+        try {
+            waitForElement(relatedProjSelect);
+            element = findElement(relatedProjSelect);
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
+        }
+
+        return element;
+    }
+
     public WebElement getURLOverrideInput() {
         WebElement element = null;
 
@@ -207,32 +226,10 @@ public class PresentationEdit extends AbstractPageObject {
         return element;
     }
 
-    public Boolean getRelatedFilesSet() {
-        Boolean relatedFilesSet = false;
-
-        try {
-            waitForElement(presentationFileInput);
-
-            findElements(presentationFileInput).get(1);
-            findElements(presentationFileInput).get(2);
-            findElements(presentationFileInput).get(3);
-
-            relatedFilesSet = true;
-        } catch (ElementNotFoundException e1) {
-        } catch (ElementNotVisibleException e2) {
-        } catch (TimeoutException e3) {
-        }
-
-        return relatedFilesSet;
-    }
-
     public Boolean getChkBoxSet() {
         Boolean timeSet = false;
 
         try {
-            waitForElement(sendSlideShareCheckbox);
-            findElement(sendSlideShareCheckbox);
-
             waitForElement(openLinkCheckbox);
             findElement(openLinkCheckbox);
 
@@ -251,31 +248,6 @@ public class PresentationEdit extends AbstractPageObject {
         return timeSet;
     }
 
-    public Boolean getSpeakersSet() {
-        Boolean speakersSet = false;
-
-        try {
-            waitForElement(addNewSpeakersLink);
-            findElement(addNewSpeakersLink).click();
-
-            waitForElement(cancelSpeakerButton);
-
-            findElement(speakerNameInput);
-            findElement(speakerPositionInput);
-
-            findElement(cancelSpeakerButton).click();
-
-            waitForElement(addNewSpeakersLink);
-
-            speakersSet = true;
-        } catch (ElementNotFoundException e1) {
-        } catch (ElementNotVisibleException e2) {
-        } catch (TimeoutException e3) {
-        }
-
-        return speakersSet;
-    }
-
     public WebElement getSaveAndSubmitButton() {
         WebElement element = null;
 
@@ -290,34 +262,32 @@ public class PresentationEdit extends AbstractPageObject {
         return element;
     }
 
-    public String addNewPresentation(String headline, String date, String hour, String minute, String AMPM, String[] filenames) {
-
-        //wait.until(ExpectedConditions.visibilityOf(findElement(yourPageUrlLabel)));
+    public String addNewPressRelease(String headline, String date, String hour, String minute, String AMPM, String[] filenames) {
+        // copying displayed URL of news page
+        //wait.until(ExpectedConditions.visibilityOf(findElement(displayedURL)));
         waitForElement(yourPageUrlLabel);
-
-        /*
-        String newsPageURL = findElement(displayedURL).getText(); // gives URL like http://kinross.q4web.newtest/news-and-investors/news-releases/press-release-details/
-        newsPageURL = newsPageURL.substring(0, newsPageURL.lastIndexOf("/"));
-        newsPageURL = newsPageURL.substring(0, newsPageURL.lastIndexOf("/")); // substring repetition needed to remove the -details section of URL
-        */
+        //String newsPageURL = findElement(yourPageUrlLabel).getText(); // gives URL like http://kinross.q4web.newtest/news-and-investors/news-releases/press-release-details/
+        //newsPageURL = newsPageURL.substring(0, newsPageURL.lastIndexOf("/"));
+        //newsPageURL = newsPageURL.substring(0, newsPageURL.lastIndexOf("/")); // substring repetition needed to remove the -details section of URL
 
         // filling in mandatory date, time, and headline fields
         findElement(dateInput).sendKeys(date);
         findElement(timeHHSelect).sendKeys(hour);
         findElement(timeMMSelect).sendKeys(minute);
         findElement(timeAMSelect).sendKeys(AMPM);
-        findElement(titleInput).sendKeys(headline);
+        findElement(headlineInput).sendKeys(headline);
+
         findElement(switchToHtml).click();
 
         driver.switchTo().frame(2);
         filenames[0] = imageFile;
-        findElement(textArea).sendKeys("<p>This is a test of a presentation.</p><p><img src=\"/files/"+filenames[0]+"\" alt=\"\" style=\"\"></p>");
+        findElement(textArea).sendKeys("<p>This is a test of a press release.</p><p><img src=\"/files/"+filenames[0]+"\" alt=\"\" style=\"\"></p>");
         driver.switchTo().defaultContent();
         pause(1000L);
 
         JavascriptExecutor js = (JavascriptExecutor) driver;
-        WebElement elemSrc =  findElement(presentationFileInput);
-        filenames[1] = presentationFile;
+        WebElement elemSrc =  driver.findElement(relatedDocInput);
+        filenames[1] = relatedFile;
         js.executeScript("arguments[0].setAttribute(arguments[1], arguments[2]);", elemSrc, "value", "files/"+filenames[1]);
 
         waitForElement(seoNameLiteral);
@@ -332,23 +302,22 @@ public class PresentationEdit extends AbstractPageObject {
         return newsPageURL;
     }
 
-    public Presentations changeHeadlineTo(String newHeadline) {
-        wait.until(ExpectedConditions.visibilityOf(findElement(titleInput)));
-        findElement(titleInput).clear();
-        findElement(titleInput).sendKeys(newHeadline);
+    public PressReleases changeHeadlineTo(String newHeadline) {
+        waitForElement(headlineInput);
+        findElement(headlineInput).clear();
+        findElement(headlineInput).sendKeys(newHeadline);
         findElement(updateComments).sendKeys("testing");
-
         findElement(saveAndSubmitButton).click();
 
-        return new Presentations(getDriver());
+        return new PressReleases(getDriver());
     }
 
-    public Presentations deletePresentation(){
-        wait.until(ExpectedConditions.visibilityOf(findElement(updateComments)));
+    public PressReleases deletePressRelease(){
+        waitForElement(updateComments);
         findElement(updateComments).sendKeys("testing");
         findElement(deleteButton).click();
 
-        return new Presentations(getDriver());
+        return new PressReleases(getDriver());
     }
 
 }

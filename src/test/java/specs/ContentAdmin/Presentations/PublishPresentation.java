@@ -18,6 +18,7 @@ import java.util.Date;
 /**
  * Created by philipsushkov on 2016-11-08.
  */
+
 public class PublishPresentation extends AbstractSpec {
     private static By addPresentationButton, contentAdminMenuButton, presentationsMenuItem;
     private static LoginPage loginPage;

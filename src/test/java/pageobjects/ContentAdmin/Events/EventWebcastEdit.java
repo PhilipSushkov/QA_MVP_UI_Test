@@ -411,7 +411,8 @@ public class EventWebcastEdit extends AbstractPageObject {
 
     public String addNewEvent(String headline, String date, String tommorrow, String hour, String minute, String AMPM, String timeZone, String tags, String location, String[] filenames) {
 
-        wait.until(ExpectedConditions.visibilityOf(findElement(yourPageUrlLabel)));
+        //wait.until(ExpectedConditions.visibilityOf(findElement(yourPageUrlLabel)));
+        waitForElement(yourPageUrlLabel);
 
 
         findElement(startDateInput).sendKeys(date);
@@ -435,7 +436,8 @@ public class EventWebcastEdit extends AbstractPageObject {
         driver.switchTo().defaultContent();
         pause(1000L);
 
-        wait.until(ExpectedConditions.visibilityOf(findElement(seoNameLiteral)));
+        //wait.until(ExpectedConditions.visibilityOf(findElement(seoNameLiteral)));
+        waitForElement(seoNameLiteral);
 
         // gives URL like http://chicagotest.q4web.com/English/Investors/Events/Event-Details/{year}/Test-Event---AAAA
         String newsPageURL = findElement(yourPageUrlLabel).getText();
@@ -450,7 +452,8 @@ public class EventWebcastEdit extends AbstractPageObject {
     }
 
     public Events changeHeadlineTo(String newHeadline) {
-        wait.until(ExpectedConditions.visibilityOf(findElement(titleInput)));
+        //wait.until(ExpectedConditions.visibilityOf(findElement(titleInput)));
+        waitForElement(titleInput);
         findElement(titleInput).clear();
         findElement(titleInput).sendKeys(newHeadline);
         findElement(updateComments).sendKeys("testing");
@@ -461,7 +464,8 @@ public class EventWebcastEdit extends AbstractPageObject {
     }
 
     public Events deleteEvent() {
-        wait.until(ExpectedConditions.visibilityOf(findElement(updateComments)));
+        //wait.until(ExpectedConditions.visibilityOf(findElement(updateComments)));
+        waitForElement(updateComments);
         findElement(updateComments).sendKeys("testing");
         findElement(deleteButton).click();
 
