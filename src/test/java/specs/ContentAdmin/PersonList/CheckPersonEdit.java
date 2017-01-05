@@ -52,11 +52,9 @@ public class CheckPersonEdit extends AbstractSpec {
         Assert.assertNotNull(personEdit.getDepartmentSelect(), "Department select doesn't exist");
         Assert.assertNotNull(personEdit.getTagsInput(), "Tags input doesn't exist");
 
-        /*
+        Assert.assertTrue(personEdit.getPathInputSet(), "Path elements don't exist");
 
-        Assert.assertTrue(pressReleaseEdit.getChkBoxSet(), "Checkbox elements don't exist");
-
-        */
+        Assert.assertTrue(personEdit.getChkBoxSet(), "Checkbox elements don't exist");
 
         Assert.assertNotNull(personEdit.getSaveAndSubmitButton(), "Save And Submit button doesn't exist");
     }

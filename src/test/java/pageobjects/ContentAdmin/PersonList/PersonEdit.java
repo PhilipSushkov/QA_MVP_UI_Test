@@ -12,6 +12,7 @@ import static specs.AbstractSpec.propUIContentAdmin;
 public class PersonEdit extends AbstractPageObject {
     private static By moduleTitle, firstNameInput, lastNameInput, suffixInput, saveAndSubmitButton;
     private static By titleInput, descTextarea, careerHighlightTextarea, departmentSelect, tagsInput;
+    private static By photoPathInput, thumbnailPathInput, highResolutionPathInput, lowResolutionPathInput, activeCheckbox;
 
     public PersonEdit(WebDriver driver) {
         super(driver);
@@ -25,6 +26,13 @@ public class PersonEdit extends AbstractPageObject {
         careerHighlightTextarea = By.xpath(propUIContentAdmin.getProperty("txtarea_CareerHighlight"));
         departmentSelect = By.xpath(propUIContentAdmin.getProperty("select_Department"));
         tagsInput = By.xpath(propUIContentAdmin.getProperty("input_Tags"));
+
+        photoPathInput = By.xpath(propUIContentAdmin.getProperty("input_PhotoPath"));
+        thumbnailPathInput = By.xpath(propUIContentAdmin.getProperty("input_ThumbnailPath"));
+        highResolutionPathInput = By.xpath(propUIContentAdmin.getProperty("input_HighResolutionPath"));
+        lowResolutionPathInput = By.xpath(propUIContentAdmin.getProperty("input_LowResolutionPath"));
+
+        activeCheckbox = By.xpath(propUIContentAdmin.getProperty("chk_Active"));
 
         saveAndSubmitButton = By.xpath(propUIContentAdmin.getProperty("btn_SaveAndSubmit"));
     }
@@ -144,6 +152,47 @@ public class PersonEdit extends AbstractPageObject {
         }
 
         return element;
+    }
+
+    public Boolean getPathInputSet() {
+        Boolean timeSet = false;
+
+        try {
+            waitForElement(photoPathInput);
+            findElement(photoPathInput);
+
+            waitForElement(thumbnailPathInput);
+            findElement(thumbnailPathInput);
+
+            waitForElement(highResolutionPathInput);
+            findElement(highResolutionPathInput);
+
+            waitForElement(lowResolutionPathInput);
+            findElement(lowResolutionPathInput);
+
+            timeSet = true;
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
+        }
+
+        return timeSet;
+    }
+
+    public Boolean getChkBoxSet() {
+        Boolean timeSet = false;
+
+        try {
+            waitForElement(activeCheckbox);
+            findElement(activeCheckbox);
+
+            timeSet = true;
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
+        }
+
+        return timeSet;
     }
 
     public WebElement getSaveAndSubmitButton() {
