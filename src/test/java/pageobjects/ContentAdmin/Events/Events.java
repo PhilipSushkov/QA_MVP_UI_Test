@@ -25,11 +25,6 @@ public class Events extends AbstractPageObject {
         publishButton = By.xpath(propUIContentAdmin.getProperty("btn_PublishEvent"));
     }
 
-    public String getUrl() {
-        return driver.getCurrentUrl();
-    }
-
-
     public String getTitle() {
         waitForElement(moduleTitle);
         return getText(moduleTitle);

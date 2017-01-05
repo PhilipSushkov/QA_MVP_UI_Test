@@ -59,6 +59,7 @@ public class CheckPresentationEdit extends AbstractSpec {
         Assert.assertTrue(presentationEdit.getChkBoxSet(), "Checkbox elements don't exist");
 
         Assert.assertTrue(presentationEdit.getRelatedFilesSet(), "Related Files elements don't exist");
+        Assert.assertTrue(presentationEdit.getSpeakersSet(), "Speakers elements don't exist");
 
         Assert.assertNotNull(presentationEdit.getSaveAndSubmitButton(), "Save And Submit button doesn't exist");
     }

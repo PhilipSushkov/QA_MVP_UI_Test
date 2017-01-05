@@ -25,22 +25,15 @@ public class Presentations extends AbstractPageObject {
         publishButton = By.xpath(propUIContentAdmin.getProperty("btn_PublishPresentation"));
     }
 
-    public String getUrl() {
-        return driver.getCurrentUrl();
-    }
-
-
     public String getTitle() {
         waitForElement(moduleTitle);
         return getText(moduleTitle);
     }
 
-
     public Integer getTitleQuantity() {
         wait.until(ExpectedConditions.visibilityOf(findElement(grid)) );
         return findElement(grid).findElements(gridPresentationList).size()/columnsNumber;
     }
-
 
     public WebElement getPresentationListPagination() {
         WebElement element = null;
@@ -55,7 +48,6 @@ public class Presentations extends AbstractPageObject {
 
         return element;
     }
-
 
     public WebElement getFilterByTag() {
         WebElement element = null;

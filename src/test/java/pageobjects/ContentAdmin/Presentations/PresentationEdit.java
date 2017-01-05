@@ -14,6 +14,7 @@ public class PresentationEdit extends AbstractPageObject {
     private static By titleInput, yourPageUrlLabel, changeUrlLink, tagsInput, radEditorFrame, presentationFileInput;
     private static By urlOverrideInput, thumbnailPathImage, thumbnailPathInput;
     private static By sendSlideShareCheckbox, openLinkCheckbox, exlLatestPagesCheckbox, activeCheckbox;
+    private static By addNewSpeakersLink, speakerNameInput, speakerPositionInput, cancelSpeakerButton;
     private static By switchToHtml, textArea, seoNameLiteral, updateComments, deleteButton;
 
     private final String imageFile = "Q4Touch_LtBlue.png";
@@ -50,6 +51,11 @@ public class PresentationEdit extends AbstractPageObject {
         openLinkCheckbox = By.xpath(propUIContentAdmin.getProperty("chk_OpenLink"));
         exlLatestPagesCheckbox = By.xpath(propUIContentAdmin.getProperty("chk_ExlLatestPages"));
         activeCheckbox = By.xpath(propUIContentAdmin.getProperty("chk_Active"));
+
+        addNewSpeakersLink = By.xpath(propUIContentAdmin.getProperty("href_AddNewSpeakers"));
+        speakerNameInput = By.xpath(propUIContentAdmin.getProperty("input_SpeakerName"));
+        speakerPositionInput = By.xpath(propUIContentAdmin.getProperty("input_SpeakerPosition"));
+        cancelSpeakerButton = By.xpath(propUIContentAdmin.getProperty("btn_SpeakerCancel"));
 
         switchToHtml = By.className(propUIContentAdmin.getProperty("html_SwitchTo"));
         textArea = By.tagName(propUIContentAdmin.getProperty("frame_Textarea"));
@@ -249,6 +255,31 @@ public class PresentationEdit extends AbstractPageObject {
         }
 
         return timeSet;
+    }
+
+    public Boolean getSpeakersSet() {
+        Boolean speakersSet = false;
+
+        try {
+            waitForElement(addNewSpeakersLink);
+            findElement(addNewSpeakersLink).click();
+
+            waitForElement(cancelSpeakerButton);
+
+            findElement(speakerNameInput);
+            findElement(speakerPositionInput);
+
+            findElement(cancelSpeakerButton).click();
+
+            waitForElement(addNewSpeakersLink);
+
+            speakersSet = true;
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
+        }
+
+        return speakersSet;
     }
 
     public WebElement getSaveAndSubmitButton() {

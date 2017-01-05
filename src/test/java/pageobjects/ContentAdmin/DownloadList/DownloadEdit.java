@@ -8,11 +8,13 @@ import static specs.AbstractSpec.propUIContentAdmin;
 /**
  * Created by philipsushkov on 2017-01-04.
  */
+
 public class DownloadEdit extends AbstractPageObject {
 
-    private static By moduleTitle, downloadDateInput, downloadTypeSelect, downloadTitleTextarea, downloadDescriptionTextarea;
+    private static By moduleTitle, downloadDateInput, downloadTypeSelect, downloadTitleTextarea, downloadDescTextarea;
     private static By tagsInput, downloadPathRadio, downloadUrlRadio, downloadPathInput, saveAndSubmitButton;
-    private static By thumbnailPathImage, thumbnailPathInput, iconPathImage, iconPathInput;
+    private static By thumbnailPathImage, thumbnailPathInput, iconPathImage, iconPathInput, activeCheckbox;
+    private static By downloadPagesLink, gridPagesTable, publishButton;
 
     public DownloadEdit(WebDriver driver) {
         super(driver);
@@ -21,7 +23,7 @@ public class DownloadEdit extends AbstractPageObject {
         downloadTypeSelect = By.xpath(propUIContentAdmin.getProperty("select_DownloadType"));
         saveAndSubmitButton = By.xpath(propUIContentAdmin.getProperty("btn_SaveAndSubmit"));
         downloadTitleTextarea = By.xpath(propUIContentAdmin.getProperty("txtarea_DownloadTitle"));
-        downloadDescriptionTextarea = By.xpath(propUIContentAdmin.getProperty("txtarea_DownloadDescription"));
+        downloadDescTextarea = By.xpath(propUIContentAdmin.getProperty("txtarea_DownloadDescription"));
         tagsInput = By.xpath(propUIContentAdmin.getProperty("input_Tags"));
         downloadPathRadio = By.xpath(propUIContentAdmin.getProperty("rdo_DownloadPath"));
         downloadUrlRadio = By.xpath(propUIContentAdmin.getProperty("rdo_DownloadUrl"));
@@ -31,6 +33,11 @@ public class DownloadEdit extends AbstractPageObject {
         thumbnailPathInput = By.xpath(propUIContentAdmin.getProperty("input_TxtPath"));
         iconPathImage = By.xpath(propUIContentAdmin.getProperty("img_ImagePath"));
         iconPathInput = By.xpath(propUIContentAdmin.getProperty("input_TxtPath"));
+
+        activeCheckbox = By.xpath(propUIContentAdmin.getProperty("chk_Active"));
+        downloadPagesLink = By.xpath(propUIContentAdmin.getProperty("href_DownloadPages"));
+        gridPagesTable = By.xpath(propUIContentAdmin.getProperty("table_GridPages"));
+        publishButton = By.xpath(propUIContentAdmin.getProperty("btn_Publish"));
     }
 
     public String getTitle() {
@@ -84,8 +91,8 @@ public class DownloadEdit extends AbstractPageObject {
         WebElement element = null;
 
         try {
-            waitForElement(downloadDescriptionTextarea);
-            element = findElement(downloadDescriptionTextarea);
+            waitForElement(downloadDescTextarea);
+            element = findElement(downloadDescTextarea);
         } catch (ElementNotFoundException e1) {
         } catch (ElementNotVisibleException e2) {
         } catch (TimeoutException e3) {
@@ -177,6 +184,46 @@ public class DownloadEdit extends AbstractPageObject {
         }
 
         return thumbnailSet;
+    }
+    public Boolean getChkBoxSet() {
+        Boolean timeSet = false;
+
+        try {
+            waitForElement(activeCheckbox);
+            findElement(activeCheckbox);
+
+            timeSet = true;
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
+        }
+
+        return timeSet;
+    }
+
+    public Boolean getDownloadPagesSet() {
+        Boolean quickLinkPages = false;
+
+        try {
+            waitForElement(downloadPagesLink);
+            findElement(downloadPagesLink).click();
+
+            waitForElement(gridPagesTable);
+            findElement(gridPagesTable);
+
+            waitForElement(publishButton);
+            findElement(publishButton);
+
+            findElement(downloadPagesLink).click();
+            waitForElement(downloadPagesLink);
+
+            quickLinkPages = true;
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
+        }
+
+        return quickLinkPages;
     }
 
     public WebElement getSaveAndSubmitButton() {

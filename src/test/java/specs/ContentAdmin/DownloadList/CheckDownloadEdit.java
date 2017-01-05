@@ -56,6 +56,10 @@ public class CheckDownloadEdit extends AbstractSpec {
         Assert.assertTrue(downloadEdit.getThumbnailSet(), "Thumbnail Path and Image don't exist");
         Assert.assertTrue(downloadEdit.getIconSet(), "Icon Path and Image don't exist");
 
+        Assert.assertTrue(downloadEdit.getChkBoxSet(), "Checkbox elements don't exist");
+
+        Assert.assertTrue(downloadEdit.getDownloadPagesSet(), "Quick Link Pages elements don't exist");
+
         Assert.assertNotNull(downloadEdit.getSaveAndSubmitButton(), "Save And Submit button doesn't exist");
     }
 
