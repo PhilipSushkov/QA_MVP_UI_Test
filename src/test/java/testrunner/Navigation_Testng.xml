@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="Web CMS Suite Navigation" parallel="tests" thread-count="4">
+<suite name="Web CMS Suite Navigation" parallel="tests" thread-count="6">
 
     <!-- System Admin part -->
     <test name="CheckAlertFilterList">
@@ -257,7 +257,7 @@
     </test>
 
 
-    <!-- Content Admin Editpart -->
+    <!-- Content Admin Edit part -->
     <test name="CheckFinancialReportEdit">
         <classes>
             <class name="specs.ContentAdmin.FinancialReports.CheckFinancialReportEdit" />
@@ -311,6 +311,11 @@
     <test name="CheckFaqEdit">
         <classes>
             <class name="specs.ContentAdmin.FaqList.CheckFaqEdit" />
+        </classes>
+    </test>
+    <test name="CheckRegulatoryFilingEdit">
+        <classes>
+            <class name="specs.ContentAdmin.RegulatoryFiling.CheckRegulatoryFilingEdit" />
         </classes>
     </test>
 
