@@ -1,29 +1,27 @@
-package pageobjects.ContentAdmin.PersonList;
+package pageobjects.ContentAdmin.Region;
 
 import org.openqa.selenium.*;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
 import pageobjects.PageObject;
 
 import static specs.AbstractSpec.propUIContentAdmin;
 
 /**
- * Created by philipsushkov on 2016-12-02.
+ * Created by philipsushkov on 2017-01-06.
  */
 
-public class PersonList extends AbstractPageObject {
-    private static By moduleTitle, grid, gridPersonList, dataGridPager, selectDepartment;
+public class RegionList extends AbstractPageObject {
+    private static By moduleTitle, grid, gridRegionList, dataGridPager, inputFilterByTag;
     private final Integer columnsNumber = 7;
 
-    public PersonList(WebDriver driver) {
+    public RegionList(WebDriver driver) {
         super(driver);
         moduleTitle = By.xpath(propUIContentAdmin.getProperty("spanModule_Title"));
-        grid = By.xpath(propUIContentAdmin.getProperty("table_GridPerson"));
-        gridPersonList = By.xpath(propUIContentAdmin.getProperty("table_GridItem"));
+        grid = By.xpath(propUIContentAdmin.getProperty("table_GridRegionList"));
+        gridRegionList = By.xpath(propUIContentAdmin.getProperty("table_GridItem"));
         dataGridPager = By.xpath(propUIContentAdmin.getProperty("pager_DataGrid"));
-        selectDepartment = By.xpath(propUIContentAdmin.getProperty("select_Department"));
+        inputFilterByTag = By.xpath(propUIContentAdmin.getProperty("input_FilterByTag"));
     }
-
 
     public String getTitle() {
         waitForElement(moduleTitle);
@@ -32,13 +30,12 @@ public class PersonList extends AbstractPageObject {
 
 
     public Integer getTitleQuantity() {
-        //wait.until(ExpectedConditions.visibilityOf(findElement(grid)) );
         waitForElement(grid);
-        return findElement(grid).findElements(gridPersonList).size()/columnsNumber;
+        return findElement(grid).findElements(gridRegionList).size()/columnsNumber;
     }
 
 
-    public WebElement getPersonListPagination() {
+    public WebElement getRegionListPagination() {
         WebElement element = null;
 
         try {
@@ -52,19 +49,18 @@ public class PersonList extends AbstractPageObject {
         return element;
     }
 
-
-    public WebElement getDepartmentList() {
+    public WebElement getFilterByTag() {
         WebElement element = null;
 
         try {
-            //wait.until(ExpectedConditions.visibilityOf(findElement(selectDepartment)));
-            waitForElement(selectDepartment);
-            element = findElement(selectDepartment);
-        } catch (PageObject.ElementNotFoundException e1) {
+            waitForElement(inputFilterByTag);
+            element = findElement(inputFilterByTag);
+        } catch (ElementNotFoundException e1) {
         } catch (ElementNotVisibleException e2) {
         } catch (TimeoutException e3) {
         }
 
         return element;
     }
+
 }

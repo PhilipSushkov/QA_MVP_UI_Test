@@ -255,6 +255,11 @@
             <class name="specs.ContentAdmin.RegulatoryFiling.CheckRegulatoryFilingList" />
         </classes>
     </test>
+    <test name="CheckRegionList">
+        <classes>
+            <class name="specs.ContentAdmin.Region.CheckRegionList" />
+        </classes>
+    </test>
 
 
     <!-- Content Admin Edit part -->

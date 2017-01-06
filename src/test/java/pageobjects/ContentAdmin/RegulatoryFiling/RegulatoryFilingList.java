@@ -1,9 +1,6 @@
 package pageobjects.ContentAdmin.RegulatoryFiling;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.ElementNotVisibleException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import pageobjects.AbstractPageObject;
 import pageobjects.PageObject;
 
@@ -45,6 +42,7 @@ public class RegulatoryFilingList extends AbstractPageObject {
             element = findElement(dataGridPager);
         } catch (PageObject.ElementNotFoundException e1) {
         } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
         }
 
         return element;
