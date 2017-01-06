@@ -376,4 +376,13 @@
             <class name="specs.EmailAdmin.CategoryList.CheckCategoryList" />
         </classes>
     </test>
+
+
+    <!-- Email Admin Editpart -->
+    <test name="CheckMailingListsEdit">
+        <classes>
+            <class name="specs.EmailAdmin.ManageList.CheckMailingListsEdit" />
+        </classes>
+    </test>
+
 </suite>
