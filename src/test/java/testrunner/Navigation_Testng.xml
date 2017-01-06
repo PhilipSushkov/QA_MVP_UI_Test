@@ -328,6 +328,11 @@
             <class name="specs.ContentAdmin.Region.CheckRegionEdit" />
         </classes>
     </test>
+    <test name="CheckJobPostingEdit">
+        <classes>
+            <class name="specs.ContentAdmin.JobPostingList.CheckJobPostingEdit" />
+        </classes>
+    </test>
 
 
     <!-- Email Admin part -->
