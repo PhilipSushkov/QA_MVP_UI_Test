@@ -389,5 +389,10 @@
             <class name="specs.EmailAdmin.Subscribers.CheckSubscriberEdit" />
         </classes>
     </test>
+    <test name="CheckTemplateList">
+        <classes>
+            <class name="specs.EmailAdmin.Templates.CheckTemplateList" />
+        </classes>
+    </test>
 
 </suite>
