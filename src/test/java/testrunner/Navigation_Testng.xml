@@ -394,5 +394,10 @@
             <class name="specs.EmailAdmin.Templates.CheckTemplateList" />
         </classes>
     </test>
+    <test name="CheckSystemMessageEdit">
+        <classes>
+            <class name="specs.EmailAdmin.SystemMessages.CheckSystemMessageEdit" />
+        </classes>
+    </test>
 
 </suite>
