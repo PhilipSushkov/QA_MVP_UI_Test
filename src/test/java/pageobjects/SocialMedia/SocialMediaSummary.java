@@ -1,8 +1,6 @@
 package pageobjects.SocialMedia;
 
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
 
@@ -19,6 +17,9 @@ public class SocialMediaSummary extends AbstractPageObject {
     private static By linkedInCompanySelectButton, facebookStatusIndicator, facebookStatusMessage, facebookAccountName;
     private static By facebookPage, facebookFans, facebookAuthorizeButton, facebookDeAuthorizeButton, facebookDisableButton;
     private static By facebookEnableButton, facebookReAuthorizeButton, facebookSettingsButton, facebookPageRadioSelector, facebookPageSelectButton;
+
+    private static By linkedInSpan, facebookSpan, twitterSpan, stockTwitsSpan, slideShareSpan, googleAPISpan, bitLySpan;
+    private static By linkedInDiv, facebookDiv, twitterDiv, stockTwitsDiv, slideShareDiv, googleAPIDiv, bitLyDiv;
 
     public SocialMediaSummary(WebDriver driver) {
         super(driver);
@@ -57,6 +58,23 @@ public class SocialMediaSummary extends AbstractPageObject {
         facebookSettingsButton = By.cssSelector(propUISocialMedia.getProperty("btn_facebook_Settings"));
         facebookPageRadioSelector = By.xpath(propUISocialMedia.getProperty("sel_facebook_PageRadio"));
         facebookPageSelectButton = By.cssSelector(propUISocialMedia.getProperty("btn_facebook_PageSelect"));
+
+        linkedInSpan = By.xpath(propUISocialMedia.getProperty("span_LinkedIn"));
+        facebookSpan = By.xpath(propUISocialMedia.getProperty("span_Facebook"));
+
+        stockTwitsSpan = By.xpath(propUISocialMedia.getProperty("span_StockTwits"));
+        twitterSpan = By.xpath(propUISocialMedia.getProperty("span_Twitter"));
+        slideShareSpan = By.xpath(propUISocialMedia.getProperty("span_SlideShare"));
+        googleAPISpan = By.xpath(propUISocialMedia.getProperty("span_GoogleAPI"));
+        bitLySpan = By.xpath(propUISocialMedia.getProperty("span_BitLy"));
+
+        linkedInDiv = By.xpath(propUISocialMedia.getProperty("div_LinkedIn"));
+        facebookDiv = By.xpath(propUISocialMedia.getProperty("div_Facebook"));
+        twitterDiv = By.xpath(propUISocialMedia.getProperty("div_Twitter"));
+        stockTwitsDiv = By.xpath(propUISocialMedia.getProperty("div_StockTwits"));
+        slideShareDiv = By.xpath(propUISocialMedia.getProperty("div_SlideShare"));
+        googleAPIDiv = By.xpath(propUISocialMedia.getProperty("div_GoogleAPI"));
+        bitLyDiv = By.xpath(propUISocialMedia.getProperty("div_BitLy"));
     }
 
     public String getTitle() {
@@ -305,4 +323,201 @@ public class SocialMediaSummary extends AbstractPageObject {
     public boolean facebookAuthorizeButtonIsDisplayed(){
         return doesElementExist(facebookAuthorizeButton) && findElement(facebookAuthorizeButton).isDisplayed();
     }
+
+    public WebElement getLinkedInSpan() {
+        WebElement element = null;
+
+        try {
+            waitForElement(linkedInSpan);
+            element = findElement(linkedInSpan);
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
+        }
+
+        return element;
+    }
+
+    public WebElement getFacebookSpan() {
+        WebElement element = null;
+
+        try {
+            waitForElement(facebookSpan);
+            element = findElement(facebookSpan);
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
+        }
+
+        return element;
+    }
+
+    public WebElement getTwitterSpan() {
+        WebElement element = null;
+
+        try {
+            waitForElement(twitterSpan);
+            element = findElement(twitterSpan);
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
+        }
+
+        return element;
+    }
+
+    public WebElement getStockTwitsSpan() {
+        WebElement element = null;
+
+        try {
+            waitForElement(stockTwitsSpan);
+            element = findElement(stockTwitsSpan);
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
+        }
+
+        return element;
+    }
+
+    public WebElement getSlideShareSpan() {
+        WebElement element = null;
+
+        try {
+            waitForElement(slideShareSpan);
+            element = findElement(slideShareSpan);
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
+        }
+
+        return element;
+    }
+
+    public WebElement getGoogleAPISpan() {
+        WebElement element = null;
+
+        try {
+            waitForElement(googleAPISpan);
+            element = findElement(googleAPISpan);
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
+        }
+
+        return element;
+    }
+
+    public WebElement getBitLySpan() {
+        WebElement element = null;
+
+        try {
+            waitForElement(bitLySpan);
+            element = findElement(bitLySpan);
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
+        }
+
+        return element;
+    }
+
+    public WebElement getLinkedInBtns() {
+        WebElement element = null;
+
+        try {
+            waitForElement(linkedInDiv);
+            element = findElement(linkedInDiv);
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
+        }
+
+        return element;
+    }
+
+    public WebElement getFacebookBtns() {
+        WebElement element = null;
+
+        try {
+            waitForElement(facebookDiv);
+            element = findElement(facebookDiv);
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
+        }
+
+        return element;
+    }
+
+    public WebElement getTwitterBtns() {
+        WebElement element = null;
+
+        try {
+            waitForElement(twitterDiv);
+            element = findElement(twitterDiv);
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
+        }
+
+        return element;
+    }
+
+    public WebElement getStockTwitsBtns() {
+        WebElement element = null;
+
+        try {
+            waitForElement(stockTwitsDiv);
+            element = findElement(stockTwitsDiv);
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
+        }
+
+        return element;
+    }
+
+    public WebElement getSlideShareBtns() {
+        WebElement element = null;
+
+        try {
+            waitForElement(slideShareDiv);
+            element = findElement(slideShareDiv);
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
+        }
+
+        return element;
+    }
+
+    public WebElement getGoogleAPIBtns() {
+        WebElement element = null;
+
+        try {
+            waitForElement(googleAPIDiv);
+            element = findElement(googleAPIDiv);
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
+        }
+
+        return element;
+    }
+
+    public WebElement getBitLyBtns() {
+        WebElement element = null;
+
+        try {
+            waitForElement(bitLyDiv);
+            element = findElement(bitLyDiv);
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
+        }
+
+        return element;
+    }
+
 }

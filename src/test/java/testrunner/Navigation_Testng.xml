@@ -378,7 +378,7 @@
     </test>
 
 
-    <!-- Email Admin Editpart -->
+    <!-- Email Admin Edit part -->
     <test name="CheckMailingListsEdit">
         <classes>
             <class name="specs.EmailAdmin.ManageList.CheckMailingListsEdit" />
@@ -402,6 +402,14 @@
     <test name="CheckCategoryEdit">
         <classes>
             <class name="specs.EmailAdmin.CategoryList.CheckCategoryEdit" />
+        </classes>
+    </test>
+
+
+    <!-- Social Media -->
+    <test name="CheckSocialMediaSummary">
+        <classes>
+            <class name="specs.SocialMedia.CheckSocialMediaSummary" />
         </classes>
     </test>
 

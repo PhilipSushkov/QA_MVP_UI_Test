@@ -17,7 +17,6 @@ import pageobjects.Dashboard.Dashboard;
 
 public class CheckCategoryEdit extends AbstractSpec {
 
-
     private static By emailAdminMenuButton, categoryListMenuItem, addNewLink;
     private static LoginPage loginPage;
     private static Dashboard dashboard;
