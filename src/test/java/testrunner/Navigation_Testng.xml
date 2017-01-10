@@ -389,14 +389,19 @@
             <class name="specs.EmailAdmin.Subscribers.CheckSubscriberEdit" />
         </classes>
     </test>
-    <test name="CheckTemplateList">
+    <test name="CheckTemplateEdit">
         <classes>
-            <class name="specs.EmailAdmin.Templates.CheckTemplateList" />
+            <class name="specs.EmailAdmin.Templates.CheckTemplateEdit" />
         </classes>
     </test>
     <test name="CheckSystemMessageEdit">
         <classes>
             <class name="specs.EmailAdmin.SystemMessages.CheckSystemMessageEdit" />
+        </classes>
+    </test>
+    <test name="CheckCategoryEdit">
+        <classes>
+            <class name="specs.EmailAdmin.CategoryList.CheckCategoryEdit" />
         </classes>
     </test>
 
