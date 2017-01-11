@@ -498,6 +498,7 @@ public class SocialMediaSummary extends AbstractPageObject {
         try {
             waitForElement(googleAPIDiv);
             element = findElement(googleAPIDiv);
+            //System.out.println(element.getAttribute("value"));
         } catch (ElementNotFoundException e1) {
         } catch (ElementNotVisibleException e2) {
         } catch (TimeoutException e3) {
