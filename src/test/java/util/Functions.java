@@ -37,16 +37,12 @@ public class Functions {
     }
 
     //#############################################################################
-    //2. Create New Excel Sheet for any page
-    public void CreateNewExcelSheet(String sSheetName, String[][] sValues, Properties propConf) {
+    //2. Write Excel Sheet for any page
+    public static void WriteExcelSheet(String sSheetName, String[][] sValues, String sPathToFile) {
         HSSFWorkbook workbook = null;
         try {
-            try {
-                FileInputStream inpFile = new FileInputStream(new File(propConf.getProperty("DataExcelFile")));
-                workbook = new HSSFWorkbook(inpFile);
-            } catch (FileNotFoundException e) {
-                workbook = new HSSFWorkbook();
-            }
+            FileInputStream inpFile = new FileInputStream(new File(sPathToFile));
+            workbook = new HSSFWorkbook(inpFile);
 
             HSSFSheet sheet = null;
 
@@ -87,11 +83,13 @@ public class Functions {
             }
 
             FileOutputStream outFile =
-                    new FileOutputStream(new File(propConf.getProperty("DataExcelFile")));
+                    new FileOutputStream(new File(sPathToFile));
             workbook.write(outFile);
             outFile.close();
-            //Reporter.log("Excel was written successfully.<br>");
+            System.out.println("Excel was written successfully");
 
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -146,6 +144,43 @@ public class Functions {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (ArrayIndexOutOfBoundsException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public String[][] ArrayValues(String arrayValues[]) {
+        int columnsNumber = arrayValues.length; // number of columns
+        int n = 0;
+
+        try {
+            Enumeration KeyValues = propUI.keys();
+            while (KeyValues.hasMoreElements()) {
+                String key = (String) KeyValues.nextElement();
+                if (key.contains(arrayValues[0]) ) {
+                    n = n + 1;
+                }
+            }
+
+            String str[][] = new String[n][columnsNumber];
+
+            KeyValues = propUI.keys();
+            while (KeyValues.hasMoreElements()) {
+                String key = (String) KeyValues.nextElement();
+                for (int num=0; num<arrayValues.length; num++)
+                {
+                    if (key.contains(arrayValues[num]) ) {
+                        String val1=key.substring(arrayValues[num].length()+1);
+                        int i = Integer.parseInt(val1);
+                        String value = propUI.getProperty(key);
+                        str[i][num] = value;
+                        //System.out.println(i + " " + str[i][num] + ":- " + key);
+                    }
+                }
+            }
+            return str;
+
         } catch (ArrayIndexOutOfBoundsException e) {
             e.printStackTrace();
         }

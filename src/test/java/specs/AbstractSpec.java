@@ -44,6 +44,7 @@ public abstract class AbstractSpec extends util.Functions {
     private static final Logger LOG = Logger.getLogger(AbstractSpec.class.getName());
     public static String sessionID = null;
 
+    // Declare Properties files for every section
     private static final String PATHTO_SYSTEMADMIN_PROP = "SystemAdmin/SystemAdminMap.properties";
     public static Properties propUISystemAdmin;
     private static final String PATHTO_SITEADMIN_PROP = "SiteAdmin/SiteAdminMap.properties";
@@ -58,6 +59,9 @@ public abstract class AbstractSpec extends util.Functions {
     public static Properties propUIPublicSite;
     private static final String PATHTO_SOCIALMEDIA_PROP = "SocialMedia/SocialMediaMap.properties";
     public static Properties propUISocialMedia;
+    private static final String PATHTO_PAGEADMIN_PROP = "PageAdmin/PageAdminMap.properties";
+    public static Properties propUIPageAdmin;
+
     /*
     @Rule
     public TestName testName = new TestName();
@@ -219,6 +223,7 @@ public abstract class AbstractSpec extends util.Functions {
         propUICommon = ConnectToPropUI(PATHTO_COMMON_PROP);
         propUIPublicSite = ConnectToPropUI(PATHTO_PUBLICSITE_PROP);
         propUISocialMedia = ConnectToPropUI(PATHTO_SOCIALMEDIA_PROP);
+        propUIPageAdmin = ConnectToPropUI(PATHTO_PAGEADMIN_PROP);
     }
 
 }
