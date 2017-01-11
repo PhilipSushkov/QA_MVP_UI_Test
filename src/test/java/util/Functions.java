@@ -98,10 +98,10 @@ public class Functions {
 
     //#############################################################################
     //3. Read Excel File for completing any form
-    public String[][] ReadExcelSheet(String sSheetName, int columnsTotal, String sExcept, Properties propConf) throws InterruptedException {
+    public static String[][] ReadExcelSheet(String sSheetName, int columnsTotal, String sExcept, String sPathToFile) throws InterruptedException {
         try {
 
-            FileInputStream file = new FileInputStream(new File(propConf.getProperty("DataExcelFile")));
+            FileInputStream file = new FileInputStream(new File(sPathToFile));
 
             //Get the workbook instance for XLS file
             HSSFWorkbook workbook = new HSSFWorkbook(file);
@@ -144,43 +144,6 @@ public class Functions {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (ArrayIndexOutOfBoundsException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public String[][] ArrayValues(String arrayValues[]) {
-        int columnsNumber = arrayValues.length; // number of columns
-        int n = 0;
-
-        try {
-            Enumeration KeyValues = propUI.keys();
-            while (KeyValues.hasMoreElements()) {
-                String key = (String) KeyValues.nextElement();
-                if (key.contains(arrayValues[0]) ) {
-                    n = n + 1;
-                }
-            }
-
-            String str[][] = new String[n][columnsNumber];
-
-            KeyValues = propUI.keys();
-            while (KeyValues.hasMoreElements()) {
-                String key = (String) KeyValues.nextElement();
-                for (int num=0; num<arrayValues.length; num++)
-                {
-                    if (key.contains(arrayValues[num]) ) {
-                        String val1=key.substring(arrayValues[num].length()+1);
-                        int i = Integer.parseInt(val1);
-                        String value = propUI.getProperty(key);
-                        str[i][num] = value;
-                        //System.out.println(i + " " + str[i][num] + ":- " + key);
-                    }
-                }
-            }
-            return str;
-
         } catch (ArrayIndexOutOfBoundsException e) {
             e.printStackTrace();
         }

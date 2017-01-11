@@ -45,6 +45,8 @@ public class CheckPageAdminList extends AbstractSpec {
 
         Assert.assertNotNull(pageAdminList.getPageItems(), "Pages items don't exist");
 
+        pageAdminList.clickPageItems();
+
     }
 
     @AfterTest
