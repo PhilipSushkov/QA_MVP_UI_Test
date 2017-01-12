@@ -43,9 +43,16 @@ public class CheckPageAdminList extends AbstractSpec {
 
         System.out.println(pageAdminList.getTitle());
 
-        Assert.assertNotNull(pageAdminList.getPageItems(), "Pages items don't exist");
+        Assert.assertTrue(pageAdminList.getPageItems(), "Pages items don't exist");
 
-        pageAdminList.clickPageItems();
+    }
+
+    @Test
+    public void clickPageItems() throws Exception {
+
+        dashboard.openPageFromCommonTasks(pageAdminMenuButton);
+
+        Assert.assertTrue(pageAdminList.clickPageItems(), "Some Page Names don't exist");
 
     }
 

@@ -413,4 +413,19 @@
         </classes>
     </test>
 
+
+    <!-- Page Admin -->
+    <test name="CheckPageAdminList">
+        <classes>
+            <class name="specs.PageAdmin.CheckPageAdminList" />
+        </classes>
+    </test>
+
+    <!-- Page Admin Edit-->
+    <test name="CheckPageEdit">
+        <classes>
+            <class name="specs.PageAdmin.CheckPageEdit" />
+        </classes>
+    </test>
+
 </suite>

@@ -117,7 +117,7 @@ public class CheckPreviewSite extends AbstractSpec {
     public void investmentCalculatorWorks(){
         try {
             publicTests.investmentCalculatorWorks();
-        }catch (AssertionError error){
+        } catch (AssertionError error){
             if (error.getMessage().equals("Invalid growth data is displayed.")){
                 fail("Known Issue - WEB-10632 - Appearance of growth data is different on preview site.");
             }
