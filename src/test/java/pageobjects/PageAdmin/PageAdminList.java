@@ -1,8 +1,12 @@
 package pageobjects.PageAdmin;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.openqa.selenium.*;
 import pageobjects.AbstractPageObject;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
 
 import util.Functions;
@@ -15,7 +19,7 @@ import static specs.AbstractSpec.propUIPageAdmin;
 
 public class PageAdminList extends AbstractPageObject {
     private static By moduleTitle, contentInnerWrap, dataGridTable, dataGridItemBorder;
-    private static String sSheetName, sPathToFile, sDataFile;
+    private static String sSheetName, sPathToFile, sDataFile, sDataFileJson;
     private static final long DEFAULT_PAUSE = 2000;
 
     public PageAdminList(WebDriver driver) {
@@ -26,7 +30,8 @@ public class PageAdminList extends AbstractPageObject {
         dataGridItemBorder = By.xpath(propUIPageAdmin.getProperty("table_DataGridItemBorder"));
 
         sSheetName = "PageItems";
-        sPathToFile = System.getProperty("user.dir") + propUIPageAdmin.getProperty("xlsPath_PageAdmin");
+        sDataFileJson = "PageNames.json";
+        sPathToFile = System.getProperty("user.dir") + propUIPageAdmin.getProperty("dataPath_PageAdmin");
         sDataFile = propUIPageAdmin.getProperty("xlsData_PageAdmin");
     }
 
@@ -37,8 +42,9 @@ public class PageAdminList extends AbstractPageObject {
 
     public Boolean getPageItems() {
         boolean pageItems = false;
-        List<WebElement> elements = null;
-        String[][] sa1 = null;
+        List<WebElement> elements;
+        String[][] sa1;
+        String[] sa2 = null;
         int i;
 
         try {
@@ -47,6 +53,7 @@ public class PageAdminList extends AbstractPageObject {
 
             if (elements.size() > 0 ) {
                 sa1 = new String[elements.size()+1][2];
+                sa2 = new String[elements.size()];
                 i = 0;
 
                 sa1[i][0] = "ID";
@@ -60,6 +67,7 @@ public class PageAdminList extends AbstractPageObject {
                     i++;
                     sa1[i][0] = Integer.toString(i);
                     sa1[i][1] = element.getText();
+                    sa2[i-1] = element.getText();
                 }
             }
         } catch (ElementNotFoundException e1) {
@@ -68,32 +76,29 @@ public class PageAdminList extends AbstractPageObject {
         }
 
         //System.out.println(sPathToFile + sDataFile);
-        Functions.WriteExcelSheet(sSheetName, sa1, sPathToFile + sDataFile);
+        //Functions.WriteExcelSheet(sSheetName, sa1, sPathToFile + sDataFile);
+        Functions.WriteArrayToJSON(sa2, sPathToFile + sDataFileJson, "page names");
         return pageItems;
     }
 
     public Boolean clickPageItems() throws InterruptedException {
         boolean pageNames = false;
         By innerWrapPage;
-        int columnsTotal = 2;
-        String sExcept = "ID";
-        String[][] sa1 = null;
+        String[] sa2;
 
-        sa1 = Functions.ReadExcelSheet(sSheetName, columnsTotal, sExcept, sPathToFile + sDataFile);
+        sa2 = Functions.ReadArrayFromJSON(sPathToFile + sDataFileJson, "page names");
 
         try {
-            for (int i=0; i<=sa1.length-1; i++) {
-                //System.out.println(sa1[i][1]);
-                innerWrapPage = By.xpath("//div[contains(@id, 'divContent')]//span[contains(@class, 'innerWrap')][(text()=\""+sa1[i][1]+"\")]/parent::span/parent::a");
+            for (int i=0; i<sa2.length; i++) {
+                //System.out.println(sa1[i]);
+                innerWrapPage = By.xpath("//div[contains(@id, 'divContent')]//span[contains(@class, 'innerWrap')][(text()=\""+sa2[i]+"\")]/parent::span/parent::a");
                 waitForElement(innerWrapPage);
                 findElement(innerWrapPage).click();
-
-                //Thread.sleep(DEFAULT_PAUSE);
 
                 waitForElement(dataGridTable);
                 //System.out.println(findElements(By.xpath("//td[contains(@class, 'DataGridItemBorder')]")).get(1).getText());
 
-                if (!findElements(dataGridItemBorder).get(1).getText().contains(sa1[i][1])) {
+                if (!findElements(dataGridItemBorder).get(1).getText().contains(sa2[i])) {
                     pageNames = false;
                     break;
                 } else {
