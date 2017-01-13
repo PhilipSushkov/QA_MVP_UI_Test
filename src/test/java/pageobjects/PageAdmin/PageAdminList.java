@@ -1,8 +1,13 @@
 package pageobjects.PageAdmin;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.openqa.selenium.*;
+import org.openqa.selenium.support.ui.Select;
 import pageobjects.AbstractPageObject;
 
+import java.io.*;
 import java.util.List;
 
 import util.Functions;
@@ -15,8 +20,9 @@ import static specs.AbstractSpec.propUIPageAdmin;
 
 public class PageAdminList extends AbstractPageObject {
     private static By moduleTitle, contentInnerWrap, dataGridTable, dataGridItemBorder, editPageImg;
-    private static By backBtn;
-    private static String sSheetName, sPathToFile, sDataFile, sDataFileJson;
+    private static By backBtn, sectionTitleInput, yourPageUrlLabel, seoNameInput,pageTitleInput;
+    private static By pageTypeInternalRd, pageLayoutSelect;
+    private static String sSheetName, sPathToFile, sDataFile, sDataFileJson, sDataFilePagesJson;
     private static final long DEFAULT_PAUSE = 2000;
 
     public PageAdminList(WebDriver driver) {
@@ -27,9 +33,16 @@ public class PageAdminList extends AbstractPageObject {
         dataGridItemBorder = By.xpath(propUIPageAdmin.getProperty("table_DataGridItemBorder"));
         editPageImg = By.xpath(propUIPageAdmin.getProperty("img_EditPage"));
         backBtn = By.xpath(propUIPageAdmin.getProperty("btn_Back"));
+        sectionTitleInput = By.xpath(propUIPageAdmin.getProperty("input_SectionTitle"));
+        yourPageUrlLabel = By.xpath(propUIPageAdmin.getProperty("span_YourPageUrl"));
+        seoNameInput = By.xpath(propUIPageAdmin.getProperty("input_SeoName"));
+        pageTitleInput = By.xpath(propUIPageAdmin.getProperty("input_PageTitle"));
+        pageLayoutSelect = By.xpath(propUIPageAdmin.getProperty("select_PageLayout"));
+        pageTypeInternalRd = By.xpath(propUIPageAdmin.getProperty("rd_PageTypeInternal"));
 
         sSheetName = "PageItems";
         sDataFileJson = "PageNames.json";
+        sDataFilePagesJson = "PagesProp.json";
         sPathToFile = System.getProperty("user.dir") + propUIPageAdmin.getProperty("dataPath_PageAdmin");
         sDataFile = propUIPageAdmin.getProperty("xlsData_PageAdmin");
     }
@@ -87,6 +100,8 @@ public class PageAdminList extends AbstractPageObject {
 
         sa2 = Functions.ReadArrayFromJSON(sPathToFile + sDataFileJson, "page names");
 
+        Functions.ClearJSONfile(sPathToFile + sDataFilePagesJson);
+
         try {
             for (int i=0; i<sa2.length; i++) {
                 //System.out.println(sa1[i]);
@@ -98,9 +113,74 @@ public class PageAdminList extends AbstractPageObject {
                 //System.out.println(findElements(By.xpath("//td[contains(@class, 'DataGridItemBorder')]")).get(1).getText());
 
                 waitForElement(editPageImg);
-                findElement(editPageImg).click();
+                findElements(editPageImg).get(0).click();
 
                 waitForElement(backBtn);
+
+                JSONParser parser = new JSONParser();
+                Object obj;
+                JSONObject jsonObject = new JSONObject();
+                JSONObject mmjson=new JSONObject();
+
+                // Add values to JSON file
+                try {
+                    try {
+                        obj = parser.parse(new FileReader(sPathToFile + sDataFilePagesJson));
+                        jsonObject = (JSONObject) obj;
+                    } catch (ParseException e) {
+                    }
+
+                    mmjson.put("Section Title", findElement(sectionTitleInput).getAttribute("value"));
+                    mmjson.put("You page URL", findElement(yourPageUrlLabel).getText()+findElement(seoNameInput).getAttribute("value"));
+                    mmjson.put("Page Title", findElement(pageTitleInput).getAttribute("value"));
+                    if (Boolean.parseBoolean(findElement(pageTypeInternalRd).getAttribute("checked")) ) {
+                        mmjson.put("Page Layout", new Select(driver.findElement(pageLayoutSelect)).getFirstSelectedOption().getText());
+                        System.out.println(new Select(driver.findElement(pageLayoutSelect)).getFirstSelectedOption().getText());
+                    }
+
+                    jsonObject.remove(sa2[i]);
+                    jsonObject.put(sa2[i], mmjson);
+
+                    //System.out.println(obj.toString());
+
+                    FileWriter file = new FileWriter(sPathToFile + sDataFilePagesJson);
+                    file.write(jsonObject.toJSONString().replace("\\", ""));
+                    file.flush();
+                    file.close();
+
+                } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+                //obj.put("section title", findElement(sectionTitleInput).getAttribute("value"));
+
+                /*
+                JsonWriter jsonWriter = null;
+                try {
+                    jsonWriter = new JsonWriter(new FileWriter(sPathToFile + sDataFileJson));
+                    jsonWriter.beginObject();
+                        jsonWriter.name(sa2[i]);
+                            jsonWriter.beginArray();
+                                jsonWriter.beginObject();
+                                    jsonWriter.name("section title");
+                                    jsonWriter.value(findElement(sectionTitleInput).getAttribute("value"));
+                                jsonWriter.endObject();
+                            jsonWriter.endArray();
+                    jsonWriter.endObject();
+                } catch (IOException e) {
+                } finally {
+                    try {
+                        jsonWriter.close();
+                    } catch (IOException e) {
+                    }
+                }
+                */
+
+                // ---------------------------------------------------------
+
+
                 findElement(backBtn).click();
 
                 waitForElement(dataGridItemBorder);

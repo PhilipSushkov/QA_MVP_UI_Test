@@ -207,4 +207,18 @@ public class Functions {
         return null;
     }
 
+    // Clear JSON file
+    public static void ClearJSONfile(String sPathToFile) {
+        try {
+            FileWriter fileClear = new FileWriter(sPathToFile);
+            fileClear.write("");
+            fileClear.flush();
+            fileClear.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
