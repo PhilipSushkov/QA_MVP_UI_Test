@@ -1,12 +1,8 @@
 package pageobjects.PageAdmin;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.openqa.selenium.*;
 import pageobjects.AbstractPageObject;
 
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.List;
 
 import util.Functions;
@@ -18,7 +14,8 @@ import static specs.AbstractSpec.propUIPageAdmin;
  */
 
 public class PageAdminList extends AbstractPageObject {
-    private static By moduleTitle, contentInnerWrap, dataGridTable, dataGridItemBorder;
+    private static By moduleTitle, contentInnerWrap, dataGridTable, dataGridItemBorder, editPageImg;
+    private static By backBtn;
     private static String sSheetName, sPathToFile, sDataFile, sDataFileJson;
     private static final long DEFAULT_PAUSE = 2000;
 
@@ -28,6 +25,8 @@ public class PageAdminList extends AbstractPageObject {
         contentInnerWrap = By.xpath(propUIPageAdmin.getProperty("span_ContentInnerWrap"));
         dataGridTable = By.xpath(propUIPageAdmin.getProperty("table_DataGrid"));
         dataGridItemBorder = By.xpath(propUIPageAdmin.getProperty("table_DataGridItemBorder"));
+        editPageImg = By.xpath(propUIPageAdmin.getProperty("img_EditPage"));
+        backBtn = By.xpath(propUIPageAdmin.getProperty("btn_Back"));
 
         sSheetName = "PageItems";
         sDataFileJson = "PageNames.json";
@@ -97,6 +96,14 @@ public class PageAdminList extends AbstractPageObject {
 
                 waitForElement(dataGridTable);
                 //System.out.println(findElements(By.xpath("//td[contains(@class, 'DataGridItemBorder')]")).get(1).getText());
+
+                waitForElement(editPageImg);
+                findElement(editPageImg).click();
+
+                waitForElement(backBtn);
+                findElement(backBtn).click();
+
+                waitForElement(dataGridItemBorder);
 
                 if (!findElements(dataGridItemBorder).get(1).getText().contains(sa2[i])) {
                     pageNames = false;
