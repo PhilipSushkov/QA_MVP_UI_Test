@@ -1,5 +1,6 @@
 package pageobjects.PageAdmin;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -20,10 +21,11 @@ import static specs.AbstractSpec.propUIPageAdmin;
 
 public class PageAdminList extends AbstractPageObject {
     private static By moduleTitle, contentInnerWrap, dataGridTable, dataGridItemBorder, editPageImg;
-    private static By backBtn, sectionTitleInput, yourPageUrlLabel, seoNameInput,pageTitleInput;
-    private static By pageTypeInternalRd, pageLayoutSelect;
+    private static By backBtn, sectionTitleInput, yourPageUrlLabel, seoNameInput, pageTitleInput;
+    private static By descriptionTextarea, domainSelect, switchBtn, pageTypeExternalRd, globalModuleSetLbl;
+    private static By pageTypeInternalRd, pageLayoutSelect, externalURLInput, activeChk, globalModuleSetChk;
     private static String sSheetName, sPathToFile, sDataFile, sDataFileJson, sDataFilePagesJson;
-    private static final long DEFAULT_PAUSE = 2000;
+    private static final long DEFAULT_PAUSE = 1000;
 
     public PageAdminList(WebDriver driver) {
         super(driver);
@@ -39,6 +41,14 @@ public class PageAdminList extends AbstractPageObject {
         pageTitleInput = By.xpath(propUIPageAdmin.getProperty("input_PageTitle"));
         pageLayoutSelect = By.xpath(propUIPageAdmin.getProperty("select_PageLayout"));
         pageTypeInternalRd = By.xpath(propUIPageAdmin.getProperty("rd_PageTypeInternal"));
+        pageTypeExternalRd = By.xpath(propUIPageAdmin.getProperty("rd_PageTypeExternal"));
+        descriptionTextarea = By.xpath(propUIPageAdmin.getProperty("txtarea_Description"));
+        domainSelect = By.xpath(propUIPageAdmin.getProperty("select_Domain"));
+        switchBtn = By.xpath(propUIPageAdmin.getProperty("btn_Switch"));
+        externalURLInput = By.xpath(propUIPageAdmin.getProperty("input_ExternalURL"));
+        activeChk = By.xpath(propUIPageAdmin.getProperty("chk_Active"));
+        globalModuleSetChk = By.xpath(propUIPageAdmin.getProperty("chk_GlobalModuleSet"));
+        globalModuleSetLbl = By.xpath(propUIPageAdmin.getProperty("lbl_GlobalModuleSet"));
 
         sSheetName = "PageItems";
         sDataFileJson = "PageNames.json";
@@ -133,10 +143,41 @@ public class PageAdminList extends AbstractPageObject {
                     mmjson.put("Section Title", findElement(sectionTitleInput).getAttribute("value"));
                     mmjson.put("You page URL", findElement(yourPageUrlLabel).getText()+findElement(seoNameInput).getAttribute("value"));
                     mmjson.put("Page Title", findElement(pageTitleInput).getAttribute("value"));
+
                     if (Boolean.parseBoolean(findElement(pageTypeInternalRd).getAttribute("checked")) ) {
+                        mmjson.put("Page Type", "Internal");
                         mmjson.put("Page Layout", new Select(driver.findElement(pageLayoutSelect)).getFirstSelectedOption().getText());
-                        System.out.println(new Select(driver.findElement(pageLayoutSelect)).getFirstSelectedOption().getText());
+                        mmjson.put("Description", findElement(descriptionTextarea).getText());
+                        mmjson.put("Domain", new Select(driver.findElement(domainSelect)).getFirstSelectedOption().getText());
+
+                        findElement(switchBtn).click();
+                        Thread.sleep(DEFAULT_PAUSE);
+
+                        //System.out.println(new Select(driver.findElement(pageLayoutSelect)).getFirstSelectedOption().getText());
+                    } else if (Boolean.parseBoolean(findElement(pageTypeExternalRd).getAttribute("checked")) ) {
+                        mmjson.put("Page Type", "External");
+                        mmjson.put("External URL", findElement(externalURLInput).getAttribute("value"));
                     }
+
+                    mmjson.put("Active", findElement(activeChk).getAttribute("checked"));
+
+                    // Save Global Module Settings list
+                    List<WebElement> globalModuleInputs;
+                    List<WebElement> globalModuleLabels;
+                    JSONArray globalModuleSettings = new JSONArray();
+                    i = 0;
+                    globalModuleInputs = findElements(globalModuleSetChk);
+                    globalModuleLabels = findElements(globalModuleSetLbl);
+                    for (WebElement globalModuleInput:globalModuleInputs)
+                    {
+                        if (Boolean.parseBoolean(globalModuleInput.getAttribute("checked"))) {
+                            //System.out.println(globalModuleLabels.get(j).getText());
+                            globalModuleSettings.add(globalModuleLabels.get(i).getText());
+                        }
+                        i++;
+                    }
+
+                    mmjson.put("GlobalModuleSettings", globalModuleSettings);
 
                     jsonObject.remove(sa2[i]);
                     jsonObject.put(sa2[i], mmjson);
