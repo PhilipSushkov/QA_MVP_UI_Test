@@ -9,7 +9,10 @@ import org.openqa.selenium.support.ui.Select;
 import pageobjects.AbstractPageObject;
 
 import java.io.*;
+import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import util.Functions;
 
@@ -24,6 +27,7 @@ public class PageAdminList extends AbstractPageObject {
     private static By backBtn, sectionTitleInput, yourPageUrlLabel, seoNameInput, pageTitleInput;
     private static By descriptionTextarea, domainSelect, switchBtn, pageTypeExternalRd, globalModuleSetLbl;
     private static By pageTypeInternalRd, pageLayoutSelect, externalURLInput, activeChk, globalModuleSetChk;
+    private static By moduleInstancesSpan, sectionTitleSpan;
     private static String sSheetName, sPathToFile, sDataFile, sDataFileJson, sDataFilePagesJson;
     private static final long DEFAULT_PAUSE = 1000;
 
@@ -49,6 +53,8 @@ public class PageAdminList extends AbstractPageObject {
         activeChk = By.xpath(propUIPageAdmin.getProperty("chk_Active"));
         globalModuleSetChk = By.xpath(propUIPageAdmin.getProperty("chk_GlobalModuleSet"));
         globalModuleSetLbl = By.xpath(propUIPageAdmin.getProperty("lbl_GlobalModuleSet"));
+        moduleInstancesSpan = By.xpath(propUIPageAdmin.getProperty("span_ModuleInstances"));
+        sectionTitleSpan = By.xpath(propUIPageAdmin.getProperty("span_SectionTitle"));
 
         sSheetName = "PageItems";
         sDataFileJson = "PageNames.json";
@@ -107,13 +113,14 @@ public class PageAdminList extends AbstractPageObject {
         boolean pageNames = false;
         By innerWrapPage;
         String[] sa2;
+        int i, j;
 
         sa2 = Functions.ReadArrayFromJSON(sPathToFile + sDataFileJson, "page names");
 
         Functions.ClearJSONfile(sPathToFile + sDataFilePagesJson);
 
         try {
-            for (int i=0; i<sa2.length; i++) {
+            for (i=0; i<sa2.length; i++) {
                 //System.out.println(sa1[i]);
                 innerWrapPage = By.xpath("//div[contains(@id, 'divContent')]//span[contains(@class, 'innerWrap')][(text()=\""+sa2[i]+"\")]/parent::span/parent::a");
                 waitForElement(innerWrapPage);
@@ -130,7 +137,7 @@ public class PageAdminList extends AbstractPageObject {
                 JSONParser parser = new JSONParser();
                 Object obj;
                 JSONObject jsonObject = new JSONObject();
-                JSONObject mmjson=new JSONObject();
+                JSONObject mmjson = new JSONObject();
 
                 // Add values to JSON file
                 try {
@@ -139,6 +146,23 @@ public class PageAdminList extends AbstractPageObject {
                         jsonObject = (JSONObject) obj;
                     } catch (ParseException e) {
                     }
+
+                    URL pageURL = new URL(getUrl());
+                    //System.out.println(pageURL.getQuery());
+
+                    String[] params = pageURL.getQuery().split("&");
+                    JSONObject jsonURLQuery = new JSONObject();
+
+                    Map<String, String> mapQuery = new HashMap<String, String>();
+                    for (String param : params)
+                    {
+                        String name = param.split("=")[0];
+                        String value = param.split("=")[1];
+                        mapQuery.put(name, value);
+                        jsonURLQuery.put(param.split("=")[0], param.split("=")[1]);
+                    }
+
+                    mmjson.put("URL Query", jsonURLQuery);
 
                     mmjson.put("Section Title", findElement(sectionTitleInput).getAttribute("value"));
                     mmjson.put("You page URL", findElement(yourPageUrlLabel).getText()+findElement(seoNameInput).getAttribute("value"));
@@ -165,19 +189,45 @@ public class PageAdminList extends AbstractPageObject {
                     List<WebElement> globalModuleInputs;
                     List<WebElement> globalModuleLabels;
                     JSONArray globalModuleSettings = new JSONArray();
-                    i = 0;
+                    j = 0;
                     globalModuleInputs = findElements(globalModuleSetChk);
                     globalModuleLabels = findElements(globalModuleSetLbl);
                     for (WebElement globalModuleInput:globalModuleInputs)
                     {
                         if (Boolean.parseBoolean(globalModuleInput.getAttribute("checked"))) {
                             //System.out.println(globalModuleLabels.get(j).getText());
-                            globalModuleSettings.add(globalModuleLabels.get(i).getText());
+                            globalModuleSettings.add(globalModuleLabels.get(j).getText());
                         }
-                        i++;
+                        j++;
                     }
-
                     mmjson.put("GlobalModuleSettings", globalModuleSettings);
+
+                    // Save Modules list
+                    List<WebElement> moduleSpans;
+                    JSONArray moduleList = new JSONArray();
+                    j = 0;
+                    moduleSpans = findElements(moduleInstancesSpan);
+                    for (WebElement moduleSpan:moduleSpans)
+                    {
+                        //System.out.println(moduleSpan.getText());
+                        moduleList.add(moduleSpan.getText());
+                        j++;
+                    }
+                    mmjson.put("Modules", moduleList);
+
+                    // Save Sub Pages list
+                    List<WebElement> subPagesSpans;
+                    JSONArray subPagesList = new JSONArray();
+                    j = 0;
+                    subPagesSpans = findElements(sectionTitleSpan);
+                    for (WebElement subPagesSpan:subPagesSpans)
+                    {
+                        System.out.println(subPagesSpan.getText());
+                        subPagesList.add(subPagesSpan.getText());
+                        j++;
+                    }
+                    mmjson.put("Sub Pages", subPagesList);
+
 
                     jsonObject.remove(sa2[i]);
                     jsonObject.put(sa2[i], mmjson);
