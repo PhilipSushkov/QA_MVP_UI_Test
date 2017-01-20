@@ -1,5 +1,7 @@
 package pageobjects.PageAdmin;
 
+import com.jayway.jsonpath.Configuration;
+import com.jayway.jsonpath.JsonPath;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -105,7 +107,7 @@ public class PageAdminList extends AbstractPageObject {
 
         //System.out.println(sPathToFile + sDataFile);
         //Functions.WriteExcelSheet(sSheetName, sa1, sPathToFile + sDataFile);
-        Functions.WriteArrayToJSON(sa2, sPathToFile + sDataFileJson, "page names");
+        Functions.WriteArrayToJSON(sa2, sPathToFile + sDataFileJson, "page_names");
         return pageItems;
     }
 
@@ -115,7 +117,7 @@ public class PageAdminList extends AbstractPageObject {
         String[] sa2;
         int i, j;
 
-        sa2 = Functions.ReadArrayFromJSON(sPathToFile + sDataFileJson, "page names");
+        sa2 = Functions.ReadArrayFromJSON(sPathToFile + sDataFileJson, "page_names");
 
         Functions.ClearJSONfile(sPathToFile + sDataFilePagesJson);
 
@@ -162,28 +164,28 @@ public class PageAdminList extends AbstractPageObject {
                         jsonURLQuery.put(param.split("=")[0], param.split("=")[1]);
                     }
 
-                    mmjson.put("URL Query", jsonURLQuery);
+                    mmjson.put("url_query", jsonURLQuery);
 
-                    mmjson.put("Section Title", findElement(sectionTitleInput).getAttribute("value"));
-                    mmjson.put("You page URL", findElement(yourPageUrlLabel).getText()+findElement(seoNameInput).getAttribute("value"));
-                    mmjson.put("Page Title", findElement(pageTitleInput).getAttribute("value"));
+                    mmjson.put("section_title", findElement(sectionTitleInput).getAttribute("value"));
+                    mmjson.put("you_page_url", findElement(yourPageUrlLabel).getText()+findElement(seoNameInput).getAttribute("value"));
+                    mmjson.put("page_title", findElement(pageTitleInput).getAttribute("value"));
 
                     if (Boolean.parseBoolean(findElement(pageTypeInternalRd).getAttribute("checked")) ) {
-                        mmjson.put("Page Type", "Internal");
-                        mmjson.put("Page Layout", new Select(driver.findElement(pageLayoutSelect)).getFirstSelectedOption().getText());
-                        mmjson.put("Description", findElement(descriptionTextarea).getText());
-                        mmjson.put("Domain", new Select(driver.findElement(domainSelect)).getFirstSelectedOption().getText());
+                        mmjson.put("page_type", "Internal");
+                        mmjson.put("page_layout", new Select(driver.findElement(pageLayoutSelect)).getFirstSelectedOption().getText());
+                        mmjson.put("description", findElement(descriptionTextarea).getText());
+                        mmjson.put("domain", new Select(driver.findElement(domainSelect)).getFirstSelectedOption().getText());
 
                         findElement(switchBtn).click();
                         Thread.sleep(DEFAULT_PAUSE);
 
                         //System.out.println(new Select(driver.findElement(pageLayoutSelect)).getFirstSelectedOption().getText());
                     } else if (Boolean.parseBoolean(findElement(pageTypeExternalRd).getAttribute("checked")) ) {
-                        mmjson.put("Page Type", "External");
-                        mmjson.put("External URL", findElement(externalURLInput).getAttribute("value"));
+                        mmjson.put("page_type", "External");
+                        mmjson.put("external_url", findElement(externalURLInput).getAttribute("value"));
                     }
 
-                    mmjson.put("Active", findElement(activeChk).getAttribute("checked"));
+                    mmjson.put("active", findElement(activeChk).getAttribute("checked"));
 
                     // Save Global Module Settings list
                     List<WebElement> globalModuleInputs;
@@ -200,7 +202,7 @@ public class PageAdminList extends AbstractPageObject {
                         }
                         j++;
                     }
-                    mmjson.put("GlobalModuleSettings", globalModuleSettings);
+                    mmjson.put("globa_module_settings", globalModuleSettings);
 
                     // Save Modules list
                     List<WebElement> moduleSpans;
@@ -213,7 +215,7 @@ public class PageAdminList extends AbstractPageObject {
                         moduleList.add(moduleSpan.getText());
                         j++;
                     }
-                    mmjson.put("Modules", moduleList);
+                    mmjson.put("modules", moduleList);
 
                     // Save Sub Pages list
                     List<WebElement> subPagesSpans;
@@ -222,11 +224,11 @@ public class PageAdminList extends AbstractPageObject {
                     subPagesSpans = findElements(sectionTitleSpan);
                     for (WebElement subPagesSpan:subPagesSpans)
                     {
-                        System.out.println(subPagesSpan.getText());
+                        //System.out.println(subPagesSpan.getText());
                         subPagesList.add(subPagesSpan.getText());
                         j++;
                     }
-                    mmjson.put("Sub Pages", subPagesList);
+                    mmjson.put("subpages", subPagesList);
 
 
                     jsonObject.remove(sa2[i]);
@@ -244,33 +246,6 @@ public class PageAdminList extends AbstractPageObject {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-                //obj.put("section title", findElement(sectionTitleInput).getAttribute("value"));
-
-                /*
-                JsonWriter jsonWriter = null;
-                try {
-                    jsonWriter = new JsonWriter(new FileWriter(sPathToFile + sDataFileJson));
-                    jsonWriter.beginObject();
-                        jsonWriter.name(sa2[i]);
-                            jsonWriter.beginArray();
-                                jsonWriter.beginObject();
-                                    jsonWriter.name("section title");
-                                    jsonWriter.value(findElement(sectionTitleInput).getAttribute("value"));
-                                jsonWriter.endObject();
-                            jsonWriter.endArray();
-                    jsonWriter.endObject();
-                } catch (IOException e) {
-                } finally {
-                    try {
-                        jsonWriter.close();
-                    } catch (IOException e) {
-                    }
-                }
-                */
-
-                // ---------------------------------------------------------
-
 
                 findElement(backBtn).click();
 
@@ -292,5 +267,31 @@ public class PageAdminList extends AbstractPageObject {
 
         return pageNames;
     }
+
+    public String getUrlPage(String searchPhrase) throws InterruptedException {
+        JSONParser parser = new JSONParser();
+        String urlPage = null;
+
+        try {
+            Object obj = parser.parse(new FileReader(sPathToFile + sDataFilePagesJson));
+            JSONObject jsonObject = (JSONObject) obj;
+            urlPage = JsonPath.read(jsonObject, "$."+searchPhrase+".you_page_url");
+            String itemID = JsonPath.read(jsonObject, "$."+searchPhrase+".url_query.ItemID");
+            System.out.println(itemID);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+        System.out.println(urlPage);
+
+        return urlPage;
+    }
+
 
 }
