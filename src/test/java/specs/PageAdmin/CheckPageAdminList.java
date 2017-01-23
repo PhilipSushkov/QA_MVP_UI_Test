@@ -61,7 +61,7 @@ public class CheckPageAdminList extends AbstractSpec {
 
         dashboard.openPageFromCommonTasks(pageAdminMenuButton);
 
-        Assert.assertNotNull(pageAdminList.getUrlPage("Investors"), "Url Page didn't find");
+        Assert.assertNotNull(pageAdminList.getUrlPage("['Karin\\'s Test Page']"), "Url Page didn't find");
 
     }
 
