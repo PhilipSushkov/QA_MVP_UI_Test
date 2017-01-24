@@ -1,4 +1,5 @@
 package specs.PageAdmin;
+
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -41,7 +42,7 @@ public class CheckPageAdminList extends AbstractSpec {
         Assert.assertNotNull(pageAdminList.getUrl());
         Assert.assertEquals(pageAdminList.getTitle(), expectedTitle, "Public Page List page Title doesn't match to expected");
 
-        System.out.println(pageAdminList.getTitle());
+        //System.out.println(pageAdminList.getTitle());
 
         Assert.assertTrue(pageAdminList.getPageItems(), "Pages items don't exist");
 

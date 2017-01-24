@@ -174,7 +174,7 @@ public class Functions {
             e.printStackTrace();
         }
 
-        System.out.print(obj);
+        //System.out.print(obj);
 
     }
 

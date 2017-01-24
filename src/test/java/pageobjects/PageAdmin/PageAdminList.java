@@ -1,6 +1,5 @@
 package pageobjects.PageAdmin;
 
-import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -63,9 +62,9 @@ public class PageAdminList extends AbstractPageObject {
         workflowStateSpan = By.xpath(propUIPageAdmin.getProperty("select_WorkflowState"));
 
         sSheetName = "PageItems";
-        sDataFileJson = "PageNames.json";
-        sDataFilePagesJson = "PagesProp.json";
-        sDataFileModulesJson = "ModulesProp.json";
+        sDataFileJson = propUIPageAdmin.getProperty("json_PageNames");
+        sDataFilePagesJson = propUIPageAdmin.getProperty("json_PagesProp");
+        sDataFileModulesJson = propUIPageAdmin.getProperty("json_ModulesProp");
         sPathToFile = System.getProperty("user.dir") + propUIPageAdmin.getProperty("dataPath_PageAdmin");
         sDataFile = propUIPageAdmin.getProperty("xlsData_PageAdmin");
     }
@@ -136,8 +135,6 @@ public class PageAdminList extends AbstractPageObject {
                 findElement(innerWrapPage).click();
 
                 waitForElement(dataGridTable);
-                //System.out.println(findElements(By.xpath("//td[contains(@class, 'DataGridItemBorder')]")).get(1).getText());
-
                 waitForElement(editPageImg);
 
                 // Starts pages loop
@@ -239,17 +236,17 @@ public class PageAdminList extends AbstractPageObject {
                         }
                         mmjson.put("modules", moduleList);
 
-
+                        // ----------------------------------------------------
                         // Open Module pages
                         List<WebElement> modulePages;
                         modulePages = findElements(moduleInstancesSpan);
-                        System.out.println(" --- " + findElement(sectionTitleInput).getAttribute("value") + " modules start --- ");
+                        //System.out.println(" --- " + findElement(sectionTitleInput).getAttribute("value") + " modules start --- ");
                         for (int moduleNum=0; moduleNum<modulePages.size(); moduleNum++) {
                             System.out.println(findElements(moduleNameLbl).get(moduleNum).getText());
                             findElements(editModuleImg).get(moduleNum).click();
                             waitForElement(backBtn);
 
-                            System.out.println(new Select(driver.findElement(moduleDefinitionSelect)).getFirstSelectedOption().getText());
+                            //System.out.println(new Select(driver.findElement(moduleDefinitionSelect)).getFirstSelectedOption().getText());
 
                             JSONObject pageParameters = new JSONObject();
                             pageParameters.put("section_title", sectionTitle);
@@ -267,7 +264,7 @@ public class PageAdminList extends AbstractPageObject {
                             for (String paramparamModule : paramModules) {
                                 jsonURLQueryModule.put(paramparamModule.split("=")[0], paramparamModule.split("=")[1]);
 
-                                System.out.println(paramparamModule.split("=")[0]);
+                                //System.out.println(paramparamModule.split("=")[0]);
                                 if (paramparamModule.split("=")[0].equals("ItemID")) {
                                     itemIDModule = paramparamModule.split("=")[1];
                                 }
@@ -282,8 +279,8 @@ public class PageAdminList extends AbstractPageObject {
 
                             findElement(backBtn).click();
                         }
-                        System.out.println(" --- " + findElement(sectionTitleInput).getAttribute("value") + " modules end --- ");
-
+                        //System.out.println(" --- " + findElement(sectionTitleInput).getAttribute("value") + " modules end --- ");
+                        // ----------------------------------------------------
 
                         // Save Sub Pages list
                         List<WebElement> subPagesSpans;
