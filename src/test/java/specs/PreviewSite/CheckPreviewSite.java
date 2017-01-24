@@ -1,7 +1,8 @@
 package specs.PreviewSite;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.testng.Assert;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
 import pageobjects.LoginPage.LoginPage;
 import specs.AbstractSpec;
 import specs.PublicSite.CheckPublicSite;
@@ -15,11 +16,12 @@ public class CheckPreviewSite extends AbstractSpec {
 
     //// THERE SHOULD BE ONE TEST HERE FOR EVERY TEST ON CheckPublicSite.java \\\\
 
-    private CheckPublicSite publicTests = new CheckPublicSite();
+    private static CheckPublicSite publicTests;
 
-    @Before
+    @BeforeTest
     public void goToPreviewSite() throws Exception {
         new LoginPage(driver).loginUser().previewSite().goToInvestorsPage();
+        publicTests = new CheckPublicSite();
     }
 
     @Test

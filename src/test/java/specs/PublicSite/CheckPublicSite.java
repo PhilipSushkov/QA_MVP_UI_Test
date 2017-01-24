@@ -23,7 +23,7 @@ import static org.testng.Assert.fail;
 
 
 public class CheckPublicSite extends AbstractSpec {
-    private final String Q4WebVersionNumber = "4.3.0.61";
+    private final String Q4WebVersionNumber = "4.3.0.63";
 
     //// WHEN ADDING A TEST TO THIS CLASS, ADD A ENTRY TO IT IN CheckPreviewSite.java \\\\
 

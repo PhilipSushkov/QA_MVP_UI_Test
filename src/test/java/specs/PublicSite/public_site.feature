@@ -96,7 +96,7 @@ Feature: pages on public site are displayed properly
     When I select "Site Map" fromm the site footer
     And select "Email Alerts" from the site map
     Then the email alerts page opens
-    When I input my email credentials in the unsubscibe section
+    When I input my email credentials in the unsubscribe section
     And submit the form
     Then a message appears signifying unsubscribe success
 
