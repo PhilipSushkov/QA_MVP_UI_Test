@@ -242,7 +242,7 @@ public class PageAdminList extends AbstractPageObject {
                         modulePages = findElements(moduleInstancesSpan);
                         //System.out.println(" --- " + findElement(sectionTitleInput).getAttribute("value") + " modules start --- ");
                         for (int moduleNum=0; moduleNum<modulePages.size(); moduleNum++) {
-                            System.out.println(findElements(moduleNameLbl).get(moduleNum).getText());
+                            //System.out.println(findElements(moduleNameLbl).get(moduleNum).getText());
                             findElements(editModuleImg).get(moduleNum).click();
                             waitForElement(backBtn);
 
