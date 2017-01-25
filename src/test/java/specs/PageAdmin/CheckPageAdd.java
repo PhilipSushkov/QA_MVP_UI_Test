@@ -54,9 +54,11 @@ public class CheckPageAdd extends AbstractSpec {
 
     @Test(dataProvider="pageData")
     public void checkAddPage(String pageName) throws Exception {
+        String workflowState = "In Progress";
         dashboard.openPageFromCommonTasks(pageAdminMenuButton);
 
-        Assert.assertTrue(pageAdd.createNewPage(pageName), "New Page didn't create properly");
+        //Assert.assertTrue(pageAdd.createNewPage(pageName), "New Page didn't create properly");
+        Assert.assertEquals(pageAdd.createNewPage(pageName), workflowState, "New Page didn't create properly");
 
     }
 

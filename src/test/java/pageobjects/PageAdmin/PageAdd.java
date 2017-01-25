@@ -1,11 +1,13 @@
 package pageobjects.PageAdmin;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 
 import org.openqa.selenium.By;
@@ -20,8 +22,9 @@ import static specs.AbstractSpec.propUIPageAdmin;
  */
 public class PageAdd extends AbstractPageObject {
     private static By addNewBtn, backBtn, sectionTitleInput, pageTypeInternalRd, pageTypeExternalRd, externalURLInput;
-    private static By pageTemplateSelect, parentPageSelect, showNavChk, openNewWindChk;
-    private static String sPathToFile, sDataFileJson;
+    private static By pageTemplateSelect, parentPageSelect, showNavChk, openNewWindChk, saveBtn, workflowStateSpan;
+    private static By revertBtn;
+    private static String sPathToFile, sDataFileJson, sNewPagesJson;
     private static JSONParser parser;
 
     public PageAdd(WebDriver driver) {
@@ -36,28 +39,28 @@ public class PageAdd extends AbstractPageObject {
         parentPageSelect = By.xpath(propUIPageAdmin.getProperty("select_ParentPage"));
         showNavChk = By.xpath(propUIPageAdmin.getProperty("chk_ShowInNav"));
         openNewWindChk = By.xpath(propUIPageAdmin.getProperty("chk_OpenInNewWindow"));
+        saveBtn = By.xpath(propUIPageAdmin.getProperty("btn_Save"));
+        workflowStateSpan = By.xpath(propUIPageAdmin.getProperty("select_WorkflowState"));
+        revertBtn = By.xpath(propUIPageAdmin.getProperty("btn_Revert"));
 
         sPathToFile = System.getProperty("user.dir") + propUIPageAdmin.getProperty("dataPath_PageAdmin");
         sDataFileJson = propUIPageAdmin.getProperty("json_CreatePageData");
+        sNewPagesJson = propUIPageAdmin.getProperty("json_NewPagesData");
 
         parser = new JSONParser();
     }
 
-    public Boolean createNewPage(String pageName) {
+    public String createNewPage(String pageName) {
         int randNum = Functions.randInt(0, 999);
 
         waitForElement(addNewBtn);
         findElement(addNewBtn).click();
         waitForElement(backBtn);
 
-        System.out.println(pageName);
-
         try {
             Object obj = parser.parse(new FileReader(sPathToFile + sDataFileJson));
 
             JSONObject jsonObject = (JSONObject) obj;
-            //System.out.println(jsonObject);
-
             JSONObject pagesDataObj = (JSONObject) jsonObject.get(pageName);
 
             findElement(sectionTitleInput).sendKeys(pagesDataObj.get("section_title").toString() + randNum);
@@ -74,40 +77,74 @@ public class PageAdd extends AbstractPageObject {
                 System.out.println("Page type in not defined. May lead to incorrect test implementation.");
             }
 
-            pause(3000);
+            findElement(parentPageSelect).sendKeys(pagesDataObj.get("parent_page").toString());
+
+            //pause(3000);
 
             if (Boolean.parseBoolean(pagesDataObj.get("show_in_navigation").toString())) {
                 if (!Boolean.parseBoolean(findElement(showNavChk).getAttribute("checked"))) {
-                    System.out.println("show_in_navigation - true, show_in_navigation - unchecked");
+                    //System.out.println("show_in_navigation - true, Show in Navigation - unchecked");
                     findElement(showNavChk).click();
                 } else {
-                    System.out.println("show_in_navigation - true, show_in_navigation - checked");
+                    //System.out.println("show_in_navigation - true, Show in Navigation - checked");
                 }
             } else {
                 if (!Boolean.parseBoolean(findElement(showNavChk).getAttribute("checked"))) {
-                    System.out.println("show_in_navigation - false, show_in_navigation - unchecked");
+                    //System.out.println("show_in_navigation - false, Show in Navigation - unchecked");
                 } else {
-                    System.out.println("show_in_navigation - false, show_in_navigation - checked");
+                    //System.out.println("show_in_navigation - false, Show in Navigation - checked");
                     findElement(showNavChk).click();
                 }
             }
 
-            findElement(parentPageSelect).sendKeys(pagesDataObj.get("parent_page").toString());
+            if (Boolean.parseBoolean(pagesDataObj.get("open_in_new_window").toString())) {
+                if (!Boolean.parseBoolean(findElement(openNewWindChk).getAttribute("checked"))) {
+                    //System.out.println("open_in_new_window - true, Open In New Window - unchecked");
+                    findElement(openNewWindChk).click();
+                } else {
+                    //System.out.println("open_in_new_window - true, Open In New Window - checked");
+                }
+            } else {
+                if (!Boolean.parseBoolean(findElement(openNewWindChk).getAttribute("checked"))) {
+                    //System.out.println("open_in_new_window - false, Open In New Window - unchecked");
+                } else {
+                    //System.out.println("open_in_new_window - false, Open In New Window - checked");
+                    findElement(openNewWindChk).click();
+                }
+            }
 
-            pause(3000);
+            pause(1000);
+
+            //findElement(saveBtn).click();
+            //waitForElement(revertBtn);
+
+
+            // Write page parameters to json
+            Object objNew = parser.parse(new FileReader(sPathToFile + sNewPagesJson));
+            JSONObject jsonObjectNew = (JSONObject) objNew;
+            JSONArray list = (JSONArray) jsonObjectNew.get("new_page_names");
+            list.add(pagesDataObj.get("section_title").toString() + randNum);
+
+            FileWriter file = new FileWriter(sPathToFile + sNewPagesJson);
+            JSONObject newPages = new JSONObject();
+            newPages.put("new_page_names", list);
+            file.write(newPages.toJSONString());
+            file.flush();
+
+            //return findElement(workflowStateSpan).getText();
+            return "In Progress";
 
         }  catch (FileNotFoundException e) {
             e.printStackTrace();
-            return false;
+            return null;
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
+            return null;
         } catch (ParseException e) {
             e.printStackTrace();
-            return false;
+            return null;
         }
 
-        return true;
     }
 
 }
