@@ -9,9 +9,11 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.Actions;
 import pageobjects.AbstractPageObject;
 import util.Functions;
 
@@ -23,8 +25,8 @@ import static specs.AbstractSpec.propUIPageAdmin;
 public class PageAdd extends AbstractPageObject {
     private static By addNewBtn, backBtn, sectionTitleInput, pageTypeInternalRd, pageTypeExternalRd, externalURLInput;
     private static By pageTemplateSelect, parentPageSelect, showNavChk, openNewWindChk, saveBtn, workflowStateSpan;
-    private static By revertBtn;
-    private static String sPathToFile, sDataFileJson, sNewPagesJson;
+    private static By revertBtn, parentUrlSpan, seoNameInput, previewLnk, breadcrumbDiv;
+    private static String sPathToFile, sDataFileJson, sNewPagesJson, sNewPageName, you_page_url;
     private static JSONParser parser;
 
     public PageAdd(WebDriver driver) {
@@ -42,6 +44,10 @@ public class PageAdd extends AbstractPageObject {
         saveBtn = By.xpath(propUIPageAdmin.getProperty("btn_Save"));
         workflowStateSpan = By.xpath(propUIPageAdmin.getProperty("select_WorkflowState"));
         revertBtn = By.xpath(propUIPageAdmin.getProperty("btn_Revert"));
+        parentUrlSpan = By.xpath(propUIPageAdmin.getProperty("span_YourPageUrl"));
+        seoNameInput = By.xpath(propUIPageAdmin.getProperty("input_SeoName"));
+        previewLnk = By.xpath(propUIPageAdmin.getProperty("lnk_Preview"));
+        breadcrumbDiv = By.xpath(propUIPageAdmin.getProperty("div_Breadcrumb"));
 
         sPathToFile = System.getProperty("user.dir") + propUIPageAdmin.getProperty("dataPath_PageAdmin");
         sDataFileJson = propUIPageAdmin.getProperty("json_CreatePageData");
@@ -63,7 +69,9 @@ public class PageAdd extends AbstractPageObject {
             JSONObject jsonObject = (JSONObject) obj;
             JSONObject pagesDataObj = (JSONObject) jsonObject.get(pageName);
 
-            findElement(sectionTitleInput).sendKeys(pagesDataObj.get("section_title").toString() + randNum);
+            sNewPageName = pagesDataObj.get("section_title").toString() + randNum;
+
+            findElement(sectionTitleInput).sendKeys(sNewPageName);
 
             if (pagesDataObj.get("page_type").toString().equals("Internal")) {
                 findElement(pageTypeInternalRd).click();
@@ -78,8 +86,6 @@ public class PageAdd extends AbstractPageObject {
             }
 
             findElement(parentPageSelect).sendKeys(pagesDataObj.get("parent_page").toString());
-
-            //pause(3000);
 
             if (Boolean.parseBoolean(pagesDataObj.get("show_in_navigation").toString())) {
                 if (!Boolean.parseBoolean(findElement(showNavChk).getAttribute("checked"))) {
@@ -115,36 +121,122 @@ public class PageAdd extends AbstractPageObject {
 
             pause(1000);
 
-            //findElement(saveBtn).click();
-            //waitForElement(revertBtn);
-
+            findElement(saveBtn).click();
+            waitForElement(revertBtn);
 
             // Write page parameters to json
-            Object objNew = parser.parse(new FileReader(sPathToFile + sNewPagesJson));
-            JSONObject jsonObjectNew = (JSONObject) objNew;
-            JSONArray list = (JSONArray) jsonObjectNew.get("new_page_names");
-            list.add(pagesDataObj.get("section_title").toString() + randNum);
+            Object objNew;
+            JSONObject jsonObjectNew;
+            JSONArray list;
+            try {
+                objNew = parser.parse(new FileReader(sPathToFile + sNewPagesJson));
+                jsonObjectNew = (JSONObject) objNew;
+                list = (JSONArray) jsonObjectNew.get("new_page_names");
+            } catch (ParseException e) {
+                objNew = new JSONObject();
+                jsonObjectNew = (JSONObject) objNew;
+                list = new JSONArray();
+            }
+
+            list.add(sNewPageName);
+
+            JSONObject page = new JSONObject();
+            you_page_url = findElement(parentUrlSpan).getText() + findElement(seoNameInput).getAttribute("value");
+            page.put("your_page_url", you_page_url);
+
+            URL pageURL = new URL(getUrl());
+            String[] params = pageURL.getQuery().split("&");
+            JSONObject jsonURLQuery = new JSONObject();
+            for (String param:params) {
+                jsonURLQuery.put(param.split("=")[0], param.split("=")[1]);
+            }
+            page.put("url_query", jsonURLQuery);
 
             FileWriter file = new FileWriter(sPathToFile + sNewPagesJson);
-            JSONObject newPages = new JSONObject();
-            newPages.put("new_page_names", list);
-            file.write(newPages.toJSONString());
+
+            jsonObjectNew.put("new_page_names", list);
+            jsonObjectNew.put(sNewPageName, page);
+
+            file.write(jsonObjectNew.toJSONString());
             file.flush();
 
-            //return findElement(workflowStateSpan).getText();
-            return "In Progress";
+            return findElement(workflowStateSpan).getText();
 
         }  catch (FileNotFoundException e) {
             e.printStackTrace();
             return null;
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException e1) {
+            e1.printStackTrace();
             return null;
-        } catch (ParseException e) {
-            e.printStackTrace();
+        } catch (ParseException e2) {
+            e2.printStackTrace();
             return null;
         }
 
+    }
+
+    public Boolean previewNewPage() {
+        findElement(previewLnk).click();
+        pause(1500);
+        ArrayList<String> tabs = new ArrayList<String> (driver.getWindowHandles());
+        driver.switchTo().window(tabs.get(1));
+        //System.out.println(driver.getCurrentUrl());
+        waitForElement(breadcrumbDiv);
+
+        if ( (findElement(breadcrumbDiv).getText().contains(sNewPageName)) && (driver.getTitle().contains(sNewPageName)) ) {
+            driver.switchTo().window(tabs.get(1)).close();
+            pause(1000);
+            driver.switchTo().window(tabs.get(0));
+            return true;
+        } else {
+            driver.switchTo().window(tabs.get(1)).close();
+            pause(1000);
+            driver.switchTo().window(tabs.get(0));
+            return false;
+        }
+
+    }
+
+    public Boolean publicNewPage() {
+        ((JavascriptExecutor)driver).executeScript("window.open();");
+        pause(1500);
+        ArrayList<String> tabs = new ArrayList<String> (driver.getWindowHandles());
+        driver.switchTo().window(tabs.get(1));
+        //you_page_url = "http://chicagotest.q4web.release/Test";
+        driver.get(you_page_url);
+        waitForElement(breadcrumbDiv);
+        System.out.println(findElement(breadcrumbDiv).getText());
+        System.out.println(driver.getTitle());
+
+        if ( (findElement(breadcrumbDiv).getText().contains(sNewPageName)) && (driver.getTitle().contains(sNewPageName)) ) {
+            driver.switchTo().window(tabs.get(1)).close();
+            pause(1000);
+            driver.switchTo().window(tabs.get(0));
+            return false;
+        } else {
+            driver.switchTo().window(tabs.get(1)).close();
+            pause(1000);
+            driver.switchTo().window(tabs.get(0));
+            return true;
+        }
+
+    }
+
+    public Boolean listNewPage() {
+        boolean item = false;
+        By innerWrapPage;
+
+        try {
+            innerWrapPage = By.xpath("//div[contains(@id, 'divContent')]//span[contains(@class, 'innerWrap')][(text()=\""+sNewPageName+"\")]/parent::span/parent::a");
+            waitForElement(innerWrapPage);
+            item = true;
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
+        } catch (Exception e3) {
+        }
+
+        return item;
     }
 
 }

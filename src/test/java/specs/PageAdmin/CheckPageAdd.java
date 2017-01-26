@@ -15,12 +15,11 @@ import pageobjects.Dashboard.Dashboard;
 import pageobjects.LoginPage.LoginPage;
 import pageobjects.PageAdmin.PageAdd;
 import specs.AbstractSpec;
+import util.Functions;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * Created by philipsushkov on 2017-01-24.
@@ -33,7 +32,7 @@ public class CheckPageAdd extends AbstractSpec {
     private static Dashboard dashboard;
     private static PageAdd pageAdd;
 
-    private static String sPathToFile, sDataFileJson;
+    private static String sPathToFile, sDataFileJson, sNewPagesJson;
     private static JSONParser parser;
 
     @BeforeTest
@@ -46,8 +45,10 @@ public class CheckPageAdd extends AbstractSpec {
 
         sPathToFile = System.getProperty("user.dir") + propUIPageAdmin.getProperty("dataPath_PageAdmin");
         sDataFileJson = propUIPageAdmin.getProperty("json_CreatePageData");
+        sNewPagesJson = propUIPageAdmin.getProperty("json_NewPagesData");
 
         parser = new JSONParser();
+        Functions.ClearJSONfile(sPathToFile + sNewPagesJson);
 
         loginPage.loginUser();
     }
@@ -57,9 +58,12 @@ public class CheckPageAdd extends AbstractSpec {
         String workflowState = "In Progress";
         dashboard.openPageFromCommonTasks(pageAdminMenuButton);
 
-        //Assert.assertTrue(pageAdd.createNewPage(pageName), "New Page didn't create properly");
         Assert.assertEquals(pageAdd.createNewPage(pageName), workflowState, "New Page didn't create properly");
+        Assert.assertTrue(pageAdd.previewNewPage(), "Preview of New Page didn't work properly");
+        Assert.assertTrue(pageAdd.publicNewPage(), "Public site shouldn't show the content of New Page when it is not published yet");
 
+        dashboard.openPageFromCommonTasks(pageAdminMenuButton);
+        Assert.assertTrue(pageAdd.listNewPage(), "New Page isn't found on Pablic Page List");
     }
 
     @DataProvider
@@ -88,6 +92,12 @@ public class CheckPageAdd extends AbstractSpec {
             return null;
         }
 
+    }
+
+    @AfterTest
+    public void tearDown() {
+        //dashboard.logoutFromAdmin();
+        driver.quit();
     }
 
 }

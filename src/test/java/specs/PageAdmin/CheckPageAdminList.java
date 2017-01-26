@@ -33,7 +33,7 @@ public class CheckPageAdminList extends AbstractSpec {
         loginPage.loginUser();
     }
 
-    @Test
+    @Test(priority=1)
     public void checkPageAdminList() throws Exception {
         final String expectedTitle = "Public Page List";
 
@@ -48,7 +48,7 @@ public class CheckPageAdminList extends AbstractSpec {
 
     }
 
-    @Test
+    @Test(priority=2)
     public void clickPageItems() throws Exception {
 
         dashboard.openPageFromCommonTasks(pageAdminMenuButton);
@@ -57,12 +57,12 @@ public class CheckPageAdminList extends AbstractSpec {
 
     }
 
-    @Test
+    @Test(priority=3)
     public void findUrlPage() throws Exception {
 
         dashboard.openPageFromCommonTasks(pageAdminMenuButton);
 
-        Assert.assertNotNull(pageAdminList.getUrlPage("['Karin\\'s Test Page']"), "Url Page didn't find");
+        Assert.assertNotNull(pageAdminList.getUrlPage("['6da1f1fd-9af0-48bf-a882-124273c06c20']"), "Url Page didn't find");
 
     }
 
