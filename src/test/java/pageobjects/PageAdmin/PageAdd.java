@@ -269,7 +269,7 @@ public class PageAdd extends AbstractPageObject {
             driver.get(desktopUrl.toString()+"default.aspx?ItemID="+sItemID+"&LanguageId="+sLanguageId+"&SectionId="+sSectionId);
             Thread.sleep(DEFAULT_PAUSE);
 
-            //System.out.println(Functions.RemoveArrayItem(pageNamesArray, pageName).toJSONString());
+            System.out.println(Functions.RemoveArrayItem(pageNamesArray, pageName).toJSONString());
 
             jsonObject.remove(pageName);
 

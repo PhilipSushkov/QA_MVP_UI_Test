@@ -107,6 +107,7 @@ public class PageAdminList extends AbstractPageObject {
         } catch (TimeoutException e3) {
         }
 
+        Functions.ClearJSONfile(sPathToFile + sDataFilePagesJson);
         Functions.WriteArrayToJSON(sa2, sPathToFile + sDataFilePagesJson, "page_names");
         return pageItems;
     }
