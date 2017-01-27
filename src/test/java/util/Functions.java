@@ -231,6 +231,14 @@ public class Functions {
         }
     }
 
+    public static JSONArray RemoveArrayItem(JSONArray jsonArr, String item) {
+        for (int i=0; i<jsonArr.size(); i++) {
+            if (jsonArr.get(i).toString().contains(item)) {
+                jsonArr.remove(i);
+            }
+        }
+        return jsonArr;
+    }
 
 
 }

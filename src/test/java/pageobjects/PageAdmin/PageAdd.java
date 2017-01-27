@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.openqa.selenium.*;
 import pageobjects.AbstractPageObject;
+import util.Functions;
 
 import static specs.AbstractSpec.desktopUrl;
 import static specs.AbstractSpec.propUIPageAdmin;
@@ -54,7 +55,6 @@ public class PageAdd extends AbstractPageObject {
         sPathToFile = System.getProperty("user.dir") + propUIPageAdmin.getProperty("dataPath_PageAdmin");
         sDataFileJson = propUIPageAdmin.getProperty("json_CreatePageData");
         sDataFilePagesJson = propUIPageAdmin.getProperty("json_PagesProp");
-        //sNewPagesJson = propUIPageAdmin.getProperty("json_NewPagesData");
 
         parser = new JSONParser();
     }
@@ -128,17 +128,16 @@ public class PageAdd extends AbstractPageObject {
             // Write page parameters to json
             JSONObject jsonObjectNew = new JSONObject();
             JSONArray pageNamesArray = new JSONArray();
-            JSONArray pagesArray = new JSONArray();
-            JSONObject pageObj = new JSONObject();
 
             try {
                 jsonObjectNew = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFilePagesJson));
                 pageNamesArray = (JSONArray) jsonObjectNew.get("page_names");
-                pagesArray = (JSONArray) jsonObjectNew.get("pages");
             } catch (ParseException e) {
             }
 
-            pageNamesArray.add(sNewPageName);
+            if (parent_page.equals("Home")) {
+                pageNamesArray.add(sNewPageName);
+            }
 
             JSONObject page = new JSONObject();
             you_page_url = findElement(parentUrlSpan).getText() + findElement(seoNameInput).getAttribute("value");
@@ -154,9 +153,7 @@ public class PageAdd extends AbstractPageObject {
 
             FileWriter file = new FileWriter(sPathToFile + sDataFilePagesJson);
 
-            pageObj.put(sNewPageName, page);
-            pagesArray.add(pageObj);
-            jsonObjectNew.put("page_names", pageNamesArray);
+            jsonObjectNew.put(sNewPageName, page);
 
             file.write(jsonObjectNew.toJSONString().replace("\\", ""));
             file.flush();
@@ -255,20 +252,28 @@ public class PageAdd extends AbstractPageObject {
 
         try {
             JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFilePagesJson));
+            JSONArray pageNamesArray = (JSONArray) jsonObject.get("page_names");
+            //System.out.println(pageNamesArray.toJSONString());
 
-            List<String>  sItemID = JsonPath.read(jsonObject, "$.pages[*].['"+pageName+"'].url_query.ItemID");
-            List<String>  sLanguageId = JsonPath.read(jsonObject, "$.pages[*].['"+pageName+"'].url_query.LanguageId");
-            List<String>  sSectionId = JsonPath.read(jsonObject, "$.pages[*].['"+pageName+"'].url_query.SectionId");
+            //System.out.println(jsonObject.toJSONString());
 
-            /*
-            System.out.println("Domain: "+desktopUrl.toString());
-            System.out.println("ItemID: "+sItemID.get(0));
-            System.out.println("LanguageId: "+sLanguageId.get(0));
-            System.out.println("SectionId: "+sSectionId.get(0));
-            */
+            String  sItemID = JsonPath.read(jsonObject, "$.['"+pageName+"'].url_query.ItemID");
+            String  sLanguageId = JsonPath.read(jsonObject, "$.['"+pageName+"'].url_query.LanguageId");
+            String  sSectionId = JsonPath.read(jsonObject, "$.['"+pageName+"'].url_query.SectionId");
 
-            driver.get(desktopUrl.toString()+"default.aspx?ItemID="+sItemID.get(0)+"&LanguageId="+sLanguageId.get(0)+"&SectionId="+sSectionId.get(0));
+            //System.out.println("Domain: "+desktopUrl.toString());
+            //System.out.println("ItemID: "+sItemID);
+            //System.out.println("LanguageId: "+sLanguageId);
+            //System.out.println("SectionId: "+sSectionId);
+
+            driver.get(desktopUrl.toString()+"default.aspx?ItemID="+sItemID+"&LanguageId="+sLanguageId+"&SectionId="+sSectionId);
             Thread.sleep(DEFAULT_PAUSE);
+
+            //System.out.println(Functions.RemoveArrayItem(pageNamesArray, pageName).toJSONString());
+
+            jsonObject.remove(pageName);
+
+            //System.out.println(jsonObject.toJSONString());
 
             item = true;
         }  catch (FileNotFoundException e) {

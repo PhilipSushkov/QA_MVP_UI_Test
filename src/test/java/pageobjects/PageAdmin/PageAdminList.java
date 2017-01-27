@@ -144,8 +144,6 @@ public class PageAdminList extends AbstractPageObject {
                     // Create JSON object for Pages
                     JSONParser parser = new JSONParser();
                     JSONObject jsonObject = new JSONObject();
-                    JSONArray pagesArray = new JSONArray();
-                    JSONObject pageObj = new JSONObject();
                     JSONObject mmjson = new JSONObject();
 
                     // Create JSON object for Modules
@@ -155,7 +153,6 @@ public class PageAdminList extends AbstractPageObject {
                     try {
                         try {
                             jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFilePagesJson));
-                            pagesArray = (JSONArray) jsonObject.get("pages");
                             jsonObjectModule = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFileModulesJson));
                         } catch (ParseException e) {
                         }
@@ -275,11 +272,7 @@ public class PageAdminList extends AbstractPageObject {
                             j++;
                         }
                         mmjson.put("subpages", subPagesList);
-
-                        pageObj.put(sectionTitle, mmjson);
-
-                        pagesArray.add(pageObj);
-                        jsonObject.put("pages", pagesArray);
+                        jsonObject.put(sectionTitle, mmjson);
 
                         FileWriter file = new FileWriter(sPathToFile + sDataFilePagesJson);
                         file.write(jsonObject.toJSONString().replace("\\", ""));
@@ -331,7 +324,7 @@ public class PageAdminList extends AbstractPageObject {
             JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFilePagesJson));
             urlPage = JsonPath.read(jsonObject, "$."+searchPhrase+".you_page_url");
             String itemID = JsonPath.read(jsonObject, "$."+searchPhrase+".url_query.ItemID");
-            System.out.println(itemID);
+            //System.out.println(itemID);
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
