@@ -1,5 +1,6 @@
 package pageobjects.PageAdmin;
 
+import com.jayway.jsonpath.JsonPath;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -13,10 +14,9 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import org.openqa.selenium.*;
-import org.openqa.selenium.interactions.Actions;
 import pageobjects.AbstractPageObject;
-import util.Functions;
 
+import static specs.AbstractSpec.desktopUrl;
 import static specs.AbstractSpec.propUIPageAdmin;
 
 /**
@@ -26,8 +26,9 @@ public class PageAdd extends AbstractPageObject {
     private static By addNewBtn, backBtn, sectionTitleInput, pageTypeInternalRd, pageTypeExternalRd, externalURLInput;
     private static By pageTemplateSelect, parentPageSelect, showNavChk, openNewWindChk, saveBtn, workflowStateSpan;
     private static By revertBtn, parentUrlSpan, seoNameInput, previewLnk, breadcrumbDiv;
-    private static String sPathToFile, sDataFileJson, sNewPagesJson, sNewPageName, you_page_url;
+    private static String sPathToFile, sDataFileJson, sNewPagesJson, sNewPageName, you_page_url, parent_page;
     private static JSONParser parser;
+    private static final long DEFAULT_PAUSE = 1500;
 
     public PageAdd(WebDriver driver) {
         super(driver);
@@ -56,36 +57,36 @@ public class PageAdd extends AbstractPageObject {
         parser = new JSONParser();
     }
 
-    public String createNewPage(String pageName) {
-        int randNum = Functions.randInt(0, 999);
+    public String createNewPage(String pageName) throws InterruptedException {
+        //int randNum = Functions.randInt(0, 999);
 
         waitForElement(addNewBtn);
         findElement(addNewBtn).click();
         waitForElement(backBtn);
 
         try {
-            Object obj = parser.parse(new FileReader(sPathToFile + sDataFileJson));
-
-            JSONObject jsonObject = (JSONObject) obj;
+            JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFileJson));
             JSONObject pagesDataObj = (JSONObject) jsonObject.get(pageName);
 
-            sNewPageName = pagesDataObj.get("section_title").toString() + randNum;
+            //sNewPageName = pagesDataObj.get("section_title").toString() + randNum;
+            sNewPageName = pageName;
 
             findElement(sectionTitleInput).sendKeys(sNewPageName);
 
             if (pagesDataObj.get("page_type").toString().equals("Internal")) {
                 findElement(pageTypeInternalRd).click();
-                pause(1000);
+                Thread.sleep(DEFAULT_PAUSE);
                 findElement(pageTemplateSelect).sendKeys(pagesDataObj.get("page_template").toString());
             } else if (pagesDataObj.get("page_type").toString().equals("External")) {
                 findElement(pageTypeExternalRd).click();
-                pause(1000);
+                Thread.sleep(DEFAULT_PAUSE);
                 findElement(externalURLInput).sendKeys(pagesDataObj.get("external_url").toString());
             } else {
                 System.out.println("Page type in not defined. May lead to incorrect test implementation.");
             }
 
-            findElement(parentPageSelect).sendKeys(pagesDataObj.get("parent_page").toString());
+            parent_page = pagesDataObj.get("parent_page").toString();
+            findElement(parentPageSelect).sendKeys(parent_page);
 
             if (Boolean.parseBoolean(pagesDataObj.get("show_in_navigation").toString())) {
                 if (!Boolean.parseBoolean(findElement(showNavChk).getAttribute("checked"))) {
@@ -119,23 +120,18 @@ public class PageAdd extends AbstractPageObject {
                 }
             }
 
-            pause(1000);
+            Thread.sleep(DEFAULT_PAUSE);
 
             findElement(saveBtn).click();
             waitForElement(revertBtn);
 
             // Write page parameters to json
-            Object objNew;
-            JSONObject jsonObjectNew;
-            JSONArray list;
+            JSONObject jsonObjectNew = new JSONObject();
+            JSONArray list = new JSONArray();
             try {
-                objNew = parser.parse(new FileReader(sPathToFile + sNewPagesJson));
-                jsonObjectNew = (JSONObject) objNew;
+                jsonObjectNew = (JSONObject) parser.parse(new FileReader(sPathToFile + sNewPagesJson));
                 list = (JSONArray) jsonObjectNew.get("new_page_names");
             } catch (ParseException e) {
-                objNew = new JSONObject();
-                jsonObjectNew = (JSONObject) objNew;
-                list = new JSONArray();
             }
 
             list.add(sNewPageName);
@@ -175,65 +171,107 @@ public class PageAdd extends AbstractPageObject {
 
     }
 
-    public Boolean previewNewPage() {
+    public Boolean previewNewPage() throws InterruptedException {
         findElement(previewLnk).click();
-        pause(1500);
+
+        Thread.sleep(DEFAULT_PAUSE);
+
         ArrayList<String> tabs = new ArrayList<String> (driver.getWindowHandles());
         driver.switchTo().window(tabs.get(1));
-        //System.out.println(driver.getCurrentUrl());
         waitForElement(breadcrumbDiv);
 
         if ( (findElement(breadcrumbDiv).getText().contains(sNewPageName)) && (driver.getTitle().contains(sNewPageName)) ) {
             driver.switchTo().window(tabs.get(1)).close();
-            pause(1000);
+            Thread.sleep(DEFAULT_PAUSE);
             driver.switchTo().window(tabs.get(0));
             return true;
         } else {
             driver.switchTo().window(tabs.get(1)).close();
-            pause(1000);
+            Thread.sleep(DEFAULT_PAUSE);
             driver.switchTo().window(tabs.get(0));
             return false;
         }
 
     }
 
-    public Boolean publicNewPage() {
+    public Boolean publicNewPage() throws InterruptedException {
         ((JavascriptExecutor)driver).executeScript("window.open();");
-        pause(1500);
+
+        Thread.sleep(DEFAULT_PAUSE);
+
         ArrayList<String> tabs = new ArrayList<String> (driver.getWindowHandles());
         driver.switchTo().window(tabs.get(1));
-        //you_page_url = "http://chicagotest.q4web.release/Test";
         driver.get(you_page_url);
         waitForElement(breadcrumbDiv);
-        System.out.println(findElement(breadcrumbDiv).getText());
-        System.out.println(driver.getTitle());
 
         if ( (findElement(breadcrumbDiv).getText().contains(sNewPageName)) && (driver.getTitle().contains(sNewPageName)) ) {
             driver.switchTo().window(tabs.get(1)).close();
-            pause(1000);
+            Thread.sleep(DEFAULT_PAUSE);
             driver.switchTo().window(tabs.get(0));
             return false;
         } else {
             driver.switchTo().window(tabs.get(1)).close();
-            pause(1000);
+            Thread.sleep(DEFAULT_PAUSE);
             driver.switchTo().window(tabs.get(0));
             return true;
         }
 
     }
 
-    public Boolean listNewPage() {
+    public Boolean listNewPage() throws InterruptedException {
         boolean item = false;
-        By innerWrapPage;
+        By innerWrapPage, newPageLbl;
 
         try {
-            innerWrapPage = By.xpath("//div[contains(@id, 'divContent')]//span[contains(@class, 'innerWrap')][(text()=\""+sNewPageName+"\")]/parent::span/parent::a");
-            waitForElement(innerWrapPage);
-            item = true;
+            if (parent_page.equals("Home")) {
+                innerWrapPage = By.xpath("//div[contains(@id, 'divContent')]//span[contains(@class, 'innerWrap')][(text()=\"" + sNewPageName + "\")]/parent::span/parent::a");
+                waitForElement(innerWrapPage);
+                item = true;
+            } else {
+                innerWrapPage = By.xpath("//div[contains(@id, 'divContent')]//span[contains(@class, 'innerWrap')][(text()=\"" + parent_page + "\")]/parent::span/parent::a");
+                waitForElement(innerWrapPage);
+                findElement(innerWrapPage).click();
+                newPageLbl = By.xpath("//td[contains(@class, 'DataGridItemBorder')][contains(@style, \'padding-left\')][contains(text(), \'" + sNewPageName + "\')]");
+                waitForElement(newPageLbl);
+                item = true;
+            }
         } catch (ElementNotFoundException e1) {
         } catch (ElementNotVisibleException e2) {
         } catch (TimeoutException e3) {
         } catch (Exception e3) {
+        }
+
+        return item;
+    }
+
+    public Boolean setupAsDeletedPage(String pageName) throws InterruptedException {
+        boolean item = false;
+        JSONParser parser = new JSONParser();
+
+        try {
+            JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sNewPagesJson));
+
+            String sItemID = JsonPath.read(jsonObject, "$.['"+pageName+"'].url_query.ItemID");
+            String sLanguageId = JsonPath.read(jsonObject, "$.['"+pageName+"'].url_query.LanguageId");
+            String sSectionId = JsonPath.read(jsonObject, "$.['"+pageName+"'].url_query.SectionId");
+
+            System.out.println("Domain: "+desktopUrl.toString());
+            System.out.println("ItemID: "+sItemID);
+            System.out.println("LanguageId: "+sLanguageId);
+            System.out.println("SectionId: "+sSectionId);
+
+            driver.get(desktopUrl.toString()+"default.aspx?ItemID="+sItemID+"&LanguageId="+sLanguageId+"&SectionId="+sSectionId);
+            Thread.sleep(DEFAULT_PAUSE);
+
+            https://chicagotest.s1.q4web.release/admin/default.aspx?ItemID=eb0f7fdc-3054-46ff-9713-176e0c38eb49&LanguageId=1&SectionId=f6d80133-c225-4a4e-aa62-d96e8cb2ac66
+
+            item = true;
+        }  catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
 
         return item;

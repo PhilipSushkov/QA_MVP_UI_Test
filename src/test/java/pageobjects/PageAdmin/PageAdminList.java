@@ -147,23 +147,17 @@ public class PageAdminList extends AbstractPageObject {
 
                     // Create JSON object for Pages
                     JSONParser parser = new JSONParser();
-                    Object obj;
                     JSONObject jsonObject = new JSONObject();
                     JSONObject mmjson = new JSONObject();
 
                     // Create JSON object for Modules
-                    JSONParser parserModule = new JSONParser();
-                    Object objModule;
                     JSONObject jsonObjectModule = new JSONObject();
 
                     // Add values to JSON file
                     try {
                         try {
-                            obj = parser.parse(new FileReader(sPathToFile + sDataFilePagesJson));
-                            jsonObject = (JSONObject) obj;
-
-                            objModule = parserModule.parse(new FileReader(sPathToFile + sDataFileModulesJson));
-                            jsonObjectModule = (JSONObject) objModule;
+                            jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFilePagesJson));
+                            jsonObjectModule = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFileModulesJson));
                         } catch (ParseException e) {
                         }
 
@@ -346,8 +340,7 @@ public class PageAdminList extends AbstractPageObject {
         String urlPage = null;
 
         try {
-            Object obj = parser.parse(new FileReader(sPathToFile + sDataFilePagesJson));
-            JSONObject jsonObject = (JSONObject) obj;
+            JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFilePagesJson));
             urlPage = JsonPath.read(jsonObject, "$."+searchPhrase+".you_page_url");
             String itemID = JsonPath.read(jsonObject, "$."+searchPhrase+".url_query.ItemID");
             System.out.println(itemID);

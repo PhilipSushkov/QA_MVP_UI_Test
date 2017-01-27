@@ -48,12 +48,11 @@ public class CheckPageAdd extends AbstractSpec {
         sNewPagesJson = propUIPageAdmin.getProperty("json_NewPagesData");
 
         parser = new JSONParser();
-        Functions.ClearJSONfile(sPathToFile + sNewPagesJson);
 
         loginPage.loginUser();
     }
 
-    @Test(dataProvider="pageData")
+    @Test(dataProvider="pageData", priority=1)
     public void checkAddPage(String pageName) throws Exception {
         String workflowState = "In Progress";
         dashboard.openPageFromCommonTasks(pageAdminMenuButton);
@@ -63,15 +62,21 @@ public class CheckPageAdd extends AbstractSpec {
         Assert.assertTrue(pageAdd.publicNewPage(), "Public site shouldn't show the content of New Page when it is not published yet");
 
         dashboard.openPageFromCommonTasks(pageAdminMenuButton);
-        Assert.assertTrue(pageAdd.listNewPage(), "New Page isn't found on Pablic Page List");
+        Assert.assertTrue(pageAdd.listNewPage(), "New Page isn't found on Public Page List");
+    }
+
+    @Test(dataProvider="pageData", priority=2)
+    public void checkDeletePage(String pageName) throws Exception {
+        dashboard.openPageFromCommonTasks(pageAdminMenuButton);
+
+        Assert.assertTrue(pageAdd.setupAsDeletedPage(pageName), "New Page didn't setup as Deleted properly");
     }
 
     @DataProvider
     public Object[][] pageData() {
 
         try {
-            Object obj = parser.parse(new FileReader(sPathToFile + sDataFileJson));
-            JSONObject jsonObject = (JSONObject) obj;
+            JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFileJson));
             JSONArray pageData = (JSONArray) jsonObject.get("page_names");
             Object[][] pageName = new Object[pageData.size()][1];
 
@@ -97,6 +102,7 @@ public class CheckPageAdd extends AbstractSpec {
     @AfterTest
     public void tearDown() {
         //dashboard.logoutFromAdmin();
+        //Functions.ClearJSONfile(sPathToFile + sNewPagesJson);
         driver.quit();
     }
 
