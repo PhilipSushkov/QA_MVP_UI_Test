@@ -12,6 +12,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.openqa.selenium.*;
 import pageobjects.AbstractPageObject;
@@ -26,7 +27,7 @@ public class PageAdd extends AbstractPageObject {
     private static By addNewBtn, backBtn, sectionTitleInput, pageTypeInternalRd, pageTypeExternalRd, externalURLInput;
     private static By pageTemplateSelect, parentPageSelect, showNavChk, openNewWindChk, saveBtn, workflowStateSpan;
     private static By revertBtn, parentUrlSpan, seoNameInput, previewLnk, breadcrumbDiv;
-    private static String sPathToFile, sDataFileJson, sNewPagesJson, sNewPageName, you_page_url, parent_page;
+    private static String sPathToFile, sDataFileJson, sDataFilePagesJson, sNewPageName, you_page_url, parent_page;
     private static JSONParser parser;
     private static final long DEFAULT_PAUSE = 1500;
 
@@ -52,13 +53,13 @@ public class PageAdd extends AbstractPageObject {
 
         sPathToFile = System.getProperty("user.dir") + propUIPageAdmin.getProperty("dataPath_PageAdmin");
         sDataFileJson = propUIPageAdmin.getProperty("json_CreatePageData");
-        sNewPagesJson = propUIPageAdmin.getProperty("json_NewPagesData");
+        sDataFilePagesJson = propUIPageAdmin.getProperty("json_PagesProp");
+        //sNewPagesJson = propUIPageAdmin.getProperty("json_NewPagesData");
 
         parser = new JSONParser();
     }
 
     public String createNewPage(String pageName) throws InterruptedException {
-        //int randNum = Functions.randInt(0, 999);
 
         waitForElement(addNewBtn);
         findElement(addNewBtn).click();
@@ -68,7 +69,6 @@ public class PageAdd extends AbstractPageObject {
             JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFileJson));
             JSONObject pagesDataObj = (JSONObject) jsonObject.get(pageName);
 
-            //sNewPageName = pagesDataObj.get("section_title").toString() + randNum;
             sNewPageName = pageName;
 
             findElement(sectionTitleInput).sendKeys(sNewPageName);
@@ -127,14 +127,18 @@ public class PageAdd extends AbstractPageObject {
 
             // Write page parameters to json
             JSONObject jsonObjectNew = new JSONObject();
-            JSONArray list = new JSONArray();
+            JSONArray pageNamesArray = new JSONArray();
+            JSONArray pagesArray = new JSONArray();
+            JSONObject pageObj = new JSONObject();
+
             try {
-                jsonObjectNew = (JSONObject) parser.parse(new FileReader(sPathToFile + sNewPagesJson));
-                list = (JSONArray) jsonObjectNew.get("new_page_names");
+                jsonObjectNew = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFilePagesJson));
+                pageNamesArray = (JSONArray) jsonObjectNew.get("page_names");
+                pagesArray = (JSONArray) jsonObjectNew.get("pages");
             } catch (ParseException e) {
             }
 
-            list.add(sNewPageName);
+            pageNamesArray.add(sNewPageName);
 
             JSONObject page = new JSONObject();
             you_page_url = findElement(parentUrlSpan).getText() + findElement(seoNameInput).getAttribute("value");
@@ -148,12 +152,13 @@ public class PageAdd extends AbstractPageObject {
             }
             page.put("url_query", jsonURLQuery);
 
-            FileWriter file = new FileWriter(sPathToFile + sNewPagesJson);
+            FileWriter file = new FileWriter(sPathToFile + sDataFilePagesJson);
 
-            jsonObjectNew.put("new_page_names", list);
-            jsonObjectNew.put(sNewPageName, page);
+            pageObj.put(sNewPageName, page);
+            pagesArray.add(pageObj);
+            jsonObjectNew.put("page_names", pageNamesArray);
 
-            file.write(jsonObjectNew.toJSONString());
+            file.write(jsonObjectNew.toJSONString().replace("\\", ""));
             file.flush();
 
             return findElement(workflowStateSpan).getText();
@@ -249,21 +254,21 @@ public class PageAdd extends AbstractPageObject {
         JSONParser parser = new JSONParser();
 
         try {
-            JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sNewPagesJson));
+            JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFilePagesJson));
 
-            String sItemID = JsonPath.read(jsonObject, "$.['"+pageName+"'].url_query.ItemID");
-            String sLanguageId = JsonPath.read(jsonObject, "$.['"+pageName+"'].url_query.LanguageId");
-            String sSectionId = JsonPath.read(jsonObject, "$.['"+pageName+"'].url_query.SectionId");
+            List<String>  sItemID = JsonPath.read(jsonObject, "$.pages[*].['"+pageName+"'].url_query.ItemID");
+            List<String>  sLanguageId = JsonPath.read(jsonObject, "$.pages[*].['"+pageName+"'].url_query.LanguageId");
+            List<String>  sSectionId = JsonPath.read(jsonObject, "$.pages[*].['"+pageName+"'].url_query.SectionId");
 
+            /*
             System.out.println("Domain: "+desktopUrl.toString());
-            System.out.println("ItemID: "+sItemID);
-            System.out.println("LanguageId: "+sLanguageId);
-            System.out.println("SectionId: "+sSectionId);
+            System.out.println("ItemID: "+sItemID.get(0));
+            System.out.println("LanguageId: "+sLanguageId.get(0));
+            System.out.println("SectionId: "+sSectionId.get(0));
+            */
 
-            driver.get(desktopUrl.toString()+"default.aspx?ItemID="+sItemID+"&LanguageId="+sLanguageId+"&SectionId="+sSectionId);
+            driver.get(desktopUrl.toString()+"default.aspx?ItemID="+sItemID.get(0)+"&LanguageId="+sLanguageId.get(0)+"&SectionId="+sSectionId.get(0));
             Thread.sleep(DEFAULT_PAUSE);
-
-            https://chicagotest.s1.q4web.release/admin/default.aspx?ItemID=eb0f7fdc-3054-46ff-9713-176e0c38eb49&LanguageId=1&SectionId=f6d80133-c225-4a4e-aa62-d96e8cb2ac66
 
             item = true;
         }  catch (FileNotFoundException e) {

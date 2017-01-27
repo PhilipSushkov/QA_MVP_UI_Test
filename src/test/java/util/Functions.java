@@ -155,8 +155,19 @@ public class Functions {
     }
 
     public static void WriteArrayToJSON(String[] args, String sPathToFile, String sArrayName) {
+        JSONParser parser = new JSONParser();
         JSONObject obj = new JSONObject();
         JSONArray list = new JSONArray();
+
+        try {
+            obj = (JSONObject) parser.parse(new FileReader(sPathToFile));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         for (int i=0; i<args.length; i++) {
             list.add(args[i]);
@@ -170,11 +181,11 @@ public class Functions {
             file.flush();
             file.close();
 
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        //System.out.print(obj);
 
     }
 
@@ -191,7 +202,6 @@ public class Functions {
             int i = 0;
             for (Iterator<String> iterator = items.iterator(); iterator.hasNext(); i++) {
                 temp[i] = iterator.next();
-                //System.out.println(temp[i]);
             }
 
             return temp;
@@ -220,5 +230,7 @@ public class Functions {
             e.printStackTrace();
         }
     }
+
+
 
 }

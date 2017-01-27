@@ -28,7 +28,7 @@ public class PageAdminList extends AbstractPageObject {
     private static By pageTypeInternalRd, pageLayoutSelect, externalURLInput, activeChk, globalModuleSetChk;
     private static By moduleInstancesSpan, sectionTitleSpan, pageNameLbl, moduleNameLbl, editModuleImg, moduleDefinitionSelect;
     private static By workflowStateSpan;
-    private static String sSheetName, sPathToFile, sDataFile, sDataFileJson, sDataFilePagesJson, sDataFileModulesJson;
+    private static String sPathToFile, sDataFilePagesJson, sDataFileModulesJson;
     private static final long DEFAULT_PAUSE = 1500;
 
     public PageAdminList(WebDriver driver) {
@@ -61,12 +61,10 @@ public class PageAdminList extends AbstractPageObject {
         moduleDefinitionSelect = By.xpath(propUIPageAdmin.getProperty("select_ModuleDefinition"));
         workflowStateSpan = By.xpath(propUIPageAdmin.getProperty("select_WorkflowState"));
 
-        sSheetName = "PageItems";
-        sDataFileJson = propUIPageAdmin.getProperty("json_PageNames");
+        //sDataFileJson = propUIPageAdmin.getProperty("json_PageNames");
         sDataFilePagesJson = propUIPageAdmin.getProperty("json_PagesProp");
         sDataFileModulesJson = propUIPageAdmin.getProperty("json_ModulesProp");
         sPathToFile = System.getProperty("user.dir") + propUIPageAdmin.getProperty("dataPath_PageAdmin");
-        sDataFile = propUIPageAdmin.getProperty("xlsData_PageAdmin");
     }
 
     public String getTitle() {
@@ -109,9 +107,7 @@ public class PageAdminList extends AbstractPageObject {
         } catch (TimeoutException e3) {
         }
 
-        //System.out.println(sPathToFile + sDataFile);
-        //Functions.WriteExcelSheet(sSheetName, sa1, sPathToFile + sDataFile);
-        Functions.WriteArrayToJSON(sa2, sPathToFile + sDataFileJson, "page_names");
+        Functions.WriteArrayToJSON(sa2, sPathToFile + sDataFilePagesJson, "page_names");
         return pageItems;
     }
 
@@ -120,11 +116,11 @@ public class PageAdminList extends AbstractPageObject {
         By innerWrapPage;
         String[] sa2;
         int i, j;
-        String itemID=null, sectionTitle=null, itemIDModule=null, you_page_url=null;
+        String itemID=null, sectionTitle, itemIDModule=null, you_page_url;
 
-        sa2 = Functions.ReadArrayFromJSON(sPathToFile + sDataFileJson, "page_names");
+        sa2 = Functions.ReadArrayFromJSON(sPathToFile + sDataFilePagesJson, "page_names");
 
-        Functions.ClearJSONfile(sPathToFile + sDataFilePagesJson);
+        //Functions.ClearJSONfile(sPathToFile + sDataFilePagesJson);
         Functions.ClearJSONfile(sPathToFile + sDataFileModulesJson);
 
         try {
@@ -148,6 +144,8 @@ public class PageAdminList extends AbstractPageObject {
                     // Create JSON object for Pages
                     JSONParser parser = new JSONParser();
                     JSONObject jsonObject = new JSONObject();
+                    JSONArray pagesArray = new JSONArray();
+                    JSONObject pageObj = new JSONObject();
                     JSONObject mmjson = new JSONObject();
 
                     // Create JSON object for Modules
@@ -157,12 +155,12 @@ public class PageAdminList extends AbstractPageObject {
                     try {
                         try {
                             jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFilePagesJson));
+                            pagesArray = (JSONArray) jsonObject.get("pages");
                             jsonObjectModule = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFileModulesJson));
                         } catch (ParseException e) {
                         }
 
                         URL pageURL = new URL(getUrl());
-                        //System.out.println(pageURL.getQuery());
 
                         String[] params = pageURL.getQuery().split("&");
                         JSONObject jsonURLQuery = new JSONObject();
@@ -170,7 +168,6 @@ public class PageAdminList extends AbstractPageObject {
                         for (String param : params) {
                             jsonURLQuery.put(param.split("=")[0], param.split("=")[1]);
 
-                            //System.out.println(param.split("=")[0]);
                             if (param.split("=")[0].equals("ItemID")) {
                                 itemID = param.split("=")[1];
                             }
@@ -193,7 +190,6 @@ public class PageAdminList extends AbstractPageObject {
                             findElement(switchBtn).click();
                             Thread.sleep(DEFAULT_PAUSE);
 
-                            //System.out.println(new Select(driver.findElement(pageLayoutSelect)).getFirstSelectedOption().getText());
                         } else if (Boolean.parseBoolean(findElement(pageTypeExternalRd).getAttribute("checked"))) {
                             mmjson.put("page_type", "External");
                             mmjson.put("external_url", findElement(externalURLInput).getAttribute("value"));
@@ -211,7 +207,6 @@ public class PageAdminList extends AbstractPageObject {
                         globalModuleLabels = findElements(globalModuleSetLbl);
                         for (WebElement globalModuleInput : globalModuleInputs) {
                             if (Boolean.parseBoolean(globalModuleInput.getAttribute("checked"))) {
-                                //System.out.println(globalModuleLabels.get(j).getText());
                                 globalModuleSettings.add(globalModuleLabels.get(j).getText());
                             }
                             j++;
@@ -234,13 +229,10 @@ public class PageAdminList extends AbstractPageObject {
                         // Open Module pages
                         List<WebElement> modulePages;
                         modulePages = findElements(moduleInstancesSpan);
-                        //System.out.println(" --- " + findElement(sectionTitleInput).getAttribute("value") + " modules start --- ");
+
                         for (int moduleNum=0; moduleNum<modulePages.size(); moduleNum++) {
-                            //System.out.println(findElements(moduleNameLbl).get(moduleNum).getText());
                             findElements(editModuleImg).get(moduleNum).click();
                             waitForElement(backBtn);
-
-                            //System.out.println(new Select(driver.findElement(moduleDefinitionSelect)).getFirstSelectedOption().getText());
 
                             JSONObject pageParameters = new JSONObject();
                             pageParameters.put("section_title", sectionTitle);
@@ -250,7 +242,6 @@ public class PageAdminList extends AbstractPageObject {
                             mmjsonModule.put(itemID, pageParameters);
 
                             URL pageURLModule = new URL(getUrl());
-                            //System.out.println(pageURL.getQuery());
 
                             String[] paramModules = pageURLModule.getQuery().split("&");
                             JSONObject jsonURLQueryModule = new JSONObject();
@@ -258,7 +249,6 @@ public class PageAdminList extends AbstractPageObject {
                             for (String paramparamModule : paramModules) {
                                 jsonURLQueryModule.put(paramparamModule.split("=")[0], paramparamModule.split("=")[1]);
 
-                                //System.out.println(paramparamModule.split("=")[0]);
                                 if (paramparamModule.split("=")[0].equals("ItemID")) {
                                     itemIDModule = paramparamModule.split("=")[1];
                                 }
@@ -273,7 +263,6 @@ public class PageAdminList extends AbstractPageObject {
 
                             findElement(backBtn).click();
                         }
-                        //System.out.println(" --- " + findElement(sectionTitleInput).getAttribute("value") + " modules end --- ");
                         // ----------------------------------------------------
 
                         // Save Sub Pages list
@@ -282,16 +271,15 @@ public class PageAdminList extends AbstractPageObject {
                         j = 0;
                         subPagesSpans = findElements(sectionTitleSpan);
                         for (WebElement subPagesSpan : subPagesSpans) {
-                            //System.out.println(subPagesSpan.getText());
                             subPagesList.add(subPagesSpan.getText());
                             j++;
                         }
                         mmjson.put("subpages", subPagesList);
 
-                        jsonObject.remove(itemID);
-                        jsonObject.put(itemID, mmjson);
+                        pageObj.put(sectionTitle, mmjson);
 
-                        //System.out.println(obj.toString());
+                        pagesArray.add(pageObj);
+                        jsonObject.put("pages", pagesArray);
 
                         FileWriter file = new FileWriter(sPathToFile + sDataFilePagesJson);
                         file.write(jsonObject.toJSONString().replace("\\", ""));
