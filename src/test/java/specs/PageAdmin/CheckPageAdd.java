@@ -55,6 +55,7 @@ public class CheckPageAdd extends AbstractSpec {
     @Test(dataProvider="pageData", priority=1)
     public void checkAddPage(String pageName) throws Exception {
         String workflowState = "In Progress";
+
         dashboard.openPageFromCommonTasks(pageAdminMenuButton);
 
         Assert.assertEquals(pageAdd.createNewPage(pageName), workflowState, "New Page didn't create properly");
@@ -67,9 +68,11 @@ public class CheckPageAdd extends AbstractSpec {
 
     @Test(dataProvider="pageData", priority=2)
     public void checkDeletePage(String pageName) throws Exception {
+        String currentContent = "Delete Pending";
         dashboard.openPageFromCommonTasks(pageAdminMenuButton);
 
-        Assert.assertTrue(pageAdd.setupAsDeletedPage(pageName), "New Page didn't setup as Deleted properly");
+        Assert.assertEquals(pageAdd.setupAsDeletedPage(pageName), currentContent, "New Page didn't setup as Deleted properly");
+        Assert.assertTrue(pageAdd.removePage(pageName), "Couldn't remove New Page. Something went wrong.");
     }
 
     @DataProvider

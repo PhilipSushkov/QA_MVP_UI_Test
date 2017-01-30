@@ -235,6 +235,7 @@ public class Functions {
         for (int i=0; i<jsonArr.size(); i++) {
             if (jsonArr.get(i).toString().contains(item)) {
                 jsonArr.remove(i);
+                i--;
             }
         }
         return jsonArr;
