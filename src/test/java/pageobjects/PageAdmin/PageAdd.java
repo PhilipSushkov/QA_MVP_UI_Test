@@ -27,6 +27,7 @@ public class PageAdd extends AbstractPageObject {
     private static By addNewBtn, backBtn, sectionTitleInput, pageTypeInternalRd, pageTypeExternalRd, externalURLInput, publishBtn;
     private static By pageTemplateSelect, parentPageSelect, showNavChk, openNewWindChk, saveBtn, workflowStateSpan, currentContentSpan;
     private static By revertBtn, parentUrlSpan, seoNameInput, previewLnk, breadcrumbDiv, commentsTxt, deleteBtn, addNewInput;
+    private static By saveAndSubmitBtn;
     private static String sPathToFile, sDataFileJson, sDataFilePagesJson, sNewPageName, you_page_url, parent_page;
     private static JSONParser parser;
     private static final long DEFAULT_PAUSE = 2500;
@@ -57,6 +58,7 @@ public class PageAdd extends AbstractPageObject {
         deleteBtn = By.xpath(propUIPageAdmin.getProperty("btn_Delete"));
         publishBtn = By.xpath(propUIPageAdmin.getProperty("btn_Publish"));
         backBtn = By.xpath(propUIPageAdmin.getProperty("btn_Back"));
+        saveAndSubmitBtn = By.xpath(propUIPageAdmin.getProperty("btn_SaveAndSubmit"));
 
         sPathToFile = System.getProperty("user.dir") + propUIPageAdmin.getProperty("dataPath_PageAdmin");
         sDataFileJson = propUIPageAdmin.getProperty("json_CreatePageData");
@@ -65,16 +67,14 @@ public class PageAdd extends AbstractPageObject {
         parser = new JSONParser();
     }
 
-    public String createNewPage(JSONObject pagesDataObj) throws InterruptedException {
-        String state = null;
+    public String createNewPage(JSONObject pagesDataObj, String pageName) throws InterruptedException {
 
         waitForElement(addNewBtn);
         findElement(addNewBtn).click();
         waitForElement(backBtn);
+        sNewPageName = pageName;
 
         try {
-            sNewPageName = pagesDataObj.get("section_title").toString();
-
             findElement(sectionTitleInput).sendKeys(sNewPageName);
 
             if (pagesDataObj.get("page_type").toString().equals("Internal")) {
@@ -162,7 +162,7 @@ public class PageAdd extends AbstractPageObject {
             e1.printStackTrace();
         }
 
-        return state;
+        return null;
 
     }
 
@@ -242,18 +242,55 @@ public class PageAdd extends AbstractPageObject {
         return item;
     }
 
-    public String setupAsDeletedPage(String pageName) throws InterruptedException {
-        String state = null;
+
+    public String saveAdnSubmitNewPage(JSONObject pagesDataObj, String pageName) throws InterruptedException {
         JSONParser parser = new JSONParser();
 
         try {
             JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFilePagesJson));
 
-            String  sItemID = JsonPath.read(jsonObject, "$.['"+pageName+"'].url_query.ItemID");
-            String  sLanguageId = JsonPath.read(jsonObject, "$.['"+pageName+"'].url_query.LanguageId");
-            String  sSectionId = JsonPath.read(jsonObject, "$.['"+pageName+"'].url_query.SectionId");
+            String pageUrl = getPageUrl(jsonObject, pageName);
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
 
-            driver.get(desktopUrl.toString()+"default.aspx?ItemID="+sItemID+"&LanguageId="+sLanguageId+"&SectionId="+sSectionId);
+            waitForElement(commentsTxt);
+            findElement(commentsTxt).sendKeys(pagesDataObj.get("comment").toString());
+            findElement(saveAndSubmitBtn).click();
+            Thread.sleep(DEFAULT_PAUSE);
+
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+
+            JSONObject pageObj = (JSONObject) jsonObject.get(pageName);
+
+            pageObj.put("workflow_state", "For Approval");
+            pageObj.put("deleted", "false");
+
+            jsonObject.put(pageName, pageObj);
+
+            FileWriter file = new FileWriter(sPathToFile + sDataFilePagesJson);
+            file.write(jsonObject.toJSONString().replace("\\", ""));
+            file.flush();
+
+            return findElement(workflowStateSpan).getText();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+
+    public String setupAsDeletedPage(String pageName) throws InterruptedException {
+        JSONParser parser = new JSONParser();
+
+        try {
+            JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFilePagesJson));
+
+            String pageUrl = getPageUrl(jsonObject, pageName);
+            driver.get(pageUrl);
             Thread.sleep(DEFAULT_PAUSE);
 
             waitForElement(commentsTxt);
@@ -263,7 +300,7 @@ public class PageAdd extends AbstractPageObject {
             Thread.sleep(DEFAULT_PAUSE);
 
             waitForElement(addNewInput);
-            driver.get(desktopUrl.toString()+"default.aspx?ItemID="+sItemID+"&LanguageId="+sLanguageId+"&SectionId="+sSectionId);
+            driver.get(pageUrl);
             waitForElement(currentContentSpan);
 
             JSONObject pageObj = (JSONObject) jsonObject.get(pageName);
@@ -286,21 +323,18 @@ public class PageAdd extends AbstractPageObject {
             e.printStackTrace();
         }
 
-        return state;
+        return null;
     }
 
 
     public String removePage(String pageName) throws InterruptedException {
-
         try {
             JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFilePagesJson));
             JSONArray pageNamesArray = (JSONArray) jsonObject.get("page_names");
 
-            String  sItemID = JsonPath.read(jsonObject, "$.['"+pageName+"'].url_query.ItemID");
-            String  sLanguageId = JsonPath.read(jsonObject, "$.['"+pageName+"'].url_query.LanguageId");
-            String  sSectionId = JsonPath.read(jsonObject, "$.['"+pageName+"'].url_query.SectionId");
-
-            driver.get(desktopUrl.toString()+"default.aspx?ItemID="+sItemID+"&LanguageId="+sLanguageId+"&SectionId="+sSectionId);
+            String pageUrl = getPageUrl(jsonObject, pageName);
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
 
             if (findElement(currentContentSpan).getText().equals("Delete Pending")) {
 
@@ -310,7 +344,7 @@ public class PageAdd extends AbstractPageObject {
 
                 Thread.sleep(DEFAULT_PAUSE);
 
-                driver.get(desktopUrl.toString()+"default.aspx?ItemID="+sItemID+"&LanguageId="+sLanguageId+"&SectionId="+sSectionId);
+                driver.get(pageUrl);
                 Thread.sleep(DEFAULT_PAUSE);
 
                 Functions.RemoveArrayItem(pageNamesArray, pageName);
@@ -334,4 +368,12 @@ public class PageAdd extends AbstractPageObject {
         return null;
     }
 
+    public String getPageUrl (JSONObject obj, String pageName) {
+
+        String  sItemID = JsonPath.read(obj, "$.['"+pageName+"'].url_query.ItemID");
+        String  sLanguageId = JsonPath.read(obj, "$.['"+pageName+"'].url_query.LanguageId");
+        String  sSectionId = JsonPath.read(obj, "$.['"+pageName+"'].url_query.SectionId");
+
+        return desktopUrl.toString()+"default.aspx?ItemID="+sItemID+"&LanguageId="+sLanguageId+"&SectionId="+sSectionId;
+    }
 }

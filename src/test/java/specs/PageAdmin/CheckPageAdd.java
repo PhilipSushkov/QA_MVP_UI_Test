@@ -54,16 +54,23 @@ public class CheckPageAdd extends AbstractSpec {
 
     @Test(dataProvider="pageData", priority=1)
     public void checkAddPage(JSONObject page) throws Exception {
-        String workflowState = "In Progress";
+        String workflowStateProgress = "In Progress";
+        String workflowStateApproval = "For Approval";
+        String workflowStateLive = "Live";
+        String pageName = page.get("section_title").toString();
 
         dashboard.openPageFromCommonTasks(pageAdminMenuButton);
 
-        Assert.assertEquals(pageAdd.createNewPage(page), workflowState, "New Page didn't create properly");
+        /*
+        Assert.assertEquals(pageAdd.createNewPage(page, pageName), workflowStateProgress, "New Page didn't create properly");
         Assert.assertTrue(pageAdd.previewNewPage(), "Preview of New Page didn't work properly");
         Assert.assertTrue(pageAdd.publicNewPage(), "Public site shouldn't show the content of New Page when it is not published yet");
 
         dashboard.openPageFromCommonTasks(pageAdminMenuButton);
         Assert.assertTrue(pageAdd.listNewPage(), "New Page isn't found on Public Page List");
+        */
+
+        Assert.assertEquals(pageAdd.saveAdnSubmitNewPage(page, pageName), workflowStateApproval, "Couldn't submit New Page");
     }
 
     @Test(dataProvider="pageData", priority=2)

@@ -61,7 +61,6 @@ public class PageAdminList extends AbstractPageObject {
         moduleDefinitionSelect = By.xpath(propUIPageAdmin.getProperty("select_ModuleDefinition"));
         workflowStateSpan = By.xpath(propUIPageAdmin.getProperty("select_WorkflowState"));
 
-        //sDataFileJson = propUIPageAdmin.getProperty("json_PageNames");
         sDataFilePagesJson = propUIPageAdmin.getProperty("json_PagesProp");
         sDataFileModulesJson = propUIPageAdmin.getProperty("json_ModulesProp");
         sPathToFile = System.getProperty("user.dir") + propUIPageAdmin.getProperty("dataPath_PageAdmin");
@@ -95,7 +94,6 @@ public class PageAdminList extends AbstractPageObject {
 
                 for (WebElement element:elements)
                 {
-                    //System.out.println(element.getText());
                     i++;
                     sa1[i][0] = Integer.toString(i);
                     sa1[i][1] = element.getText();
@@ -217,7 +215,6 @@ public class PageAdminList extends AbstractPageObject {
                         j = 0;
                         moduleSpans = findElements(moduleInstancesSpan);
                         for (WebElement moduleSpan : moduleSpans) {
-                            //System.out.println(moduleSpan.getText());
                             moduleList.add(moduleSpan.getText());
                             j++;
                         }
