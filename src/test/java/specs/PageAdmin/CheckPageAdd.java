@@ -14,8 +14,8 @@ import org.openqa.selenium.By;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.LoginPage.LoginPage;
 import pageobjects.PageAdmin.PageAdd;
+import pageobjects.PageAdmin.WorkflowState;
 import specs.AbstractSpec;
-import util.Functions;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -54,29 +54,28 @@ public class CheckPageAdd extends AbstractSpec {
 
     @Test(dataProvider="pageData", priority=1)
     public void checkAddPage(JSONObject page) throws Exception {
-        String workflowStateProgress = "In Progress";
-        String workflowStateApproval = "For Approval";
-        String workflowStateLive = "Live";
+        String stateProgress = WorkflowState.IN_PROGRESS.state();
+        String stateApproval = WorkflowState.FOR_APPROVAL.state();
+        String stateLive = WorkflowState.LIVE.state();
         String pageName = page.get("section_title").toString();
 
         dashboard.openPageFromCommonTasks(pageAdminMenuButton);
 
-        /*
-        Assert.assertEquals(pageAdd.createNewPage(page, pageName), workflowStateProgress, "New Page didn't create properly");
+        Assert.assertEquals(pageAdd.createNewPage(page, pageName), stateProgress, "New Page didn't create properly");
         Assert.assertTrue(pageAdd.previewNewPage(), "Preview of New Page didn't work properly");
         Assert.assertTrue(pageAdd.publicNewPage(), "Public site shouldn't show the content of New Page when it is not published yet");
 
         dashboard.openPageFromCommonTasks(pageAdminMenuButton);
         Assert.assertTrue(pageAdd.listNewPage(), "New Page isn't found on Public Page List");
-        */
 
-        Assert.assertEquals(pageAdd.saveAdnSubmitNewPage(page, pageName), workflowStateApproval, "Couldn't submit New Page");
+        Assert.assertEquals(pageAdd.saveAndSubmitNewPage(page, pageName), stateApproval, "Couldn't submit New Page");
+        Assert.assertEquals(pageAdd.publishNewPage(pageName), stateLive, "Couldn't publish New Page properly");
     }
 
     @Test(dataProvider="pageData", priority=2)
     public void checkDeletePage(JSONObject page) throws Exception {
-        String currentContent = "Delete Pending";
-        String workflowState = "New Item";
+        String currentContent = WorkflowState.DELETE_PENDING.state();
+        String workflowState = WorkflowState.NEW_ITEM.state();
         String pageName = page.get("section_title").toString();
 
         dashboard.openPageFromCommonTasks(pageAdminMenuButton);

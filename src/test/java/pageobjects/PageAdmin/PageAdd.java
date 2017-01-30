@@ -15,6 +15,7 @@ import java.util.ArrayList;
 
 import org.openqa.selenium.*;
 import pageobjects.AbstractPageObject;
+import pageobjects.PageAdmin.WorkflowState;
 import util.Functions;
 
 import static specs.AbstractSpec.desktopUrl;
@@ -139,7 +140,7 @@ public class PageAdd extends AbstractPageObject {
             you_page_url = findElement(parentUrlSpan).getText() + findElement(seoNameInput).getAttribute("value");
             page.put("your_page_url", you_page_url);
 
-            page.put("workflow_state", "In Progress");
+            page.put("workflow_state", WorkflowState.IN_PROGRESS.state());
 
             URL pageURL = new URL(getUrl());
             String[] params = pageURL.getQuery().split("&");
@@ -243,9 +244,7 @@ public class PageAdd extends AbstractPageObject {
     }
 
 
-    public String saveAdnSubmitNewPage(JSONObject pagesDataObj, String pageName) throws InterruptedException {
-        JSONParser parser = new JSONParser();
-
+    public String saveAndSubmitNewPage(JSONObject pagesDataObj, String pageName) throws InterruptedException {
         try {
             JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFilePagesJson));
 
@@ -263,7 +262,44 @@ public class PageAdd extends AbstractPageObject {
 
             JSONObject pageObj = (JSONObject) jsonObject.get(pageName);
 
-            pageObj.put("workflow_state", "For Approval");
+            pageObj.put("workflow_state", WorkflowState.FOR_APPROVAL.state());
+            pageObj.put("deleted", "false");
+
+            jsonObject.put(pageName, pageObj);
+
+            FileWriter file = new FileWriter(sPathToFile + sDataFilePagesJson);
+            file.write(jsonObject.toJSONString().replace("\\", ""));
+            file.flush();
+
+            return findElement(workflowStateSpan).getText();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+
+    public String publishNewPage(String pageName) throws InterruptedException {
+        try {
+            JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFilePagesJson));
+
+            String pageUrl = getPageUrl(jsonObject, pageName);
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+
+            waitForElement(publishBtn);
+            findElement(publishBtn).click();
+            Thread.sleep(DEFAULT_PAUSE);
+
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+
+            JSONObject pageObj = (JSONObject) jsonObject.get(pageName);
+
+            pageObj.put("workflow_state", WorkflowState.LIVE.state());
             pageObj.put("deleted", "false");
 
             jsonObject.put(pageName, pageObj);
@@ -284,8 +320,6 @@ public class PageAdd extends AbstractPageObject {
 
 
     public String setupAsDeletedPage(String pageName) throws InterruptedException {
-        JSONParser parser = new JSONParser();
-
         try {
             JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFilePagesJson));
 
@@ -305,7 +339,7 @@ public class PageAdd extends AbstractPageObject {
 
             JSONObject pageObj = (JSONObject) jsonObject.get(pageName);
 
-            pageObj.put("workflow_state", "For Approval");
+            pageObj.put("workflow_state", WorkflowState.FOR_APPROVAL.state());
             pageObj.put("deleted", "true");
 
             jsonObject.put(pageName, pageObj);
@@ -336,7 +370,7 @@ public class PageAdd extends AbstractPageObject {
             driver.get(pageUrl);
             Thread.sleep(DEFAULT_PAUSE);
 
-            if (findElement(currentContentSpan).getText().equals("Delete Pending")) {
+            if (findElement(currentContentSpan).getText().equals(WorkflowState.DELETE_PENDING.state())) {
 
                 waitForElement(commentsTxt);
                 findElement(commentsTxt).sendKeys("Approving the page removal");
