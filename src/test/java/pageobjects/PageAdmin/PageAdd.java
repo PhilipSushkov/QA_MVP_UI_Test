@@ -12,7 +12,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 
 import org.openqa.selenium.*;
 import pageobjects.AbstractPageObject;
@@ -30,12 +29,12 @@ public class PageAdd extends AbstractPageObject {
     private static By revertBtn, parentUrlSpan, seoNameInput, previewLnk, breadcrumbDiv, commentsTxt, deleteBtn, addNewInput;
     private static String sPathToFile, sDataFileJson, sDataFilePagesJson, sNewPageName, you_page_url, parent_page;
     private static JSONParser parser;
-    private static final long DEFAULT_PAUSE = 2000;
+    private static final long DEFAULT_PAUSE = 2500;
 
     public PageAdd(WebDriver driver) {
         super(driver);
+
         addNewBtn = By.xpath(propUIPageAdmin.getProperty("btn_AddNew"));
-        backBtn = By.xpath(propUIPageAdmin.getProperty("btn_Back"));
         sectionTitleInput = By.xpath(propUIPageAdmin.getProperty("input_SectionTitle"));
         pageTypeInternalRd = By.xpath(propUIPageAdmin.getProperty("rd_PageTypeInt"));
         pageTypeExternalRd = By.xpath(propUIPageAdmin.getProperty("rd_PageTypeExt"));
@@ -44,18 +43,20 @@ public class PageAdd extends AbstractPageObject {
         parentPageSelect = By.xpath(propUIPageAdmin.getProperty("select_ParentPage"));
         showNavChk = By.xpath(propUIPageAdmin.getProperty("chk_ShowInNav"));
         openNewWindChk = By.xpath(propUIPageAdmin.getProperty("chk_OpenInNewWindow"));
-        saveBtn = By.xpath(propUIPageAdmin.getProperty("btn_Save"));
         workflowStateSpan = By.xpath(propUIPageAdmin.getProperty("select_WorkflowState"));
-        revertBtn = By.xpath(propUIPageAdmin.getProperty("btn_Revert"));
         parentUrlSpan = By.xpath(propUIPageAdmin.getProperty("span_YourPageUrl"));
         seoNameInput = By.xpath(propUIPageAdmin.getProperty("input_SeoName"));
         previewLnk = By.xpath(propUIPageAdmin.getProperty("lnk_Preview"));
         breadcrumbDiv = By.xpath(propUIPageAdmin.getProperty("div_Breadcrumb"));
         commentsTxt = By.xpath(propUIPageAdmin.getProperty("txtarea_Comments"));
-        deleteBtn = By.xpath(propUIPageAdmin.getProperty("btn_Delete"));
         addNewInput = By.xpath(propUIPageAdmin.getProperty("input_AddNew"));
         currentContentSpan = By.xpath(propUIPageAdmin.getProperty("span_CurrentContent"));
+
+        saveBtn = By.xpath(propUIPageAdmin.getProperty("btn_Save"));
+        revertBtn = By.xpath(propUIPageAdmin.getProperty("btn_Revert"));
+        deleteBtn = By.xpath(propUIPageAdmin.getProperty("btn_Delete"));
         publishBtn = By.xpath(propUIPageAdmin.getProperty("btn_Publish"));
+        backBtn = By.xpath(propUIPageAdmin.getProperty("btn_Back"));
 
         sPathToFile = System.getProperty("user.dir") + propUIPageAdmin.getProperty("dataPath_PageAdmin");
         sDataFileJson = propUIPageAdmin.getProperty("json_CreatePageData");
@@ -64,7 +65,7 @@ public class PageAdd extends AbstractPageObject {
         parser = new JSONParser();
     }
 
-    public String createNewPage(String pageName) throws InterruptedException {
+    public String createNewPage(JSONObject pagesDataObj) throws InterruptedException {
         String state = null;
 
         waitForElement(addNewBtn);
@@ -72,10 +73,7 @@ public class PageAdd extends AbstractPageObject {
         waitForElement(backBtn);
 
         try {
-            JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFileJson));
-            JSONObject pagesDataObj = (JSONObject) jsonObject.get(pageName);
-
-            sNewPageName = pageName;
+            sNewPageName = pagesDataObj.get("section_title").toString();
 
             findElement(sectionTitleInput).sendKeys(sNewPageName);
 
@@ -96,32 +94,24 @@ public class PageAdd extends AbstractPageObject {
 
             if (Boolean.parseBoolean(pagesDataObj.get("show_in_navigation").toString())) {
                 if (!Boolean.parseBoolean(findElement(showNavChk).getAttribute("checked"))) {
-                    //System.out.println("show_in_navigation - true, Show in Navigation - unchecked");
                     findElement(showNavChk).click();
                 } else {
-                    //System.out.println("show_in_navigation - true, Show in Navigation - checked");
                 }
             } else {
                 if (!Boolean.parseBoolean(findElement(showNavChk).getAttribute("checked"))) {
-                    //System.out.println("show_in_navigation - false, Show in Navigation - unchecked");
                 } else {
-                    //System.out.println("show_in_navigation - false, Show in Navigation - checked");
                     findElement(showNavChk).click();
                 }
             }
 
             if (Boolean.parseBoolean(pagesDataObj.get("open_in_new_window").toString())) {
                 if (!Boolean.parseBoolean(findElement(openNewWindChk).getAttribute("checked"))) {
-                    //System.out.println("open_in_new_window - true, Open In New Window - unchecked");
                     findElement(openNewWindChk).click();
                 } else {
-                    //System.out.println("open_in_new_window - true, Open In New Window - checked");
                 }
             } else {
                 if (!Boolean.parseBoolean(findElement(openNewWindChk).getAttribute("checked"))) {
-                    //System.out.println("open_in_new_window - false, Open In New Window - unchecked");
                 } else {
-                    //System.out.println("open_in_new_window - false, Open In New Window - checked");
                     findElement(openNewWindChk).click();
                 }
             }
@@ -170,20 +160,19 @@ public class PageAdd extends AbstractPageObject {
             e.printStackTrace();
         } catch (IOException e1) {
             e1.printStackTrace();
-        } catch (ParseException e2) {
-            e2.printStackTrace();
         }
 
         return state;
 
     }
 
+
     public Boolean previewNewPage() throws InterruptedException {
         findElement(previewLnk).click();
 
         Thread.sleep(DEFAULT_PAUSE);
 
-        ArrayList<String> tabs = new ArrayList<String> (driver.getWindowHandles());
+        ArrayList<String> tabs = new ArrayList<> (driver.getWindowHandles());
         driver.switchTo().window(tabs.get(1));
         waitForElement(breadcrumbDiv);
 
@@ -201,12 +190,13 @@ public class PageAdd extends AbstractPageObject {
 
     }
 
+
     public Boolean publicNewPage() throws InterruptedException {
         ((JavascriptExecutor)driver).executeScript("window.open();");
 
         Thread.sleep(DEFAULT_PAUSE);
 
-        ArrayList<String> tabs = new ArrayList<String> (driver.getWindowHandles());
+        ArrayList<String> tabs = new ArrayList<> (driver.getWindowHandles());
         driver.switchTo().window(tabs.get(1));
         driver.get(you_page_url);
         waitForElement(breadcrumbDiv);
@@ -224,6 +214,7 @@ public class PageAdd extends AbstractPageObject {
         }
 
     }
+
 
     public Boolean listNewPage() throws InterruptedException {
         boolean item = false;
@@ -298,7 +289,8 @@ public class PageAdd extends AbstractPageObject {
         return state;
     }
 
-    public Boolean removePage(String pageName) throws InterruptedException {
+
+    public String removePage(String pageName) throws InterruptedException {
 
         try {
             JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFilePagesJson));
@@ -328,7 +320,7 @@ public class PageAdd extends AbstractPageObject {
                 file.write(jsonObject.toJSONString().replace("\\", ""));
                 file.flush();
 
-                return true;
+                return findElement(workflowStateSpan).getText();
             }
 
         } catch (FileNotFoundException e) {
@@ -339,7 +331,7 @@ public class PageAdd extends AbstractPageObject {
             e.printStackTrace();
         }
 
-        return false;
+        return null;
     }
 
 }

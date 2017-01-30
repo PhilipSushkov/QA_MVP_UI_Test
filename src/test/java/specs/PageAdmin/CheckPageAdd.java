@@ -53,12 +53,12 @@ public class CheckPageAdd extends AbstractSpec {
     }
 
     @Test(dataProvider="pageData", priority=1)
-    public void checkAddPage(String pageName) throws Exception {
+    public void checkAddPage(JSONObject page) throws Exception {
         String workflowState = "In Progress";
 
         dashboard.openPageFromCommonTasks(pageAdminMenuButton);
 
-        Assert.assertEquals(pageAdd.createNewPage(pageName), workflowState, "New Page didn't create properly");
+        Assert.assertEquals(pageAdd.createNewPage(page), workflowState, "New Page didn't create properly");
         Assert.assertTrue(pageAdd.previewNewPage(), "Preview of New Page didn't work properly");
         Assert.assertTrue(pageAdd.publicNewPage(), "Public site shouldn't show the content of New Page when it is not published yet");
 
@@ -67,12 +67,15 @@ public class CheckPageAdd extends AbstractSpec {
     }
 
     @Test(dataProvider="pageData", priority=2)
-    public void checkDeletePage(String pageName) throws Exception {
+    public void checkDeletePage(JSONObject page) throws Exception {
         String currentContent = "Delete Pending";
+        String workflowState = "New Item";
+        String pageName = page.get("section_title").toString();
+
         dashboard.openPageFromCommonTasks(pageAdminMenuButton);
 
         Assert.assertEquals(pageAdd.setupAsDeletedPage(pageName), currentContent, "New Page didn't setup as Deleted properly");
-        Assert.assertTrue(pageAdd.removePage(pageName), "Couldn't remove New Page. Something went wrong.");
+        Assert.assertEquals(pageAdd.removePage(pageName), workflowState, "Couldn't remove New Page. Something went wrong.");
     }
 
     @DataProvider
@@ -80,31 +83,29 @@ public class CheckPageAdd extends AbstractSpec {
 
         try {
             JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFileJson));
-            JSONArray pageData = (JSONArray) jsonObject.get("page_names");
-            Object[][] pageName = new Object[pageData.size()][1];
+            JSONArray pageData = (JSONArray) jsonObject.get("pages");
+            Object[][] pages = new Object[pageData.size()][1];
 
             for (int i = 0; i < pageData.size(); i++) {
-                pageName[i][0] = (pageData.get(i)).toString();
+                pages[i][0] = pageData.get(i);
             }
 
-            return pageName;
+            return pages;
 
         }  catch (FileNotFoundException e) {
             e.printStackTrace();
-            return null;
         } catch (IOException e) {
             e.printStackTrace();
-            return null;
         } catch (ParseException e) {
             e.printStackTrace();
-            return null;
         }
 
+        return null;
     }
 
     @AfterTest
     public void tearDown() {
-        //dashboard.logoutFromAdmin();
+        dashboard.logoutFromAdmin();
         //Functions.ClearJSONfile(sPathToFile + sNewPagesJson);
         driver.quit();
     }
