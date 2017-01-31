@@ -28,7 +28,8 @@ public class HomePage extends AbstractPageObject {
     private final By emailAlerts;
     private final By investmentCalculator;
     private final By faq;
-    
+    private final By jobApplications;
+
     public HomePage(WebDriver driver) {
         super(driver);
 
@@ -49,6 +50,7 @@ public class HomePage extends AbstractPageObject {
         emailAlerts = By.linkText(propUIPublicSite.getProperty("emailAlerts"));
         investmentCalculator = By.linkText(propUIPublicSite.getProperty("investmentCalculator"));
         faq = By.linkText(propUIPublicSite.getProperty("faq"));
+        jobApplications = By.xpath("/html/body[@class='BodyBackground']//ul[@class='level2']/li[6]/a");
     }
 
     public boolean logoIsPresent(){
@@ -165,6 +167,15 @@ public class HomePage extends AbstractPageObject {
             driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
         }
         return new FAQPage(getDriver());
+    }
+
+    public JobApplicationsPage selectJobApplicationFromMenu(){
+        try {
+            findVisibleElement(jobApplications).click();
+        }catch (TimeoutException e){
+            driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
+        }
+        return new JobApplicationsPage(getDriver());
     }
 
 }

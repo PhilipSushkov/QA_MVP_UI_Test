@@ -42,8 +42,11 @@ public class Dashboard extends AbstractPageObject {
     public PreviewSiteHome previewSite() {
         waitForElement(previewSiteButton);
         findElement(previewSiteButton).click();
+        pause(1000L);
         ArrayList<String> tabs = new ArrayList<String> (driver.getWindowHandles());
+        pause(1000L);
         driver.switchTo().window(tabs.get(1));
+
         return new PreviewSiteHome(getDriver());
     }
 

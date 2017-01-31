@@ -68,7 +68,7 @@ public class CheckPublicSite extends AbstractSpec {
     public void versionNumberIsCorrect(){
         Assert.assertEquals(homePage.getVersionNumber(), Q4WebVersionNumber
                 , "Displayed version number is incorrect");
-    }
+}
 
     @Test
     public void stockChartXigniteWorks(){
@@ -133,7 +133,7 @@ public class CheckPublicSite extends AbstractSpec {
         Assert.assertEquals(stockInformationPage.getStockDayLow(), stockQuote.getDayLow().doubleValue()
                 , 0.25, "Stock intraday low isn't accurate");
         Assert.assertEquals(stockInformationPage.getStock52WeekLow(), stockQuote.getYearLow().doubleValue()
-                , 0.1, "Stock 52 week low isn't accurate");
+                , 0.25, "Stock 52 week low isn't accurate");
         Assert.assertEquals(stockInformationPage.getStockTodayOpen(), stockQuote.getOpen().doubleValue()
                 , 0.01, "Stock today's open isn't accurate");
         Assert.assertEquals(stockInformationPage.getStockPreviousClose(), stockQuote.getPreviousClose().doubleValue()
@@ -395,36 +395,36 @@ public class CheckPublicSite extends AbstractSpec {
                 , "Press release is not open.");
     }
 
-    @Test
-    public void eventsWork(){
-        // going to Events page and checking that at least one event is displayed
-        try {
-            Assert.assertTrue(homePage.selectEventsFromMenu().eventsAreDisplayed()
-                    ,"Upcoming events are not displayed.");
-        }catch (TimeoutException e){
-            driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
-        }
-        // checking that all displayed events take place today or in the future
-        Assert.assertTrue(liveEvents.allEventsAreUpcoming()
-                , "One or more events displayed are not upcoming.");
-        // clicking Past Events button and checking that at least one event is displayed and all displayed events are in the past
-        liveEvents.switchToPastEvents();
-        Assert.assertTrue(liveEvents.eventsAreDisplayed(), "Past events are not displayed.");
-        try {
-            Assert.assertTrue(liveEvents.allEventsArePast(), "One or more events displayed are not past.");
-        }catch (TimeoutException e){
-            driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
-        }
-        // opening the first event and checking that the Events Details module is displayed
-        try{
-              liveEvents.openFirstEvent();
-        }catch (TimeoutException e){
-             driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
-        }
-        try{
-            Assert.assertTrue(liveEvents.eventIsOpen(), "Event details have not been loaded.");
-        }catch (TimeoutException e)
-        {
+            @Test
+            public void eventsWork(){
+            // going to Events page and checking that at least one event is displayed
+            try {
+                Assert.assertTrue(homePage.selectEventsFromMenu().eventsAreDisplayed()
+                        ,"Upcoming events are not displayed.");
+            }catch (TimeoutException e){
+                driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
+            }
+            // checking that all displayed events take place today or in the future
+            Assert.assertTrue(liveEvents.allEventsAreUpcoming()
+                    , "One or more events displayed are not upcoming.");
+            // clicking Past Events button and checking that at least one event is displayed and all displayed events are in the past
+            liveEvents.switchToPastEvents();
+            Assert.assertTrue(liveEvents.eventsAreDisplayed(), "Past events are not displayed.");
+            try {
+                Assert.assertTrue(liveEvents.allEventsArePast(), "One or more events displayed are not past.");
+            }catch (TimeoutException e){
+                driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
+            }
+            // opening the first event and checking that the Events Details module is displayed
+            try{
+                liveEvents.openFirstEvent();
+            }catch (TimeoutException e){
+                driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
+            }
+            try{
+                Assert.assertTrue(liveEvents.eventIsOpen(), "Event details have not been loaded.");
+            }catch (TimeoutException e)
+            {
             driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
         }
     }

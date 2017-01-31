@@ -21,6 +21,7 @@ public class LivePressReleases extends AbstractPageObject{
     // elements on page of loaded press release
     private final By pressReleaseImage;
     private final By documentDownloadLink_PressRelease;
+    private final By DownloadLink;
 
     public LivePressReleases(WebDriver driver) {
         super(driver);
@@ -29,6 +30,7 @@ public class LivePressReleases extends AbstractPageObject{
         latestHeadlines_PressRelease = By.xpath(propUIPublicSite.getProperty("latestHeadlines_PressRelease"));
         pressReleaseDate = By.className(propUIPublicSite.getProperty("pressReleaseDate"));
         yearLink_PressRelease = By.className(propUIPublicSite.getProperty("yearLink_PressRelease"));
+        DownloadLink = By.xpath("//a[@id='_ctrl0_ctl45_hrefDownload']");
 
         // elements on page of loaded press release
         pressReleaseImage = By.xpath(propUIPublicSite.getProperty("pressReleaseImage"));
@@ -206,5 +208,14 @@ public class LivePressReleases extends AbstractPageObject{
 
     public boolean pressReleaseIsOpen(){
         return doesElementExist(documentDownloadLink_PressRelease) && findElement(documentDownloadLink_PressRelease).isDisplayed();
+    }
+
+    public  void ClickLatestRelease() {
+        findElement(latestHeadlines_PressRelease).click();
+
+    }
+
+    public boolean FindDownloadLink() {
+        return doesElementExist(DownloadLink) && findElement(DownloadLink).isDisplayed();
     }
 }

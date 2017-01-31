@@ -149,3 +149,5 @@ Feature: pages on public site are displayed properly
     When I click on "back to top"
     Then the page scrolls up to the top
 
+   Scenario:
+

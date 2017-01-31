@@ -110,9 +110,7 @@ public class StockInformationPage extends AbstractPageObject {
 
     // XIGNITE STOCK CHART METHODS
 
-    public boolean stockChartXigniteIsDisplayed(){
-        return doesElementExist(stockChartXignite);
-    }
+    public boolean stockChartXigniteIsDisplayed() { return doesElementExist(stockChartXignite); }
 
     public void switchChartXigniteTo1Month(){
         findElements(timeRangeButtonXignite).get(0).click();
