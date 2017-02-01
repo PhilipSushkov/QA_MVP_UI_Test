@@ -53,44 +53,50 @@ public class CheckPageAdd extends AbstractSpec {
 
     @Test(dataProvider="pageData", priority=1)
     public void checkAddPage(JSONObject page) throws Exception {
-        String stateProgress = WorkflowState.IN_PROGRESS.state();
-        String stateApproval = WorkflowState.FOR_APPROVAL.state();
-        String stateLive = WorkflowState.LIVE.state();
         String pageName = page.get("section_title").toString();
 
         dashboard.openPageFromCommonTasks(pageAdminMenuButton);
 
-        Assert.assertEquals(pageAdd.createNewPage(page, pageName), stateProgress, "New Page didn't create properly");
-        Assert.assertTrue(pageAdd.previewNewPage(), "Preview of New Page didn't work properly");
-        Assert.assertTrue(pageAdd.publicNewPage(), "Public site shouldn't show the content of New Page when it is not published yet");
+        Assert.assertEquals(pageAdd.createNewPage(page, pageName), WorkflowState.IN_PROGRESS.state(), "New Page didn't create properly");
+        Assert.assertTrue(pageAdd.previewNewPage(pageName), "Preview of New Page didn't work properly (after Save)");
+        Assert.assertFalse(pageAdd.publicNewPage(pageName), "Public site shouldn't show the content of New Page when it is not published yet (after Save)");
 
         dashboard.openPageFromCommonTasks(pageAdminMenuButton);
-        Assert.assertTrue(pageAdd.listNewPage(), "New Page isn't found on Public Page List");
+        Assert.assertTrue(pageAdd.listNewPage(pageName), "New Page isn't found on Public Page List");
 
-        Assert.assertEquals(pageAdd.saveAndSubmitNewPage(page, pageName), stateApproval, "Couldn't submit New Page");
-        Assert.assertEquals(pageAdd.publishNewPage(pageName), stateLive, "Couldn't publish New Page properly");
+        Assert.assertEquals(pageAdd.saveAndSubmitNewPage(page, pageName), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New Page");
+        Assert.assertTrue(pageAdd.previewNewPage(pageName), "Preview of New Page didn't work properly (after Save and Submit)");
+        Assert.assertFalse(pageAdd.publicNewPage(pageName), "Public site shouldn't show the content of New Page when not published yet (after Save and Submit)");
+
+        Assert.assertEquals(pageAdd.publishNewPage(pageName), WorkflowState.LIVE.state(), "Couldn't publish New Page properly");
+        dashboard.openPageFromCommonTasks(pageAdminMenuButton);
+        Assert.assertTrue(pageAdd.previewNewPage(pageName), "Preview of New Page didn't work properly (after Publish)");
+        Assert.assertTrue(pageAdd.publicNewPage(pageName), "New page should be shown on Public site (after Publish)");
     }
 
     @Test(dataProvider="pageData", priority=2)
     public void checkEditPage(JSONObject page) throws Exception {
-        String stateApproval = WorkflowState.FOR_APPROVAL.state();
         String pageName = page.get("section_title").toString();
 
         dashboard.openPageFromCommonTasks(pageAdminMenuButton);
 
-        Assert.assertEquals(pageAdd.changePage(page, pageName), stateApproval, "Some fields of New Page didn't changed properly");
+        Assert.assertEquals(pageAdd.changePage(page, pageName), WorkflowState.FOR_APPROVAL.state(), "Some fields of New Page didn't changed properly");
     }
 
     @Test(dataProvider="pageData", priority=3)
     public void checkDeletePage(JSONObject page) throws Exception {
-        String currentContent = WorkflowState.DELETE_PENDING.state();
-        String workflowState = WorkflowState.NEW_ITEM.state();
         String pageName = page.get("section_title").toString();
 
         dashboard.openPageFromCommonTasks(pageAdminMenuButton);
 
-        Assert.assertEquals(pageAdd.setupAsDeletedPage(pageName), currentContent, "New Page didn't setup as Deleted properly");
-        Assert.assertEquals(pageAdd.removePage(pageName), workflowState, "Couldn't remove New Page. Something went wrong.");
+        Assert.assertEquals(pageAdd.setupAsDeletedPage(pageName), WorkflowState.DELETE_PENDING.state(), "New Page didn't setup as Deleted properly");
+        Assert.assertFalse(pageAdd.previewNewPage(pageName), "New Page shouldn't be shown in Preview (after Delete)");
+        Assert.assertFalse(pageAdd.publicNewPage(pageName), "New Page shouldn't be shown on Public pages (after Delete)");
+
+        Assert.assertEquals(pageAdd.removePage(pageName), WorkflowState.NEW_ITEM.state(), "Couldn't remove New Page. Something went wrong.");
+        //dashboard.openPageFromCommonTasks(pageAdminMenuButton);
+        //Assert.assertFalse(pageAdd.previewNewPage(pageName), "New Page shouldn't be shown in Preview (after Approval)");
+        //Assert.assertFalse(pageAdd.publicNewPage(pageName), "New Page shouldn't be shown on Public pages (after Approval)");
     }
 
     @DataProvider

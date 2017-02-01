@@ -178,14 +178,13 @@ public class PageAdminList extends AbstractPageObject {
             e.printStackTrace();
         }
 
-
         System.out.println(urlPage);
 
         return urlPage;
     }
 
     public JSONObject savePageToJSON (String sPathToFile, String sDataFilePagesJson, String sDataFileModulesJson) throws InterruptedException {
-        String itemID=null, sectionTitle, itemIDModule=null, you_page_url;
+        String itemID=null, sectionTitle, itemIDModule=null, your_page_url;
         int j;
         JSONObject jsonObject = new JSONObject();
         JSONObject jsonObjectModule = new JSONObject();
@@ -216,8 +215,8 @@ public class PageAdminList extends AbstractPageObject {
 
             sectionTitle = findElement(sectionTitleInput).getAttribute("value");
             mmjson.put("section_title", sectionTitle);
-            you_page_url = findElement(yourPageUrlLabel).getText() + findElement(seoNameInput).getAttribute("value");
-            mmjson.put("you_page_url", you_page_url);
+            your_page_url = findElement(yourPageUrlLabel).getText() + findElement(seoNameInput).getAttribute("value");
+            mmjson.put("you_page_url", your_page_url);
             mmjson.put("page_title", findElement(pageTitleInput).getAttribute("value"));
 
             if (Boolean.parseBoolean(findElement(pageTypeInternalRd).getAttribute("checked"))) {
@@ -274,7 +273,7 @@ public class PageAdminList extends AbstractPageObject {
 
                 JSONObject pageParameters = new JSONObject();
                 pageParameters.put("section_title", sectionTitle);
-                pageParameters.put("page_url", you_page_url);
+                pageParameters.put("page_url", your_page_url);
 
                 JSONObject mmjsonModule = new JSONObject();
                 mmjsonModule.put(itemID, pageParameters);
@@ -293,7 +292,7 @@ public class PageAdminList extends AbstractPageObject {
                 }
 
                 mmjsonModule.put("url_query", jsonURLQueryModule);
-                mmjsonModule.put(new Select(driver.findElement(moduleDefinitionSelect)).getFirstSelectedOption().getText(), you_page_url);
+                mmjsonModule.put(new Select(driver.findElement(moduleDefinitionSelect)).getFirstSelectedOption().getText(), your_page_url);
                 mmjsonModule.put("active", findElement(activeChk).getAttribute("checked"));
                 mmjsonModule.put("workflow_state", findElement(workflowStateSpan).getText());
 

@@ -28,7 +28,7 @@ public class PageAdd extends AbstractPageObject {
     private static By pageTemplateSelect, parentPageSelect, showNavChk, openNewWindChk, saveBtn, workflowStateSpan, currentContentSpan;
     private static By revertBtn, parentUrlSpan, seoNameInput, previewLnk, breadcrumbDiv, commentsTxt, deleteBtn, addNewInput;
     private static By saveAndSubmitBtn;
-    private static String sPathToFile, sDataFileJson, sDataFilePagesJson, sNewPageName, you_page_url, parent_page;
+    private static String sPathToFile, sDataFilePagesJson;
     private static JSONParser parser;
     private static final long DEFAULT_PAUSE = 2500;
 
@@ -61,22 +61,22 @@ public class PageAdd extends AbstractPageObject {
         saveAndSubmitBtn = By.xpath(propUIPageAdmin.getProperty("btn_SaveAndSubmit"));
 
         sPathToFile = System.getProperty("user.dir") + propUIPageAdmin.getProperty("dataPath_PageAdmin");
-        sDataFileJson = propUIPageAdmin.getProperty("json_CreatePageData");
         sDataFilePagesJson = propUIPageAdmin.getProperty("json_PagesProp");
 
         parser = new JSONParser();
     }
 
     public String createNewPage(JSONObject pagesDataObj, String pageName) throws InterruptedException {
+        String your_page_url, parent_page, page_type, external_url = null;
 
         waitForElement(addNewBtn);
         findElement(addNewBtn).click();
         waitForElement(backBtn);
-        sNewPageName = pageName;
 
         try {
-            findElement(sectionTitleInput).sendKeys(sNewPageName);
+            findElement(sectionTitleInput).sendKeys(pageName);
 
+            page_type = pagesDataObj.get("page_type").toString();
             if (pagesDataObj.get("page_type").toString().equals("Internal")) {
                 findElement(pageTypeInternalRd).click();
                 Thread.sleep(DEFAULT_PAUSE);
@@ -84,6 +84,7 @@ public class PageAdd extends AbstractPageObject {
             } else if (pagesDataObj.get("page_type").toString().equals("External")) {
                 findElement(pageTypeExternalRd).click();
                 Thread.sleep(DEFAULT_PAUSE);
+                external_url = pagesDataObj.get("external_url").toString();
                 findElement(externalURLInput).sendKeys(pagesDataObj.get("external_url").toString());
             } else {
                 System.out.println("Page type in not defined. May lead to incorrect test implementation.");
@@ -132,12 +133,17 @@ public class PageAdd extends AbstractPageObject {
             }
 
             if (parent_page.equals("Home")) {
-                pageNamesArray.add(sNewPageName);
+                pageNamesArray.add(pageName);
             }
 
             JSONObject page = new JSONObject();
-            you_page_url = findElement(parentUrlSpan).getText() + findElement(seoNameInput).getAttribute("value");
-            page.put("your_page_url", you_page_url);
+            your_page_url = findElement(parentUrlSpan).getText() + findElement(seoNameInput).getAttribute("value");
+            page.put("your_page_url", your_page_url);
+            page.put("parent_page", parent_page);
+            page.put("page_type", page_type);
+            if (page_type.equals("External")) {
+                page.put("external_url", external_url);
+            }
 
             page.put("workflow_state", WorkflowState.IN_PROGRESS.state());
 
@@ -148,7 +154,7 @@ public class PageAdd extends AbstractPageObject {
                 jsonURLQuery.put(param.split("=")[0], param.split("=")[1]);
             }
             page.put("url_query", jsonURLQuery);
-            jsonObjectNew.put(sNewPageName, page);
+            jsonObjectNew.put(pageName, page);
 
             FileWriter file = new FileWriter(sPathToFile + sDataFilePagesJson);
             file.write(jsonObjectNew.toJSONString().replace("\\", ""));
@@ -167,76 +173,132 @@ public class PageAdd extends AbstractPageObject {
     }
 
 
-    public Boolean previewNewPage() throws InterruptedException {
-        findElement(previewLnk).click();
+    public Boolean previewNewPage(String pageName) throws InterruptedException {
+        try {
+            JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFilePagesJson));
 
-        Thread.sleep(DEFAULT_PAUSE);
-
-        ArrayList<String> tabs = new ArrayList<> (driver.getWindowHandles());
-        driver.switchTo().window(tabs.get(1));
-        waitForElement(breadcrumbDiv);
-
-        if ( (findElement(breadcrumbDiv).getText().contains(sNewPageName)) && (driver.getTitle().contains(sNewPageName)) ) {
-            driver.switchTo().window(tabs.get(1)).close();
+            String pageUrl = getPageUrl(jsonObject, pageName);
+            driver.get(pageUrl);
             Thread.sleep(DEFAULT_PAUSE);
-            driver.switchTo().window(tabs.get(0));
-            return true;
-        } else {
-            driver.switchTo().window(tabs.get(1)).close();
+
+            findElement(previewLnk).click();
+
             Thread.sleep(DEFAULT_PAUSE);
-            driver.switchTo().window(tabs.get(0));
-            return false;
+
+            ArrayList<String> tabs = new ArrayList<> (driver.getWindowHandles());
+            driver.switchTo().window(tabs.get(1));
+            waitForElement(breadcrumbDiv);
+
+            if ( (findElement(breadcrumbDiv).getText().contains(pageName)) && (driver.getTitle().contains(pageName)) ) {
+                driver.switchTo().window(tabs.get(1)).close();
+                Thread.sleep(DEFAULT_PAUSE);
+                driver.switchTo().window(tabs.get(0));
+                return true;
+            } else {
+                driver.switchTo().window(tabs.get(1)).close();
+                Thread.sleep(DEFAULT_PAUSE);
+                driver.switchTo().window(tabs.get(0));
+                return false;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
 
+        return null;
     }
 
 
-    public Boolean publicNewPage() throws InterruptedException {
-        ((JavascriptExecutor)driver).executeScript("window.open();");
+    public Boolean publicNewPage(String pageName) throws InterruptedException {
+        try {
+            JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFilePagesJson));
 
-        Thread.sleep(DEFAULT_PAUSE);
-
-        ArrayList<String> tabs = new ArrayList<> (driver.getWindowHandles());
-        driver.switchTo().window(tabs.get(1));
-        driver.get(you_page_url);
-        waitForElement(breadcrumbDiv);
-
-        if ( (findElement(breadcrumbDiv).getText().contains(sNewPageName)) && (driver.getTitle().contains(sNewPageName)) ) {
-            driver.switchTo().window(tabs.get(1)).close();
+            String pageUrl = getPageUrl(jsonObject, pageName);
+            driver.get(pageUrl);
             Thread.sleep(DEFAULT_PAUSE);
-            driver.switchTo().window(tabs.get(0));
-            return false;
-        } else {
-            driver.switchTo().window(tabs.get(1)).close();
+
+            ((JavascriptExecutor)driver).executeScript("window.open();");
+
             Thread.sleep(DEFAULT_PAUSE);
-            driver.switchTo().window(tabs.get(0));
-            return true;
+
+            ArrayList<String> tabs = new ArrayList<> (driver.getWindowHandles());
+            driver.switchTo().window(tabs.get(1));
+
+            try {
+                driver.get(JsonPath.read(jsonObject, "$.['"+pageName+"'].your_page_url").toString());
+            } catch (TimeoutException e) {
+                driver.findElement(By.tagName("body")).sendKeys("Keys.ESCAPE");
+            }
+
+            if (driver.getTitle().contains(pageName)) {
+                try {
+                    waitForElement(breadcrumbDiv);
+                    if ((findElement(breadcrumbDiv).getText().contains(pageName))) {
+                        driver.switchTo().window(tabs.get(1)).close();
+                        driver.switchTo().window(tabs.get(0));
+                        return true;
+                    }
+                } catch (TimeoutException e) {
+                }
+            } else if (JsonPath.read(jsonObject, "$.['"+pageName+"'].page_type").toString().equals("External")) {
+                if (driver.getCurrentUrl().contains(JsonPath.read(jsonObject, "$.['" + pageName + "'].external_url").toString())) {
+                    driver.switchTo().window(tabs.get(1)).close();
+                    driver.switchTo().window(tabs.get(0));
+                    return true;
+                } else {
+                    driver.switchTo().window(tabs.get(1)).close();
+                    driver.switchTo().window(tabs.get(0));
+                    return false;
+                }
+            } else {
+                driver.switchTo().window(tabs.get(1)).close();
+                driver.switchTo().window(tabs.get(0));
+                return false;
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (NullPointerException e) {
         }
 
+        return null;
     }
 
 
-    public Boolean listNewPage() throws InterruptedException {
+    public Boolean listNewPage(String pageName) throws InterruptedException {
         boolean item = false;
         By innerWrapPage, newPageLbl;
 
         try {
-            if (parent_page.equals("Home")) {
-                innerWrapPage = By.xpath("//div[contains(@id, 'divContent')]//span[contains(@class, 'innerWrap')][(text()=\"" + sNewPageName + "\")]/parent::span/parent::a");
-                waitForElement(innerWrapPage);
-                item = true;
-            } else {
-                innerWrapPage = By.xpath("//div[contains(@id, 'divContent')]//span[contains(@class, 'innerWrap')][(text()=\"" + parent_page + "\")]/parent::span/parent::a");
-                waitForElement(innerWrapPage);
-                findElement(innerWrapPage).click();
-                newPageLbl = By.xpath("//td[contains(@class, 'DataGridItemBorder')][contains(@style, \'padding-left\')][contains(text(), \'" + sNewPageName + "\')]");
-                waitForElement(newPageLbl);
-                item = true;
+            JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFilePagesJson));
+            String parent_page = JsonPath.read(jsonObject, "$.['"+pageName+"'].parent_page").toString();
+
+            try {
+                if (parent_page.equals("Home")) {
+                    innerWrapPage = By.xpath("//div[contains(@id, 'divContent')]//span[contains(@class, 'innerWrap')][(text()=\"" + pageName + "\")]/parent::span/parent::a");
+                    waitForElement(innerWrapPage);
+                    item = true;
+                } else {
+                    innerWrapPage = By.xpath("//div[contains(@id, 'divContent')]//span[contains(@class, 'innerWrap')][(text()=\"" + parent_page + "\")]/parent::span/parent::a");
+                    waitForElement(innerWrapPage);
+                    findElement(innerWrapPage).click();
+                    newPageLbl = By.xpath("//td[contains(@class, 'DataGridItemBorder')][contains(@style, \'padding-left\')][contains(text(), \'" + pageName + "\')]");
+                    waitForElement(newPageLbl);
+                    item = true;
+                }
+            } catch (ElementNotFoundException e) {
+            } catch (ElementNotVisibleException e) {
+            } catch (TimeoutException e) {
+            } catch (Exception e) {
             }
-        } catch (ElementNotFoundException e1) {
-        } catch (ElementNotVisibleException e2) {
-        } catch (TimeoutException e3) {
-        } catch (Exception e3) {
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
 
         return item;
