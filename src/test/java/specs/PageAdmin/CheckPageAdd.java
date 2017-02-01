@@ -32,7 +32,7 @@ public class CheckPageAdd extends AbstractSpec {
     private static Dashboard dashboard;
     private static PageAdd pageAdd;
 
-    private static String sPathToFile, sDataFileJson, sNewPagesJson;
+    private static String sPathToFile, sDataFileJson;
     private static JSONParser parser;
 
     @BeforeTest
@@ -45,7 +45,6 @@ public class CheckPageAdd extends AbstractSpec {
 
         sPathToFile = System.getProperty("user.dir") + propUIPageAdmin.getProperty("dataPath_PageAdmin");
         sDataFileJson = propUIPageAdmin.getProperty("json_CreatePageData");
-        sNewPagesJson = propUIPageAdmin.getProperty("json_NewPagesData");
 
         parser = new JSONParser();
 
@@ -73,6 +72,16 @@ public class CheckPageAdd extends AbstractSpec {
     }
 
     @Test(dataProvider="pageData", priority=2)
+    public void checkEditPage(JSONObject page) throws Exception {
+        String stateApproval = WorkflowState.FOR_APPROVAL.state();
+        String pageName = page.get("section_title").toString();
+
+        dashboard.openPageFromCommonTasks(pageAdminMenuButton);
+
+        Assert.assertEquals(pageAdd.changePage(page, pageName), stateApproval, "Some fields of New Page didn't changed properly");
+    }
+
+    @Test(dataProvider="pageData", priority=3)
     public void checkDeletePage(JSONObject page) throws Exception {
         String currentContent = WorkflowState.DELETE_PENDING.state();
         String workflowState = WorkflowState.NEW_ITEM.state();

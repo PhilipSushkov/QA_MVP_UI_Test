@@ -15,7 +15,6 @@ import java.util.ArrayList;
 
 import org.openqa.selenium.*;
 import pageobjects.AbstractPageObject;
-import pageobjects.PageAdmin.WorkflowState;
 import util.Functions;
 
 import static specs.AbstractSpec.desktopUrl;
@@ -318,6 +317,60 @@ public class PageAdd extends AbstractPageObject {
         return null;
     }
 
+    public String changePage (JSONObject pagesDataObj, String pageName) throws InterruptedException {
+        try {
+            JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFilePagesJson));
+
+            String pageUrl = getPageUrl(jsonObject, pageName);
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+
+            try {
+                if (!pagesDataObj.get("section_title_ch").toString().isEmpty()) {
+                    System.out.println(pagesDataObj.get("section_title_ch").toString());
+                    findElement(sectionTitleInput).sendKeys(pagesDataObj.get("section_title_ch").toString());
+                    findElement(commentsTxt).sendKeys(pagesDataObj.get("comment_ch").toString());
+                }
+
+                /*
+                findElement(saveAndSubmitBtn).click();
+                Thread.sleep(DEFAULT_PAUSE);
+
+                driver.get(pageUrl);
+                Thread.sleep(DEFAULT_PAUSE);
+                waitForElement(sectionTitleInput);
+
+                //if ()
+
+                JSONObject pageObj = (JSONObject) jsonObject.get(pageName);
+
+                pageObj.put("workflow_state", WorkflowState.FOR_APPROVAL.state());
+                pageObj.put("deleted", "false");
+
+                jsonObject.put(pageName, pageObj);
+
+                FileWriter file = new FileWriter(sPathToFile + sDataFilePagesJson);
+                file.write(jsonObject.toJSONString().replace("\\", ""));
+                file.flush();
+                */
+
+                //return findElement(workflowStateSpan).getText();
+                return WorkflowState.FOR_APPROVAL.state();
+
+            } catch (NullPointerException e) {
+            }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
 
     public String setupAsDeletedPage(String pageName) throws InterruptedException {
         try {
@@ -349,7 +402,7 @@ public class PageAdd extends AbstractPageObject {
             file.flush();
 
             return findElement(currentContentSpan).getText();
-        }  catch (FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
