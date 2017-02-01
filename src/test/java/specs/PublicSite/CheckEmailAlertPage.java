@@ -29,8 +29,7 @@ public class CheckEmailAlertPage extends AbstractSpec {
     @BeforeTest
     public void goToPublicSite() {
 
-        driver.get("http://chicagotest.q4web.com/English/Investors/default.aspx");
-        //driver.get("http://fiesta.q4web.newtest/stock-information/default.aspx");
+        driver.get(desktopUrlPublic.toString()+"English/Investors/Email-Alerts/default.aspx");
 
         homePage = new HomePage(driver);
 
@@ -45,7 +44,7 @@ public class CheckEmailAlertPage extends AbstractSpec {
         String wrongEmail = "QWEASDZXC1234567";
         String rightEmail = "kelvint@q4inc.com";
         boolean buttonsActivated = true; //State of the buttons
-
+        emailAlertsPage.clickAllButtons();
         Assert.assertTrue(emailAlertsPage.clickAllButtonsWorks(buttonsActivated)
                 , "Buttons did not behave as expected" );
 
@@ -76,7 +75,7 @@ public class CheckEmailAlertPage extends AbstractSpec {
         String incorrectFormEmail = "QWEASDZXC1234567";
         String wrongEmail = "telvink@q4inc.com"; //never used to subscribe
         String rightEmail = "kelvint@q4inc.com";
-
+        emailAlertsPage.clickAllButtons();
         Assert.assertFalse(emailAlertsPage.clickUnsubscribeWorks()
                 , "Entering no credentials allowed submitting");
 

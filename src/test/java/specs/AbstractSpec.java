@@ -37,7 +37,7 @@ public abstract class AbstractSpec extends util.Functions {
     private static final String BUILD_ID = RandomStringUtils.randomAlphanumeric(6);
     public static final long DEFAULT_TIMEOUT = 5L;
 
-    public static URL desktopUrl;
+    public static URL desktopUrl, desktopUrlPublic;
     public static BrowserStackCapability browser;
     protected WebDriver driver;
     private static boolean setupIsDone = false;
@@ -73,6 +73,7 @@ public abstract class AbstractSpec extends util.Functions {
             setupEnvironment();
 
             desktopUrl = new URL(activeEnvironment.getProtocol() + activeEnvironment.getHost());
+            desktopUrlPublic = new URL("http://chicagotest.q4web.release/");
 
             LOG.info("ENV URL: " + desktopUrl);
 
@@ -178,17 +179,18 @@ public abstract class AbstractSpec extends util.Functions {
         if (getActiveEnvironment() != EnvironmentType.BETA){
             driver.quit();
         }
-        */
 
-        /*
+
+
         if (getActiveEnvironment() != EnvironmentType.DEVELOP) {
             if (getActiveEnvironment() != EnvironmentType.BETA) //temp code due to temp use of testing environment
 
                 driver.quit();
         }
-        */
 
+        */
         driver.quit();
+
 
     }
 

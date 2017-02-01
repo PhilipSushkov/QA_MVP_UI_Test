@@ -35,7 +35,7 @@ public class EmailAlertPreviewPage extends AbstractSpec {
         String wrongEmail = "QWEASDZXC1234567";
         String rightEmail = "kelvint@q4inc.com";
         boolean buttonsActivated = true; //State of the buttons
-
+        emailAlertsPage.clickAllButtons();
         Assert.assertTrue(emailAlertsPage.clickAllButtonsWorks(buttonsActivated)
                 , "Buttons did not behave as expected" );
 
@@ -45,7 +45,6 @@ public class EmailAlertPreviewPage extends AbstractSpec {
                 , "Buttons did not behave as expected");
         Assert.assertFalse(emailAlertsPage.clickSubmitWorks()
                 , "Selecting no options for the mailing list still allowed submitting");
-
         Assert.assertFalse(emailAlertsPage.clickSubmitWorks()
                 , "Entering no credentials allowed submitting");
         emailAlertsPage.enterSubEmailAddress(wrongEmail);
@@ -66,7 +65,7 @@ public class EmailAlertPreviewPage extends AbstractSpec {
         String incorrectFormEmail = "QWEASDZXC1234567";
         String wrongEmail = "telvink@q4inc.com"; //never used to subscribe
         String rightEmail = "kelvint@q4inc.com";
-
+        emailAlertsPage.clickAllButtons();
         Assert.assertFalse(emailAlertsPage.clickUnsubscribeWorks()
                 , "Entering no credentials allowed submitting");
 
