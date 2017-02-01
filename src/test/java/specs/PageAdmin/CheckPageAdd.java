@@ -91,12 +91,9 @@ public class CheckPageAdd extends AbstractSpec {
 
         Assert.assertEquals(pageAdd.setupAsDeletedPage(pageName), WorkflowState.DELETE_PENDING.state(), "New Page didn't setup as Deleted properly");
         Assert.assertFalse(pageAdd.previewNewPage(pageName), "New Page shouldn't be shown in Preview (after Delete)");
-        Assert.assertFalse(pageAdd.publicNewPage(pageName), "New Page shouldn't be shown on Public pages (after Delete)");
+        Assert.assertTrue(pageAdd.publicNewPage(pageName), "New Page shouldn't be shown on Public pages (after Delete)");
 
         Assert.assertEquals(pageAdd.removePage(pageName), WorkflowState.NEW_ITEM.state(), "Couldn't remove New Page. Something went wrong.");
-        //dashboard.openPageFromCommonTasks(pageAdminMenuButton);
-        //Assert.assertFalse(pageAdd.previewNewPage(pageName), "New Page shouldn't be shown in Preview (after Approval)");
-        //Assert.assertFalse(pageAdd.publicNewPage(pageName), "New Page shouldn't be shown on Public pages (after Approval)");
     }
 
     @DataProvider

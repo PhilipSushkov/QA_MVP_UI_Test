@@ -187,19 +187,35 @@ public class PageAdd extends AbstractPageObject {
 
             ArrayList<String> tabs = new ArrayList<> (driver.getWindowHandles());
             driver.switchTo().window(tabs.get(1));
-            waitForElement(breadcrumbDiv);
 
-            if ( (findElement(breadcrumbDiv).getText().contains(pageName)) && (driver.getTitle().contains(pageName)) ) {
-                driver.switchTo().window(tabs.get(1)).close();
-                Thread.sleep(DEFAULT_PAUSE);
-                driver.switchTo().window(tabs.get(0));
-                return true;
+            if (driver.getTitle().contains(pageName)) {
+                try {
+                    waitForElement(breadcrumbDiv);
+
+                    if ( (findElement(breadcrumbDiv).getText().contains(pageName)) && (driver.getTitle().contains(pageName)) ) {
+                        driver.switchTo().window(tabs.get(1)).close();
+                        Thread.sleep(DEFAULT_PAUSE);
+                        driver.switchTo().window(tabs.get(0));
+                        return true;
+                    } else {
+                        driver.switchTo().window(tabs.get(1)).close();
+                        Thread.sleep(DEFAULT_PAUSE);
+                        driver.switchTo().window(tabs.get(0));
+                        return false;
+                    }
+                }  catch (TimeoutException e) {
+                    driver.switchTo().window(tabs.get(1)).close();
+                    Thread.sleep(DEFAULT_PAUSE);
+                    driver.switchTo().window(tabs.get(0));
+                    return false;
+                }
             } else {
                 driver.switchTo().window(tabs.get(1)).close();
                 Thread.sleep(DEFAULT_PAUSE);
                 driver.switchTo().window(tabs.get(0));
                 return false;
             }
+
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParseException e) {
