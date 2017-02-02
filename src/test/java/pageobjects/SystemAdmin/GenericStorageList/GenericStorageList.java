@@ -24,21 +24,17 @@ public class GenericStorageList extends AbstractPageObject {
         gridStorageListHeader = By.xpath(propUISystemAdmin.getProperty("table_GridHeader"));
     }
 
-    public String getUrl() {
-        return driver.getCurrentUrl();
-    }
-
     public String getTitle() {
-        wait.until(ExpectedConditions.visibilityOf(findElement(moduleTitle)));
-        return findElement(moduleTitle).getText();
+        waitForElement(moduleTitle);
+        return getText(moduleTitle);
     }
 
     public Integer getStorageHeaderSize() {
         Integer headerSize = 0;
 
         try {
-            wait.until(ExpectedConditions.visibilityOf(findElement(grid)));
-            headerSize = findElement(grid).findElements(gridStorageListHeader).size()/columnsNumber;
+            waitForElement(grid);
+            headerSize = getGridRowQuantity(findElement(grid).findElements(gridStorageListHeader).size(), columnsNumber);
         } catch (ElementNotFoundException e1) {
         } catch (ElementNotVisibleException e2) {
         }

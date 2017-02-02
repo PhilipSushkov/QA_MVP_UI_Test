@@ -22,17 +22,14 @@ public class AlertFilterList extends AbstractPageObject {
         gridFilterName = By.xpath(propUISystemAdmin.getProperty("table_GridItem"));
     }
 
-    public String getUrl() {
-        return driver.getCurrentUrl();
-    }
-
     public String getTitle() {
-        wait.until(ExpectedConditions.visibilityOf(findElement(moduleTitle)));
-        return findElement(moduleTitle).getText();
+        waitForElement(moduleTitle);
+        return getText(moduleTitle);
     }
 
     public Integer getFilterNameQuantity() {
-        wait.until(ExpectedConditions.visibilityOf(findElement(grid)));
-        return findElement(grid).findElements(gridFilterName).size()/columnsNumber;
+        waitForElement(grid);
+        return getGridRowQuantity(findElement(grid).findElements(gridFilterName).size(), columnsNumber);
     }
+
 }

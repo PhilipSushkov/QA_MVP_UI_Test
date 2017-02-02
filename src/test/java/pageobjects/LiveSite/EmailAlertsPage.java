@@ -5,21 +5,23 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import pageobjects.AbstractPageObject;
 
+import static specs.AbstractSpec.propUIPublicSite;
+
 /**
  * Created by kelvint on 11/17/16.
  */
 public class EmailAlertsPage extends AbstractPageObject {
 
 
-    private final By emailSubTextField = By.name("_ctrl0$ctl48$txtEmail");
-    private final By pressReleaseBtn = By.id("_ctrl0_ctl48_chkLists_0");
-    private final By testListBtn = By.id("_ctrl0_ctl48_chkLists_1");
-    private final By eodBtn = By.id("_ctrl0_ctl48_chkLists_2");
-    private final By submitBtn = By.id("_ctrl0_ctl48_btnSubmit");
-    private final By submitMessage =  By.id("_ctrl0_ctl48_divEditSubscriberConfirmation");
-    private final By emailUnsubTextField = By.name("_ctrl0$ctl54$txtEmailAddress");
-    private final By unsubscribeBtn = By.name("_ctrl0$ctl54$btnUnsubscribe");
-    private final By unsubscribeMessage = By.className("MailingListUnsubscribeMessage");
+    private final By emailSubTextField = By.xpath(propUIPublicSite.getProperty("emailSubTextField"));
+    private final By pressReleaseBtn = By.xpath(propUIPublicSite.getProperty("pressReleaseBtn"));
+    private final By testListBtn = By.xpath(propUIPublicSite.getProperty("testListBtn"));
+    private final By eodBtn = By.xpath(propUIPublicSite.getProperty("eodBtn"));
+    private final By submitBtn = By.xpath(propUIPublicSite.getProperty("submitBtn"));
+    private final By submitMessage =  By.xpath(propUIPublicSite.getProperty("submitMessage"));
+    private final By emailUnsubTextField = By.xpath(propUIPublicSite.getProperty("emailUnsubTextField"));
+    private final By unsubscribeBtn = By.xpath(propUIPublicSite.getProperty("unsubscribeBtn"));
+    private final By unsubscribeMessage =By.xpath(propUIPublicSite.getProperty("unsubscribeMessage"));
 
     public EmailAlertsPage(WebDriver driver) { super(driver); }
 
@@ -27,6 +29,7 @@ public class EmailAlertsPage extends AbstractPageObject {
     public void enterSubEmailAddress(String email){
         findElement(emailSubTextField).click();
         findElement(emailSubTextField).sendKeys(email);
+        pause(3000);
     }
     public void clearAllTextFields(){
         findElement(emailSubTextField).click();
@@ -57,6 +60,7 @@ public class EmailAlertsPage extends AbstractPageObject {
     public boolean clickSubmitWorks(){
         findElement(submitBtn).click();
         WebElement submit = findElement(submitMessage);
+        pause(3000);
         return submit.isDisplayed();
     }
 

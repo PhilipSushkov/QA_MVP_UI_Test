@@ -1,9 +1,10 @@
 package specs.SiteAdmin.GlobalModuleList;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.After;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+import org.testng.Assert;
+
 import org.openqa.selenium.By;
 import pageobjects.SiteAdmin.GlobalModuleList.GlobalModuleList;
 import specs.AbstractSpec;
@@ -20,7 +21,7 @@ public class CheckGlobalModuleList extends AbstractSpec {
     private static Dashboard dashboard;
     private static GlobalModuleList globalModuleList;
 
-    @Before
+    @BeforeTest
     public void setUp() throws Exception {
         siteAdminMenuButton = By.xpath(propUISiteAdmin.getProperty("btnMenu_SiteAdmin"));
         globalModuleListMenuItem = By.xpath(propUISiteAdmin.getProperty("itemMenu_GlobalModuleList"));
@@ -40,14 +41,14 @@ public class CheckGlobalModuleList extends AbstractSpec {
         dashboard.openPageFromMenu(siteAdminMenuButton, globalModuleListMenuItem);
 
         Assert.assertNotNull(globalModuleList.getUrl());
-        Assert.assertEquals("Actual Global Module List page Title doesn't match to expected", expectedTitle, globalModuleList.getTitle());
+        Assert.assertEquals(globalModuleList.getTitle(), expectedTitle, "Actual Global Module List page Title doesn't match to expected");
 
         //System.out.println(new GlobalModuleList(driver).getGlobalModuleListQuantity().toString());
-        Assert.assertTrue("Actual Module Name Quantity is less than expected: "+expectedQuantity, expectedQuantity <= globalModuleList.getGlobalModuleListQuantity() );
+        Assert.assertTrue(expectedQuantity <= globalModuleList.getGlobalModuleListQuantity(), "Actual Module Name Quantity is less than expected: "+expectedQuantity);
 
     }
 
-    @After
+    @AfterTest
     public void tearDown() {
         dashboard.logoutFromAdmin();
         //driver.quit();

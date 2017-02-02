@@ -1,9 +1,10 @@
 package specs.SystemAdmin.SiteMaintenance;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.After;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+import org.testng.Assert;
+
 import org.openqa.selenium.By;
 import pageobjects.SystemAdmin.SiteMaintenance.SiteMaintenance;
 import specs.AbstractSpec;
@@ -20,7 +21,7 @@ public class CheckSiteMaintenance extends AbstractSpec {
     private static Dashboard dashboard;
     private static SiteMaintenance siteMaintenance;
 
-    @Before
+    @BeforeTest
     public void setUp() throws Exception {
         systemAdminMenuButton = By.xpath(propUISystemAdmin.getProperty("btnMenu_SystemAdmin"));
         siteMaintenanceMenuItem = By.xpath(propUISystemAdmin.getProperty("itemMenu_SiteMaintenance"));
@@ -40,16 +41,16 @@ public class CheckSiteMaintenance extends AbstractSpec {
 
         Assert.assertNotNull(siteMaintenance.getUrl());
 
-        Assert.assertEquals("Actual PDF Template Edit page Title doesn't match to expected", expectedTitle, siteMaintenance.getTitle());
+        Assert.assertEquals(siteMaintenance.getTitle(), expectedTitle, "Actual PDF Template Edit page Title doesn't match to expected");
 
         //System.out.println(new SiteMaintenance(driver).getGoLiveButton().getText() );
-        Assert.assertNotNull("Go Live Button doesn't exist", siteMaintenance.getGoLiveButton() );
-        Assert.assertNotNull("One Touch Button doesn't exist", siteMaintenance.getOneTouchButton() );
-        Assert.assertNotNull("Two Factor Authentication Button doesn't exist", siteMaintenance.getTwoFactorAuthenticationButton() );
+        Assert.assertNotNull(siteMaintenance.getGoLiveButton(), "Go Live Button doesn't exist");
+        Assert.assertNotNull(siteMaintenance.getOneTouchButton(), "One Touch Button doesn't exist");
+        Assert.assertNotNull(siteMaintenance.getTwoFactorAuthenticationButton(), "Two Factor Authentication Button doesn't exist");
 
     }
 
-    @After
+    @AfterTest
     public void tearDown() {
         dashboard.logoutFromAdmin();
         //driver.quit();

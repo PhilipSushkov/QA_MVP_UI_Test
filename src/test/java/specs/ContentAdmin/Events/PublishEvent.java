@@ -1,9 +1,12 @@
 package specs.ContentAdmin.Events;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.After;
+import org.openqa.selenium.By;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+import org.testng.Assert;
+
+import pageobjects.ContentAdmin.Events.EventWebcastEdit;
 import pageobjects.LiveSite.LiveEvents;
 import specs.AbstractSpec;
 import pageobjects.LoginPage.LoginPage;
@@ -17,11 +20,27 @@ import java.util.Date;
  */
 
 public class PublishEvent extends AbstractSpec {
+    private static By addEventButton, contentAdminMenuButton, eventsMenuItem;
+    private static LoginPage loginPage;
+    private static Dashboard dashboard;
+    private static Events events;
+    private static EventWebcastEdit editEvent;
+    private static LiveEvents liveEvens;
 
 
-    @Before
+    @BeforeTest
     public void setUp() throws Exception {
-        new LoginPage(driver).loginUser();
+        addEventButton = By.xpath(propUICommon.getProperty("btn_AddEvent"));
+        contentAdminMenuButton = By.xpath(propUIContentAdmin.getProperty("btnMenu_ContentAdmin"));
+        eventsMenuItem = By.xpath(propUIContentAdmin.getProperty("btnMenu_Events"));
+
+        loginPage = new LoginPage(driver);
+        dashboard = new Dashboard(driver);
+        events = new Events(driver);
+        editEvent = new EventWebcastEdit(driver);
+        liveEvens = new LiveEvents(driver);
+
+        loginPage.loginUser();
     }
 
     private Date current = new Date();
@@ -47,42 +66,46 @@ public class PublishEvent extends AbstractSpec {
     @Test
     public void canAddNewEvent() throws Exception {
 
-        dashboardURL = new Dashboard(driver).getUrl();
+        dashboardURL = dashboard.getUrl();
         String[] filenames = new String[2];
 
-        String newsPageURL = new Dashboard(driver).newEvent().addNewEvent(headline, today, tommorrow, hour, min, AMPM, timeZone, tags, location, filenames);
+        dashboard.openPageFromCommonTasks(addEventButton);
+
+        String newsPageURL = editEvent.addNewEvent(headline, today, tommorrow, hour, min, AMPM, timeZone, tags, location, filenames);
         Assert.assertNotNull(newsPageURL);
 
         System.out.println(newsPageURL);
 
         // publishing event
-        new Events(driver).publishEvent(headline);
+        events.publishEvent(headline);
 
         // checking event on live site
         System.out.println("Looking for headline: " + headline);
-        boolean headlineFound = new Events(driver).liveEvents(newsPageURL).canFindNewHeadline(headline, true, filenames);
+        boolean headlineFound = events.liveEvents(newsPageURL).canFindNewHeadline(headline, true, filenames);
         Assert.assertTrue(headlineFound);
 
         // changing headline on an existing event
-        new LiveEvents(driver).dashboard(dashboardURL).events().clickEditEventButton(headline).changeHeadlineTo(headlineV2);
+        liveEvens.dashboard(dashboardURL).openPageFromMenu(contentAdminMenuButton, eventsMenuItem);
+        events.clickEditEventButton(headline).changeHeadlineTo(headlineV2);
 
         // publishing and checking updated event
-        new Events(driver).publishEvent(headlineV2);
+        events.publishEvent(headlineV2);
         System.out.println("Looking for headline: " + headlineV2);
-        headlineFound = new Events(driver).liveEvents(newsPageURL).canFindNewHeadline(headlineV2, true, filenames);
+        headlineFound = events.liveEvents(newsPageURL).canFindNewHeadline(headlineV2, true, filenames);
         Assert.assertTrue(headlineFound);
 
         // deleting event, and verifying it is gone
-        new LiveEvents(driver).dashboard(dashboardURL).events().clickEditEventButton(headlineV2).deleteEvent();
-        new Events(driver).publishEvent(headlineV2);
-        headlineFound = new Events(driver).liveEvents(newsPageURL).canFindNewHeadline(headlineV2, false, filenames);
+        liveEvens.dashboard(dashboardURL).openPageFromMenu(contentAdminMenuButton, eventsMenuItem);
+        events.clickEditEventButton(headlineV2).deleteEvent();
+        events.publishEvent(headlineV2);
+        headlineFound = events.liveEvents(newsPageURL).canFindNewHeadline(headlineV2, false, filenames);
         Assert.assertFalse(headlineFound);
     }
 
-    @After
+    @AfterTest
     public void tearDown() {
-        new LiveEvents(driver).dashboard(dashboardURL);
-        new Dashboard(driver).logoutFromAdmin();
+        liveEvens.dashboard(dashboardURL);
+        dashboard.logoutFromAdmin();
         //driver.quit();
     }
 

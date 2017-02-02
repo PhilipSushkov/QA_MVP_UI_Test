@@ -1,9 +1,12 @@
 package specs.ContentAdmin.Presentations;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.After;
+import org.openqa.selenium.By;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+import org.testng.Assert;
+
+import pageobjects.ContentAdmin.Presentations.PresentationEdit;
 import pageobjects.LiveSite.LivePresentations;
 import specs.AbstractSpec;
 import pageobjects.LoginPage.LoginPage;
@@ -15,11 +18,28 @@ import java.util.Date;
 /**
  * Created by philipsushkov on 2016-11-08.
  */
-public class PublishPresentation extends AbstractSpec {
 
-    @Before
+public class PublishPresentation extends AbstractSpec {
+    private static By addPresentationButton, contentAdminMenuButton, presentationsMenuItem;
+    private static LoginPage loginPage;
+    private static Dashboard dashboard;
+    private static Presentations presentations;
+    private static PresentationEdit presentationEdit;
+    private static LivePresentations livePresentations;
+
+    @BeforeTest
     public void setUp() throws Exception {
-        new LoginPage(driver).loginUser();
+        addPresentationButton = By.xpath(propUICommon.getProperty("btn_AddPresentation"));
+        contentAdminMenuButton = By.xpath(propUIContentAdmin.getProperty("btnMenu_ContentAdmin"));
+        presentationsMenuItem = By.xpath(propUIContentAdmin.getProperty("btnMenu_Presentations"));
+
+        loginPage = new LoginPage(driver);
+        dashboard = new Dashboard(driver);
+        presentations = new Presentations(driver);
+        presentationEdit = new PresentationEdit(driver);
+        livePresentations = new LivePresentations(driver);
+
+        loginPage.loginUser();
     }
 
     private Date current = new Date();
@@ -46,39 +66,42 @@ public class PublishPresentation extends AbstractSpec {
         dashboardURL = new Dashboard(driver).getUrl();
         String[] filenames = new String[2];
 
-        String newsPageURL = new Dashboard(driver).newPresentation().addNewPresentation(headline, date, hour, min, AMPM, filenames);
+        dashboard.openPageFromCommonTasks(addPresentationButton);
+
+        String newsPageURL = presentationEdit.addNewPresentation(headline, date, hour, min, AMPM, filenames);
         Assert.assertNotNull(newsPageURL);
 
         // publishing presentation
-        new Presentations(driver).publishPresentation(headline);
+        presentations.publishPresentation(headline);
 
         // checking presentation on live site
         System.out.println("Looking for headline: " + headline);
-        boolean headlineFound = new Presentations(driver).livePresentations(newsPageURL).canFindNewHeadline(headline, true, filenames);
+        boolean headlineFound = presentations.livePresentations(newsPageURL).canFindNewHeadline(headline, true, filenames);
         Assert.assertTrue(headlineFound);
 
         // changing headline on an existing presentation
-        new LivePresentations(driver).dashboard(dashboardURL).presentations().editPresentation(headline).changeHeadlineTo(headlineV2);
+        livePresentations.dashboard(dashboardURL).openPageFromMenu(contentAdminMenuButton, presentationsMenuItem);
+        presentations.editPresentation(headline).changeHeadlineTo(headlineV2);
 
         // publishing and checking updated presentation
-        new Presentations(driver).publishPresentation(headlineV2);
+        presentations.publishPresentation(headlineV2);
         System.out.println("Looking for headline: " + headlineV2);
-        headlineFound = new Presentations(driver).livePresentations(newsPageURL).canFindNewHeadline(headlineV2, true, filenames);
+        headlineFound = presentations.livePresentations(newsPageURL).canFindNewHeadline(headlineV2, true, filenames);
         Assert.assertTrue(headlineFound);
 
         // deleting presentation, and verifying it is gone
-        new LivePresentations(driver).dashboard(dashboardURL).presentations().editPresentation(headlineV2).deletePresentation();
-        new Presentations(driver).publishPresentation(headlineV2);
-        headlineFound = new Presentations(driver).livePresentations(newsPageURL).canFindNewHeadline(headlineV2, false, filenames);
+        livePresentations.dashboard(dashboardURL).openPageFromMenu(contentAdminMenuButton, presentationsMenuItem);
+        presentations.editPresentation(headlineV2).deletePresentation();
+        presentations.publishPresentation(headlineV2);
+        headlineFound = presentations.livePresentations(newsPageURL).canFindNewHeadline(headlineV2, false, filenames);
         Assert.assertFalse(headlineFound);
 
     }
 
-
-    @After
+    @AfterTest
     public void tearDown() {
-        new LivePresentations(driver).dashboard(dashboardURL);
-        new Dashboard(driver).logoutFromAdmin();
+        livePresentations.dashboard(dashboardURL);
+        dashboard.logoutFromAdmin();
         //driver.quit();
     }
 

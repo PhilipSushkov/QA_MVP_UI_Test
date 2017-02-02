@@ -1,9 +1,10 @@
 package specs.SiteAdmin.MobileLinkList;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+import org.testng.Assert;
+
 import org.openqa.selenium.By;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.LoginPage.LoginPage;
@@ -20,7 +21,7 @@ public class CheckMobileLinkList extends AbstractSpec {
     private static Dashboard dashboard;
     private static MobileLinkList mobileLinkList;
 
-    @Before
+    @BeforeTest
     public void setUp() throws Exception {
         siteAdminMenuButton = By.xpath(propUISiteAdmin.getProperty("btnMenu_SiteAdmin"));
         mobileLinkListMenuItem = By.xpath(propUISiteAdmin.getProperty("itemMenu_MobileLinkList"));
@@ -41,15 +42,15 @@ public class CheckMobileLinkList extends AbstractSpec {
         new Dashboard(driver).openPageFromMenu(siteAdminMenuButton, mobileLinkListMenuItem);
 
         Assert.assertNotNull(mobileLinkList.getUrl());
-        Assert.assertEquals("Actual Mobile Link List page Title doesn't match to expected", expectedTitle, mobileLinkList.getTitle());
+        Assert.assertEquals(mobileLinkList.getTitle(), expectedTitle, "Actual Mobile Link List page Title doesn't match to expected");
 
         //System.out.println(new MobileLinkList(driver).getMobileLinkListQuantity().toString());
-        Assert.assertTrue("Actual Mobile Link Quantity is less than expected: "+expectedQuantity, expectedQuantity <= mobileLinkList.getMobileLinkListQuantity() );
-        Assert.assertNotNull("Mobile View pagination doesn't exist", mobileLinkList.getMobileLinkListPagination() );
+        Assert.assertTrue(expectedQuantity <= mobileLinkList.getMobileLinkListQuantity(), "Actual Mobile Link Quantity is less than expected: "+expectedQuantity);
+        Assert.assertNotNull(mobileLinkList.getMobileLinkListPagination(), "Mobile View pagination doesn't exist");
 
     }
 
-    @After
+    @AfterTest
     public void tearDown() {
         dashboard.logoutFromAdmin();
         //driver.quit();

@@ -1,9 +1,10 @@
 package specs.ContentAdmin.DownloadList;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+import org.testng.Assert;
+
 import org.openqa.selenium.By;
 import pageobjects.ContentAdmin.DownloadList.DownloadList;
 import pageobjects.Dashboard.Dashboard;
@@ -20,7 +21,7 @@ public class CheckDownloadList extends AbstractSpec {
     private static Dashboard dashboard;
     private static DownloadList downloadList;
 
-    @Before
+    @BeforeTest
     public void setUp() throws Exception {
         contentAdminMenuButton = By.xpath(propUIContentAdmin.getProperty("btnMenu_ContentAdmin"));
         downloadListMenuItem = By.xpath(propUIContentAdmin.getProperty("btnMenu_DownloadList"));
@@ -40,16 +41,17 @@ public class CheckDownloadList extends AbstractSpec {
         dashboard.openPageFromMenu(contentAdminMenuButton, downloadListMenuItem);
 
         Assert.assertNotNull(downloadList.getUrl());
-        Assert.assertEquals("Actual Download List page Title doesn't match to expected", expectedTitle, downloadList.getTitle());
+        Assert.assertEquals(downloadList.getTitle(), expectedTitle, "Actual Download List page Title doesn't match to expected");
 
         //System.out.println(new DownloadList(driver).getTitleQuantity().toString());
-        Assert.assertTrue("Actual Download List Title Quantity is less than expected: "+expectedQuantity, expectedQuantity <= downloadList.getTitleQuantity() );
-        Assert.assertNotNull("Download List Pagination doesn't exist", downloadList.getDownloadListPagination() );
-        Assert.assertNotNull("Filter By Tag field doesn't exist", downloadList.getFilterByTag() );
-
+        Assert.assertTrue(expectedQuantity <= downloadList.getTitleQuantity(), "Actual Download List Title Quantity is less than expected: "+expectedQuantity);
+        Assert.assertNotNull(downloadList.getDownloadListPagination(), "Download List Pagination doesn't exist");
+        Assert.assertNotNull(downloadList.getFilterByTag(), "Filter By Tag field doesn't exist");
+        Assert.assertNotNull(downloadList.getGeneralSelect(), "General select doesn't exist");
+        Assert.assertNotNull(downloadList.getPublishButton(), "Publish button doesn't exist");
     }
 
-    @After
+    @AfterTest
     public void tearDown() {
         dashboard.logoutFromAdmin();
         //driver.quit();

@@ -1,9 +1,10 @@
 package specs.ContentAdmin.FaqList;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+import org.testng.Assert;
+
 import org.openqa.selenium.By;
 import pageobjects.ContentAdmin.FaqList.FaqList;
 import pageobjects.Dashboard.Dashboard;
@@ -20,7 +21,7 @@ public class CheckFaqList extends AbstractSpec {
     private static Dashboard dashboard;
     private static FaqList faqList;
 
-    @Before
+    @BeforeTest
     public void setUp() throws Exception {
         contentAdminMenuButton = By.xpath(propUIContentAdmin.getProperty("btnMenu_ContentAdmin"));
         faqListMenuItem = By.xpath(propUIContentAdmin.getProperty("btnMenu_FaqList"));
@@ -40,15 +41,15 @@ public class CheckFaqList extends AbstractSpec {
         dashboard.openPageFromMenu(contentAdminMenuButton, faqListMenuItem);
 
         Assert.assertNotNull(faqList.getUrl());
-        Assert.assertEquals("Actual Faq List page Title doesn't match to expected", expectedTitle, faqList.getTitle());
+        Assert.assertEquals(faqList.getTitle(), expectedTitle, "Actual Faq List page Title doesn't match to expected");
 
         //System.out.println(new FaqList(driver).getTitleQuantity().toString());
-        Assert.assertTrue("Actual Faq List Name Quantity is less than expected: "+expectedQuantity, expectedQuantity <= faqList.getTitleQuantity() );
-        Assert.assertNotNull("Faq List Pagination doesn't exist", faqList.getFaqListPagination() );
+        Assert.assertTrue(expectedQuantity <= faqList.getTitleQuantity(), "Actual Faq List Name Quantity is less than expected: "+expectedQuantity);
+        Assert.assertNotNull(faqList.getFaqListPagination(), "Faq List Pagination doesn't exist");
 
     }
 
-    @After
+    @AfterTest
     public void tearDown() {
         dashboard.logoutFromAdmin();
         //driver.quit();

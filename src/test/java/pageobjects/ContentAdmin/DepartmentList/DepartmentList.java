@@ -26,15 +26,9 @@ public class DepartmentList extends AbstractPageObject {
         dataGridPager = By.xpath(propUIContentAdmin.getProperty("pager_DataGrid"));
     }
 
-
-    public String getUrl() {
-        return driver.getCurrentUrl();
-    }
-
-
     public String getTitle() {
-        wait.until(ExpectedConditions.visibilityOf(findElement(moduleTitle)) );
-        return findElement(moduleTitle).getText();
+        waitForElement(moduleTitle);
+        return getText(moduleTitle);
     }
 
 

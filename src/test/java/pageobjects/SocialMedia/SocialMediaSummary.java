@@ -1,55 +1,80 @@
 package pageobjects.SocialMedia;
 
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
 
 import static org.junit.Assert.fail;
+import static specs.AbstractSpec.propUISocialMedia;
 
 /**
  * Created by jasons on 2016-12-07.
  */
 public class SocialMediaSummary extends AbstractPageObject {
+    private static By moduleTitle, settingsDialog, linkedInStatusIndicator, linkedInStatusMessage, linkedInAccountName;
+    private static By linkedInCompany, linkedInFollowers, linkedInAuthorizeButton, linkedInDeAuthorizeButton;
+    private static By linkedInDisableButton, linkedInEnableButton, linkedInReAuthorizeButton, linkedInSettingsButton, linkedInCompanyRadioSelector;
+    private static By linkedInCompanySelectButton, facebookStatusIndicator, facebookStatusMessage, facebookAccountName;
+    private static By facebookPage, facebookFans, facebookAuthorizeButton, facebookDeAuthorizeButton, facebookDisableButton;
+    private static By facebookEnableButton, facebookReAuthorizeButton, facebookSettingsButton, facebookPageRadioSelector, facebookPageSelectButton;
 
-    private final By moduleTitle = By.xpath("//span[contains(@class, 'AdminContent')]/h1/span[contains(@id,'ModuleTitle')]");
-    private final By settingsDialog = By.id("SMSettingBox");
-
-    // LinkedIn section
-    private final By linkedInStatusIndicator = By.cssSelector(".LinkedIn .ActiveAccount");
-        //css -> background-image contains /unchecked.png (if not setup), /checked.png (if setup), or /disabled.png (if disabled)
-    private final By linkedInStatusMessage = By.xpath("//span[contains(@id,'lblLinkedInMessage')]");
-    private final By linkedInAccountName = By.cssSelector(".LinkedIn .ProfileLink");
-    private final By linkedInCompany = By.xpath("//a[contains(@id,'hpLinkedInCompany')]");
-    private final By linkedInFollowers = By.xpath("//span[contains(@id,'lblLinkedInCompanyFollowers')]");
-    private final By linkedInAuthorizeButton = By.cssSelector(".LinkedIn [value=Authorize]");
-    private final By linkedInDeAuthorizeButton = By.cssSelector(".LinkedIn .DeAuthorize");
-    private final By linkedInDisableButton = By.cssSelector(".LinkedIn [value=Disable]");
-    private final By linkedInEnableButton = By.cssSelector(".LinkedIn [value=Enable]");
-    private final By linkedInReAuthorizeButton = By.cssSelector(".LinkedIn [value=Re-Authorize]");
-    private final By linkedInSettingsButton = By.cssSelector(".LinkedIn .Settings");
-    private final By linkedInCompanyRadioSelector = By.xpath("//input[contains(@id,'rblLinkedInCompanyList')]");
-    private final By linkedInCompanySelectButton = By.cssSelector(".LinkedIn [value=Select]");
-
-    // Facebook section
-    private final By facebookStatusIndicator = By.cssSelector(".Facebook .ActiveAccount");
-    //css -> background-image contains /unchecked.png (if not setup), /checked.png (if setup), or /disabled.png (if disabled)
-    private final By facebookStatusMessage = By.xpath("//span[contains(@id,'lblFacebookMessage')]");
-    private final By facebookAccountName = By.cssSelector(".Facebook .ProfileLink");
-    private final By facebookPage = By.xpath("//a[contains(@id,'hpFacebookPage')]");
-    private final By facebookFans = By.xpath("//span[contains(@id,'lblFacebookLikesCount')]");
-    private final By facebookAuthorizeButton = By.cssSelector(".Facebook [value=Authorize]");
-    private final By facebookDeAuthorizeButton = By.cssSelector(".Facebook .DeAuthorize");
-    private final By facebookDisableButton = By.cssSelector(".Facebook [value=Disable]");
-    private final By facebookEnableButton = By.cssSelector(".Facebook [value=Enable]");
-    private final By facebookReAuthorizeButton = By.cssSelector(".Facebook [value=Re-Authorize]");
-    private final By facebookSettingsButton = By.cssSelector(".Facebook .Settings");
-    private final By facebookPageRadioSelector = By.xpath("//input[contains(@id,'rblFacebookPages')]");
-    private final By facebookPageSelectButton = By.cssSelector(".Facebook [value=Select]");
+    private static By linkedInSpan, facebookSpan, twitterSpan, stockTwitsSpan, slideShareSpan, googleAPISpan, bitLySpan;
+    private static By linkedInDiv, facebookDiv, twitterDiv, stockTwitsDiv, slideShareDiv, googleAPIDiv, bitLyDiv;
 
     public SocialMediaSummary(WebDriver driver) {
         super(driver);
+
+        moduleTitle = By.xpath(propUISocialMedia.getProperty("spanModule_Title"));
+        settingsDialog = By.id(propUISocialMedia.getProperty("box_SettingsDialog"));
+
+        // LinkedIn section
+        linkedInStatusIndicator = By.cssSelector(propUISocialMedia.getProperty("linkedIn_StatusInd"));
+        //css -> background-image contains /unchecked.png (if not setup), /checked.png (if setup), or /disabled.png (if disabled)
+        linkedInStatusMessage = By.xpath(propUISocialMedia.getProperty("msg_linkedInStatus"));
+        linkedInAccountName = By.cssSelector(propUISocialMedia.getProperty("linkedIn_AccountName"));
+        linkedInCompany = By.xpath(propUISocialMedia.getProperty("linkedIn_Company"));
+        linkedInFollowers = By.xpath(propUISocialMedia.getProperty("linkedIn_Followers"));
+        linkedInAuthorizeButton = By.cssSelector(propUISocialMedia.getProperty("btn_linkedIn_Authorize"));
+        linkedInDeAuthorizeButton = By.cssSelector(propUISocialMedia.getProperty("btn_linkedInDeAuthorize"));
+        linkedInDisableButton = By.cssSelector(propUISocialMedia.getProperty("btn_linkedInDisable"));
+        linkedInEnableButton = By.cssSelector(propUISocialMedia.getProperty("btn_linkedInEnable"));
+        linkedInReAuthorizeButton = By.cssSelector(propUISocialMedia.getProperty("btn_linkedInReAuthorize"));
+        linkedInSettingsButton = By.cssSelector(propUISocialMedia.getProperty("btn_linkedInSettings"));
+        linkedInCompanyRadioSelector = By.xpath(propUISocialMedia.getProperty("sel_linkedInCompanyRadio"));
+        linkedInCompanySelectButton = By.cssSelector(propUISocialMedia.getProperty("btn_linkedInCompanySelect"));
+
+        // Facebook section
+        facebookStatusIndicator = By.cssSelector(propUISocialMedia.getProperty("facebook_StatusInd"));
+        //css -> background-image contains /unchecked.png (if not setup), /checked.png (if setup), or /disabled.png (if disabled)
+        facebookStatusMessage = By.xpath(propUISocialMedia.getProperty("msg_facebook_Status"));
+        facebookAccountName = By.cssSelector(propUISocialMedia.getProperty("facebook_AccountName"));
+        facebookPage = By.xpath(propUISocialMedia.getProperty("facebook_Page"));
+        facebookFans = By.xpath(propUISocialMedia.getProperty("facebook_Fans"));
+        facebookAuthorizeButton = By.cssSelector(propUISocialMedia.getProperty("btn_facebook_Authorize"));
+        facebookDeAuthorizeButton = By.cssSelector(propUISocialMedia.getProperty("btn_facebook_DeAuthorize"));
+        facebookDisableButton = By.cssSelector(propUISocialMedia.getProperty("btn_facebook_Disable"));
+        facebookEnableButton = By.cssSelector(propUISocialMedia.getProperty("btn_facebook_Enable"));
+        facebookReAuthorizeButton = By.cssSelector(propUISocialMedia.getProperty("btn_facebook_ReAuthorize"));
+        facebookSettingsButton = By.cssSelector(propUISocialMedia.getProperty("btn_facebook_Settings"));
+        facebookPageRadioSelector = By.xpath(propUISocialMedia.getProperty("sel_facebook_PageRadio"));
+        facebookPageSelectButton = By.cssSelector(propUISocialMedia.getProperty("btn_facebook_PageSelect"));
+
+        linkedInSpan = By.xpath(propUISocialMedia.getProperty("span_LinkedIn"));
+        facebookSpan = By.xpath(propUISocialMedia.getProperty("span_Facebook"));
+
+        stockTwitsSpan = By.xpath(propUISocialMedia.getProperty("span_StockTwits"));
+        twitterSpan = By.xpath(propUISocialMedia.getProperty("span_Twitter"));
+        slideShareSpan = By.xpath(propUISocialMedia.getProperty("span_SlideShare"));
+        googleAPISpan = By.xpath(propUISocialMedia.getProperty("span_GoogleAPI"));
+        bitLySpan = By.xpath(propUISocialMedia.getProperty("span_BitLy"));
+
+        linkedInDiv = By.xpath(propUISocialMedia.getProperty("div_LinkedIn"));
+        facebookDiv = By.xpath(propUISocialMedia.getProperty("div_Facebook"));
+        twitterDiv = By.xpath(propUISocialMedia.getProperty("div_Twitter"));
+        stockTwitsDiv = By.xpath(propUISocialMedia.getProperty("div_StockTwits"));
+        slideShareDiv = By.xpath(propUISocialMedia.getProperty("div_SlideShare"));
+        googleAPIDiv = By.xpath(propUISocialMedia.getProperty("div_GoogleAPI"));
+        bitLyDiv = By.xpath(propUISocialMedia.getProperty("div_BitLy"));
     }
 
     public String getTitle() {
@@ -132,6 +157,7 @@ public class SocialMediaSummary extends AbstractPageObject {
         return findElement(linkedInCompany).getText();
     }
 
+    // checks that a number of followers of at least zero is displayed
     public boolean numberOfLinkedInFollowersIsDisplayed(){
         if (!doesElementExist(linkedInFollowers) || !findElement(linkedInFollowers).isDisplayed()){
             fail("Number of LinkedIn followers is not displayed.");
@@ -143,6 +169,7 @@ public class SocialMediaSummary extends AbstractPageObject {
         }
     }
 
+    // returns image file path containing /unchecked.png (red X; not setup), /checked.png (green checkmark; setup), or /disabled.png (grey checkmark; disabled)
     public String getLinkedInStatusIndicator(){
         if (!doesElementExist(linkedInStatusIndicator) || !findElement(linkedInStatusIndicator).isDisplayed()){
             fail("LinkedIn status indicator is not displayed.");
@@ -189,13 +216,16 @@ public class SocialMediaSummary extends AbstractPageObject {
         return new FacebookLogin(getDriver());
     }
 
-    public FacebookLogin reAuthorizeFacebookAccount(){
-        // deleting Facebook session cookie so that you are not logged in to Facebook
+    // This deletes the Facebook session cookie (named "xs") in order to undo the login that occurred during the authorization process
+    public SocialMediaSummary logoutFromFacebook(){
         String currentURL = driver.getCurrentUrl();
-        driver.get("https://www.facebook.com");
+        driver.get("https://www.facebook.com"); //need to navigate to facebook.com because WebDriver can only delete cookies from current domain
         driver.manage().deleteCookieNamed("xs");
         driver.get(currentURL);
+        return this;
+    }
 
+    public FacebookLogin reAuthorizeFacebookAccount(){
         waitForElement(facebookReAuthorizeButton);
         findElement(facebookReAuthorizeButton).click();
         return new FacebookLogin(getDriver());
@@ -250,6 +280,7 @@ public class SocialMediaSummary extends AbstractPageObject {
         return findElement(facebookPage).getText();
     }
 
+    // checks that a number of fans of at least zero is displayed
     public boolean numberOfFacebookFansIsDisplayed(){
         if (!doesElementExist(facebookFans) || !findElement(facebookFans).isDisplayed()){
             fail("Number of Facebook fans is not displayed.");
@@ -261,6 +292,7 @@ public class SocialMediaSummary extends AbstractPageObject {
         }
     }
 
+    // returns image file path containing /unchecked.png (red X; not setup), /checked.png (green checkmark; setup), or /disabled.png (grey checkmark; disabled)
     public String getFacebookStatusIndicator(){
         if (!doesElementExist(facebookStatusIndicator) || !findElement(facebookStatusIndicator).isDisplayed()){
             fail("Facebook status indicator is not displayed.");
@@ -291,4 +323,202 @@ public class SocialMediaSummary extends AbstractPageObject {
     public boolean facebookAuthorizeButtonIsDisplayed(){
         return doesElementExist(facebookAuthorizeButton) && findElement(facebookAuthorizeButton).isDisplayed();
     }
+
+    public WebElement getLinkedInSpan() {
+        WebElement element = null;
+
+        try {
+            waitForElement(linkedInSpan);
+            element = findElement(linkedInSpan);
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
+        }
+
+        return element;
+    }
+
+    public WebElement getFacebookSpan() {
+        WebElement element = null;
+
+        try {
+            waitForElement(facebookSpan);
+            element = findElement(facebookSpan);
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
+        }
+
+        return element;
+    }
+
+    public WebElement getTwitterSpan() {
+        WebElement element = null;
+
+        try {
+            waitForElement(twitterSpan);
+            element = findElement(twitterSpan);
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
+        }
+
+        return element;
+    }
+
+    public WebElement getStockTwitsSpan() {
+        WebElement element = null;
+
+        try {
+            waitForElement(stockTwitsSpan);
+            element = findElement(stockTwitsSpan);
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
+        }
+
+        return element;
+    }
+
+    public WebElement getSlideShareSpan() {
+        WebElement element = null;
+
+        try {
+            waitForElement(slideShareSpan);
+            element = findElement(slideShareSpan);
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
+        }
+
+        return element;
+    }
+
+    public WebElement getGoogleAPISpan() {
+        WebElement element = null;
+
+        try {
+            waitForElement(googleAPISpan);
+            element = findElement(googleAPISpan);
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
+        }
+
+        return element;
+    }
+
+    public WebElement getBitLySpan() {
+        WebElement element = null;
+
+        try {
+            waitForElement(bitLySpan);
+            element = findElement(bitLySpan);
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
+        }
+
+        return element;
+    }
+
+    public WebElement getLinkedInBtns() {
+        WebElement element = null;
+
+        try {
+            waitForElement(linkedInDiv);
+            element = findElement(linkedInDiv);
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
+        }
+
+        return element;
+    }
+
+    public WebElement getFacebookBtns() {
+        WebElement element = null;
+
+        try {
+            waitForElement(facebookDiv);
+            element = findElement(facebookDiv);
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
+        }
+
+        return element;
+    }
+
+    public WebElement getTwitterBtns() {
+        WebElement element = null;
+
+        try {
+            waitForElement(twitterDiv);
+            element = findElement(twitterDiv);
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
+        }
+
+        return element;
+    }
+
+    public WebElement getStockTwitsBtns() {
+        WebElement element = null;
+
+        try {
+            waitForElement(stockTwitsDiv);
+            element = findElement(stockTwitsDiv);
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
+        }
+
+        return element;
+    }
+
+    public WebElement getSlideShareBtns() {
+        WebElement element = null;
+
+        try {
+            waitForElement(slideShareDiv);
+            element = findElement(slideShareDiv);
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
+        }
+
+        return element;
+    }
+
+    public WebElement getGoogleAPIBtns() {
+        WebElement element = null;
+
+        try {
+            waitForElement(googleAPIDiv);
+            element = findElement(googleAPIDiv);
+            //System.out.println(element.getAttribute("value"));
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
+        }
+
+        return element;
+    }
+
+    public WebElement getBitLyBtns() {
+        WebElement element = null;
+
+        try {
+            waitForElement(bitLyDiv);
+            element = findElement(bitLyDiv);
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
+        }
+
+        return element;
+    }
+
 }

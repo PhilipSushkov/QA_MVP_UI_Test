@@ -1,9 +1,6 @@
 package pageobjects.ContentAdmin.QuickLinkList;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.ElementNotVisibleException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
 
@@ -52,6 +49,7 @@ public class QuickLinks extends AbstractPageObject {
             element = findElement(dataGridPager);
         } catch (ElementNotFoundException e1) {
         } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
         }
 
         return element;
@@ -66,6 +64,7 @@ public class QuickLinks extends AbstractPageObject {
             element = findElement(inputFilterByTag);
         } catch (ElementNotFoundException e1) {
         } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
         }
 
         return element;

@@ -1,9 +1,10 @@
 package specs.ContentAdmin.PersonList;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+import org.testng.Assert;
+
 import org.openqa.selenium.By;
 import pageobjects.ContentAdmin.PersonList.PersonList;
 import pageobjects.Dashboard.Dashboard;
@@ -20,7 +21,7 @@ public class CheckPersonList extends AbstractSpec {
     private static Dashboard dashboard;
     private static PersonList personList;
 
-    @Before
+    @BeforeTest
     public void setUp() throws Exception {
         contentAdminMenuButton = By.xpath(propUIContentAdmin.getProperty("btnMenu_ContentAdmin"));
         personListMenuItem = By.xpath(propUIContentAdmin.getProperty("btnMenu_PersonList"));
@@ -40,16 +41,16 @@ public class CheckPersonList extends AbstractSpec {
         dashboard.openPageFromMenu(contentAdminMenuButton, personListMenuItem);
 
         Assert.assertNotNull(personList.getUrl());
-        Assert.assertEquals("Actual Person List page Title doesn't match to expected", expectedTitle, personList.getTitle());
+        Assert.assertEquals(personList.getTitle(), expectedTitle, "Actual Person List page Title doesn't match to expected");
 
         //System.out.println(new PersonList(driver).getTitleQuantity().toString());
-        Assert.assertTrue("Actual Person List Name Quantity is less than expected: "+expectedQuantity, expectedQuantity <= personList.getTitleQuantity() );
+        Assert.assertTrue(expectedQuantity <= personList.getTitleQuantity(), "Actual Person List Name Quantity is less than expected: "+expectedQuantity);
         //Assert.assertNotNull("Person List Pagination doesn't exist", new PersonList(driver).getQuickLinksPagination() );
-        Assert.assertNotNull("Department drop down list doesn't exist", personList.getDepartmentList() );
+        Assert.assertNotNull(personList.getDepartmentList(), "Department drop down list doesn't exist");
 
     }
 
-    @After
+    @AfterTest
     public void tearDown() {
         dashboard.logoutFromAdmin();
         //driver.quit();

@@ -1,9 +1,10 @@
 package specs.SystemAdmin.UserList;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.After;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+import org.testng.Assert;
+
 import org.openqa.selenium.By;
 import specs.AbstractSpec;
 import pageobjects.LoginPage.LoginPage;
@@ -20,7 +21,7 @@ public class CheckUserList extends AbstractSpec {
     private static Dashboard dashboard;
     private static UserList userList;
 
-    @Before
+    @BeforeTest
     public void setUp() throws Exception {
         systemAdminMenuButton = By.xpath(propUISystemAdmin.getProperty("btnMenu_SystemAdmin"));
         userListMenuItem = By.xpath(propUISystemAdmin.getProperty("itemMenu_UserList"));
@@ -30,6 +31,7 @@ public class CheckUserList extends AbstractSpec {
         userList = new UserList(driver);
 
         loginPage.loginUser();
+        dashboard.openPageFromMenu(systemAdminMenuButton, userListMenuItem);
     }
 
     @Test
@@ -37,17 +39,15 @@ public class CheckUserList extends AbstractSpec {
         final String expectedTitle = "User List";
         final Integer expectedQuantity = 30;
 
-        dashboard.openPageFromMenu(systemAdminMenuButton, userListMenuItem);
-
         Assert.assertNotNull(userList.getUrl());
-        Assert.assertEquals("Actual User List page Title doesn't match to expected", expectedTitle, userList.getTitle());
+        Assert.assertEquals(userList.getTitle(), expectedTitle, "Actual User List page Title doesn't match to expected");
 
         //System.out.println(new UserList(driver).getUserNameQuantity().toString());
-        Assert.assertTrue("Actual User Name Quantity is less than expected: "+expectedQuantity, expectedQuantity <= userList.getUserNameQuantity() );
+        Assert.assertTrue(expectedQuantity <= userList.getUserNameQuantity(), "Actual User Name Quantity is less than expected: "+expectedQuantity);
 
     }
 
-    @After
+    @AfterTest
     public void tearDown() {
         dashboard.logoutFromAdmin();
         //driver.quit();

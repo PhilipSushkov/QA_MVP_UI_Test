@@ -2,6 +2,7 @@ package pageobjects;
 
 import org.apache.commons.collections4.Predicate;
 import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import pageobjects.LoginPage.LoginPage;
@@ -19,6 +20,8 @@ public class AbstractPageObject implements PageObject {
     };
 
     private final By logoutButton = By.xpath("//li/a[contains(text(),'Logout')]");
+    private static final long DEFAULT_PAUSE = 1500;
+    private static final int ATTEMPTS = 3;
 
     public AbstractPageObject(WebDriver driver) {
         this.driver = driver;
@@ -74,5 +77,65 @@ public class AbstractPageObject implements PageObject {
         return size/columnsNumber;
     }
 
+    public void openPageFromCommonTasks(By taskLink) throws Exception {
+        waitForElement(taskLink);
+
+        for (int i=0; i<ATTEMPTS; i++) {
+            try {
+                findElement(taskLink).click();
+                break;
+            } catch (ElementNotVisibleException e1){
+                System.out.println("Attempt #" + i);
+            } catch (ElementNotFoundException e2) {
+                System.out.println("Attempt #" + i);
+            } catch (TimeoutException e3) {
+                System.out.println("Attempt #" + i);
+            }
+        }
+    }
+
+    public void openPageFromMenu(By menuButton, By menuItem) throws Exception {
+        Actions action = new Actions(driver);
+        wait.until(ExpectedConditions.visibilityOf(findElement(menuButton)));
+
+        for (int i=0; i<ATTEMPTS; i++) {
+            try {
+                action.moveToElement(findElement(menuButton)).perform();
+                wait.until(ExpectedConditions.visibilityOf(findElement(menuItem)));
+                Thread.sleep(DEFAULT_PAUSE);
+                findElement(menuItem).click();
+                break;
+            } catch (ElementNotVisibleException e1){
+                System.out.println("Attempt #" + i);
+            } catch (ElementNotFoundException e2) {
+                System.out.println("Attempt #" + i);
+            } catch (TimeoutException e3) {
+                System.out.println("Attempt #" + i);
+            }
+        }
+    }
+
+    public void openEditPageFromAddNew(By menuButton, By menuItem, By linkAddNew) throws Exception {
+        Actions action = new Actions(driver);
+        wait.until(ExpectedConditions.visibilityOf(findElement(menuButton)));
+
+        for (int i=0; i<ATTEMPTS; i++) {
+            try {
+                action.moveToElement(findElement(menuButton)).perform();
+                wait.until(ExpectedConditions.visibilityOf(findElement(menuItem)));
+                Thread.sleep(DEFAULT_PAUSE);
+                findElement(menuItem).click();
+                wait.until(ExpectedConditions.visibilityOf(findElement(linkAddNew)));
+                findElement(linkAddNew).click();
+                break;
+            } catch (ElementNotVisibleException e1){
+                System.out.println("Attempt #" + i);
+            } catch (ElementNotFoundException e2) {
+                System.out.println("Attempt #" + i);
+            } catch (TimeoutException e3) {
+                System.out.println("Attempt #" + i);
+            }
+        }
+    }
 
 }

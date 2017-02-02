@@ -17,7 +17,7 @@ public class GlobalModuleList extends AbstractPageObject {
 
     public GlobalModuleList(WebDriver driver) {
         super(driver);
-        moduleTitle = By.xpath(propUISiteAdmin.getProperty("span_Title"));
+        moduleTitle = By.xpath(propUISiteAdmin.getProperty("spanSection_Title"));
         grid = By.xpath(propUISiteAdmin.getProperty("table_GridGlobalModule"));
         gridGlobalModuleList = By.xpath(propUISiteAdmin.getProperty("table_GridItem"));
     }

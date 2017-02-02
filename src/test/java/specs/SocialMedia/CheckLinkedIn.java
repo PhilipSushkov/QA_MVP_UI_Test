@@ -1,10 +1,12 @@
 package specs.SocialMedia;
 
-import org.hamcrest.CoreMatchers;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+//import org.hamcrest.CoreMatchers;
+
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+import org.testng.Assert;
+
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.LoginPage.LoginPage;
 import pageobjects.SocialMedia.SocialMediaSummary;
@@ -18,12 +20,13 @@ import java.util.Date;
  */
 public class CheckLinkedIn extends AbstractSpec{
 
-    @Before
+    @BeforeTest
     public void setUp() throws Exception {
         new LoginPage(driver).loginUser();
     }
 
     @Test
+    // This test assumes that LinkedIn account is not currently setup and that you are not logged in to LinkedIn
     public void canConnectLinkedInAccount() throws Exception {
         String expectedTitle = "Social Media Summary";
         String selectCompanyMessage = "Select the Company page you want to link";
@@ -33,90 +36,120 @@ public class CheckLinkedIn extends AbstractSpec{
         String linkedInName = "NotJohn Smith";
         String linkedInCompany = "Q4TestInc";
         SocialMediaSummary socialMediaSummary = new Dashboard(driver).openSocialMedia();
-        Assert.assertEquals("Actual Social Media Summary page title doesn't match to expected", expectedTitle, socialMediaSummary.getTitle());
-        Assert.assertThat("Red X is not displayed at start of test (LinkedIn account not setup state expected)",
+
+        Assert.assertEquals(socialMediaSummary.getTitle(), expectedTitle,"Actual Social Media Summary page title doesn't match to expected");
+
+        /* Assert.assertThat("Red X is not displayed at start of test (LinkedIn account not setup state expected)",
                 socialMediaSummary.getLinkedInStatusIndicator(),
-                CoreMatchers.containsString("/unchecked.png"));
+                CoreMatchers.containsString("/unchecked.png")); */
+        Assert.assertTrue(socialMediaSummary.getLinkedInStatusIndicator().contains("/unchecked.png"),
+                "Red X is not displayed at start of test (LinkedIn account not setup state expected)");
 
         // authorizing LinkedIn account
         socialMediaSummary.authorizeLinkedInAccount().allowAccessTo(linkedInEmail, linkedInPassword);
-        Assert.assertEquals("You are not returned to summary page after authorizing LinkedIn account", expectedTitle, socialMediaSummary.getTitle());
-        Assert.assertEquals("Select company status message is not properly displayed", selectCompanyMessage, socialMediaSummary.getLinkedInStatusMessage());
+        Assert.assertEquals(socialMediaSummary.getTitle(), expectedTitle, "You are not returned to summary page after authorizing LinkedIn account");
+        Assert.assertEquals(socialMediaSummary.getLinkedInStatusMessage(), selectCompanyMessage,"Select company status message is not properly displayed");
+
         socialMediaSummary.chooseFirstLinkedInCompany();
-        Assert.assertEquals("Incorrect account name is displayed", linkedInName, socialMediaSummary.getLinkedInAccountName());
-        Assert.assertEquals("Incorrect company name is displayed", linkedInCompany, socialMediaSummary.getLinkedInCompany());
-        Assert.assertTrue("Number of followers is improperly displayed.", socialMediaSummary.numberOfLinkedInFollowersIsDisplayed());
-        Assert.assertThat("Green checkmark is not displayed after authorizing LinkedIn account",
+        Assert.assertEquals(socialMediaSummary.getLinkedInAccountName(),linkedInName, "Incorrect account name is displayed");
+        Assert.assertEquals(socialMediaSummary.getLinkedInCompany(), linkedInCompany, "Incorrect company name is displayed");
+        Assert.assertTrue(socialMediaSummary.numberOfLinkedInFollowersIsDisplayed(), "Number of followers is improperly displayed.");
+
+        /* Assert.assertThat("Green checkmark is not displayed after authorizing LinkedIn account",
                 socialMediaSummary.getLinkedInStatusIndicator(),
-                CoreMatchers.containsString("/checked.png"));
-        Assert.assertTrue("Settings button is not displayed after authorizing LinkedIn account.", socialMediaSummary.linkedInSettingsButtonIsDisplayed());
-        Assert.assertTrue("De-Authorize button is not displayed after authorizing LinkedIn account", socialMediaSummary.linkedInDeAuthorizeButtonIsDisplayed());
-        Assert.assertTrue("Disable button is not displayed after authorizing LinkedIn account", socialMediaSummary.linkedInDisableButtonIsDisplayed());
-        Assert.assertTrue("Re-Authorize button is not displayed after authorizing LinkedIn account", socialMediaSummary.linkedInReAuthorizeButtonIsDisplayed());
+                CoreMatchers.containsString("/checked.png")); */
+        Assert.assertTrue(socialMediaSummary.getLinkedInStatusIndicator().contains("/checked.png"),
+                "Green checkmark is not displayed after authorizing LinkedIn account");
+
+        Assert.assertTrue(socialMediaSummary.linkedInSettingsButtonIsDisplayed(), "Settings button is not displayed after authorizing LinkedIn account.");
+        Assert.assertTrue(socialMediaSummary.linkedInDeAuthorizeButtonIsDisplayed(), "De-Authorize button is not displayed after authorizing LinkedIn account");
+        Assert.assertTrue(socialMediaSummary.linkedInDisableButtonIsDisplayed(),"Disable button is not displayed after authorizing LinkedIn account");
+        Assert.assertTrue(socialMediaSummary.linkedInReAuthorizeButtonIsDisplayed(),"Re-Authorize button is not displayed after authorizing LinkedIn account");
 
         // disabling LinkedIn account
         socialMediaSummary.disableLinkedInAccount();
-        Assert.assertThat("Grey checkmark is not displayed after disabling LinkedIn account",
+
+        /*Assert.assertThat("Grey checkmark is not displayed after disabling LinkedIn account",
                 socialMediaSummary.getLinkedInStatusIndicator(),
-                CoreMatchers.containsString("/disabled.png"));
-        Assert.assertFalse("Disable button is still present after disabling LinkedIn account.", socialMediaSummary.linkedInDisableButtonIsDisplayed());
-        Assert.assertTrue("Enable button is not present after disabling LinkedIn account.", socialMediaSummary.linkedInEnableButtonIsDisplayed());
+                CoreMatchers.containsString("/disabled.png"));*/
+        Assert.assertTrue(socialMediaSummary.getLinkedInStatusIndicator().contains("/disabled.png"),
+                "Grey checkmark is not displayed after disabling LinkedIn account");
+
+        Assert.assertFalse(socialMediaSummary.linkedInDisableButtonIsDisplayed(),"Disable button is still present after disabling LinkedIn account.");
+        Assert.assertTrue(socialMediaSummary.linkedInEnableButtonIsDisplayed(), "Enable button is not present after disabling LinkedIn account.");
 
         // enabling LinkedIn account
         socialMediaSummary.enableLinkedInAccount();
-        Assert.assertThat("Green checkmark is not displayed after enabling LinkedIn account",
+
+        /* Assert.assertThat("Green checkmark is not displayed after enabling LinkedIn account",
                 socialMediaSummary.getLinkedInStatusIndicator(),
-                CoreMatchers.containsString("/checked.png"));
-        Assert.assertFalse("Enable button is still present after enabling LinkedIn account.", socialMediaSummary.linkedInEnableButtonIsDisplayed());
-        Assert.assertTrue("Disable button is not present after enabling LinkedIn account.", socialMediaSummary.linkedInDisableButtonIsDisplayed());
+                CoreMatchers.containsString("/checked.png")); */
+        Assert.assertTrue(socialMediaSummary.getLinkedInStatusIndicator().contains("/checked.png"),
+                "Green checkmark is not displayed after enabling LinkedIn account");
+
+        Assert.assertFalse(socialMediaSummary.linkedInEnableButtonIsDisplayed(),"Enable button is still present after enabling LinkedIn account.");
+        Assert.assertTrue(socialMediaSummary.linkedInDisableButtonIsDisplayed(),"Disable button is not present after enabling LinkedIn account.");
 
         // re-authorizing LinkedIn account
         socialMediaSummary.reAuthorizeLinkedInAccount().allowAccessTo(linkedInEmail, linkedInPassword);
-        Assert.assertEquals("You are not returned to summary page after re-authorizing LinkedIn account", expectedTitle, socialMediaSummary.getTitle());
-        Assert.assertEquals("Select company status message is not properly displayed after re-authorizing", selectCompanyMessage, socialMediaSummary.getLinkedInStatusMessage());
+        Assert.assertEquals(socialMediaSummary.getTitle(), expectedTitle, "You are not returned to summary page after re-authorizing LinkedIn account");
+        Assert.assertEquals(socialMediaSummary.getLinkedInStatusMessage(),selectCompanyMessage, "Select company status message is not properly displayed after re-authorizing");
+
         socialMediaSummary.chooseFirstLinkedInCompany();
-        Assert.assertEquals("Incorrect account name is displayed after re-authorizing", linkedInName, socialMediaSummary.getLinkedInAccountName());
-        Assert.assertEquals("Incorrect company name is displayed after re-authorizing", linkedInCompany, socialMediaSummary.getLinkedInCompany());
-        Assert.assertTrue("Number of followers is improperly displayed after re-authorizing.", socialMediaSummary.numberOfLinkedInFollowersIsDisplayed());
-        Assert.assertThat("Green checkmark is not displayed after re-authorizing LinkedIn account",
+        Assert.assertEquals(socialMediaSummary.getLinkedInAccountName(),linkedInName, "Incorrect account name is displayed after re-authorizing");
+        Assert.assertEquals(socialMediaSummary.getLinkedInCompany(),linkedInCompany,"Incorrect company name is displayed after re-authorizing");
+        Assert.assertTrue(socialMediaSummary.numberOfLinkedInFollowersIsDisplayed(),"Number of followers is improperly displayed after re-authorizing.");
+
+        /* Assert.assertThat("Green checkmark is not displayed after re-authorizing LinkedIn account",
                 socialMediaSummary.getLinkedInStatusIndicator(),
-                CoreMatchers.containsString("/checked.png"));
-        Assert.assertTrue("Settings button is not displayed after re-authorizing LinkedIn account.", socialMediaSummary.linkedInSettingsButtonIsDisplayed());
-        Assert.assertTrue("De-Authorize button is not displayed after re-authorizing LinkedIn account", socialMediaSummary.linkedInDeAuthorizeButtonIsDisplayed());
-        Assert.assertTrue("Disable button is not displayed after re-authorizing LinkedIn account", socialMediaSummary.linkedInDisableButtonIsDisplayed());
-        Assert.assertTrue("Re-Authorize button is not displayed after re-authorizing LinkedIn account", socialMediaSummary.linkedInReAuthorizeButtonIsDisplayed());
+                CoreMatchers.containsString("/checked.png")); */
+        Assert.assertTrue(socialMediaSummary.getLinkedInStatusIndicator().contains("/checked.png"),
+                "Green checkmark is not displayed after re-authorizing LinkedIn account");
+
+        Assert.assertTrue(socialMediaSummary.linkedInSettingsButtonIsDisplayed(),"Settings button is not displayed after re-authorizing LinkedIn account.");
+        Assert.assertTrue(socialMediaSummary.linkedInDeAuthorizeButtonIsDisplayed(),"De-Authorize button is not displayed after re-authorizing LinkedIn account");
+        Assert.assertTrue(socialMediaSummary.linkedInDisableButtonIsDisplayed(),"Disable button is not displayed after re-authorizing LinkedIn account");
+        Assert.assertTrue(socialMediaSummary.linkedInReAuthorizeButtonIsDisplayed(),"Re-Authorize button is not displayed after re-authorizing LinkedIn account");
 
         // de-authorizing LinkedIn account
         socialMediaSummary.deAuthorizeLinkedInAccount();
-        Assert.assertThat("Red X is not displayed after de-authorizing LinkedIn account",
+
+        /* Assert.assertThat("Red X is not displayed after de-authorizing LinkedIn account",
                 socialMediaSummary.getLinkedInStatusIndicator(),
-                CoreMatchers.containsString("/unchecked.png"));
-        Assert.assertEquals("Status message is not properly displayed after de-authorizing LinkedIn account", notSetupMessage, socialMediaSummary.getLinkedInStatusMessage());
-        Assert.assertTrue("Settings button is not displayed after de-authorizing LinkedIn account.", socialMediaSummary.linkedInSettingsButtonIsDisplayed());
-        Assert.assertTrue("Authorize button is not displayed after de-authorizing LinkedIn account.", socialMediaSummary.linkedInAuthorizeButtonIsDisplayed());
+                CoreMatchers.containsString("/unchecked.png")); */
+        Assert.assertTrue(socialMediaSummary.getLinkedInStatusIndicator().contains("/unchecked.png"),
+                "Red X is not displayed after de-authorizing LinkedIn account");
+
+        Assert.assertEquals(socialMediaSummary.getLinkedInStatusMessage(), notSetupMessage, "Status message is not properly displayed after de-authorizing LinkedIn account");
+        Assert.assertTrue(socialMediaSummary.linkedInSettingsButtonIsDisplayed(), "Settings button is not displayed after de-authorizing LinkedIn account.");
+        Assert.assertTrue(socialMediaSummary.linkedInAuthorizeButtonIsDisplayed(), "Authorize button is not displayed after de-authorizing LinkedIn account.");
     }
 
     @Test
     public void canModifyLinkedInSettings() throws Exception {
         SocialTemplates socialTemplates = new Dashboard(driver).openSocialMedia().openLinkedInSettings();
-        Assert.assertTrue("LinkedIn Social Templates screen is not open.", socialTemplates.linkedInSocialTemplatesAreDisplayed());
+        Assert.assertTrue(socialTemplates.linkedInSocialTemplatesAreDisplayed(),"LinkedIn Social Templates screen is not open.");
         String firstTemplateBefore = socialTemplates.getFirstTemplateText();
         String firstTemplateAfter = (new Date().getTime()/1000)+": Event starting {Event.StartDate}, for details: {ShortURL}";
+
+        // changing the first template to new value and saving it
         socialTemplates.editFirstTemplate();
-        Assert.assertTrue("Edit template screen is not open.", socialTemplates.editTemplateIsOpen());
-        Assert.assertEquals("Editable template textbox is different from original value", firstTemplateBefore, socialTemplates.getEditableTemplateText());
+        Assert.assertTrue(socialTemplates.editTemplateIsOpen(),"Edit template screen is not open.");
+        Assert.assertEquals(socialTemplates.getEditableTemplateText(), firstTemplateBefore, "Editable template textbox is different from original value");
         socialTemplates.editTemplateTo(firstTemplateAfter).saveTemplate();
-        Assert.assertEquals("Template is not set to new value", firstTemplateAfter, socialTemplates.getFirstTemplateText());
+
+        //checking that the template has been changed (including after closing and reopening the settings screen)
+        Assert.assertEquals(socialTemplates.getFirstTemplateText(), firstTemplateAfter, "Template is not set to new value");
         socialTemplates.closeSocialTemplates().openLinkedInSettings();
-        Assert.assertEquals("Template is not set to new value after closing and re-opening Social Templates", firstTemplateAfter, socialTemplates.getFirstTemplateText());
+        Assert.assertEquals(socialTemplates.getFirstTemplateText(), firstTemplateAfter, "Template is not set to new value after closing and re-opening Social Templates");
 
         // reverting template back to original setting
         socialTemplates.editFirstTemplate().editTemplateTo(firstTemplateBefore).saveTemplate();
-        Assert.assertEquals("Template has not been reset to original value", firstTemplateBefore, socialTemplates.getFirstTemplateText());
-        Assert.assertTrue("Social Templates has not been closed.", socialTemplates.closeSocialTemplates().socialTemplatesIsClosed());
+        Assert.assertEquals(socialTemplates.getFirstTemplateText(), firstTemplateBefore, "Template has not been reset to original value");
+        Assert.assertTrue(socialTemplates.closeSocialTemplates().socialTemplatesIsClosed(), "Social Templates has not been closed.");
     }
 
-    @After
+    @AfterTest
     public void tearDown() {
         //driver.quit();
     }

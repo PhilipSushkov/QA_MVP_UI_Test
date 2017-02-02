@@ -43,6 +43,7 @@ public class InvestmentCalculatorPage extends AbstractPageObject {
         return doesElementExist(calculator) && findElement(calculator).isDisplayed();
     }
 
+    // performs a calculation of the investment of $100 with specified start and end dates
     public InvestmentCalculatorPage performSampleCalculation(LocalDate startDate, LocalDate endDate){
         waitForElement(amountInput);
         findElement(amountInput).clear();
@@ -82,11 +83,12 @@ public class InvestmentCalculatorPage extends AbstractPageObject {
     }
 
     public boolean canHoverOverGrowthChart(){
-        actions.clickAndHold(findElement(growthChart)).perform();
+        actions.clickAndHold(findElement(growthChart)).perform(); //clickAndHold needed so that cursor is still there when getAttribute is run
         pause(5000L);
-        return !findElement(chartHoverText).getAttribute("transform").contains("-9999");
+        return !findElement(chartHoverText).getAttribute("transform").contains("-9999"); //transform attribute contains "-9999" when hovertext is not visible
     }
 
+    // checks whether the provided symbol is displayed in the table header
     public boolean resultsIncludeSymbol(String symbol){
         return findElements(growthDataRow).get(0).getText().contains(symbol.toUpperCase());
     }

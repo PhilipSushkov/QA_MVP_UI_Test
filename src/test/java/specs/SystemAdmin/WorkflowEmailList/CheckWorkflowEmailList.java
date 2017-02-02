@@ -1,9 +1,10 @@
 package specs.SystemAdmin.WorkflowEmailList;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.After;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+import org.testng.Assert;
+
 import org.openqa.selenium.By;
 import specs.AbstractSpec;
 import pageobjects.LoginPage.LoginPage;
@@ -20,7 +21,7 @@ public class CheckWorkflowEmailList extends AbstractSpec {
     private static Dashboard dashboard;
     private static WorkflowEmailList workflowEmailList;
 
-    @Before
+    @BeforeTest
     public void setUp() throws Exception {
         systemAdminMenuButton = By.xpath(propUISystemAdmin.getProperty("btnMenu_SystemAdmin"));
         workflowEmailListMenuItem = By.xpath(propUISystemAdmin.getProperty("itemMenu_WorkflowEmailList"));
@@ -40,13 +41,13 @@ public class CheckWorkflowEmailList extends AbstractSpec {
         dashboard.openPageFromMenu(systemAdminMenuButton, workflowEmailListMenuItem);
 
         Assert.assertNotNull(workflowEmailList.getUrl());
-        Assert.assertEquals("Actual Workflow Email List page Title doesn't match to expected", expectedTitle, workflowEmailList.getTitle());
+        Assert.assertEquals(workflowEmailList.getTitle(), expectedTitle, "Actual Workflow Email List page Title doesn't match to expected");
 
         //System.out.println(new WorkflowEmailList(driver).getDescriptionQuantity().toString());
-        Assert.assertTrue("Actual Description Quantity is less than expected: "+expectedQuantity, expectedQuantity < workflowEmailList.getDescriptionQuantity() );
+        Assert.assertTrue(expectedQuantity < workflowEmailList.getDescriptionQuantity(), "Actual Description Quantity is less than expected: "+expectedQuantity );
     }
 
-    @After
+    @AfterTest
     public void tearDown() {
         dashboard.logoutFromAdmin();
         //driver.quit();

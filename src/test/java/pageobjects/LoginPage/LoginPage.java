@@ -4,6 +4,7 @@ import org.openqa.selenium.*;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.Page;
 import specs.AbstractSpec;
+import util.Functions;
 
 import static org.junit.Assert.fail;
 
@@ -25,8 +26,22 @@ public class LoginPage extends Page {
     }
 
     public Dashboard loginUser() throws Exception {
+        int randNum = Functions.randInt(0, 9);
 
         waitForElementToAppear(emailField);
+
+        findElement(emailField).sendKeys("admintest"+randNum);
+        findElement(passwordField).sendKeys("qwerty@01");
+
+        pause(1000L);
+        retryClick(loginButton);
+        pause(2000);
+
+        waitForElement(logoutMenuItem);
+
+        new Dashboard(driver).getUrl();
+
+        return new Dashboard(getDriver());
 
         /*
         if (AbstractSpec.getSessionID() != null) {
@@ -43,15 +58,6 @@ public class LoginPage extends Page {
         }
         */
 
-        findElement(emailField).sendKeys("admintest");
-        findElement(passwordField).sendKeys("qwerty@01");
-
-        pause(1000L);
-        retryClick(loginButton);
-        new Dashboard(driver).getUrl();
-
-        return new Dashboard(getDriver());
-
         //JavascriptExecutor js = (JavascriptExecutor) driver;
         //WebElement elemSrc =  driver.findElement(passwordField);
         //js.executeScript("arguments[0].setAttribute(arguments[1], arguments[2]);", elemSrc, "value", "Song2Q4!");
@@ -62,6 +68,7 @@ public class LoginPage extends Page {
 
     }
 
+    // alternative login method for using a different username and password (use only with valid credentials)
     public Dashboard loginUser(String username, String password) throws Exception {
         waitForElementToAppear(emailField);
         findElement(emailField).sendKeys(username);
@@ -71,6 +78,12 @@ public class LoginPage extends Page {
         return new Dashboard(getDriver());
     }
 
+    /*
+        Checks whether you can login with a given username and password
+        If login is successful, it will log out and then return true
+        If error message is presented, it will clear the fields and then return false
+        NOTE: Repeatedly running this method with incorrect passwords may result in the account becoming temporarily locked out
+     */
     public boolean credentialsWork(String username, String password) throws Exception {
         waitForElementToAppear(emailField);
         findElement(emailField).sendKeys(username);
@@ -80,11 +93,13 @@ public class LoginPage extends Page {
 
         pause(5000);
 
+        // checks if login error message is present
         if (doesElementExist(loginErrorMessage) && findElement(loginErrorMessage).isDisplayed()){
             findElement(emailField).clear();
             findElement(passwordField).clear();
             return false;
         }
+        // checks if dashboard has been loaded
         else if (doesElementExist(dashboardLabel) && findElement(dashboardLabel).getText().toLowerCase().contains("dashboard")){
             logoutFromAdmin();
             return true;

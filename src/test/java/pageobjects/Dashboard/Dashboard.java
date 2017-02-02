@@ -2,132 +2,52 @@ package pageobjects.Dashboard;
 
 
 import org.openqa.selenium.*;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
-import pageobjects.ContentAdmin.PressReleases.EditPressRelease;
-import pageobjects.ContentAdmin.PressReleases.PressReleases;
-import pageobjects.ContentAdmin.Presentations.EditPresentation;
-import pageobjects.ContentAdmin.Presentations.Presentations;
-import pageobjects.ContentAdmin.Events.EditEvent;
-import pageobjects.ContentAdmin.Events.Events;
 import pageobjects.PreviewSite.PreviewSiteHome;
 import pageobjects.SocialMedia.SocialMediaSummary;
 
 import java.util.ArrayList;
 
 import static org.junit.Assert.fail;
+import static specs.AbstractSpec.propUICommon;
+
 
 public class Dashboard extends AbstractPageObject {
-    Actions action = new Actions(driver);
-
-    private final By addPressReleaseButton = By.xpath("//a[contains(@id,'hrefPressReleases')]");
-    private final By addPresentationButton = By.xpath("//a[contains(@id,'hrefPresentations')]");
-    private final By addEventButton = By.xpath("//a[contains(@id,'hrefEvents')]");
-    private final By contentAdminMenuButton = By.xpath("//span[contains(text(),'Content Admin')]");
-    private final By pressReleasesMenuButton = By.xpath("//a[contains(text(),'Press Releases')]/parent::li");
-    private final By presentationsMenuButton = By.xpath("//a[contains(text(),'Presentations')]/parent::li");
-    private final By eventsMenuButton = By.xpath("//a[contains(text(),'Events')]/parent::li");
-    private final By socialMediaDashboard = By.linkText("Social Media Dashboard");
-    private final By previewSiteButton = By.linkText("PREVIEW SITE");
-    private final By invalidateCacheButton = By.xpath("//a[contains(@id,'hrefInvalidateCache')]");
-    private final By invalidateCacheMessage = By.className("MessageContainer");
-    //private final By logoutMenuItem = By.xpath("//li/a[contains(text(),'Logout')]");
-
-    private final By selectAnActionDropdown = By.className("user-manage-ddl");
-    private final By changePasswordButton = By.className("StartChangePassword");
-
-    //within the change password popup
-    private final By oldPasswordField = By.xpath("//input[contains(@id,'txtOldPassword')]");
-    private final By newPasswordField = By.xpath("//input[contains(@id,'txtNewPassword')]");
-    private final By confirmNewPasswordField = By.xpath("//input[contains(@id,'txtConfirmNewPassword')]");
-    private final By resetPasswordButton = By.cssSelector("[value='Reset Password']");
-    private final By passwordChangeError = By.className("ErrorChangePassword");
-    private final By closePasswordChangeDialog = By.className("fancybox-close");
-
-    private static final long DEFAULT_PAUSE = 1500;
-    private static final int ATTEMPTS = 3;
+    private static By socialMediaDashboard, previewSiteButton, invalidateCacheButton;
+    private static By invalidateCacheMessage, selectAnActionDropdown, changePasswordButton, oldPasswordField;
+    private static By newPasswordField, confirmNewPasswordField, resetPasswordButton, passwordChangeError, closePasswordChangeDialog;
 
     public Dashboard(WebDriver driver) {
-
         super(driver);
-    }
 
-    /*
-    public String getURL() throws Exception {
-        wait.until(ExpectedConditions.elementToBeClickable(addPressReleaseButton));
-        if (AbstractSpec.getSessionID() == null) {
-            new LoginPage(driver).sessionID();
-        }
-        return driver.getCurrentUrl();
+        previewSiteButton = By.linkText(propUICommon.getProperty("btn_PreviewSite"));
+        socialMediaDashboard = By.linkText(propUICommon.getProperty("btnMenu_SocialMedia"));
+
+        invalidateCacheButton = By.xpath(propUICommon.getProperty("btn_InvalidateCache"));
+        invalidateCacheMessage = By.xpath(propUICommon.getProperty("msg_InvalidateCache"));
+
+        selectAnActionDropdown = By.className(propUICommon.getProperty("select_AnAction"));
+        changePasswordButton = By.className(propUICommon.getProperty("btn_ChangePassword"));
+
+        // Within the change password popup
+        oldPasswordField = By.xpath(propUICommon.getProperty("input_OldPassword"));
+        newPasswordField = By.xpath(propUICommon.getProperty("input_NewPassword"));
+        confirmNewPasswordField = By.xpath(propUICommon.getProperty("input_ConfirmNewPassword"));
+        resetPasswordButton = By.cssSelector(propUICommon.getProperty("btn_ResetPassword"));
+        passwordChangeError = By.xpath(propUICommon.getProperty("msg_PasswordChange"));
+        closePasswordChangeDialog = By.xpath(propUICommon.getProperty("btn_ClosePasswordChangeDialog"));
+
     }
-    */
 
     public PreviewSiteHome previewSite() {
         waitForElement(previewSiteButton);
         findElement(previewSiteButton).click();
+        pause(1000L);
         ArrayList<String> tabs = new ArrayList<String> (driver.getWindowHandles());
+        pause(1000L);
         driver.switchTo().window(tabs.get(1));
+
         return new PreviewSiteHome(getDriver());
-    }
-
-    public EditPressRelease newPressRelease() {
-        wait.until(ExpectedConditions.elementToBeClickable(addPressReleaseButton));
-        findElement(addPressReleaseButton).click();
-        return new EditPressRelease(getDriver());
-    }
-
-    public EditPresentation newPresentation() {
-        wait.until(ExpectedConditions.elementToBeClickable(addPresentationButton));
-        findElement(addPresentationButton).click();
-        return new EditPresentation(getDriver());
-    }
-
-    public EditEvent newEvent() {
-        wait.until(ExpectedConditions.elementToBeClickable(addEventButton));
-        findElement(addEventButton).click();
-        return new EditEvent(getDriver());
-    }
-
-    public void openPageFromMenu(By menuButton, By menuItem) throws Exception {
-
-        for (int i=0; i<ATTEMPTS; i++) {
-            try {
-                action.moveToElement(findElement(menuButton)).perform();
-                wait.until(ExpectedConditions.visibilityOf(findElement(menuItem)));
-                Thread.sleep(DEFAULT_PAUSE);
-                findElement(menuItem).click();
-                break;
-            } catch (ElementNotVisibleException e1){
-                System.out.println("Attempt #" + i);
-            } catch (ElementNotFoundException e2) {
-                System.out.println("Attempt #" + i);
-            } catch (TimeoutException e3) {
-                System.out.println("Attempt #" + i);
-            }
-        }
-    }
-
-    public PressReleases pressReleases() {
-        action.moveToElement(findElement(contentAdminMenuButton)).perform();
-        wait.until(ExpectedConditions.visibilityOf(findElement(pressReleasesMenuButton)));
-        findElement(pressReleasesMenuButton).click();
-
-        return new PressReleases(getDriver());
-    }
-
-    public Presentations presentations() {
-        action.moveToElement(findElement(contentAdminMenuButton)).perform();
-        wait.until(ExpectedConditions.visibilityOf(findElement(presentationsMenuButton)));
-        findElement(presentationsMenuButton).click();
-        return new Presentations(getDriver());
-    }
-
-    public Events events() {
-        action.moveToElement(findElement(contentAdminMenuButton)).perform();
-        wait.until(ExpectedConditions.visibilityOf(findElement(eventsMenuButton)));
-        findElement(eventsMenuButton).click();
-        return new Events(getDriver());
     }
 
     public SocialMediaSummary openSocialMedia(){
@@ -139,11 +59,11 @@ public class Dashboard extends AbstractPageObject {
     public Dashboard invalidateCache(){
         waitForElement(invalidateCacheButton);
         findElement(invalidateCacheButton).click();
+        pause(5000);
         return this;
     }
 
     public String getInvalidateCacheMessage(){
-        pause(5000);
         if (!doesElementExist(invalidateCacheMessage)){
             return "";
         }
@@ -151,16 +71,20 @@ public class Dashboard extends AbstractPageObject {
     }
 
     public Dashboard changePassword(String current, String changeTo){
+        // opening the change password dialog box
         waitForElement(selectAnActionDropdown);
         findElement(selectAnActionDropdown).click();
         waitForElement(changePasswordButton);
         findElement(changePasswordButton).click();
+        // entering old password and twice entering new password
         waitForElement(oldPasswordField);
         findElement(oldPasswordField).sendKeys(current);
         findElement(newPasswordField).sendKeys(changeTo);
         findElement(confirmNewPasswordField).sendKeys(changeTo);
-        findElement(resetPasswordButton).click();
-        pause(3000);
+        pause(2000);
+        // submitting password change
+        retryClick(findElement(resetPasswordButton));
+        pause(2000);
         return this;
     }
 
@@ -174,18 +98,21 @@ public class Dashboard extends AbstractPageObject {
         findElement(oldPasswordField).sendKeys(oldPassword);
         findElement(newPasswordField).sendKeys(newPassword);
         findElement(confirmNewPasswordField).sendKeys(confirmNewPassword);
-        findElement(resetPasswordButton).click();
-        pause(3000);
+        pause(2000);
+        retryClick(findElement(resetPasswordButton));
+        pause(2000);
         return this;
     }
 
+    // returns the message shown in the password change confirmation alert and closes the alert
+    // fails the test if no alert is present
     public String getPasswordChangeConfirmationAndAccept(){
         try {
             Alert confirmation = driver.switchTo().alert();
             String confirmationText = confirmation.getText();
-            confirmation.accept();
+            confirmation.accept(); // closes the alert
             driver.switchTo().defaultContent();
-            pause(3000);
+            pause(2000);
             return confirmationText;
         }catch (NoAlertPresentException e){
             fail("Password change confirmation dialog does not appear.");
@@ -193,22 +120,20 @@ public class Dashboard extends AbstractPageObject {
         }
     }
 
+    // returns the password change error message and closes the password change dialog box
+    // fails the test if no error message is present
     public String getPasswordChangeErrorMessageAndClose(){
+        pause(2000);
+        waitForElement(passwordChangeError);
         if (!doesElementExist(passwordChangeError)){
             fail("Password change error message does not appear.");
         }
         String message = findElement(passwordChangeError).getText();
-        findElement(closePasswordChangeDialog).click();
-        pause(3000);
+        //findElement(closePasswordChangeDialog).click();
+        retryClick(findElement(closePasswordChangeDialog));
+        pause(2000);
         return message;
     }
 
-    /*
-    public LoginPage logout() {
-        wait.until(ExpectedConditions.visibilityOf(findElement(logoutMenuItem)));
-        findElement(logoutMenuItem).click();
-        return new LoginPage(getDriver());
-    }
-    */
 
 }

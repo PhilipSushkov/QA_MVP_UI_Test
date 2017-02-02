@@ -1,9 +1,10 @@
 package specs.SiteAdmin.LayoutDefinitionList;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.After;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+import org.testng.Assert;
+
 import org.openqa.selenium.By;
 import pageobjects.SiteAdmin.LayoutDefinitionList.LayoutDefinitionList;
 import specs.AbstractSpec;
@@ -20,7 +21,7 @@ public class CheckLayoutDefinitionList extends AbstractSpec {
     private static Dashboard dashboard;
     private static LayoutDefinitionList layoutDefinitionList;
 
-    @Before
+    @BeforeTest
     public void setUp() throws Exception {
         siteAdminMenuButton = By.xpath(propUISiteAdmin.getProperty("btnMenu_SiteAdmin"));
         layoutDefinitionListMenuItem = By.xpath(propUISiteAdmin.getProperty("itemMenu_LayoutDefinitionList"));
@@ -40,15 +41,15 @@ public class CheckLayoutDefinitionList extends AbstractSpec {
         dashboard.openPageFromMenu(siteAdminMenuButton, layoutDefinitionListMenuItem);
 
         Assert.assertNotNull(layoutDefinitionList.getUrl());
-        Assert.assertEquals("Actual Layout Definition List page Title doesn't match to expected", expectedTitle, layoutDefinitionList.getTitle());
+        Assert.assertEquals(layoutDefinitionList.getTitle(), expectedTitle, "Actual Layout Definition List page Title doesn't match to expected");
 
         //System.out.println(new LayoutDefinitionList(driver).getLayoutDefinitionListQuantity().toString());
-        Assert.assertTrue("Actual Layout Definition Quantity is less than expected: "+expectedQuantity, expectedQuantity == layoutDefinitionList.getLayoutDefinitionListQuantity() );
-        Assert.assertNotNull("Layout Definition Pagination doesn't exist", layoutDefinitionList.getLayoutDefinitionPagination() );
+        Assert.assertTrue(expectedQuantity == layoutDefinitionList.getLayoutDefinitionListQuantity(), "Actual Layout Definition Quantity is less than expected: "+expectedQuantity);
+        Assert.assertNotNull(layoutDefinitionList.getLayoutDefinitionPagination(), "Layout Definition Pagination doesn't exist");
 
     }
 
-    @After
+    @AfterTest
     public void tearDown() {
         dashboard.logoutFromAdmin();
         //driver.quit();

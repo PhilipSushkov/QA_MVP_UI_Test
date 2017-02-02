@@ -9,12 +9,20 @@ import org.testng.IInvokedMethod;
 import org.testng.IInvokedMethodListener;
 import org.testng.ITestResult;
 
+import java.io.IOException;
+
 public class WebDriverListener implements IInvokedMethodListener {
 
     @Override
     public void beforeInvocation(IInvokedMethod method, ITestResult testResult) {
         if (method.isTestMethod()) {
-            WebDriver driver = LocalDriverFactory.createInstance();
+            WebDriver driver = null;
+            try {
+                driver = LocalDriverFactory.createInstance();
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
             LocalDriverManager.setWebDriver(driver);
         }
     }

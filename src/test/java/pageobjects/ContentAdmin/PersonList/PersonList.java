@@ -1,9 +1,6 @@
 package pageobjects.ContentAdmin.PersonList;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.ElementNotVisibleException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
 import pageobjects.PageObject;
@@ -28,31 +25,28 @@ public class PersonList extends AbstractPageObject {
     }
 
 
-    public String getUrl() {
-        return driver.getCurrentUrl();
-    }
-
-
     public String getTitle() {
-        wait.until(ExpectedConditions.visibilityOf(findElement(moduleTitle)) );
-        return findElement(moduleTitle).getText();
+        waitForElement(moduleTitle);
+        return getText(moduleTitle);
     }
 
 
     public Integer getTitleQuantity() {
-        wait.until(ExpectedConditions.visibilityOf(findElement(grid)) );
+        //wait.until(ExpectedConditions.visibilityOf(findElement(grid)) );
+        waitForElement(grid);
         return findElement(grid).findElements(gridPersonList).size()/columnsNumber;
     }
 
 
-    public WebElement getQuickLinksPagination() {
+    public WebElement getPersonListPagination() {
         WebElement element = null;
 
         try {
-            wait.until(ExpectedConditions.visibilityOf(findElement(dataGridPager)));
+            waitForElement(dataGridPager);
             element = findElement(dataGridPager);
         } catch (PageObject.ElementNotFoundException e1) {
         } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
         }
 
         return element;
@@ -63,10 +57,12 @@ public class PersonList extends AbstractPageObject {
         WebElement element = null;
 
         try {
-            wait.until(ExpectedConditions.visibilityOf(findElement(selectDepartment)));
+            //wait.until(ExpectedConditions.visibilityOf(findElement(selectDepartment)));
+            waitForElement(selectDepartment);
             element = findElement(selectDepartment);
         } catch (PageObject.ElementNotFoundException e1) {
         } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
         }
 
         return element;

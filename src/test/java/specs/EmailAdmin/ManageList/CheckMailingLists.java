@@ -1,9 +1,10 @@
 package specs.EmailAdmin.ManageList;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+import org.testng.Assert;
+
 import org.openqa.selenium.By;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.EmailAdmin.ManageList.MailingLists;
@@ -21,7 +22,7 @@ public class CheckMailingLists extends AbstractSpec {
     private static Dashboard dashboard;
     private static MailingLists mailingLists;
 
-    @Before
+    @BeforeTest
     public void setUp() throws Exception {
         emailAdminMenuButton = By.xpath(propUIEmailAdmin.getProperty("btnMenu_EmailAdmin"));
         manageListMenuItem = By.xpath(propUIEmailAdmin.getProperty("btnMenu_ManageList"));
@@ -41,16 +42,16 @@ public class CheckMailingLists extends AbstractSpec {
         dashboard.openPageFromMenu(emailAdminMenuButton, manageListMenuItem);
 
         Assert.assertNotNull(mailingLists.getUrl());
-        Assert.assertEquals("Actual Mailing Lists page Title doesn't match to expected", expectedTitle, mailingLists.getTitle());
+        Assert.assertEquals(mailingLists.getTitle(), expectedTitle, "Actual Mailing Lists page Title doesn't match to expected");
 
         //System.out.println(new MailingLists(driver).getTitleQuantity().toString());
-        Assert.assertTrue("Actual List Name Quantity is less than expected: "+expectedQuantity, expectedQuantity <= mailingLists.getTitleQuantity() );
-        Assert.assertNotNull("Search field doesn't exist", mailingLists.getSearchField() );
-        Assert.assertNotNull("Search button doesn't exist", mailingLists.getSearchButton() );
+        Assert.assertTrue(expectedQuantity <= mailingLists.getTitleQuantity(), "Actual List Name Quantity is less than expected: "+expectedQuantity);
+        Assert.assertNotNull(mailingLists.getSearchField(), "Search field doesn't exist");
+        Assert.assertNotNull(mailingLists.getSearchButton(), "Search button doesn't exist");
 
     }
 
-    @After
+    @AfterTest
     public void tearDown() {
         dashboard.logoutFromAdmin();
         //driver.quit();

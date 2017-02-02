@@ -8,20 +8,29 @@ import pageobjects.AbstractPageObject;
 
 import java.util.ArrayList;
 
+import static specs.AbstractSpec.propUIPublicSite;
+
 /**
  * Created by kelvint on 11/14/16.
  */
 public class RSSFeedsPage extends AbstractPageObject{
 
-    private final By pressReleaseFeeds = By.partialLinkText("Press Release RSS Feed");
-    private final By eventsFeeds = By.partialLinkText("Event RSS Feed");
-    private final By presentationFeeds = By.partialLinkText("Presentation RSS Feed");
-    private final By rssFeedIcon = By.xpath("//img[contains(@src,'rssicon.gif')]");
-    private final By feedsExist = By.className("line"); //amount of VISIBLE lines should be greater than 11
+    private final By pressReleaseFeeds;
+    private final By eventsFeeds;
+    private final By presentationFeeds;
+    private final By rssFeedIcon;
+    private final By feedsExist; //amount of VISIBLE lines should be greater than 11
 
     private JavascriptExecutor executor = (JavascriptExecutor) driver;
 
-    public RSSFeedsPage(WebDriver driver) { super(driver); }
+    public RSSFeedsPage(WebDriver driver) {
+        super(driver);
+        pressReleaseFeeds = By.partialLinkText(propUIPublicSite.getProperty("pressReleaseFeeds"));
+        eventsFeeds = By.partialLinkText(propUIPublicSite.getProperty("eventsFeeds"));
+        presentationFeeds = By.partialLinkText(propUIPublicSite.getProperty("presentationFeeds"));
+        rssFeedIcon = By.xpath(propUIPublicSite.getProperty("rssFeedIcon"));
+        feedsExist = By.className(propUIPublicSite.getProperty("feedsExist")); //amount of VISIBLE lines should be greater than 11
+    }
 
     public boolean rssFeedsExist ()
     {

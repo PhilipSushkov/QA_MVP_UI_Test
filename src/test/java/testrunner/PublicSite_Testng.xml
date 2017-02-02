@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Web CMS Suite Creation" parallel="tests" thread-count="5">
+    <test name="CheckMainPage">
+        <classes>
+            <class name="specs.PublicSite.CheckMainPage" />
+        </classes>
+    </test>
+    <test name="CheckFinancialReportsPage">
+        <classes>
+            <class name="specs.PublicSite.CheckFinancialReportsPage" />
+        </classes>
+    </test>
+    <test name="CheckStockInformationPage">
+        <classes>
+            <class name="specs.PublicSite.CheckStockInformationPage" />
+        </classes>
+    </test>
+    <test name="CheckPressReleasePage">
+        <classes>
+            <class name="specs.PublicSite.CheckPressReleasePage" />
+        </classes>
+    </test>
+    <test name="CheckEventsPage">
+        <classes>
+            <class name="specs.PublicSite.CheckEventsPage" />
+        </classes>
+    </test>
+    <test name="CheckPresentationsPage">
+        <classes>
+            <class name="specs.PublicSite.CheckPresentationsPage" />
+        </classes>
+    </test>
+    <test name="CheckEmailAlertsPage">
+        <classes>
+            <class name="specs.PublicSite.CheckEmailAlertPage" />
+        </classes>
+    </test>
+    <test name="CheckFAQPage">
+        <classes>
+            <class name="specs.PublicSite.CheckFAQPage" />
+        </classes>
+    </test>
+</suite>

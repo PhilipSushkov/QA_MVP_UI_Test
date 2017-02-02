@@ -1,9 +1,10 @@
 package specs.EmailAdmin.Compose;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+import org.testng.Assert;
+
 import org.openqa.selenium.By;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.EmailAdmin.Compose.Compose;
@@ -21,7 +22,7 @@ public class CheckCompose extends AbstractSpec {
     private static Dashboard dashboard;
     private static Compose compose;
 
-    @Before
+    @BeforeTest
     public void setUp() throws Exception {
         emailAdminMenuButton = By.xpath(propUIEmailAdmin.getProperty("btnMenu_EmailAdmin"));
         composeMenuItem = By.xpath(propUIEmailAdmin.getProperty("btnMenu_Compose"));
@@ -40,20 +41,20 @@ public class CheckCompose extends AbstractSpec {
         dashboard.openPageFromMenu(emailAdminMenuButton, composeMenuItem);
 
         Assert.assertNotNull(compose.getUrl());
-        Assert.assertEquals("Actual Mailing List Messages Admin page Title doesn't match to expected", expectedTitle, compose.getTitle());
+        Assert.assertEquals(compose.getTitle(), expectedTitle, "Actual Mailing List Messages Admin page Title doesn't match to expected");
 
-        Assert.assertNotNull("Template drop down list doesn't exist", compose.getTemplateList() );
-        Assert.assertNotNull("To drop down list doesn't exist", compose.getToList() );
-        Assert.assertNotNull("From field doesn't exist", compose.getFromField() );
-        Assert.assertNotNull("Subject field doesn't exist", compose.getSubjectField() );
-        Assert.assertNotNull("Body textarea doesn't exist", compose.getBodyTextArea() );
-        Assert.assertNotNull("Created By field doesn't exist", compose.getCreatedByField() );
-        Assert.assertNotNull("Send Test Email button doesn't exist", compose.getSendTestEmailButton() );
-        Assert.assertNotNull("Save button doesn't exist", compose.getSaveButton() );
+        Assert.assertNotNull(compose.getTemplateList(), "Template drop down list doesn't exist");
+        Assert.assertNotNull(compose.getToList(), "To drop down list doesn't exist");
+        Assert.assertNotNull(compose.getFromField(), "From field doesn't exist");
+        Assert.assertNotNull(compose.getSubjectField(), "Subject field doesn't exist");
+        Assert.assertNotNull(compose.getBodyTextArea(), "Body textarea doesn't exist");
+        Assert.assertNotNull(compose.getCreatedByField(), "Created By field doesn't exist");
+        Assert.assertNotNull(compose.getSendTestEmailButton(), "Send Test Email button doesn't exist");
+        Assert.assertNotNull(compose.getSaveButton(), "Save button doesn't exist");
 
     }
 
-    @After
+    @AfterTest
     public void tearDown() {
         dashboard.logoutFromAdmin();
         //driver.quit();

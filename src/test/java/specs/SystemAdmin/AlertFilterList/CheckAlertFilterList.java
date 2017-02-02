@@ -1,9 +1,10 @@
 package specs.SystemAdmin.AlertFilterList;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.After;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+import org.testng.Assert;
+
 import org.openqa.selenium.By;
 import specs.AbstractSpec;
 import pageobjects.LoginPage.LoginPage;
@@ -21,7 +22,7 @@ public class CheckAlertFilterList extends AbstractSpec {
     private static AlertFilterList alertFilterList;
 
 
-    @Before
+    @BeforeTest
     public void setUp() throws Exception {
         systemAdminMenuButton = By.xpath(propUISystemAdmin.getProperty("btnMenu_SystemAdmin"));
         alertFilterListMenuItem = By.xpath(propUISystemAdmin.getProperty("itemMenu_AlertFilterList"));
@@ -41,13 +42,14 @@ public class CheckAlertFilterList extends AbstractSpec {
         dashboard.openPageFromMenu(systemAdminMenuButton, alertFilterListMenuItem);
 
         Assert.assertNotNull(alertFilterList.getUrl());
-        Assert.assertEquals("Actual Alert Filter List page Title doesn't match to expected", expectedTitle, alertFilterList.getTitle());
+        Assert.assertEquals(alertFilterList.getTitle(), expectedTitle, "Actual Alert Filter List page Title doesn't match to expected");
 
         //System.out.println(new AlertFilterList(driver).getFilterNameQuantity().toString());
-        Assert.assertTrue("Actual Filter Name Quantity is less than expected: "+expectedQuantity, expectedQuantity <= alertFilterList.getFilterNameQuantity() );
+        Assert.assertTrue(expectedQuantity <= alertFilterList.getFilterNameQuantity(), "Actual Filter Name Quantity is less than expected: "+expectedQuantity);
     }
 
-    @After
+
+    @AfterTest
     public void tearDown() {
         dashboard.logoutFromAdmin();
         //driver.quit();

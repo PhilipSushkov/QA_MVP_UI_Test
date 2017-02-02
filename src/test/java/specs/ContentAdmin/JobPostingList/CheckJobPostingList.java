@@ -1,11 +1,11 @@
 package specs.ContentAdmin.JobPostingList;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+import org.testng.Assert;
+
 import org.openqa.selenium.By;
-import pageobjects.ContentAdmin.FaqList.FaqList;
 import pageobjects.ContentAdmin.JobPostingList.JobPostingList;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.LoginPage.LoginPage;
@@ -21,7 +21,7 @@ public class CheckJobPostingList extends AbstractSpec {
     private static Dashboard dashboard;
     private static JobPostingList jobPostingList;
 
-    @Before
+    @BeforeTest
     public void setUp() throws Exception {
         contentAdminMenuButton = By.xpath(propUIContentAdmin.getProperty("btnMenu_ContentAdmin"));
         jobPostingMenuItem = By.xpath(propUIContentAdmin.getProperty("btnMenu_JobPosting"));
@@ -41,14 +41,14 @@ public class CheckJobPostingList extends AbstractSpec {
         dashboard.openPageFromMenu(contentAdminMenuButton, jobPostingMenuItem);
 
         Assert.assertNotNull(jobPostingList.getUrl());
-        Assert.assertEquals("Actual Job Posting List page Title doesn't match to expected", expectedTitle, jobPostingList.getTitle());
+        Assert.assertEquals(expectedTitle, jobPostingList.getTitle(), "Actual Job Posting List page Title doesn't match to expected");
 
         //System.out.println(new JobPostingList(driver).getTitleQuantity().toString());
-        Assert.assertTrue("Actual Job Posting Title Quantity is less than expected: "+expectedQuantity, expectedQuantity <= jobPostingList.getTitleQuantity() );
+        Assert.assertTrue(expectedQuantity <= jobPostingList.getTitleQuantity(), "Actual Job Posting Title Quantity is less than expected: "+expectedQuantity);
 
     }
 
-    @After
+    @AfterTest
     public void tearDown() {
         dashboard.logoutFromAdmin();
         //driver.quit();

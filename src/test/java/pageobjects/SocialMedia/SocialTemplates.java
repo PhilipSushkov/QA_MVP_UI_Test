@@ -4,11 +4,16 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import pageobjects.AbstractPageObject;
 
+import static specs.AbstractSpec.propUISocialMedia;
+
 /**
  * Created by jasons on 2016-12-08.
  */
 public class SocialTemplates extends AbstractPageObject {
+    private static By settingsDialog, settingsDialogTitle, templateText, editTemplateButton;
+    private static By editableTemplateText, saveTemplateButton, closeSocialTemplatesButton;
 
+    /*
     private final By settingsDialog = By.id("SMSettingBox");
     private final By settingsDialogTitle = By.cssSelector("#SMSettingBox .Title");
     private final By templateText = By.cssSelector("#SMSettingBox input[readonly]");
@@ -16,9 +21,18 @@ public class SocialTemplates extends AbstractPageObject {
     private final By editableTemplateText = By.cssSelector(".Edit .TemplateValue");
     private final By saveTemplateButton = By.cssSelector("#SMSettingBox .SaveTemplate");
     private final By closeSocialTemplatesButton = By.className("fancybox-close");
+    */
 
     public SocialTemplates(WebDriver driver) {
         super(driver);
+
+        settingsDialog = By.id(propUISocialMedia.getProperty("box_SettingsDialog"));
+        settingsDialogTitle = By.cssSelector(propUISocialMedia.getProperty("settingsDialogTitle"));
+        templateText = By.cssSelector(propUISocialMedia.getProperty("templateText"));
+        editTemplateButton = By.cssSelector(propUISocialMedia.getProperty("editTemplateButton"));
+        editableTemplateText = By.cssSelector(propUISocialMedia.getProperty("editableTemplateText"));
+        saveTemplateButton = By.cssSelector(propUISocialMedia.getProperty("saveTemplateButton"));
+        closeSocialTemplatesButton = By.className(propUISocialMedia.getProperty("closeSocialTemplatesButton"));
     }
 
     public boolean linkedInSocialTemplatesAreDisplayed(){
@@ -42,6 +56,7 @@ public class SocialTemplates extends AbstractPageObject {
         return this;
     }
 
+    // checks that the editable template text is displayed
     public boolean editTemplateIsOpen(){
         waitForElement(editableTemplateText);
         return findElement(editableTemplateText).isDisplayed();

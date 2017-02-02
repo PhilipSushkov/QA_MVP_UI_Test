@@ -96,7 +96,7 @@ Feature: pages on public site are displayed properly
     When I select "Site Map" fromm the site footer
     And select "Email Alerts" from the site map
     Then the email alerts page opens
-    When I input my email credentials in the unsubscibe section
+    When I input my email credentials in the unsubscribe section
     And submit the form
     Then a message appears signifying unsubscribe success
 
@@ -148,4 +148,6 @@ Feature: pages on public site are displayed properly
     Then the page scrolls down to that question and its answer below
     When I click on "back to top"
     Then the page scrolls up to the top
+
+   Scenario:
 

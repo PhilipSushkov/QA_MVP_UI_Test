@@ -7,17 +7,22 @@ import pageobjects.AbstractPageObject;
 
 import java.util.List;
 
+import static specs.AbstractSpec.propUIPublicSite;
+
 /**
  * Created by jasons on 2016-11-11.
  */
 public class SECFilingsPage extends AbstractPageObject {
 
-    private final By filingDate = By.className("ItemDate");
-    private final By yearLink = By.className("ModuleYearLink");
-    private final By pdfIcon = By.cssSelector(".PdfIcon a");
+    private final By filingDate;
+    private final By yearLink_Sec;
+    private final By pdfIcon;
 
     public SECFilingsPage(WebDriver driver) {
         super(driver);
+        filingDate = By.className(propUIPublicSite.getProperty("filingDate"));
+        yearLink_Sec = By.className(propUIPublicSite.getProperty("yearLink_Sec"));
+        pdfIcon = By.cssSelector(propUIPublicSite.getProperty("pdfIcon"));
     }
 
     public boolean filingsAreDisplayed(){
@@ -37,7 +42,7 @@ public class SECFilingsPage extends AbstractPageObject {
     }
 
     public void switchYearTo(String year){
-        List<WebElement> yearLinks = findElements(yearLink);
+        List<WebElement> yearLinks = findElements(yearLink_Sec);
         for (int i=0; i<yearLinks.size(); i++){
             if (yearLinks.get(i).getText().equals(year)){
                 yearLinks.get(i).click();

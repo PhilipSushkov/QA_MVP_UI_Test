@@ -1,9 +1,10 @@
 package specs.ContentAdmin.QuickLinkList;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+import org.testng.Assert;
+
 import org.openqa.selenium.By;
 import pageobjects.ContentAdmin.QuickLinkList.QuickLinks;
 import pageobjects.Dashboard.Dashboard;
@@ -20,7 +21,7 @@ public class CheckQuickLinkList extends AbstractSpec {
     private static Dashboard dashboard;
     private static QuickLinks quickLinks;
 
-    @Before
+    @BeforeTest
     public void setUp() throws Exception {
         contentAdminMenuButton = By.xpath(propUIContentAdmin.getProperty("btnMenu_ContentAdmin"));
         quickLinksMenuItem = By.xpath(propUIContentAdmin.getProperty("btnMenu_QuickLinks"));
@@ -40,16 +41,16 @@ public class CheckQuickLinkList extends AbstractSpec {
         dashboard.openPageFromMenu(contentAdminMenuButton, quickLinksMenuItem);
 
         Assert.assertNotNull(quickLinks.getUrl());
-        Assert.assertEquals("Actual Quick Link List page Title doesn't match to expected", expectedTitle, quickLinks.getTitle());
+        Assert.assertEquals(quickLinks.getTitle(), expectedTitle, "Actual Quick Link List page Title doesn't match to expected");
 
         //System.out.println(new FinancialReports(driver).getTitleQuantity().toString());
-        Assert.assertTrue("Actual Quick Link Description Quantity is less than expected: "+expectedQuantity, expectedQuantity <= quickLinks.getTitleQuantity() );
-        Assert.assertNotNull("Quick Link Pagination doesn't exist", quickLinks.getQuickLinksPagination() );
-        Assert.assertNotNull("Filter By Tag field doesn't exist", quickLinks.getFilterByTag() );
+        Assert.assertTrue(expectedQuantity <= quickLinks.getTitleQuantity(), "Actual Quick Link Description Quantity is less than expected: "+expectedQuantity);
+        Assert.assertNotNull(quickLinks.getQuickLinksPagination(), "Quick Link Pagination doesn't exist");
+        Assert.assertNotNull(quickLinks.getFilterByTag(), "Filter By Tag field doesn't exist");
 
     }
 
-    @After
+    @AfterTest
     public void tearDown() {
         dashboard.logoutFromAdmin();
         //driver.quit();

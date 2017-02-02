@@ -1,11 +1,11 @@
 package specs.ContentAdmin.FinancialReports;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+import org.testng.Assert;
+
 import org.openqa.selenium.By;
-import pageobjects.ContentAdmin.DepartmentList.DepartmentList;
 import pageobjects.ContentAdmin.FinancialReports.FinancialReports;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.LoginPage.LoginPage;
@@ -21,7 +21,7 @@ public class CheckFinancialReports extends AbstractSpec {
     private static Dashboard dashboard;
     private static FinancialReports financialReports;
 
-    @Before
+    @BeforeTest
     public void setUp() throws Exception {
         contentAdminMenuButton = By.xpath(propUIContentAdmin.getProperty("btnMenu_ContentAdmin"));
         financialReportsMenuItem = By.xpath(propUIContentAdmin.getProperty("btnMenu_FinancialReports"));
@@ -41,16 +41,16 @@ public class CheckFinancialReports extends AbstractSpec {
         dashboard.openPageFromMenu(contentAdminMenuButton, financialReportsMenuItem);
 
         Assert.assertNotNull(financialReports.getUrl());
-        Assert.assertEquals("Actual Financial Reports page Title doesn't match to expected", expectedTitle, financialReports.getTitle());
+        Assert.assertEquals(financialReports.getTitle(), expectedTitle, "Actual Financial Reports page Title doesn't match to expected");
 
         //System.out.println(new FinancialReports(driver).getTitleQuantity().toString());
-        Assert.assertTrue("Actual Financial Reports Title Quantity is less than expected: "+expectedQuantity, expectedQuantity <= financialReports.getTitleQuantity() );
-        Assert.assertNotNull("Financial Reports Pagination doesn't exist", financialReports.getFinancialReportPagination() );
-        Assert.assertNotNull("Filter By Tag field doesn't exist", financialReports.getFilterByTag() );
+        Assert.assertTrue(expectedQuantity <= financialReports.getTitleQuantity(), "Actual Financial Reports Title Quantity is less than expected: "+expectedQuantity);
+        Assert.assertNotNull(financialReports.getFinancialReportPagination(), "Financial Reports Pagination doesn't exist");
+        Assert.assertNotNull(financialReports.getFilterByTag(), "Filter By Tag field doesn't exist");
 
     }
 
-    @After
+    @AfterTest
     public void tearDown() {
         dashboard.logoutFromAdmin();
         //driver.quit();

@@ -19,10 +19,12 @@ public class FAQPage extends AbstractPageObject{
         super(driver);
     }
 
+    // returns number of questions displayed at the top of the page
     public int getNumQuestionsTop(){
         return findElements(questionTop).size();
     }
 
+    // returns number of questions displayed below (alongside the answers)
     public int getNumQuestionsBelow(){
         return findElements(questionBelow).size();
     }
@@ -31,6 +33,7 @@ public class FAQPage extends AbstractPageObject{
         return findElements(answer).size();
     }
 
+    // returns the vertical position (from the top of the page in pixels) of the first question below
     public int getFirstQuestionY(){
         waitForElement(topOfFirstAnswer);
         return findElement(topOfFirstAnswer).getLocation().getY();

@@ -1,9 +1,10 @@
 package specs.SiteAdmin.LookupList;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+import org.testng.Assert;
+
 import org.openqa.selenium.By;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.LoginPage.LoginPage;
@@ -20,7 +21,7 @@ public class CheckLookupList extends AbstractSpec {
     private static Dashboard dashboard;
     private static LookupList lookupList;
 
-    @Before
+    @BeforeTest
     public void setUp() throws Exception {
         siteAdminMenuButton = By.xpath(propUISiteAdmin.getProperty("btnMenu_SiteAdmin"));
         lookupListMenuItem = By.xpath(propUISiteAdmin.getProperty("itemMenu_LookupList"));
@@ -40,15 +41,15 @@ public class CheckLookupList extends AbstractSpec {
         dashboard.openPageFromMenu(siteAdminMenuButton, lookupListMenuItem);
 
         Assert.assertNotNull(lookupList.getUrl());
-        Assert.assertEquals("Actual Lookup List page Title doesn't match to expected", expectedTitle, lookupList.getTitle());
+        Assert.assertEquals(lookupList.getTitle(), expectedTitle, "Actual Lookup List page Title doesn't match to expected");
 
-        Assert.assertNotNull("Lookup Type dropdown list doesn't exist", lookupList.getLookupListLookupType() );
+        Assert.assertNotNull(lookupList.getLookupListLookupType(), "Lookup Type dropdown list doesn't exist");
         //System.out.println(new LookupList(driver).getLookupListQuantity().toString());
-        Assert.assertTrue("Actual Lookup Text Quantity is less than expected: "+expectedQuantity, expectedQuantity <= lookupList.getLookupListQuantity() );
+        Assert.assertTrue(expectedQuantity <= lookupList.getLookupListQuantity(), "Actual Lookup Text Quantity is less than expected: "+expectedQuantity);
 
     }
 
-    @After
+    @AfterTest
     public void tearDown() {
         dashboard.logoutFromAdmin();
         //driver.quit();

@@ -1,11 +1,11 @@
 package specs.PublicSite;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.TimeoutException;
+import org.testng.Assert;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
 import pageobjects.LiveSite.*;
 import specs.AbstractSpec;
 import yahoofinance.YahooFinance;
@@ -19,58 +19,99 @@ import java.time.Month;
 import java.time.Year;
 import java.util.Calendar;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.junit.Assert.fail;
+import static org.testng.Assert.fail;
+
 
 public class CheckPublicSite extends AbstractSpec {
-    private final String Q4WebVersionNumber = "4.3.0.56";
+    private final String Q4WebVersionNumber = "4.3.0.63";
 
-    @Before
+    //// WHEN ADDING A TEST TO THIS CLASS, ADD A ENTRY TO IT IN CheckPreviewSite.java \\\\
+
+
+    /** Changes necessary to make include removing all the "new XXX(drivers).YYY with a declaration, instead, in the @Before
+     and replacing it in all pieces of code. DONE
+      Second changes include making a .properties file including ALL the selectors. THEN making them all do the .property thing. DONE
+     Last is switching this to testNG*/
+
+    private static StockInformationPage stockInformationPage;
+    private static HomePage homePage;
+    private static FinancialReportsPage financialReportsPage;
+    private static LivePressReleases livePressReleases;
+    private static LiveEvents liveEvents;
+    private static LivePresentations livePresentations;
+    private static SECFilingsPage secFilingsPage;
+    private static RSSFeedsPage rssFeedsPage;
+    private static BoardOfDirectorsPage boardOfDirectorsPage;
+
+
+    @BeforeTest
     public void goToPublicSite() {
+
         driver.get("http://chicagotest.q4web.com/English/Investors/default.aspx");
         //driver.get("http://fiesta.q4web.newtest/stock-information/default.aspx");
-        Assert.assertTrue("Home page of public site has not been loaded.", new HomePage(driver).logoIsPresent());
+
+        stockInformationPage = new StockInformationPage(driver);
+        homePage = new HomePage(driver);
+        financialReportsPage = new FinancialReportsPage(driver);
+        livePressReleases = new LivePressReleases(driver);
+        liveEvents = new LiveEvents(driver);
+        livePresentations = new LivePresentations(driver);
+        secFilingsPage = new SECFilingsPage(driver);
+        rssFeedsPage = new RSSFeedsPage(driver);
+        boardOfDirectorsPage = new BoardOfDirectorsPage(driver);
+
+        Assert.assertTrue(homePage.logoIsPresent(), "Home page of public site has not been loaded.");
+
     }
 
     @Test
     public void versionNumberIsCorrect(){
-        Assert.assertEquals("Displayed version number is incorrect", Q4WebVersionNumber,
-                new HomePage(driver).getVersionNumber());
-    }
+        Assert.assertEquals(homePage.getVersionNumber(), Q4WebVersionNumber
+                , "Displayed version number is incorrect");
+}
 
     @Test
     public void stockChartXigniteWorks(){
-        Assert.assertTrue("Xignite stock chart is not displayed."
-                , new HomePage(driver).selectStockInformationFromMenu().stockChartXigniteIsDisplayed());
-        new StockInformationPage(driver).switchChartXigniteTo1Month();
-        int xStart1Month = new StockInformationPage(driver).getChartXigniteSliderXStart();
-        new StockInformationPage(driver).switchChartXigniteTo1Quarter();
-        int xStart1Quarter = new StockInformationPage(driver).getChartXigniteSliderXStart();
-        new StockInformationPage(driver).switchChartXigniteTo1Year();
-        int xStart1Year = new StockInformationPage(driver).getChartXigniteSliderXStart();
-        Assert.assertTrue("Xignite stock chart period is not switching properly.\nxStart1Year="+xStart1Year+
-                        "\nxStart1Quarter="+xStart1Quarter+"\nxStart1Month="+xStart1Month,
-                xStart1Month>xStart1Quarter && xStart1Quarter>xStart1Year);
-        Assert.assertTrue("Hovering over Xignite chart doesn't work.",
-                new StockInformationPage(driver).canHoverOverChartXignite());
+        // going to Stock Information page and checking that Xignite stock chart appears
+        Assert.assertTrue(homePage.selectStockInformationFromMenu().stockChartXigniteIsDisplayed()
+                , "Xignite stock chart is not displayed.");
+
+        // trying to switch time range and checking that the longer the time range, the earlier the start of the range displayed (x position of left side of slider)
+        stockInformationPage.switchChartXigniteTo1Month();
+        int xStart1Month = stockInformationPage.getChartXigniteSliderXStart();
+        stockInformationPage.switchChartXigniteTo1Quarter();
+        int xStart1Quarter = stockInformationPage.getChartXigniteSliderXStart();
+        stockInformationPage.switchChartXigniteTo1Year();
+        int xStart1Year = stockInformationPage.getChartXigniteSliderXStart();
+        Assert.assertTrue(xStart1Month>xStart1Quarter && xStart1Quarter>xStart1Year
+                , "Xignite stock chart period is not switching properly.\nxStart1Year="+xStart1Year+
+                        "\nxStart1Quarter="+xStart1Quarter+"\nxStart1Month="+xStart1Month);
+
+        // checking that hovering over the chart causes hovertext to appear
+        Assert.assertTrue(stockInformationPage.canHoverOverChartXignite()
+                , "Hovering over Xignite chart doesn't work.");
     }
 
     @Test
     public void stockQuoteWorks(){
-        Assert.assertTrue("Stock quote is not displayed.",
-                new HomePage(driver).selectStockInformationFromMenu().stockQuoteIsDisplayed());
-        Assert.assertTrue("One or more stock quote values are missing or invalid.",
-                new StockInformationPage(driver).stockQuoteValuesArePresent());
+        // going to Stock Information page and checking that the stock quote module is displayed
+        Assert.assertTrue(homePage.selectStockInformationFromMenu().stockQuoteIsDisplayed()
+                , "Stock quote is not displayed.");
+
+        // checking that all stock quote values are present and doing basic validation (like checking that stock prices are above zero)
+        Assert.assertTrue(stockInformationPage.stockQuoteValuesArePresent()
+                , "One or more stock quote values are missing or invalid.");
     }
 
     @Test
     public void stockQuoteValuesAreAccurate() throws TimeoutException{
-
-        Assert.assertTrue("Stock quote is not displayed.",
-                new HomePage(driver).selectStockInformationFromMenu().stockQuoteIsDisplayed());
+        // going to Stock Information page and checking that the stock quote module is displayed
+        Assert.assertTrue(homePage.selectStockInformationFromMenu().stockQuoteIsDisplayed()
+                , "Stock quote is not displayed.");
 
         driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
 
+        // fetching stock quotes from Yahoo
         StockQuote stockQuote;
         try {
             stockQuote = YahooFinance.get("TXRH").getQuote(false);
@@ -78,111 +119,167 @@ public class CheckPublicSite extends AbstractSpec {
             fail("Problem retrieving stock data from Yahoo Finance.");
             return;
         }
-        Assert.assertEquals("Stock price isn't accurate", stockQuote.getPrice().doubleValue(),
-                new StockInformationPage(driver).getStockPrice(), 0.25);
-        Assert.assertEquals("Stock change isn't accurate", stockQuote.getChange().doubleValue()
-                , new StockInformationPage(driver).getStockChange(), 0.25);
-        Assert.assertEquals("Stock % change isn't accurate", stockQuote.getChangeInPercent().doubleValue()
-                , new StockInformationPage(driver).getStockPChange(), 1);
-        Assert.assertEquals("Stock intraday high isn't accurate", stockQuote.getDayHigh().doubleValue()
-                , new StockInformationPage(driver).getStockDayHigh(), 0.25);
-        Assert.assertEquals("Stock 52 week high isn't accurate", stockQuote.getYearHigh().doubleValue()
-                , new StockInformationPage(driver).getStock52WeekHigh(), 0.1);
-        Assert.assertEquals("Stock intraday low isn't accurate", stockQuote.getDayLow().doubleValue()
-                , new StockInformationPage(driver).getStockDayLow(), 0.25);
-        Assert.assertEquals("Stock 52 week low isn't accurate", stockQuote.getYearLow().doubleValue()
-                , new StockInformationPage(driver).getStock52WeekLow(), 0.1);
-        Assert.assertEquals("Stock today's open isn't accurate", stockQuote.getOpen().doubleValue()
-                , new StockInformationPage(driver).getStockTodayOpen(), 0.01);
-        Assert.assertEquals("Stock previous close isn't accurate", stockQuote.getPreviousClose().doubleValue()
-                , new StockInformationPage(driver).getStockPreviousClose(), 0.01);
+        // checking that displayed stock quote values are close to values from Yahoo
+        Assert.assertEquals(stockInformationPage.getStockPrice(),stockQuote.getPrice().doubleValue()
+                , 0.25, "Stock price isn't accurate");
+        Assert.assertEquals(stockInformationPage.getStockChange(), stockQuote.getChange().doubleValue()
+                , 0.25,"Stock change isn't accurate");
+        Assert.assertEquals(stockInformationPage.getStockPChange(), stockQuote.getChangeInPercent().doubleValue()
+                , 1, "Stock % change isn't accurate");
+        Assert.assertEquals(stockInformationPage.getStockDayHigh(), stockQuote.getDayHigh().doubleValue()
+                , 0.25, "Stock intraday high isn't accurate");
+        Assert.assertEquals(stockInformationPage.getStock52WeekHigh(), stockQuote.getYearHigh().doubleValue()
+                , 0.1, "Stock 52 week high isn't accurate");
+        Assert.assertEquals(stockInformationPage.getStockDayLow(), stockQuote.getDayLow().doubleValue()
+                , 0.25, "Stock intraday low isn't accurate");
+        Assert.assertEquals(stockInformationPage.getStock52WeekLow(), stockQuote.getYearLow().doubleValue()
+                , 0.25, "Stock 52 week low isn't accurate");
+        Assert.assertEquals(stockInformationPage.getStockTodayOpen(), stockQuote.getOpen().doubleValue()
+                , 0.01, "Stock today's open isn't accurate");
+        Assert.assertEquals(stockInformationPage.getStockPreviousClose(), stockQuote.getPreviousClose().doubleValue()
+                , 0.01, "Stock previous close isn't accurate");
+        // Accuracy of volume is not checked due to the wide tolerance (in the hundreds of thousands) that would be needed to account for delayed values.
     }
 
     @Test
     public void stockChartTickertechWorks() {
-
+        /*
+            The actual chart in the Tickertech module is a single image file that is loaded from Tickertech's website
+            with its URL containing all the parameters that affect the chart. This test extracts these parameters from
+            the URL in order to confirm that clicking various things results in the right chart being requested from Tickertech.
+            PARAMETERS (the ones that change when modifying the chart):
+                period: 1m, 1q, 1y, 5y, 1mp, 1qp, 1yp, 5yp (p if chart set to % change)
+                fillBelowLine (Chart type): yes (mountain), prev (fill to prev. close), no (line, point, bar, candle stick)
+                type (Chart type): line (mountain, fill to prev. close, line), point (point), bar (bar), candle (candle stick)
+                showHighsLows (Chart type): no (mountain, fill to prev. close, line, bar, candle stick), yes (point)
+                showVolumeTable: no if comparing
+                showLegendTable: yes if comparing
+                symbols: TXRH (not comparing)
+        		         TXRH,$DJI (comparing with Dow)
+		                 TXRH,$DJI,COMP (comparing with Dow and Nasdaq)
+        		         TXRH,$DJI,COMP,SPX (comparing with Dow, Nasdaq, and S&P)
+		                 TXRH,$DJI,COMP,SPX,RUT (comparing with all)
+        		         TXRH,COMP,RUT (comparing with Nasdaq and Russell)
+                Note: candle stick can’t be used with % change
+                Note: upon activating compare, chart switches to % change and line
+        */
         try {
             //go to stock information page and check that chart is present
-            Assert.assertTrue("Tickertech stock chart is not displayed.", new HomePage(driver).selectStockInformationFromMenu().stockChartTickertechIsDisplayed());
+            Assert.assertTrue(homePage.selectStockInformationFromMenu().stockChartTickertechIsDisplayed()
+                    , "Tickertech stock chart is not displayed." );
             //cycle through time periods and check that chart changes accordingly
-            new StockInformationPage(driver).switchChartTickertechTo1Month();
-            Assert.assertThat("Tickertech chart isn't displaying 1 month period", new StockInformationPage(driver).getTickertechSRC(), containsString("period=1m&"));
-            new StockInformationPage(driver).switchChartTickertechTo1Quarter();
-            Assert.assertThat("Tickertech chart isn't displaying 1 quarter period", new StockInformationPage(driver).getTickertechSRC(), containsString("period=1q&"));
-            new StockInformationPage(driver).switchChartTickertechTo1Year();
-            Assert.assertThat("Tickertech chart isn't displaying 1 year period", new StockInformationPage(driver).getTickertechSRC(), containsString("period=1y&"));
+            stockInformationPage.switchChartTickertechTo1Month();
+            Assert.assertTrue(stockInformationPage.getTickertechSRC().contains("period=1m&"),
+                    "Tickertech chart isn't displaying 1 month period" );
+            stockInformationPage.switchChartTickertechTo1Quarter();
+            Assert.assertTrue(stockInformationPage.getTickertechSRC().contains("period=1q&")
+                    , "Tickertech chart isn't displaying 1 quarter period");
+            stockInformationPage.switchChartTickertechTo1Year();
+            Assert.assertTrue(stockInformationPage.getTickertechSRC().contains("period=1y&")
+                    , "Tickertech chart isn't displaying 1 year period");
             //try switching to % change and check that chart changes accordingly
-            new StockInformationPage(driver).switchChartTickertechToPChange();
-            Assert.assertThat("Tickertech chart isn't displaying % change", new StockInformationPage(driver).getTickertechSRC(), containsString("period=1yp&"));
+            stockInformationPage.switchChartTickertechToPChange();
+            Assert.assertTrue(stockInformationPage.getTickertechSRC().contains("period=1yp&")
+                    , "Tickertech chart isn't displaying % change");
             //try switching back to price and check that chart changes accordingly
-            new StockInformationPage(driver).switchChartTickertechToPrice();
-            Assert.assertThat("Tickertech chart isn't displaying price", new StockInformationPage(driver).getTickertechSRC(), containsString("period=1y&"));
+            stockInformationPage.switchChartTickertechToPrice();
+            Assert.assertTrue(stockInformationPage.getTickertechSRC().contains("period=1y&")
+                    , "Tickertech chart isn't displaying price");
             //cycle though chart types and check that chart changes accordingly
-            new StockInformationPage(driver).switchChartTickertechToFillToPrevClose();
-            Assert.assertThat("Tickertech chart isn't displaying fill to prev. close type", new StockInformationPage(driver).getTickertechSRC(), containsString("fillBelowLine=prev&"));
-            new StockInformationPage(driver).switchChartTickertechToLine();
-            Assert.assertThat("Tickertech chart isn't displaying line type", new StockInformationPage(driver).getTickertechSRC(), containsString("fillBelowLine=no&"));
-            Assert.assertThat("Tickertech chart isn't displaying line type", new StockInformationPage(driver).getTickertechSRC(), containsString("type=line&"));
-            Assert.assertThat("Tickertech chart isn't displaying line type", new StockInformationPage(driver).getTickertechSRC(), containsString("showHighsLows=no&"));
-            new StockInformationPage(driver).switchChartTickertechToPoint();
-            Assert.assertThat("Tickertech chart isn't displaying point type", new StockInformationPage(driver).getTickertechSRC(), containsString("type=point&"));
-            Assert.assertThat("Tickertech chart isn't displaying point type", new StockInformationPage(driver).getTickertechSRC(), containsString("showHighsLows=yes&"));
-            new StockInformationPage(driver).switchChartTickertechToBar();
-            Assert.assertThat("Tickertech chart isn't displaying bar type", new StockInformationPage(driver).getTickertechSRC(), containsString("type=bar&"));
-            Assert.assertThat("Tickertech chart isn't displaying bar type", new StockInformationPage(driver).getTickertechSRC(), containsString("showHighsLows=no&"));
-            new StockInformationPage(driver).switchChartTickertechToCandleStick();
-            Assert.assertThat("Tickertech chart isn't displaying candle stick type", new StockInformationPage(driver).getTickertechSRC(), containsString("type=candle&"));
-            new StockInformationPage(driver).switchChartTickertechToMountain();
-            Assert.assertThat("Tickertech chart isn't displaying mountain type", new StockInformationPage(driver).getTickertechSRC(), containsString("fillBelowLine=yes&"));
-            Assert.assertThat("Tickertech chart isn't displaying mountain type", new StockInformationPage(driver).getTickertechSRC(), containsString("type=line&"));
+            stockInformationPage.switchChartTickertechToFillToPrevClose();
+            Assert.assertTrue(stockInformationPage.getTickertechSRC().contains("fillBelowLine=prev&")
+                    , "Tickertech chart isn't displaying fill to prev. close type");
+            stockInformationPage.switchChartTickertechToLine();
+            Assert.assertTrue(stockInformationPage.getTickertechSRC().contains("fillBelowLine=no&")
+                    , "Tickertech chart isn't displaying line type");
+            Assert.assertTrue(stockInformationPage.getTickertechSRC().contains("type=line&")
+                    , "Tickertech chart isn't displaying line type");
+            Assert.assertTrue(stockInformationPage.getTickertechSRC().contains("showHighsLows=no&")
+                    , "Tickertech chart isn't displaying line type");
+            stockInformationPage.switchChartTickertechToPoint();
+            Assert.assertTrue(stockInformationPage.getTickertechSRC().contains("type=point&")
+                    , "Tickertech chart isn't displaying point type");
+            Assert.assertTrue(stockInformationPage.getTickertechSRC().contains("showHighsLows=yes&")
+                    , "Tickertech chart isn't displaying point type");
+            stockInformationPage.switchChartTickertechToBar();
+            Assert.assertTrue(stockInformationPage.getTickertechSRC().contains("type=bar&")
+                    , "Tickertech chart isn't displaying bar type");
+            Assert.assertTrue(stockInformationPage.getTickertechSRC().contains("showHighsLows=no&")
+                    , "Tickertech chart isn't displaying bar type" );
+            stockInformationPage.switchChartTickertechToCandleStick();
+            Assert.assertTrue(stockInformationPage.getTickertechSRC().contains("type=candle&")
+                    , "Tickertech chart isn't displaying candle stick type" );
+            stockInformationPage.switchChartTickertechToMountain();
+            Assert.assertTrue(stockInformationPage.getTickertechSRC().contains("fillBelowLine=yes&")
+                    , "Tickertech chart isn't displaying mountain type" );
+            Assert.assertTrue(stockInformationPage.getTickertechSRC().contains("type=line&")
+                    , "Tickertech chart isn't displaying mountain type" );
             //select one or more indices/stocks and check that chart changes accordingly
-            new StockInformationPage(driver).tickertechCompareVs("", true, false, true, false); // comparing with Dow and S&P
-            Assert.assertThat("Tickertech chart isn't comparing with indices properly", new StockInformationPage(driver).getTickertechSRC(), containsString("showVolumeTable=no&"));
-            Assert.assertThat("Tickertech chart isn't comparing with indices properly", new StockInformationPage(driver).getTickertechSRC(), containsString("showLegendTable=yes&"));
-            Assert.assertThat("Tickertech chart isn't comparing with indices properly", new StockInformationPage(driver).getTickertechSRC(), containsString("period=1yp&"));
-            Assert.assertThat("Tickertech chart isn't comparing with indices properly", new StockInformationPage(driver).getTickertechSRC(), containsString("fillBelowLine=no&"));
-            Assert.assertThat("Tickertech chart isn't displaying Dow and S&P only", new StockInformationPage(driver).getTickertechSRC(), containsString("symbols=TXRH,$DJI,SPX&"));
-            new StockInformationPage(driver).tickertechCompareVs("", true, true, true, true); // comparing with all four indices
-            Assert.assertThat("Tickertech chart isn't displaying all four indices", new StockInformationPage(driver).getTickertechSRC(), containsString("symbols=TXRH,$DJI,COMP,SPX,RUT&"));
-            new StockInformationPage(driver).tickertechCompareVs("", false, true, false, false); // comparing with Nasdaq
-            Assert.assertThat("Tickertech chart isn't displaying Nasdaq only", new StockInformationPage(driver).getTickertechSRC(), containsString("symbols=TXRH,COMP&"));
-            new StockInformationPage(driver).tickertechCompareVs("AAPL", false, true, false, false); // comparing with AAPL and Nasdaq
-            Assert.assertThat("Tickertech chart isn't displaying AAPL and Nasdaq only", new StockInformationPage(driver).getTickertechSRC(), containsString("symbols=TXRH,AAPL,COMP&"));
+            stockInformationPage.tickertechCompareVs("",true, false, true, false);
+            // ^^^ comparing with Dow and S&P
+            Assert.assertTrue(stockInformationPage.getTickertechSRC().contains("showVolumeTable=no&")
+                    , "Tickertech chart isn't comparing with indices properly");
+            Assert.assertTrue(stockInformationPage.getTickertechSRC().contains("showLegendTable=yes&")
+                    , "Tickertech chart isn't comparing with indices properly");
+            Assert.assertTrue(stockInformationPage.getTickertechSRC().contains("period=1yp&")
+                    , "Tickertech chart isn't comparing with indices properly");
+            Assert.assertTrue(stockInformationPage.getTickertechSRC().contains("fillBelowLine=no&")
+                    , "Tickertech chart isn't comparing with indices properly");
+            Assert.assertTrue(stockInformationPage.getTickertechSRC().contains("symbols=TXRH,$DJI,SPX&")
+                    , "Tickertech chart isn't displaying Dow and S&P only");
+            stockInformationPage.tickertechCompareVs("", true, true, true, true);
+            // ^^^ comparing with all four indices
+            Assert.assertTrue(stockInformationPage.getTickertechSRC().contains("symbols=TXRH,$DJI,COMP,SPX,RUT&")
+                    , "Tickertech chart isn't displaying all four indices");
+            stockInformationPage.tickertechCompareVs("", false, true, false, false);
+            // ^^^ comparing with Nasdaq
+            Assert.assertTrue(stockInformationPage.getTickertechSRC().contains("symbols=TXRH,COMP&")
+                    , "Tickertech chart isn't displaying Nasdaq only");
+            stockInformationPage.tickertechCompareVs("AAPL", false, true, false, false);
+            // ^^^ comparing with AAPL and Nasdaq
+            Assert.assertTrue(stockInformationPage.getTickertechSRC().contains("symbols=TXRH,AAPL,COMP&")
+                    , "Tickertech chart isn't displaying AAPL and Nasdaq only");
 
-        }catch (TimeoutException e)
-        {
+        }
+        catch (TimeoutException e){
             e.printStackTrace();
             driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
         }
-
     }
 
     @Test
     public void historicalQuotesWork(){
+        // going to Stock Information page and checking that historical quotes module appears
         try{
-           Assert.assertTrue("Historical quotes are not displayed.",
-                   new HomePage(driver).selectStockInformationFromMenu().historicalQuotesAreDisplayed());
+           Assert.assertTrue(homePage.selectStockInformationFromMenu().historicalQuotesAreDisplayed()
+                   , "Historical quotes are not displayed.");
         }catch (TimeoutException e) {
            driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
         }
 
+        // checking that all stock quote values are present and doing basic validation (like checking that stock prices are above zero)
         try {
-           Assert.assertTrue("One or more historical quote values are missing or invalid.",
-                   new StockInformationPage(driver).historicalQuoteValuesArePresent());
+           Assert.assertTrue(stockInformationPage.historicalQuoteValuesArePresent()
+                   , "One or more historical quote values are missing or invalid.");
         }catch (TimeoutException e){
             driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
         }
+
+        //
         try {
-            String[] lastDayQuotes = new StockInformationPage(driver).getHistoricalQuote();
-            new StockInformationPage(driver).changeQuoteDate();
+            String[] lastDayQuotes = stockInformationPage.getHistoricalQuote(); // saving values currently displayed
+            stockInformationPage.changeQuoteDate(); // changing to an earlier date
 
-            Assert.assertTrue("One or more historical quote values are missing or invalid after changing date.",
-                    new StockInformationPage(driver).historicalQuoteValuesArePresent());
+            // revalidating the new values
+            Assert.assertTrue(stockInformationPage.historicalQuoteValuesArePresent()
+                    ,"One or more historical quote values are missing or invalid after changing date.");
 
-            String[] olderDayQuotes = new StockInformationPage(driver).getHistoricalQuote();
+            // checking that all the values have changed
+            String[] olderDayQuotes = stockInformationPage.getHistoricalQuote();
             for (int i = 0; i < olderDayQuotes.length; i++) {
-                Assert.assertFalse("Identical value (" + lastDayQuotes[i] + " = " + olderDayQuotes[i] + ") present in last trading day's historical quote and older (May 25th, 2016) historical quote.",
-                olderDayQuotes[i].equals(lastDayQuotes[i]));
+                Assert.assertFalse(olderDayQuotes[i].equals(lastDayQuotes[i])
+                        , "Identical value (" + lastDayQuotes[i] + " = " + olderDayQuotes[i] +
+                       ") present in last trading day's historical quote and older (May 25th, 2016) historical quote.");
                 }
         }catch (TimeoutException e){
             e.printStackTrace();
@@ -193,43 +290,60 @@ public class CheckPublicSite extends AbstractSpec {
     @Test
     public void historicalQuoteValuesAreAccurate() {
         try {
-            Assert.assertTrue("Historical quotes are not displayed.", new HomePage(driver).selectStockInformationFromMenu().historicalQuotesAreDisplayed());
+            // going to Stock Information page and checking that historical quotes module appears
+            Assert.assertTrue(homePage.selectStockInformationFromMenu().historicalQuotesAreDisplayed()
+            , "Historical quotes are not displayed." );
 
             // checking historical values from last trading day
-            Calendar lastTradingDay = new StockInformationPage(driver).getCurrentDate();
+            Calendar lastTradingDay = stockInformationPage.getCurrentDate(); //getting date from date dropdowns in module
             HistoricalQuote lastTradingDayQuotes;
+            // fetching data from Yahoo
             try {
-                lastTradingDayQuotes = YahooFinance.get("TXRH").getHistory(lastTradingDay, lastTradingDay, Interval.DAILY).get(0);
+                lastTradingDayQuotes = YahooFinance.get("TXRH").getHistory(lastTradingDay, lastTradingDay
+                        , Interval.DAILY).get(0);
             } catch (IOException e) {
                 fail("Problem retrieving last trading day stock data from Yahoo Finance.");
                 return;
             }
-            Assert.assertEquals("Last trading day high isn't accurate", lastTradingDayQuotes.getHigh().doubleValue(), new StockInformationPage(driver).getHistoricalHigh(), 0.01);
-            Assert.assertEquals("Last trading day low isn't accurate", lastTradingDayQuotes.getLow().doubleValue(), new StockInformationPage(driver).getHistoricalLow(), 0.01);
-            Assert.assertEquals("Last trading day volume isn't accurate", lastTradingDayQuotes.getVolume().doubleValue(), new StockInformationPage(driver).getHistoricalVolume(), 5000);
-            Assert.assertEquals("Last trading day opening price isn't accurate", lastTradingDayQuotes.getOpen().doubleValue(), new StockInformationPage(driver).getHistoricalOpen(), 0.01);
-            Assert.assertEquals("Last trading day last price isn't accurate", lastTradingDayQuotes.getClose().doubleValue(), new StockInformationPage(driver).getHistoricalLast(), 0.01);
+            // comparing Yahoo data with displayed values
+            Assert.assertEquals(stockInformationPage.getHistoricalHigh(), lastTradingDayQuotes.getHigh().doubleValue()
+                    , 0.01, "Last trading day high isn't accurate");
+            Assert.assertEquals(stockInformationPage.getHistoricalLow(), lastTradingDayQuotes.getLow().doubleValue()
+                    , 0.01, "Last trading day low isn't accurate");
+            Assert.assertEquals(stockInformationPage.getHistoricalVolume()
+                    , lastTradingDayQuotes.getVolume().doubleValue()
+                    , 10000, "Last trading day volume isn't accurate");
+            Assert.assertEquals(stockInformationPage.getHistoricalOpen(), lastTradingDayQuotes.getOpen().doubleValue()
+                    , 0.01, "Last trading day opening price isn't accurate");
+            Assert.assertEquals(stockInformationPage.getHistoricalLast(), lastTradingDayQuotes.getClose().doubleValue()
+                    , 0.01, "Last trading day last price isn't accurate" );
 
             // checking historical values from older day
-            new StockInformationPage(driver).changeQuoteDate();
-            Calendar olderDay = new StockInformationPage(driver).getCurrentDate();
+            stockInformationPage.changeQuoteDate();
+            Calendar olderDay = stockInformationPage.getCurrentDate(); //getting date from date dropdowns in module
             HistoricalQuote olderDayQuotes;
+            // fetching data from Yahoo
             try {
                 olderDayQuotes = YahooFinance.get("TXRH").getHistory(olderDay, olderDay, Interval.DAILY).get(0);
             } catch (IOException e) {
                 fail("Problem retrieving older day stock data from Yahoo Finance.");
                 return;
             }
-            Assert.assertEquals("Older day high isn't accurate", olderDayQuotes.getHigh().doubleValue()
-                    , new StockInformationPage(driver).getHistoricalHigh(), 0.01);
-            Assert.assertEquals("Older day low isn't accurate", olderDayQuotes.getLow().doubleValue()
-                    , new StockInformationPage(driver).getHistoricalLow(), 0.01);
-            Assert.assertEquals("Older day volume isn't accurate", olderDayQuotes.getVolume().doubleValue()
-                    , new StockInformationPage(driver).getHistoricalVolume(), 5000);
-            Assert.assertEquals("Older day opening price isn't accurate",olderDayQuotes.getOpen().doubleValue()
-                    , new StockInformationPage(driver).getHistoricalOpen(), 0.01);
-            Assert.assertEquals("Older day last price isn't accurate", olderDayQuotes.getClose().doubleValue()
-                    , new StockInformationPage(driver).getHistoricalLast(), 0.01);
+            // comparing Yahoo data with displayed values
+            Assert.assertEquals(stockInformationPage.getHistoricalHigh(), olderDayQuotes.getHigh().doubleValue()
+                    ,0.01, "Older day high isn't accurate");
+
+            Assert.assertEquals(stockInformationPage.getHistoricalLow(),olderDayQuotes.getLow().doubleValue()
+                    , 0.01, "Older day low isn't accurate");
+
+            Assert.assertEquals(stockInformationPage.getHistoricalVolume(), olderDayQuotes.getVolume().doubleValue()
+                    , 5000, "Older day volume isn't accurate");
+
+            Assert.assertEquals(stockInformationPage.getHistoricalOpen(),olderDayQuotes.getOpen().doubleValue()
+                    , 0.01, "Older day opening price isn't accurate" );
+
+            Assert.assertEquals(stockInformationPage.getHistoricalLast(), olderDayQuotes.getClose().doubleValue()
+                    , 0.01, "Older day last price isn't accurate");
 
         }catch (TimeoutException e)
         {
@@ -240,177 +354,199 @@ public class CheckPublicSite extends AbstractSpec {
 
     @Test
     public void financialReportsWork(){
+        // going to Financial Reports page and checking that at least one report is displayed
         try {
-            Assert.assertTrue("Financial reports are not displayed."
-                    , new HomePage(driver).selectFinancialReportsFromMenu().financialReportsAreDisplayed());
+            Assert.assertTrue(homePage.selectFinancialReportsFromMenu().financialReportsAreDisplayed()
+                    , "Financial reports are not displayed.");
         }catch (TimeoutException e){
             driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
         }
-        Assert.assertTrue("One or more financial report titles are not links."
-                , new FinancialReportsPage(driver).reportTitlesAreLinks());
-        Assert.assertTrue("No financial reports links to a .pdf file."
-                , new FinancialReportsPage(driver).pdfLinkIsPresent());
+        // checking that all report titles are valid links
+        Assert.assertTrue(financialReportsPage.reportTitlesAreLinks()
+                , "One or more financial report titles are not links.");
+        // checking that at least one report title links to a .pdf file
+        Assert.assertTrue(financialReportsPage.pdfLinkIsPresent()
+                , "No financial reports links to a .pdf file.");
     }
 
     @Test
     public void pressReleasesWork(){
-       try {
-           Assert.assertTrue("Press releases are not displayed."
-                   , new HomePage(driver).selectPressReleasesFromMenu().pressReleasesAreDisplayed());
-       }catch (TimeoutException e) {
-           driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
-       }
-        Assert.assertTrue("One or more displayed press releases are not from the current year."
-                , new LivePressReleases(driver).pressReleasesAreAllFromYear(Year.now().toString()));
-        new LivePressReleases(driver).switchYearTo("2015");
-        Assert.assertTrue("One or more displayed press releases are not from the selected year (2015)."
-                , new LivePressReleases(driver).pressReleasesAreAllFromYear("2015"));
+       // going to Press Releases page and checking that at least one press release is displayed
         try {
-            new LivePressReleases(driver).openFirstPressRelease();
+            Assert.assertTrue(homePage.selectPressReleasesFromMenu().pressReleasesAreDisplayed()
+                   , "Press releases are not displayed.");
+        }catch (TimeoutException e) {
+            driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
+        }
+        // checking that all press releases displayed are from the current year
+        Assert.assertTrue(livePressReleases.pressReleasesAreAllFromYear(Year.now().toString())
+                , "One or more displayed press releases are not from the current year.");
+        // switching year to 2015 and checking that all press releases displayed are from 2015
+        livePressReleases.switchYearTo("2015");
+        Assert.assertTrue(livePressReleases.pressReleasesAreAllFromYear("2015")
+                , "One or more displayed press releases are not from the selected year (2015).");
+        // clicking the first headline and checking the the opened press release has a download link
+        try {
+            livePressReleases.openFirstPressRelease();
         }catch (TimeoutException e){
             driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
         }
-        Assert.assertTrue("Press release is not open."
-                , new LivePressReleases(driver).pressReleaseIsOpen());
+        Assert.assertTrue(livePressReleases.pressReleaseIsOpen()
+                , "Press release is not open.");
     }
 
-    @Test
-    public void eventsWork(){
-        try {
-            Assert.assertTrue("Upcoming events are not displayed."
-                    , new HomePage(driver).selectEventsFromMenu().eventsAreDisplayed());
-        }catch (TimeoutException e){
-            driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
-        }
-        Assert.assertTrue("One or more events displayed are not upcoming."
-                , new LiveEvents(driver).allEventsAreUpcoming());
-        new LiveEvents(driver).switchToPastEvents();
-        Assert.assertTrue("Past events are not displayed.", new LiveEvents(driver).eventsAreDisplayed());
-        try {
-            Assert.assertTrue("One or more events displayed are not past.", new LiveEvents(driver).allEventsArePast());
-        }catch (TimeoutException e){
-            driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
-        }
-
-        try{
-              new LiveEvents(driver).openFirstEvent();
-        }catch (TimeoutException e){
-             driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
-        }
-
-        try{
-            Assert.assertTrue("Event details have not been loaded.", new LiveEvents(driver).eventIsOpen());
-        }catch (TimeoutException e)
-        {
+            @Test
+            public void eventsWork(){
+            // going to Events page and checking that at least one event is displayed
+            try {
+                Assert.assertTrue(homePage.selectEventsFromMenu().eventsAreDisplayed()
+                        ,"Upcoming events are not displayed.");
+            }catch (TimeoutException e){
+                driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
+            }
+            // checking that all displayed events take place today or in the future
+            Assert.assertTrue(liveEvents.allEventsAreUpcoming()
+                    , "One or more events displayed are not upcoming.");
+            // clicking Past Events button and checking that at least one event is displayed and all displayed events are in the past
+            liveEvents.switchToPastEvents();
+            Assert.assertTrue(liveEvents.eventsAreDisplayed(), "Past events are not displayed.");
+            try {
+                Assert.assertTrue(liveEvents.allEventsArePast(), "One or more events displayed are not past.");
+            }catch (TimeoutException e){
+                driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
+            }
+            // opening the first event and checking that the Events Details module is displayed
+            try{
+                liveEvents.openFirstEvent();
+            }catch (TimeoutException e){
+                driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
+            }
+            try{
+                Assert.assertTrue(liveEvents.eventIsOpen(), "Event details have not been loaded.");
+            }catch (TimeoutException e)
+            {
             driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
         }
     }
 
     @Test
     public void presentationsWork(){
+        // going to Presentations page and checking that at least one presentation is displayed
         try{
-            Assert.assertTrue("Presentations are not displayed."
-                    , new HomePage(driver).selectPresentationsFromMenu().presentationsAreDisplayed());
+            Assert.assertTrue(homePage.selectPresentationsFromMenu().presentationsAreDisplayed()
+                    , "Presentations are not displayed.");
         } catch(TimeoutException e){
             driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
         }
-        Assert.assertTrue("One or more displayed presentations are not from the current year."
-                , new LivePresentations(driver).presentationsAreAllFromYear(Year.now().toString()));
-        new LivePresentations(driver).switchYearTo("2015");
-        Assert.assertTrue("One or more displayed presentations are not from the selected year (2015)."
-                , new LivePresentations(driver).presentationsAreAllFromYear("2015"));
-        Assert.assertTrue("One or more presentation links are not links."
-                , new LivePresentations(driver).presentationLinksAreLinks());
-        Assert.assertTrue("No presentations link to a .pdf file."
-                , new LivePresentations(driver).pdfLinkIsPresent());
+        // checking that all presentations displayed are from the current year
+        Assert.assertTrue(livePresentations.presentationsAreAllFromYear(Year.now().toString())
+                , "One or more displayed presentations are not from the current year.");
+        // switching year to 2015 and checking that all presentations displayed are from 2015
+        livePresentations.switchYearTo("2015");
+        Assert.assertTrue(livePresentations.presentationsAreAllFromYear("2015")
+                , "One or more displayed presentations are not from the selected year (2015).");
+        // checking that all presentation links are valid links
+        Assert.assertTrue(livePresentations.presentationLinksAreLinks()
+                , "One or more presentation links are not links.");
+        // checking that at least one link links to a .pdf file
+        Assert.assertTrue(livePresentations.pdfLinkIsPresent()
+                ,"No presentations link to a .pdf file.");
     }
 
     @Test
     public void secFilingsWork(){
+        // going to SEC Filings page and checking that at least one filing is displayed
         try {
-            Assert.assertTrue("SEC filings are not displayed."
-                    , new HomePage(driver).selectSECFilingsFromMenu().filingsAreDisplayed());
+            Assert.assertTrue(homePage.selectSECFilingsFromMenu().filingsAreDisplayed()
+                    ,"SEC filings are not displayed.");
         }catch (TimeoutException e){
             driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
         }
-        Assert.assertTrue("One or more displayed filings are not from the current year."
-                , new SECFilingsPage(driver).filingsAreAllFromYear(Year.now().toString()));
-        new SECFilingsPage(driver).switchYearTo("2015");
-        Assert.assertTrue("One or more displayed filings are not from the selected year (2015)."
-                , new SECFilingsPage(driver).filingsAreAllFromYear("2015"));
-        Assert.assertTrue("One or more pdf icons do not link to a .pdf file."
-                , new SECFilingsPage(driver).pdfIconsLinkToPDF());
+        // checking that all filings displayed are from the current year
+        Assert.assertTrue(secFilingsPage.filingsAreAllFromYear(Year.now().toString())
+                , "One or more displayed filings are not from the current year.");
+        // switching year to 2015 and checking that all filings displayed are from 2015
+        secFilingsPage.switchYearTo("2015");
+        Assert.assertTrue(secFilingsPage.filingsAreAllFromYear("2015")
+                , "One or more displayed filings are not from the selected year (2015).");
+        // checking that all the PDF icons link to a .pdf file
+        Assert.assertTrue(secFilingsPage.pdfIconsLinkToPDF()
+                , "One or more pdf icons do not link to a .pdf file.");
     }
 
     @Test
     public void peopleWork(){
+        // going to Board of Directors page and checking that at least one person is displayed
         try {
-            Assert.assertTrue("People are not displayed."
-                    , new HomePage(driver).selectBoardOfDirectorsFromMenu().peopleAreDisplayed());
+            Assert.assertTrue(homePage.selectBoardOfDirectorsFromMenu().peopleAreDisplayed()
+                    , "People are not displayed." );
         }catch (TimeoutException e){
             driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
         }
-        Assert.assertTrue("One or more people do not have biographical information."
-                , new BoardOfDirectorsPage(driver).peopleHaveBiographicalInformation());
+        // checking that biographical information is displayed for every person
+        Assert.assertTrue(boardOfDirectorsPage.peopleHaveBiographicalInformation()
+                , "One or more people do not have biographical information.");
     }
 
 
     @Test
     public void rssPressReleaseWorks() {
         try{
-            Assert.assertTrue("RSS Feeds are not displayed."
-                    , new HomePage(driver).selectRSSFeedsFromMenu().rssFeedsExist());
+            Assert.assertTrue(homePage.selectRSSFeedsFromMenu().rssFeedsExist()
+                    , "RSS Feeds are not displayed.");
         }catch(TimeoutException e){
             driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
         }
-        Assert.assertTrue("RSS Feeds for press release do not open correctly"
-                , new RSSFeedsPage(driver).pressReleaseRSSExists());
+        Assert.assertTrue(rssFeedsPage.pressReleaseRSSExists()
+                , "RSS Feeds for press release do not open correctly");
     }
 
     @Test
     public void rssEventsWorks(){
-        Assert.assertTrue("RSS Feeds are not displayed."
-                , new HomePage(driver).selectRSSFeedsFromMenu().rssFeedsExist());
-        Assert.assertTrue("RSS Feeds for events do not open correctly", new RSSFeedsPage(driver).eventRSSExists());
+        Assert.assertTrue(homePage.selectRSSFeedsFromMenu().rssFeedsExist()
+                , "RSS Feeds are not displayed.");
+        Assert.assertTrue(rssFeedsPage.eventRSSExists(), "RSS Feeds for events do not open correctly" );
     }
 
 
     @Test 
     public void rssPresentationsWorks(){
         try{
-            Assert.assertTrue("RSS Feeds are not displayed."
-                    , new HomePage(driver).selectRSSFeedsFromMenu().rssFeedsExist());
+            Assert.assertTrue(homePage.selectRSSFeedsFromMenu().rssFeedsExist()
+                    , "RSS Feeds are not displayed.");
         }catch (TimeoutException e){
             driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
         }
-        Assert.assertTrue("RSS Feeds for presentations do not open correctly"
-                , new RSSFeedsPage(driver).presentationRSSExists());
+        Assert.assertTrue(rssFeedsPage.presentationRSSExists()
+                , "RSS Feeds for presentations do not open correctly");
     }
 
     @Test
     public void emailAlertsWork() {
-        EmailAlertsPage emailAlertsPage = new HomePage(driver).selectEmailAlertsFromMenu();
+        EmailAlertsPage emailAlertsPage = homePage.selectEmailAlertsFromMenu();
         String wrongEmail = "QWEASDZXC1234567";
         String rightEmail = "kelvint@q4inc.com";
         boolean buttonsActivated = true; //State of the buttons
 
-        Assert.assertTrue("Buttons did not behave as expected", emailAlertsPage.clickAllButtonsWorks(buttonsActivated));
+        Assert.assertTrue(emailAlertsPage.clickAllButtonsWorks(buttonsActivated)
+                , "Buttons did not behave as expected" );
 
         buttonsActivated = false;
 
-        Assert.assertTrue("Buttons did not behave as expected", emailAlertsPage.clickAllButtonsWorks(buttonsActivated));
-        Assert.assertFalse("Selecting no options for the mailing list still allowed submitting"
-                , emailAlertsPage.clickSubmitWorks());
+        Assert.assertTrue(emailAlertsPage.clickAllButtonsWorks(buttonsActivated)
+                , "Buttons did not behave as expected");
+        Assert.assertFalse(emailAlertsPage.clickSubmitWorks()
+                , "Selecting no options for the mailing list still allowed submitting");
 
-        Assert.assertFalse("Entering no credentials allowed submitting"
-                , emailAlertsPage.clickSubmitWorks());
+        Assert.assertFalse(emailAlertsPage.clickSubmitWorks()
+                , "Entering no credentials allowed submitting");
         emailAlertsPage.enterSubEmailAddress(wrongEmail);
-        Assert.assertFalse("Entering an incorrectly formatted password works"
-                , emailAlertsPage.clickSubmitWorks());
+        Assert.assertFalse(emailAlertsPage.clickSubmitWorks()
+                , "Entering an incorrectly formatted password works");
         emailAlertsPage.clearAllTextFields();
         emailAlertsPage.enterSubEmailAddress(rightEmail);
         try{
-            Assert.assertTrue("Submitting doesn't work", emailAlertsPage.clickSubmitWorks());
+            Assert.assertTrue(emailAlertsPage.clickSubmitWorks(), "Submitting doesn't work");
         }catch (TimeoutException e){
             driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
         }
@@ -418,29 +554,29 @@ public class CheckPublicSite extends AbstractSpec {
 
     @Test
     public void unsubscribeEmailAlertsWorks() { //Timeouts still occur, despite all the escapes :/
-        EmailAlertsPage emailAlertsPage = new HomePage(driver).selectEmailAlertsFromMenu();
+        EmailAlertsPage emailAlertsPage = homePage.selectEmailAlertsFromMenu();
         String incorrectFormEmail = "QWEASDZXC1234567";
         String wrongEmail = "telvink@q4inc.com"; //never used to subscribe
         String rightEmail = "kelvint@q4inc.com";
 
-        Assert.assertFalse("Entering no credentials allowed submitting"
-                , emailAlertsPage.clickUnsubscribeWorks());
+        Assert.assertFalse(emailAlertsPage.clickUnsubscribeWorks()
+                , "Entering no credentials allowed submitting");
 
         emailAlertsPage.enterUnsubEmailAddress(incorrectFormEmail);
-        Assert.assertFalse("Unsubbing with an incorrectly formatted email works"
-                , emailAlertsPage.clickUnsubscribeWorks());
+        Assert.assertFalse(emailAlertsPage.clickUnsubscribeWorks()
+                , "Unsubbing with an incorrectly formatted email works");
 
         emailAlertsPage.clearAllTextFields();
         emailAlertsPage.enterUnsubEmailAddress(wrongEmail);
 
-        Assert.assertFalse("Unsubbing with a non-subscribed email works"
-                , emailAlertsPage.clickUnsubscribeWorks());
+        Assert.assertFalse(emailAlertsPage.clickUnsubscribeWorks()
+                , "Unsubbing with a non-subscribed email works");
         emailAlertsPage.clearAllTextFields();
 
         emailAlertsPage.enterUnsubEmailAddress(rightEmail);
 
         try{
-            Assert.assertTrue("Unsubscribing doesn't work", emailAlertsPage.clickUnsubscribeWorks());
+            Assert.assertTrue(emailAlertsPage.clickUnsubscribeWorks(), "Unsubscribing doesn't work");
         }catch (TimeoutException e) {
             driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
         }
@@ -452,32 +588,60 @@ public class CheckPublicSite extends AbstractSpec {
         String comparedSymbol = "AAPL";
         LocalDate startDate = LocalDate.of(2016, Month.APRIL, 4);
         LocalDate endDate = LocalDate.of(2016, Month.OCTOBER, 28);
-        InvestmentCalculatorPage investmentCalculatorPage = new HomePage(driver).selectInvestmentCalculatorFromMenu();
-        Assert.assertTrue("Investment Calculator is not displayed.", investmentCalculatorPage.investmentCalculatorExists());
-        Assert.assertTrue("Growth chart is not displayed after clicking calculate.", investmentCalculatorPage.performSampleCalculation(startDate, endDate).growthChartIsPresent());
-        Assert.assertTrue("Expected symbol is not present.", investmentCalculatorPage.resultsIncludeSymbol(symbol));
-        Assert.assertTrue("Cannot hover over the growth chart.", investmentCalculatorPage.canHoverOverGrowthChart());
-        Assert.assertTrue("Invalid growth data is displayed.", investmentCalculatorPage.growthDataIsValid());
-        Assert.assertEquals("Start date does not match", startDate, investmentCalculatorPage.getStartDate());
-        Assert.assertEquals("End date does not match", endDate, investmentCalculatorPage.getEndDate());
-        Assert.assertFalse("Results area is not closed.", investmentCalculatorPage.closeResults().resultsAreOpen());
-        Assert.assertTrue("Recalculation with compare to other symbol doesn't work.", investmentCalculatorPage.recalculateAndCompareTo(comparedSymbol).growthChartIsPresent());
-        Assert.assertTrue("Expected symbol is not present after recalculating.", investmentCalculatorPage.resultsIncludeSymbol(symbol));
-        Assert.assertTrue("Compared to symbol is not present.", investmentCalculatorPage.resultsIncludeSymbol(comparedSymbol));
+        // going to Investment Calculator page and checking that the investment calculator is displayed
+        InvestmentCalculatorPage investmentCalculatorPage = homePage.selectInvestmentCalculatorFromMenu();
+        Assert.assertTrue(investmentCalculatorPage.investmentCalculatorExists()
+                , "Investment Calculator is not displayed.");
+        // performing calculation of $100 investment from startDate to endDate and checking that the growth chart is displayed
+        Assert.assertTrue(investmentCalculatorPage.performSampleCalculation(startDate, endDate).growthChartIsPresent()
+                , "Growth chart is not displayed after clicking calculate.");
+        // checking that the table header has the expected symbol
+        Assert.assertTrue(investmentCalculatorPage.resultsIncludeSymbol(symbol)
+                , "Expected symbol is not present." );
+        // checking whether hovering over the chart produces hovertext
+        Assert.assertTrue(investmentCalculatorPage.canHoverOverGrowthChart()
+                , "Cannot hover over the growth chart." );
+        // checking whether values in table are present and properly formatted
+        Assert.assertTrue(investmentCalculatorPage.growthDataIsValid(), "Invalid growth data is displayed." );
+        // checking whether the displayed starting and ending dates are correct
+        Assert.assertEquals(investmentCalculatorPage.getStartDate(), startDate, "Start date does not match" );
+        Assert.assertEquals(investmentCalculatorPage.getEndDate(), endDate, "End date does not match");
+        // clicking the close button and checking that results are no longer displayed
+        Assert.assertFalse(investmentCalculatorPage.closeResults().resultsAreOpen()
+                , "Results area is not closed.");
+        // adding comparedSymbol to compare with, recalculating, and checking that the growth chart is displayed
+        Assert.assertTrue(investmentCalculatorPage.recalculateAndCompareTo(comparedSymbol).growthChartIsPresent()
+                , "Recalculation with compare to other symbol doesn't work." );
+        // checking that the table header includes both the original and the compared to symbols
+        Assert.assertTrue(investmentCalculatorPage.resultsIncludeSymbol(symbol)
+                , "Expected symbol is not present after recalculating." );
+        Assert.assertTrue(investmentCalculatorPage.resultsIncludeSymbol(comparedSymbol)
+                , "Compared to symbol is not present." );
     }
 
     @Test
     public void faqPageWorks(){
-        FAQPage faqPage = new HomePage(driver).selectFAQFromMenu();
+        // going to FAQ page and checking that at least one question is displayed at the top of the page
+        FAQPage faqPage = homePage.selectFAQFromMenu();
         int numQuestionsTop = faqPage.getNumQuestionsTop();
-        Assert.assertTrue("No questions are displayed at top of page.", numQuestionsTop > 0);
+        Assert.assertTrue(numQuestionsTop > 0, "No questions are displayed at top of page." );
+        // checking that the same number of questions are displayed at the top of the page as are displayed below
         int numQuestionsBelow = faqPage.getNumQuestionsBelow();
-        Assert.assertEquals("Number of questions displayed at below is different from number of questions displayed at top of page",
-                numQuestionsTop, numQuestionsBelow);
+        Assert.assertEquals(numQuestionsBelow, numQuestionsTop
+     ,"Number of questions displayed at below is different from number of questions displayed at top of page");
+        // checking that there is an answer for every question
         int numAnswers = faqPage.getNumAnswers();
-        Assert.assertEquals("There is not an answer for every question", numQuestionsBelow, numAnswers);
-        Assert.assertEquals("Page does not scroll down after clicking question", faqPage.getFirstQuestionY(), faqPage.clickFirstQuestion().getScrollPositionY());
-        Assert.assertEquals("Page does not scroll back up after clicking 'back to top'", 0, faqPage.clickBackToTop().getScrollPositionY());
+        Assert.assertEquals(numAnswers, numQuestionsBelow, "There is not an answer for every question");
+        // clicking on the first question (on the top of the page) and checking that the page scrolls down to that question below
+        // this may not work if the vertical distance between the first question below and the bottom of the page is less than the window height
+        Assert.assertEquals(faqPage.clickFirstQuestion().getScrollPositionY(), faqPage.getFirstQuestionY()
+                , "Page does not scroll down after clicking question");
+        // clicking on "back to top" and checking that the page scrolls back up to the top
+        Assert.assertEquals(faqPage.clickBackToTop().getScrollPositionY(), 0
+                , "Page does not scroll back up after clicking 'back to top'");
     }
+
+
+
 
 }
