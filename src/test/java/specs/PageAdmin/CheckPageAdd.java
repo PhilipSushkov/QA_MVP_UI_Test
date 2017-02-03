@@ -52,35 +52,40 @@ public class CheckPageAdd extends AbstractSpec {
     }
 
     @Test(dataProvider="pageData", priority=1)
-    public void checkAddPage(JSONObject page) throws Exception {
+    public void publishAddPage(JSONObject page) throws Exception {
         String pageName = page.get("section_title").toString();
 
         if (Boolean.parseBoolean(page.get("do_assertions").toString())) {
             dashboard.openPageFromCommonTasks(pageAdminMenuButton);
 
 
-            //Assert.assertEquals(pageAdd.createNewPage(page, pageName), WorkflowState.IN_PROGRESS.state(), "New Page didn't create properly");
-            //Assert.assertTrue(pageAdd.previewNewPage(pageName), "Preview of New Page didn't work properly (after Save)");
-            //Assert.assertFalse(pageAdd.publicNewPage(pageName), "Public site shouldn't show the content of New Page when it is not published yet (after Save)");
+            Assert.assertEquals(pageAdd.createNewPage(page, pageName), WorkflowState.IN_PROGRESS.state(), "New Page didn't create properly");
+            Assert.assertTrue(pageAdd.previewNewPage(pageName), "Preview of New Page didn't work properly (after Save)");
+            Assert.assertFalse(pageAdd.publicNewPage(pageName), "Public site shouldn't show the content of New Page when it is not published yet (after Save)");
 
-            //dashboard.openPageFromCommonTasks(pageAdminMenuButton);
-            //Assert.assertTrue(pageAdd.listNewPage(pageName), "New Page isn't found on Public Page List");
+            dashboard.openPageFromCommonTasks(pageAdminMenuButton);
+            Assert.assertTrue(pageAdd.listNewPage(pageName), "New Page isn't found on Public Page List");
 
-            //Assert.assertEquals(pageAdd.saveAndSubmitNewPage(page, pageName), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New Page");
+            Assert.assertEquals(pageAdd.saveAndSubmitNewPage(page, pageName), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New Page");
 
             Assert.assertTrue(pageAdd.checkPageData(page, pageName), "Submitted New Page data doesn't fit well to entry data (after Save and Submit)");
-            //Assert.assertTrue(pageAdd.previewNewPage(pageName), "Preview of New Page didn't work properly (after Save and Submit)");
-            //Assert.assertFalse(pageAdd.publicNewPage(pageName), "Public site shouldn't show the content of New Page when not published yet (after Save and Submit)");
+            Assert.assertTrue(pageAdd.previewNewPage(pageName), "Preview of New Page didn't work properly (after Save and Submit)");
+            Assert.assertFalse(pageAdd.publicNewPage(pageName), "Public site shouldn't show the content of New Page when not published yet (after Save and Submit)");
 
             Assert.assertEquals(pageAdd.publishNewPage(pageName), WorkflowState.LIVE.state(), "Couldn't publish New Page properly");
-            //Assert.assertTrue(pageAdd.previewNewPage(pageName), "Preview of New Page didn't work properly (after Publish)");
-            //Assert.assertTrue(pageAdd.publicNewPage(pageName), "New page should be shown on Public site (after Publish)");
         }
-
     }
 
     @Test(dataProvider="pageData", priority=2)
-    public void checkEditPage(JSONObject page) throws Exception {
+    public void checkAddPage(JSONObject page) throws Exception {
+        String pageName = page.get("section_title").toString();
+
+        Assert.assertTrue(pageAdd.previewNewPage(pageName), "Preview of New Page didn't work properly (after Publish)");
+        Assert.assertTrue(pageAdd.publicNewPage(pageName), "New page should be shown on Public site (after Publish)");
+    }
+
+    @Test(dataProvider="pageData", priority=3)
+    public void publishEditPage(JSONObject page) throws Exception {
         String pageName = page.get("section_title").toString();
 
         if (Boolean.parseBoolean(page.get("do_assertions").toString())) {
@@ -97,12 +102,24 @@ public class CheckPageAdd extends AbstractSpec {
             Assert.assertTrue(pageAdd.checkPageChanges(page, pageName), "Submitted New Page changes don't fit well to entry data (after Change And Submit)");
 
             Assert.assertEquals(pageAdd.publishNewPage(pageName), WorkflowState.LIVE.state(), "Couldn't publish New Page properly");
-            Assert.assertTrue(pageAdd.previewNewPage(pageName), "Preview of New Page didn't work properly (after Publish)");
-            Assert.assertTrue(pageAdd.publicNewPage(pageName), "New page should be shown on Public site (after Publish)");
         }
     }
 
-    @Test(dataProvider="pageData", priority=3)
+    @Test(dataProvider="pageData", priority=4)
+    public void checkEditPage(JSONObject page) throws Exception {
+        String pageName = page.get("section_title").toString();
+
+        if (Boolean.parseBoolean(page.get("do_assertions").toString())) {
+            try {
+                pageName = page.get("section_title_ch").toString();
+            } catch (NullPointerException e) {
+            }
+            Assert.assertTrue(pageAdd.previewNewPage(pageName), "Preview of Changed New Page didn't work properly (after Publish)");
+            Assert.assertTrue(pageAdd.publicNewPage(pageName), "Changed New Page should be shown on Public site (after Publish)");
+        }
+    }
+
+    @Test(dataProvider="pageData", priority=5)
     public void checkDeletePage(JSONObject page) throws Exception {
         String pageName = page.get("section_title").toString();
 
@@ -110,12 +127,17 @@ public class CheckPageAdd extends AbstractSpec {
             dashboard.openPageFromCommonTasks(pageAdminMenuButton);
 
             Assert.assertEquals(pageAdd.setupAsDeletedPage(pageName), WorkflowState.DELETE_PENDING.state(), "New Page didn't setup as Deleted properly");
-            Assert.assertFalse(pageAdd.previewNewPage(pageName), "New Page shouldn't be shown in Preview (after Delete)");
-            Assert.assertTrue(pageAdd.publicNewPage(pageName), "New Page should be shown on Public pages (after Delete)");
 
+            try {
+                pageName = page.get("section_title_ch").toString();
+            } catch (NullPointerException e) {
+            }
+            Assert.assertFalse(pageAdd.previewNewPage(pageName), "Changed Page shouldn't be shown in Preview (after Delete)");
+            Assert.assertTrue(pageAdd.publicNewPage(pageName), "Changed Page should be shown on Public pages (after Delete)");
+
+            pageName = page.get("section_title").toString();
             Assert.assertEquals(pageAdd.removePage(page, pageName), WorkflowState.NEW_ITEM.state(), "Couldn't remove New Page. Something went wrong.");
         }
-
     }
 
     @DataProvider
@@ -146,7 +168,6 @@ public class CheckPageAdd extends AbstractSpec {
     @AfterTest
     public void tearDown() {
         dashboard.logoutFromAdmin();
-        //Functions.ClearJSONfile(sPathToFile + sNewPagesJson);
         driver.quit();
     }
 

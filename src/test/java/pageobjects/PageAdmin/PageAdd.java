@@ -416,6 +416,7 @@ public class PageAdd extends AbstractPageObject {
     public Boolean checkPageChanges(JSONObject pageDataObj, String pageName) throws InterruptedException {
         try {
             JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFilePagesJson));
+            JSONArray pageNamesArray = (JSONArray) jsonObject.get("page_names");
 
             String pageUrl = getPageUrl(jsonObject, pageName);
             driver.get(pageUrl);
@@ -423,7 +424,18 @@ public class PageAdd extends AbstractPageObject {
 
             try {
                 if (!pageDataObj.get("section_title_ch").toString().isEmpty()) {
+                    Functions.RemoveArrayItem(pageNamesArray, pageName);
                     pageName = pageDataObj.get("section_title_ch").toString();
+
+                    if (pageDataObj.get("parent_page").toString().equals("Home")) {
+                        pageNamesArray.add(pageName);
+                    }
+
+                    jsonObject.put("page_names", pageNamesArray);
+
+                    FileWriter file = new FileWriter(sPathToFile + sDataFilePagesJson);
+                    file.write(jsonObject.toJSONString().replace("\\", ""));
+                    file.flush();
                 }
             } catch (NullPointerException e) {
             }
@@ -434,23 +446,17 @@ public class PageAdd extends AbstractPageObject {
                 if (!pageObj.get("section_title").toString().equals(pageDataObj.get("section_title_ch").toString())) {
                     return false;
                 }
-                System.out.println(pageObj.get("section_title").toString());
-                System.out.println(pageDataObj.get("section_title_ch").toString());
             } catch (NullPointerException e) {}
 
             try {
                 if (!pageObj.get("page_type").toString().equals(pageDataObj.get("page_type_ch").toString())) {
                     return false;
                 }
-                System.out.println(pageObj.get("page_type").toString());
-                System.out.println(pageDataObj.get("page_type_ch").toString());
             } catch (NullPointerException e) {}
 
             try {
                 if (pageObj.get("page_type").toString().equals("External")) {
                     if (!pageObj.get("external_url").toString().equals(pageDataObj.get("external_url_ch").toString())) {
-                        System.out.println(pageObj.get("external_url").toString());
-                        System.out.println(pageDataObj.get("external_url_ch").toString());
                         return false;
                     }
                 }
@@ -506,7 +512,6 @@ public class PageAdd extends AbstractPageObject {
     public String changeAndSubmitPage(JSONObject pagesDataObj, String pageName) throws InterruptedException {
         try {
             JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFilePagesJson));
-
             JSONObject pageObj = (JSONObject) jsonObject.get(pageName);
 
             if (!pageObj.get("workflow_state").toString().equals(WorkflowState.FOR_APPROVAL.state())) {
@@ -659,7 +664,7 @@ public class PageAdd extends AbstractPageObject {
     }
 
 
-    public String removePage(JSONObject pagesDataObj, String pageName) throws InterruptedException {
+    public String removePage(JSONObject pageDataObj, String pageName) throws InterruptedException {
         try {
             JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFilePagesJson));
             JSONArray pageNamesArray = (JSONArray) jsonObject.get("page_names");
@@ -680,7 +685,7 @@ public class PageAdd extends AbstractPageObject {
                 Thread.sleep(DEFAULT_PAUSE);
 
                 try {
-                    String pageNameCh = pagesDataObj.get("section_title_ch").toString();
+                    String pageNameCh = pageDataObj.get("section_title_ch").toString();
                     Functions.RemoveArrayItem(pageNamesArray, pageNameCh);
                     jsonObject.remove(pageNameCh);
                 } catch (NullPointerException e) {}
@@ -714,4 +719,6 @@ public class PageAdd extends AbstractPageObject {
 
         return desktopUrl.toString()+"default.aspx?ItemID="+sItemID+"&LanguageId="+sLanguageId+"&SectionId="+sSectionId;
     }
+
+
 }
