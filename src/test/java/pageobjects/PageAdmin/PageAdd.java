@@ -23,14 +23,16 @@ import static specs.AbstractSpec.propUIPageAdmin;
 /**
  * Created by philipsushkov on 2017-01-24.
  */
+
 public class PageAdd extends AbstractPageObject {
     private static By addNewBtn, backBtn, sectionTitleInput, pageTypeInternalRd, pageTypeExternalRd, externalURLInput, publishBtn;
     private static By pageTemplateSelect, parentPageSelect, showNavChk, openNewWindChk, saveBtn, workflowStateSpan, currentContentSpan;
     private static By revertBtn, parentUrlSpan, seoNameInput, previewLnk, breadcrumbDiv, commentsTxt, deleteBtn, addNewInput;
-    private static By saveAndSubmitBtn;
-    private static String sPathToFile, sDataFilePagesJson;
+    private static By saveAndSubmitBtn, rejectBtn;
+    private static String sPathToFile, sDataFilePagesJson, sDataFileModulesJson;
     private static JSONParser parser;
     private static final long DEFAULT_PAUSE = 2500;
+    private static PageAdminList pageAdminList;
 
     public PageAdd(WebDriver driver) {
         super(driver);
@@ -59,11 +61,14 @@ public class PageAdd extends AbstractPageObject {
         publishBtn = By.xpath(propUIPageAdmin.getProperty("btn_Publish"));
         backBtn = By.xpath(propUIPageAdmin.getProperty("btn_Back"));
         saveAndSubmitBtn = By.xpath(propUIPageAdmin.getProperty("btn_SaveAndSubmit"));
+        rejectBtn = By.xpath(propUIPageAdmin.getProperty("btn_Reject"));
 
         sPathToFile = System.getProperty("user.dir") + propUIPageAdmin.getProperty("dataPath_PageAdmin");
         sDataFilePagesJson = propUIPageAdmin.getProperty("json_PagesProp");
+        sDataFileModulesJson = propUIPageAdmin.getProperty("json_ModulesProp");
 
         parser = new JSONParser();
+        pageAdminList = new PageAdminList(driver);;
     }
 
     public String createNewPage(JSONObject pagesDataObj, String pageName) throws InterruptedException {
@@ -359,6 +364,109 @@ public class PageAdd extends AbstractPageObject {
     }
 
 
+    public Boolean checkPageData(JSONObject pageDataObj, String pageName) throws InterruptedException {
+        try {
+            JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFilePagesJson));
+
+            String pageUrl = getPageUrl(jsonObject, pageName);
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+
+            JSONObject pageObj = (JSONObject) pageAdminList.savePageToJSON(sPathToFile, sDataFilePagesJson, sDataFileModulesJson).get(pageName);
+
+            if (!pageObj.get("section_title").toString().equals(pageDataObj.get("section_title").toString())) {
+                return false;
+            }
+
+            if (!pageObj.get("page_type").toString().equals(pageDataObj.get("page_type").toString())) {
+                return false;
+            }
+
+            if (pageObj.get("page_type").toString().equals("External")) {
+                if (!pageObj.get("external_url").toString().equals(pageDataObj.get("external_url").toString())) {
+                    return false;
+                }
+            }
+
+            if (!pageObj.get("parent_section").toString().contains(pageDataObj.get("parent_page").toString())) {
+                return false;
+            }
+
+            if (!pageObj.get("show_in_navigation").toString().equals(pageDataObj.get("show_in_navigation").toString())) {
+                return false;
+            }
+
+            if (!pageObj.get("open_in_new_window").toString().equals(pageDataObj.get("open_in_new_window").toString())) {
+                return false;
+            }
+
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+
+    public Boolean checkPageChanges(JSONObject pageDataObj, String pageName) throws InterruptedException {
+        try {
+            JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFilePagesJson));
+
+            String pageUrl = getPageUrl(jsonObject, pageName);
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+
+            try {
+                if (!pageDataObj.get("section_title_ch").toString().isEmpty()) {
+                    pageName = pageDataObj.get("section_title_ch").toString();
+                }
+            } catch (NullPointerException e) {
+            }
+
+            JSONObject pageObj = (JSONObject) pageAdminList.savePageToJSON(sPathToFile, sDataFilePagesJson, sDataFileModulesJson).get(pageName);
+
+            try {
+                if (!pageObj.get("section_title").toString().equals(pageDataObj.get("section_title_ch").toString())) {
+                    return false;
+                }
+                System.out.println(pageObj.get("section_title").toString());
+                System.out.println(pageDataObj.get("section_title_ch").toString());
+            } catch (NullPointerException e) {}
+
+            try {
+                if (!pageObj.get("page_type").toString().equals(pageDataObj.get("page_type_ch").toString())) {
+                    return false;
+                }
+                System.out.println(pageObj.get("page_type").toString());
+                System.out.println(pageDataObj.get("page_type_ch").toString());
+            } catch (NullPointerException e) {}
+
+            try {
+                if (pageObj.get("page_type").toString().equals("External")) {
+                    if (!pageObj.get("external_url").toString().equals(pageDataObj.get("external_url_ch").toString())) {
+                        System.out.println(pageObj.get("external_url").toString());
+                        System.out.println(pageDataObj.get("external_url_ch").toString());
+                        return false;
+                    }
+                }
+            } catch (NullPointerException e) {}
+
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+
     public String publishNewPage(String pageName) throws InterruptedException {
         try {
             JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFilePagesJson));
@@ -395,32 +503,45 @@ public class PageAdd extends AbstractPageObject {
         return null;
     }
 
-    public String changePage (JSONObject pagesDataObj, String pageName) throws InterruptedException {
+    public String changeAndSubmitPage(JSONObject pagesDataObj, String pageName) throws InterruptedException {
         try {
             JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFilePagesJson));
 
-            String pageUrl = getPageUrl(jsonObject, pageName);
-            driver.get(pageUrl);
-            Thread.sleep(DEFAULT_PAUSE);
+            JSONObject pageObj = (JSONObject) jsonObject.get(pageName);
 
-            try {
-                if (!pagesDataObj.get("section_title_ch").toString().isEmpty()) {
-                    System.out.println(pagesDataObj.get("section_title_ch").toString());
-                    findElement(sectionTitleInput).sendKeys(pagesDataObj.get("section_title_ch").toString());
-                    findElement(commentsTxt).sendKeys(pagesDataObj.get("comment_ch").toString());
-                }
-
-                /*
-                findElement(saveAndSubmitBtn).click();
-                Thread.sleep(DEFAULT_PAUSE);
-
+            if (!pageObj.get("workflow_state").toString().equals(WorkflowState.FOR_APPROVAL.state())) {
+                String pageUrl = getPageUrl(jsonObject, pageName);
                 driver.get(pageUrl);
                 Thread.sleep(DEFAULT_PAUSE);
-                waitForElement(sectionTitleInput);
 
-                //if ()
+                try {
+                    if (!pagesDataObj.get("section_title_ch").toString().isEmpty()) {
+                        findElement(sectionTitleInput).clear();
+                        findElement(sectionTitleInput).sendKeys(pagesDataObj.get("section_title_ch").toString());
+                        findElement(commentsTxt).clear();
+                        findElement(commentsTxt).sendKeys(pagesDataObj.get("comment_ch").toString());
+                    }
+                } catch (NullPointerException e) {}
 
-                JSONObject pageObj = (JSONObject) jsonObject.get(pageName);
+                try {
+                    if (!pagesDataObj.get("page_type_ch").toString().isEmpty()) {
+
+                        if (pagesDataObj.get("page_type_ch").toString().equals("Internal")) {
+                            findElement(pageTypeInternalRd).click();
+                        } else if (pagesDataObj.get("page_type_ch").toString().equals("External")) {
+                            findElement(pageTypeExternalRd).click();
+                            waitForElement(externalURLInput);
+                            findElement(externalURLInput).clear();
+                            findElement(externalURLInput).sendKeys(pagesDataObj.get("external_url_ch").toString());
+                        }
+                        findElement(commentsTxt).clear();
+                        findElement(commentsTxt).sendKeys(pagesDataObj.get("comment_ch").toString());
+                    }
+                } catch (NullPointerException e) {}
+
+
+                findElement(saveAndSubmitBtn).click();
+                Thread.sleep(DEFAULT_PAUSE);
 
                 pageObj.put("workflow_state", WorkflowState.FOR_APPROVAL.state());
                 pageObj.put("deleted", "false");
@@ -430,13 +551,59 @@ public class PageAdd extends AbstractPageObject {
                 FileWriter file = new FileWriter(sPathToFile + sDataFilePagesJson);
                 file.write(jsonObject.toJSONString().replace("\\", ""));
                 file.flush();
-                */
 
-                //return findElement(workflowStateSpan).getText();
-                return WorkflowState.FOR_APPROVAL.state();
+                driver.get(pageUrl);
+                Thread.sleep(DEFAULT_PAUSE);
+                waitForElement(sectionTitleInput);
 
-            } catch (NullPointerException e) {
+                return findElement(workflowStateSpan).getText();
             }
+
+            return null;
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+
+    public String revertToLivePage(String pageName) throws InterruptedException {
+        try {
+            JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFilePagesJson));
+
+            JSONObject pageObj = (JSONObject) jsonObject.get(pageName);
+
+            if (pageObj.get("workflow_state").toString().equals(WorkflowState.FOR_APPROVAL.state())) {
+                String pageUrl = getPageUrl(jsonObject, pageName);
+                driver.get(pageUrl);
+                Thread.sleep(DEFAULT_PAUSE);
+
+                findElement(revertBtn).click();
+                Thread.sleep(DEFAULT_PAUSE);
+
+                pageObj.put("workflow_state", WorkflowState.LIVE.state());
+                pageObj.put("deleted", "false");
+
+                jsonObject.put(pageName, pageObj);
+
+                FileWriter file = new FileWriter(sPathToFile + sDataFilePagesJson);
+                file.write(jsonObject.toJSONString().replace("\\", ""));
+                file.flush();
+
+                driver.get(pageUrl);
+                Thread.sleep(DEFAULT_PAUSE);
+                waitForElement(sectionTitleInput);
+
+                return findElement(workflowStateSpan).getText();
+            }
+
+            return null;
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -492,7 +659,7 @@ public class PageAdd extends AbstractPageObject {
     }
 
 
-    public String removePage(String pageName) throws InterruptedException {
+    public String removePage(JSONObject pagesDataObj, String pageName) throws InterruptedException {
         try {
             JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFilePagesJson));
             JSONArray pageNamesArray = (JSONArray) jsonObject.get("page_names");
@@ -511,6 +678,12 @@ public class PageAdd extends AbstractPageObject {
 
                 driver.get(pageUrl);
                 Thread.sleep(DEFAULT_PAUSE);
+
+                try {
+                    String pageNameCh = pagesDataObj.get("section_title_ch").toString();
+                    Functions.RemoveArrayItem(pageNamesArray, pageNameCh);
+                    jsonObject.remove(pageNameCh);
+                } catch (NullPointerException e) {}
 
                 Functions.RemoveArrayItem(pageNamesArray, pageName);
                 jsonObject.remove(pageName);

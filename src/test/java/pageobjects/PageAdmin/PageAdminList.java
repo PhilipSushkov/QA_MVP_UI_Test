@@ -23,11 +23,11 @@ import static specs.AbstractSpec.propUIPageAdmin;
 
 public class PageAdminList extends AbstractPageObject {
     private static By moduleTitle, contentInnerWrap, dataGridTable, dataGridItemBorder, editPageImg;
-    private static By backBtn, sectionTitleInput, yourPageUrlLabel, seoNameInput, pageTitleInput;
+    private static By backBtn, sectionTitleInput, yourPageUrlLabel, seoNameInput, pageTitleInput, parentSectionSelect;
     private static By descriptionTextarea, domainSelect, switchBtn, pageTypeExternalRd, globalModuleSetLbl;
     private static By pageTypeInternalRd, pageLayoutSelect, externalURLInput, activeChk, globalModuleSetChk;
     private static By moduleInstancesSpan, sectionTitleSpan, pageNameLbl, moduleNameLbl, editModuleImg, moduleDefinitionSelect;
-    private static By workflowStateSpan;
+    private static By workflowStateSpan, showNavChk, openNewWindChk;
     private static String sPathToFile, sDataFilePagesJson, sDataFileModulesJson;
     private static JSONParser parser;
     private static final long DEFAULT_PAUSE = 1500;
@@ -61,10 +61,13 @@ public class PageAdminList extends AbstractPageObject {
         sectionTitleSpan = By.xpath(propUIPageAdmin.getProperty("span_SectionTitle"));
         moduleDefinitionSelect = By.xpath(propUIPageAdmin.getProperty("select_ModuleDefinition"));
         workflowStateSpan = By.xpath(propUIPageAdmin.getProperty("select_WorkflowState"));
+        parentSectionSelect = By.xpath(propUIPageAdmin.getProperty("select_ParentSection"));
+        showNavChk = By.xpath(propUIPageAdmin.getProperty("chk_ShowInNav"));
+        openNewWindChk = By.xpath(propUIPageAdmin.getProperty("chk_OpenInNewWindow"));
 
+        sPathToFile = System.getProperty("user.dir") + propUIPageAdmin.getProperty("dataPath_PageAdmin");
         sDataFilePagesJson = propUIPageAdmin.getProperty("json_PagesProp");
         sDataFileModulesJson = propUIPageAdmin.getProperty("json_ModulesProp");
-        sPathToFile = System.getProperty("user.dir") + propUIPageAdmin.getProperty("dataPath_PageAdmin");
 
         parser = new JSONParser();
     }
@@ -216,7 +219,7 @@ public class PageAdminList extends AbstractPageObject {
             sectionTitle = findElement(sectionTitleInput).getAttribute("value");
             mmjson.put("section_title", sectionTitle);
             your_page_url = findElement(yourPageUrlLabel).getText() + findElement(seoNameInput).getAttribute("value");
-            mmjson.put("you_page_url", your_page_url);
+            mmjson.put("your_page_url", your_page_url);
             mmjson.put("page_title", findElement(pageTitleInput).getAttribute("value"));
 
             if (Boolean.parseBoolean(findElement(pageTypeInternalRd).getAttribute("checked"))) {
@@ -233,7 +236,10 @@ public class PageAdminList extends AbstractPageObject {
                 mmjson.put("external_url", findElement(externalURLInput).getAttribute("value"));
             }
 
+            mmjson.put("parent_section", new Select(driver.findElement(parentSectionSelect)).getFirstSelectedOption().getText());
             mmjson.put("active", findElement(activeChk).getAttribute("checked"));
+            mmjson.put("show_in_navigation", Boolean.parseBoolean(findElement(showNavChk).getAttribute("checked")));
+            mmjson.put("open_in_new_window", Boolean.parseBoolean(findElement(openNewWindChk).getAttribute("checked")));
             mmjson.put("workflow_state", findElement(workflowStateSpan).getText());
 
             // Save Global Module Settings list
