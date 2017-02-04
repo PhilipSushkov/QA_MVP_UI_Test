@@ -232,6 +232,8 @@ public class PageAdd extends AbstractPageObject {
 
 
     public Boolean publicNewPage(String pageName) throws InterruptedException {
+        int randNum = Functions.randInt(0, 99);
+
         try {
             JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFilePagesJson));
 
@@ -247,7 +249,7 @@ public class PageAdd extends AbstractPageObject {
             driver.switchTo().window(tabs.get(1));
 
             try {
-                driver.get(JsonPath.read(jsonObject, "$.['"+pageName+"'].your_page_url").toString());
+                driver.get(JsonPath.read(jsonObject, "$.['"+pageName+"'].your_page_url").toString()+"?param="+Integer.toString(randNum));
             } catch (TimeoutException e) {
                 driver.findElement(By.tagName("body")).sendKeys("Keys.ESCAPE");
             }
