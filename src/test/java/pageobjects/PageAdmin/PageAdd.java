@@ -71,7 +71,7 @@ public class PageAdd extends AbstractPageObject {
         pageAdminList = new PageAdminList(driver);;
     }
 
-    public String createNewPage(JSONObject pagesDataObj, String pageName) throws InterruptedException {
+    public String createPage(JSONObject pagesDataObj, String pageName) throws InterruptedException {
         String your_page_url, parent_page, page_type, external_url = null;
 
         waitForElement(addNewBtn);
@@ -125,7 +125,7 @@ public class PageAdd extends AbstractPageObject {
             Thread.sleep(DEFAULT_PAUSE);
 
             findElement(saveBtn).click();
-            waitForElement(revertBtn);
+            waitForElement(deleteBtn);
 
             // Write page parameters to json
             JSONObject jsonObjectNew = new JSONObject();
@@ -178,7 +178,7 @@ public class PageAdd extends AbstractPageObject {
     }
 
 
-    public Boolean previewNewPage(String pageName) throws InterruptedException {
+    public Boolean previewPage(String pageName) throws InterruptedException {
         try {
             JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFilePagesJson));
 
@@ -231,7 +231,7 @@ public class PageAdd extends AbstractPageObject {
     }
 
 
-    public Boolean publicNewPage(String pageName) throws InterruptedException {
+    public Boolean publicPage(String pageName) throws InterruptedException {
         int randNum = Functions.randInt(0, 99);
 
         try {
@@ -291,7 +291,7 @@ public class PageAdd extends AbstractPageObject {
     }
 
 
-    public Boolean listNewPage(String pageName) throws InterruptedException {
+    public Boolean listPage(String pageName) throws InterruptedException {
         boolean item = false;
         By innerWrapPage, newPageLbl;
 
@@ -328,7 +328,7 @@ public class PageAdd extends AbstractPageObject {
     }
 
 
-    public String saveAndSubmitNewPage(JSONObject pagesDataObj, String pageName) throws InterruptedException {
+    public String saveAndSubmitPage(JSONObject pagesDataObj, String pageName) throws InterruptedException {
         try {
             JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFilePagesJson));
 
@@ -475,7 +475,7 @@ public class PageAdd extends AbstractPageObject {
     }
 
 
-    public String publishNewPage(String pageName) throws InterruptedException {
+    public String publishPage(String pageName) throws InterruptedException {
         try {
             JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFilePagesJson));
 

@@ -169,7 +169,7 @@ public class PageAdminList extends AbstractPageObject {
 
         try {
             JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFilePagesJson));
-            urlPage = JsonPath.read(jsonObject, "$."+searchPhrase+".you_page_url");
+            urlPage = JsonPath.read(jsonObject, "$."+searchPhrase+".your_page_url");
             String itemID = JsonPath.read(jsonObject, "$."+searchPhrase+".url_query.ItemID");
             //System.out.println(itemID);
 
