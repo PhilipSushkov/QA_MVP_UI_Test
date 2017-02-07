@@ -298,7 +298,7 @@ public class PageAdminList extends AbstractPageObject {
                 }
 
                 mmjsonModule.put("url_query", jsonURLQueryModule);
-                mmjsonModule.put(new Select(driver.findElement(moduleDefinitionSelect)).getFirstSelectedOption().getText(), your_page_url);
+                mmjsonModule.put(new Select(findElement(moduleDefinitionSelect)).getFirstSelectedOption().getText(), your_page_url);
                 mmjsonModule.put("active", findElement(activeChk).getAttribute("checked"));
                 mmjsonModule.put("workflow_state", findElement(workflowStateSpan).getText());
 

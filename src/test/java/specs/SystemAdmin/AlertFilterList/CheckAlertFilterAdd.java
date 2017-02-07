@@ -27,7 +27,7 @@ import java.util.ArrayList;
  */
 
 public class CheckAlertFilterAdd extends AbstractSpec {
-    private static By systemAdminMenuButton, alertFilterListMenuItem, addNewLink;
+    private static By systemAdminMenuButton, alertFilterListMenuItem;
     private static LoginPage loginPage;
     private static Dashboard dashboard;
     private static AlertFilterAdd alertFilterAdd;
@@ -35,13 +35,12 @@ public class CheckAlertFilterAdd extends AbstractSpec {
     private static String sPathToFile, sDataFileJson;
     private static JSONParser parser;
 
-    private final String PAGE_DATA="pageData";
+    private final String DATA="getData";
 
     @BeforeTest
     public void setUp() throws Exception {
         systemAdminMenuButton = By.xpath(propUISystemAdmin.getProperty("btnMenu_SystemAdmin"));
         alertFilterListMenuItem = By.xpath(propUISystemAdmin.getProperty("itemMenu_AlertFilterList"));
-        addNewLink = By.xpath(propUISystemAdmin.getProperty("input_AddNew"));
 
         loginPage = new LoginPage(driver);
         dashboard = new Dashboard(driver);
@@ -50,37 +49,47 @@ public class CheckAlertFilterAdd extends AbstractSpec {
         sPathToFile = System.getProperty("user.dir") + propUISystemAdmin.getProperty("dataPath_AlertFilterList");
         sDataFileJson = propUISystemAdmin.getProperty("json_AlertFilterData");
 
+        parser = new JSONParser();
+
         loginPage.loginUser();
+        dashboard.openPageFromMenu(systemAdminMenuButton, alertFilterListMenuItem);
     }
 
-    @Test
-    public void saveAlertFilter(JSONObject alertFilter) throws Exception {
-        dashboard.openEditPageFromAddNew(systemAdminMenuButton, alertFilterListMenuItem, addNewLink);
-        Assert.assertTrue(true, "Preview of New Alert Filter didn't work properly (after Save)");
+    @Test(dataProvider=DATA, priority=1)
+    public void saveAlertFilter(JSONObject data) throws Exception {
+        String sFilterName = data.get("filter_name").toString();
+        String expectedTitleEdit = "Alert Filter Edit";
+        String expectedTitleList = "Alert Filter List";
+        //System.out.println(data.get("filter_name").toString());
+
+        Assert.assertEquals(alertFilterAdd.getTitle(), expectedTitleEdit, "Actual Alert Filter Edit page Title doesn't match to expected");
+
+        Assert.assertEquals(alertFilterAdd.saveAlertFilter(data, sFilterName), expectedTitleList, "Alert Filter didn't save properly");
+        //Assert.assertTrue(true, "Preview of New Alert Filter didn't work properly (after Save)");
     }
 
 
     @DataProvider
-    public Object[][] pageData() {
+    public Object[][] getData() {
 
         try {
             JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFileJson));
-            JSONArray pageData = (JSONArray) jsonObject.get("pages");
+            JSONArray jsonArray = (JSONArray) jsonObject.get("alert_filter");
             ArrayList<Object> zoom = new ArrayList();
 
-            for (int i = 0; i < pageData.size(); i++) {
-                JSONObject pageObj = (JSONObject) pageData.get(i);
+            for (int i = 0; i < jsonArray.size(); i++) {
+                JSONObject pageObj = (JSONObject) jsonArray.get(i);
                 if (Boolean.parseBoolean(pageObj.get("do_assertions").toString())) {
-                    zoom.add(pageData.get(i));
+                    zoom.add(jsonArray.get(i));
                 }
             }
 
-            Object[][] newPages = new Object[zoom.size()][1];
+            Object[][] data = new Object[zoom.size()][1];
             for (int i = 0; i < zoom.size(); i++) {
-                newPages[i][0] = zoom.get(i);
+                data[i][0] = zoom.get(i);
             }
 
-            return newPages;
+            return data;
 
         }  catch (FileNotFoundException e) {
             e.printStackTrace();

@@ -43,6 +43,15 @@ public class CheckAlertFilterEdit extends AbstractSpec {
         Assert.assertEquals(alertFilterEdit.getTitle(), expectedTitle, "Actual Alert Filter Edit page Title doesn't match to expected");
 
         Assert.assertNotNull(alertFilterEdit.getFilterNameInput(), "Filter Name field doesn't exist");
+        Assert.assertNotNull(alertFilterEdit.getEntityTypeSelect(), "Entity Type select doesn't exist");
+
+        Assert.assertNotNull(alertFilterEdit.getFilterTypeSelect(), "Filter Type select doesn't exist");
+        Assert.assertNotNull(alertFilterEdit.getIncludedTitleItemsTextarea(), "Included Title Items textarea doesn't exist");
+        Assert.assertNotNull(alertFilterEdit.getIncludedBodyItemsTextarea(), "Included Body Items textarea doesn't exist");
+
+        Assert.assertNotNull(alertFilterEdit.getExcludedTitleItemsTextarea(), "Excluded Title Items textarea doesn't exist");
+        Assert.assertNotNull(alertFilterEdit.getExcludedBodyItemsTextarea(), "Excluded Body Items textarea doesn't exist");
+
         Assert.assertNotNull(alertFilterEdit.getSaveButton(), "Save Button doesn't exist");
 
     }
