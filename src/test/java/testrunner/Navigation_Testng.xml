@@ -2,6 +2,21 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="Web CMS Suite Navigation" parallel="tests" thread-count="5">
 
+    <!-- Page Admin -->
+    <test name="CheckPageAdminList">
+        <classes>
+            <class name="specs.PageAdmin.CheckPageAdminList" />
+        </classes>
+    </test>
+
+    <!-- Page Admin Edit-->
+    <test name="CheckPageEdit">
+        <classes>
+            <class name="specs.PageAdmin.CheckPageEdit" />
+        </classes>
+    </test>
+
+
     <!-- System Admin part -->
     <test name="CheckAlertFilterList">
         <classes>
@@ -413,19 +428,5 @@
         </classes>
     </test>
 
-
-    <!-- Page Admin -->
-    <test name="CheckPageAdminList">
-        <classes>
-            <class name="specs.PageAdmin.CheckPageAdminList" />
-        </classes>
-    </test>
-
-    <!-- Page Admin Edit-->
-    <test name="CheckPageEdit">
-        <classes>
-            <class name="specs.PageAdmin.CheckPageEdit" />
-        </classes>
-    </test>
 
 </suite>

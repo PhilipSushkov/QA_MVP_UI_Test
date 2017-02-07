@@ -36,6 +36,8 @@ public class CheckPageAdd extends AbstractSpec {
     private static String sPathToFile, sDataFileJson;
     private static JSONParser parser;
 
+    private final String PAGE_DATA="pageData", SECTION_TITLE="section_title", SECTION_TITLE_CH="section_title_ch";
+
     @BeforeTest
     public void setUp() throws Exception {
         pageAdminMenuButton = By.xpath(propUIPageAdmin.getProperty("btnMenu_PageAdmin"));
@@ -53,9 +55,9 @@ public class CheckPageAdd extends AbstractSpec {
     }
 
 
-    @Test(dataProvider="pageData", priority=1)
+    @Test(dataProvider=PAGE_DATA, priority=1)
     public void savePage(JSONObject page) throws Exception {
-        String pageName = page.get("section_title").toString();
+        String pageName = page.get(SECTION_TITLE).toString();
 
         dashboard.openPageFromCommonTasks(pageAdminMenuButton);
 
@@ -68,9 +70,9 @@ public class CheckPageAdd extends AbstractSpec {
     }
 
 
-    @Test(dataProvider="pageData", priority=2)
+    @Test(dataProvider=PAGE_DATA, priority=2)
     public void saveAndSubmitPage(JSONObject page) throws Exception {
-        String pageName = page.get("section_title").toString();
+        String pageName = page.get(SECTION_TITLE).toString();
 
         Assert.assertEquals(pageAdd.saveAndSubmitPage(page, pageName), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New Page");
         Assert.assertTrue(pageAdd.checkPageData(page, pageName), "Submitted New Page data doesn't fit well to entry data (after Save and Submit)");
@@ -79,9 +81,9 @@ public class CheckPageAdd extends AbstractSpec {
     }
 
 
-    @Test(dataProvider="pageData", priority=3)
+    @Test(dataProvider=PAGE_DATA, priority=3)
     public void publishPage(JSONObject page) throws Exception {
-        String pageName = page.get("section_title").toString();
+        String pageName = page.get(SECTION_TITLE).toString();
 
         Assert.assertEquals(pageAdd.publishPage(pageName), WorkflowState.LIVE.state(), "Couldn't publish New Page properly");
         Assert.assertTrue(pageAdd.previewPage(pageName), "Preview of New Page didn't work properly (after Publish)");
@@ -89,9 +91,9 @@ public class CheckPageAdd extends AbstractSpec {
     }
 
 
-    @Test(dataProvider="pageData", priority=4)
+    @Test(dataProvider=PAGE_DATA, priority=4)
     public void revertEditPage(JSONObject page) throws Exception {
-        String pageName = page.get("section_title").toString();
+        String pageName = page.get(SECTION_TITLE).toString();
 
         dashboard.openPageFromCommonTasks(pageAdminMenuButton);
 
@@ -104,23 +106,23 @@ public class CheckPageAdd extends AbstractSpec {
     }
 
 
-    @Test(dataProvider="pageData", priority=5)
+    @Test(dataProvider=PAGE_DATA, priority=5)
     public void changeAndSubmitEditPage(JSONObject page) throws Exception {
-        String pageName = page.get("section_title").toString();
+        String pageName = page.get(SECTION_TITLE).toString();
 
         Assert.assertEquals(pageAdd.changeAndSubmitPage(page, pageName), WorkflowState.FOR_APPROVAL.state(), "Some fields of New Page didn't changed properly");
         Assert.assertTrue(pageAdd.checkPageChanges(page, pageName), "Submitted New Page changes don't fit well to entry data (after Change And Submit)");
     }
 
 
-    @Test(dataProvider="pageData", priority=6)
+    @Test(dataProvider=PAGE_DATA, priority=6)
     public void publishEditPage(JSONObject page) throws Exception {
-        String pageName = page.get("section_title").toString();
+        String pageName = page.get(SECTION_TITLE).toString();
 
         Assert.assertEquals(pageAdd.publishPage(pageName), WorkflowState.LIVE.state(), "Couldn't publish New Page properly");
 
         try {
-            pageName = page.get("section_title_ch").toString();
+            pageName = page.get(SECTION_TITLE_CH).toString();
         } catch (NullPointerException e) {
         }
         Assert.assertTrue(pageAdd.previewPage(pageName), "Preview of Changed New Page didn't work properly (after Publish)");
@@ -128,28 +130,27 @@ public class CheckPageAdd extends AbstractSpec {
     }
 
 
-    @Test(dataProvider="pageData", priority=7)
+    @Test(dataProvider=PAGE_DATA, priority=7)
     public void deletePage(JSONObject page) throws Exception {
-        String pageName = page.get("section_title").toString();
+        String pageName = page.get(SECTION_TITLE).toString();
 
         dashboard.openPageFromCommonTasks(pageAdminMenuButton);
 
         Assert.assertEquals(pageAdd.setupAsDeletedPage(pageName), WorkflowState.DELETE_PENDING.state(), "New Page didn't setup as Deleted properly");
 
         try {
-            pageName = page.get("section_title_ch").toString();
+            pageName = page.get(SECTION_TITLE_CH).toString();
         } catch (NullPointerException e) {
         }
 
         Assert.assertFalse(pageAdd.previewPage(pageName), "Changed Page shouldn't be shown in Preview (after Delete)");
         Assert.assertTrue(pageAdd.publicPage(pageName), "Changed Page should be shown on Public pages (after Delete)");
-
     }
 
 
-    @Test(dataProvider="pageData", priority=8)
+    @Test(dataProvider=PAGE_DATA, priority=8)
     public void removePage(JSONObject page) throws Exception {
-        String pageName = page.get("section_title").toString();
+        String pageName = page.get(SECTION_TITLE).toString();
 
         Assert.assertEquals(pageAdd.removePage(page, pageName), WorkflowState.NEW_ITEM.state(), "Couldn't remove New Page. Something went wrong.");
     }

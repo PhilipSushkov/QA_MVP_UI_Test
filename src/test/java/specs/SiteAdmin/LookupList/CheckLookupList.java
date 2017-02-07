@@ -36,7 +36,7 @@ public class CheckLookupList extends AbstractSpec {
     @Test
     public void checkLookupList() throws Exception {
         final String expectedTitle = "Lookup List";
-        final Integer expectedQuantity = 150;
+        final Integer expectedQuantity = 30;
 
         dashboard.openPageFromMenu(siteAdminMenuButton, lookupListMenuItem);
 

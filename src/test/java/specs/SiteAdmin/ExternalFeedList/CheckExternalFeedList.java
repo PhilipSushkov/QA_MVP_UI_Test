@@ -37,7 +37,7 @@ public class CheckExternalFeedList extends AbstractSpec {
     public void checkExternalFeedList() throws Exception {
 
         final String expectedTitle = "External Feed List";
-        final Integer expectedQuantity = 4;
+        final Integer expectedQuantity = 3;
 
         dashboard.openPageFromMenu(siteAdminMenuButton, externalFeedListMenuItem);
 
