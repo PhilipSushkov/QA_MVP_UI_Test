@@ -1,3 +1,5 @@
 TODO: Add nightly cron/figure out which build server to use
 
 curl -H "Content-Type: application/json" -d '{"build_parameters": {"TEST_ENV":"BETA","SUITE_NAME":"Navigation_Testng.xml"}}' https://circleci.com/api/v1/project/q4mobile/QA-WebCMS-Test/tree/Web_TestNG?circle-token=685a07c8591a4d41b3f9be3d2c1b5b7d5fa51594
+
+curl -H "Content-Type: application/json" -d '{"build_parameters": {"TEST_ENV":"PRODUCTION","SUITE_NAME":"Navigation_Testng.xml"}}' https://circleci.com/api/v1/project/q4mobile/QA-WebCMS-Test/tree/Web_TestNG?circle-token=685a07c8591a4d41b3f9be3d2c1b5b7d5fa51594
