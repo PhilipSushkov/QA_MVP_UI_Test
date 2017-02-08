@@ -89,6 +89,9 @@ public abstract class AbstractSpec extends util.Functions {
             setupIsDone = true;
         }
 
+        System.out.println(testContext.getName()); // it prints "Check name test"
+        testName = testContext.getName();
+
         switch (getActiveEnvironment()) {
             case DEVELOP:
                 //setupLocalDriver();
@@ -106,8 +109,6 @@ public abstract class AbstractSpec extends util.Functions {
         }
 
         setupPropUI();
-        System.out.println(testContext.getName()); // it prints "Check name test"
-        testName = testContext.getName();
     }
 
     private void setupLocalDriver() throws UnknownHostException {
