@@ -16,7 +16,7 @@ import pageobjects.Dashboard.Dashboard;
  */
 
 public class CheckAlertFilterEdit extends AbstractSpec {
-    private static By systemAdminMenuButton, alertFilterListMenuItem, userAddNewLink;
+    private static By systemAdminMenuButton, alertFilterListMenuItem, addNewLink;
     private static LoginPage loginPage;
     private static Dashboard dashboard;
     private static AlertFilterEdit alertFilterEdit;
@@ -25,14 +25,14 @@ public class CheckAlertFilterEdit extends AbstractSpec {
     public void setUp() throws Exception {
         systemAdminMenuButton = By.xpath(propUISystemAdmin.getProperty("btnMenu_SystemAdmin"));
         alertFilterListMenuItem = By.xpath(propUISystemAdmin.getProperty("itemMenu_AlertFilterList"));
-        userAddNewLink = By.xpath(propUISystemAdmin.getProperty("input_AddNew"));
+        addNewLink = By.xpath(propUISystemAdmin.getProperty("input_AddNew"));
 
         loginPage = new LoginPage(driver);
         dashboard = new Dashboard(driver);
         alertFilterEdit = new AlertFilterEdit(driver);
 
         loginPage.loginUser();
-        dashboard.openEditPageFromAddNew(systemAdminMenuButton, alertFilterListMenuItem, userAddNewLink);
+        dashboard.openEditPageFromAddNew(systemAdminMenuButton, alertFilterListMenuItem, addNewLink);
     }
 
     @Test
@@ -43,6 +43,15 @@ public class CheckAlertFilterEdit extends AbstractSpec {
         Assert.assertEquals(alertFilterEdit.getTitle(), expectedTitle, "Actual Alert Filter Edit page Title doesn't match to expected");
 
         Assert.assertNotNull(alertFilterEdit.getFilterNameInput(), "Filter Name field doesn't exist");
+        Assert.assertNotNull(alertFilterEdit.getEntityTypeSelect(), "Entity Type select doesn't exist");
+
+        Assert.assertNotNull(alertFilterEdit.getFilterTypeSelect(), "Filter Type select doesn't exist");
+        Assert.assertNotNull(alertFilterEdit.getIncludedTitleItemsTextarea(), "Included Title Items textarea doesn't exist");
+        Assert.assertNotNull(alertFilterEdit.getIncludedBodyItemsTextarea(), "Included Body Items textarea doesn't exist");
+
+        Assert.assertNotNull(alertFilterEdit.getExcludedTitleItemsTextarea(), "Excluded Title Items textarea doesn't exist");
+        Assert.assertNotNull(alertFilterEdit.getExcludedBodyItemsTextarea(), "Excluded Body Items textarea doesn't exist");
+
         Assert.assertNotNull(alertFilterEdit.getSaveButton(), "Save Button doesn't exist");
 
     }

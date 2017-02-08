@@ -1,0 +1,12 @@
+{
+  "Alert_Filter_01": {
+    "mailing_list": "Press Release - English",
+    "url_query": {
+      "FilterId": "1010",
+      "SectionId": "bc91fd91-41b9-4d1f-b4de-234c31a36f7e",
+      "LanguageId": "1"
+    },
+    "filter_name": "Alert_Filter_01",
+    "entity_type": "Press Release"
+  }
+}
