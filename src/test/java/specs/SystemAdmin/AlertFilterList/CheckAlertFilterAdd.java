@@ -52,7 +52,6 @@ public class CheckAlertFilterAdd extends AbstractSpec {
         parser = new JSONParser();
 
         loginPage.loginUser();
-        dashboard.openPageFromMenu(systemAdminMenuButton, alertFilterListMenuItem);
     }
 
     @Test(dataProvider=DATA, priority=1)
@@ -60,12 +59,21 @@ public class CheckAlertFilterAdd extends AbstractSpec {
         String sFilterName = data.get("filter_name").toString();
         String expectedTitleEdit = "Alert Filter Edit";
         String expectedTitleList = "Alert Filter List";
-        //System.out.println(data.get("filter_name").toString());
+
+        dashboard.openPageFromMenu(systemAdminMenuButton, alertFilterListMenuItem);
 
         Assert.assertEquals(alertFilterAdd.getTitle(), expectedTitleEdit, "Actual Alert Filter Edit page Title doesn't match to expected");
+        Assert.assertEquals(alertFilterAdd.saveAlertFilter(data, sFilterName), expectedTitleList, "New Alert Filter didn't save properly");
+    }
 
-        Assert.assertEquals(alertFilterAdd.saveAlertFilter(data, sFilterName), expectedTitleList, "Alert Filter didn't save properly");
-        //Assert.assertTrue(true, "Preview of New Alert Filter didn't work properly (after Save)");
+    @Test(dataProvider=DATA, priority=2)
+    public void checkAlertFilter(JSONObject data) throws Exception {
+        String sFilterName = data.get("filter_name").toString();
+        //System.out.println(data.get("filter_name").toString());
+
+        dashboard.openPageFromMenu(systemAdminMenuButton, alertFilterListMenuItem);
+
+        Assert.assertTrue(alertFilterAdd.checkAlertFilter(data, sFilterName), "New Alert Filter didn't find in Alert Filter List (after Save)");
     }
 
 

@@ -1,6 +1,5 @@
 package pageobjects.SystemAdmin.AlertFilterList;
 
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -115,4 +114,55 @@ public class AlertFilterAdd extends AbstractPageObject {
         return null;
     }
 
+    public Boolean checkAlertFilter(JSONObject data, String name) {
+        JSONObject jsonObj = new JSONObject();
+        JSONObject jsonMain = new JSONObject();
+
+        By editBtn = By.xpath("//span[contains(text(), '" + name + "')]/parent::td/parent::tr/td/input[contains(@id, 'btnEdit')]");
+
+        try {
+            waitForElement(moduleTitle);
+            findElement(editBtn).click();
+            waitForElement(saveBtn);
+
+            if (findElement(filterNameInput).getAttribute("value").equals(name)) {
+                System.out.println("Filter Name is correct");
+
+                try {
+                    FileReader readFile = new FileReader(sPathToFile + sFileJson);
+                    jsonMain = (JSONObject) parser.parse(readFile);
+                    jsonObj = (JSONObject) jsonMain.get(name);
+                } catch (ParseException e) {
+                }
+
+                URL url = new URL(getUrl());
+                String[] params = url.getQuery().split("&");
+                JSONObject jsonURLQuery = new JSONObject();
+                for (String param:params) {
+                    jsonURLQuery.put(param.split("=")[0], param.split("=")[1]);
+                }
+                jsonObj.put("url_query", jsonURLQuery);
+
+                int filterID = Integer.parseInt(jsonURLQuery.get("FilterId").toString());
+
+                try {
+                    FileWriter writeFile = new FileWriter(sPathToFile + sFileJson);
+                    writeFile.write(jsonMain.toJSONString().replace("\\", ""));
+                    writeFile.flush();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                return filterID > 0;
+            }
+
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
 }
