@@ -11,6 +11,7 @@ import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriverService;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.testng.ITestContext;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import util.BrowserStackCapability;
@@ -45,6 +46,7 @@ public abstract class AbstractSpec extends util.Functions {
     private static boolean setupIsDone = false;
     private static final Logger LOG = Logger.getLogger(AbstractSpec.class.getName());
     public static String sessionID = null;
+    public static String testName;
 
     // Declare Properties files for every section
     private static final String PATHTO_SYSTEMADMIN_PROP = "SystemAdmin/SystemAdminMap.properties";
@@ -70,7 +72,7 @@ public abstract class AbstractSpec extends util.Functions {
     */
 
     @BeforeTest
-    public void init() throws Exception {
+    public void init(final ITestContext testContext) throws Exception {
         if (!setupIsDone) {
             setupEnvironment();
 
@@ -104,6 +106,8 @@ public abstract class AbstractSpec extends util.Functions {
         }
 
         setupPropUI();
+        System.out.println(testContext.getName()); // it prints "Check name test"
+        testName = testContext.getName();
     }
 
     private void setupLocalDriver() throws UnknownHostException {
@@ -162,7 +166,7 @@ public abstract class AbstractSpec extends util.Functions {
         DesiredCapabilities capability = browser.toDesiredCapability();
         capability.setCapability("project", getActiveEnvironment().name());
         capability.setCapability("build", getActiveEnvironment().name() + " - " + browser.getPlatformType().name() + " " + browser.getBrowserType().getName() + " " + browser.getBrowserType().getLatestVersion()+ " - " + BUILD_ID);
-        //capability.setCapability("name", testMethodName);
+        capability.setCapability("name", testName);
         capability.setCapability("resolution","1920x1200");
         capability.setCapability("acceptSslCerts", "true");
         capability.setCapability("browserstack.video","false");
@@ -196,7 +200,6 @@ public abstract class AbstractSpec extends util.Functions {
 
 
     public static EnvironmentType getActiveEnvironment() {
-
         return activeEnvironment;
     }
 
