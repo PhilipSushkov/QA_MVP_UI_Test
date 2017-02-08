@@ -11,7 +11,7 @@ test:
   override:
     - ? |
         if [ -n "${TEST_ENV}" ]; then
-          mvn -Dsurefire.rerunFailingTestsCount=2 test -fae -D q4inc.specs=${TEST_ENV} -Dtest=${SUITE_NAME}
+          mvn compile
         else
           mvn compile
         fi
