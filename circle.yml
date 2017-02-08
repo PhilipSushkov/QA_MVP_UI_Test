@@ -17,8 +17,13 @@ test:
         fi
       : timeout: 1500
   post:
-    - mkdir -p $CIRCLE_TEST_REPORTS/junit/
-    - find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
+    - ? |
+        if [ -n "${TEST_ENV}" ]; then
+          mvn clean test -DsuiteXmlFile=${SUITE_NAME}
+        else
+          mvn compile
+        fi
+      : timeout: 1500
 
 experimental:
   notify:
