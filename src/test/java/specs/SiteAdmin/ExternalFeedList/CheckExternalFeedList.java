@@ -44,7 +44,7 @@ public class CheckExternalFeedList extends AbstractSpec {
         Assert.assertNotNull(externalFeedList.getUrl());
         Assert.assertEquals(expectedTitle, externalFeedList.getTitle(), "Actual External Feed List page Title doesn't match to expected");
 
-        System.out.println(externalFeedList.getExternalFeedListQuantity().toString());
+        //System.out.println(externalFeedList.getExternalFeedListQuantity().toString());
         Assert.assertTrue(expectedQuantity <= externalFeedList.getExternalFeedListQuantity(), "Actual Description Quantity is less than expected: "+expectedQuantity);
 
     }

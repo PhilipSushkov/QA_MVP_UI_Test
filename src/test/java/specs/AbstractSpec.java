@@ -10,6 +10,8 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriverService;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.testng.ITestContext;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import util.BrowserStackCapability;
@@ -28,8 +30,8 @@ public abstract class AbstractSpec extends util.Functions {
 // IMPORTANT:
 // Determines which environment the test suite will run on but can be overridden by command line
 //------------------------------------------------------------------------------
-    private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.BETA;
-    //private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.PRODUCTION;
+    //private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.BETA;
+    private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.PRODUCTION;
 //------------------------------------------------------------------------------
 
     private static final EnvironmentType activeEnvironment = setupEnvironment();
@@ -44,6 +46,7 @@ public abstract class AbstractSpec extends util.Functions {
     private static boolean setupIsDone = false;
     private static final Logger LOG = Logger.getLogger(AbstractSpec.class.getName());
     public static String sessionID = null;
+    public static String testName;
 
     // Declare Properties files for every section
     private static final String PATHTO_SYSTEMADMIN_PROP = "SystemAdmin/SystemAdminMap.properties";
@@ -69,7 +72,7 @@ public abstract class AbstractSpec extends util.Functions {
     */
 
     @BeforeTest
-    public void init() throws Exception {
+    public void init(final ITestContext testContext) throws Exception {
         if (!setupIsDone) {
             setupEnvironment();
 
@@ -86,6 +89,9 @@ public abstract class AbstractSpec extends util.Functions {
             setupIsDone = true;
         }
 
+        System.out.println(testContext.getName()); // it prints "Check name test"
+        testName = testContext.getName();
+
         switch (getActiveEnvironment()) {
             case DEVELOP:
                 //setupLocalDriver();
@@ -98,7 +104,7 @@ public abstract class AbstractSpec extends util.Functions {
                 setupChromeLocalDriver();
                 break;
             case PRODUCTION:
-                //setupWebDriver();
+                setupWebDriver();
                 break;
         }
 
@@ -154,14 +160,14 @@ public abstract class AbstractSpec extends util.Functions {
 
     }
 
-    /*
+
     private void setupWebDriver() throws Exception {
-        String testMethodName = testName.getMethodName();
+        //String testMethodName = testName.getMethodName();
 
         DesiredCapabilities capability = browser.toDesiredCapability();
         capability.setCapability("project", getActiveEnvironment().name());
         capability.setCapability("build", getActiveEnvironment().name() + " - " + browser.getPlatformType().name() + " " + browser.getBrowserType().getName() + " " + browser.getBrowserType().getLatestVersion()+ " - " + BUILD_ID);
-        capability.setCapability("name", testMethodName);
+        capability.setCapability("name", testName);
         capability.setCapability("resolution","1920x1200");
         capability.setCapability("acceptSslCerts", "true");
         capability.setCapability("browserstack.video","false");
@@ -175,7 +181,6 @@ public abstract class AbstractSpec extends util.Functions {
         driver.get(desktopUrl.toString());
 
     }
-    */
 
     @AfterTest
     public void teardownWebDriver() throws Exception {
@@ -185,23 +190,17 @@ public abstract class AbstractSpec extends util.Functions {
             driver.quit();
         }
 
-
-
         if (getActiveEnvironment() != EnvironmentType.DEVELOP) {
             if (getActiveEnvironment() != EnvironmentType.BETA) //temp code due to temp use of testing environment
-
-                driver.quit();
+            driver.quit();
         }
-
         */
+
         driver.quit();
-
-
     }
 
 
     public static EnvironmentType getActiveEnvironment() {
-
         return activeEnvironment;
     }
 
