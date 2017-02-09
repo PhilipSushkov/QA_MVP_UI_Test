@@ -3,13 +3,12 @@
 <suite name="Web CMS Suite Navigation" parallel="tests" thread-count="5">
 
     <!-- Page Admin -->
-    <!--
     <test name="CheckPageAdminList">
         <classes>
             <class name="specs.PageAdmin.CheckPageAdminList" />
         </classes>
     </test>
-    -->
+
 
     <!-- Page Admin Edit-->
     <test name="CheckPageEdit">
