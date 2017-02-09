@@ -488,7 +488,7 @@ public class PageAdd extends AbstractPageObject {
 
             waitForElement(publishBtn);
             findElement(publishBtn).click();
-            Thread.sleep(DEFAULT_PAUSE);
+            Thread.sleep(DEFAULT_PAUSE*2);
 
             driver.get(pageUrl);
             Thread.sleep(DEFAULT_PAUSE);
@@ -684,7 +684,7 @@ public class PageAdd extends AbstractPageObject {
                 findElement(commentsTxt).sendKeys("Approving the page removal");
                 findElement(publishBtn).click();
 
-                Thread.sleep(DEFAULT_PAUSE);
+                Thread.sleep(DEFAULT_PAUSE*2);
 
                 driver.get(pageUrl);
                 Thread.sleep(DEFAULT_PAUSE);

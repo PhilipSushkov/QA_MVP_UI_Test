@@ -57,6 +57,8 @@ public class CheckPageAdd extends AbstractSpec {
 
     @Test(dataProvider=PAGE_DATA, priority=1)
     public void savePage(JSONObject page) throws Exception {
+        System.out.println(" --- " + new Object(){}.getClass().getEnclosingMethod().getName() + " --- ");
+
         String pageName = page.get(SECTION_TITLE).toString();
 
         dashboard.openPageFromCommonTasks(pageAdminMenuButton);
@@ -72,6 +74,8 @@ public class CheckPageAdd extends AbstractSpec {
 
     @Test(dataProvider=PAGE_DATA, priority=2)
     public void saveAndSubmitPage(JSONObject page) throws Exception {
+        System.out.println(" --- " + new Object(){}.getClass().getEnclosingMethod().getName() + " --- ");
+
         String pageName = page.get(SECTION_TITLE).toString();
 
         Assert.assertEquals(pageAdd.saveAndSubmitPage(page, pageName), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New Page");
@@ -83,6 +87,8 @@ public class CheckPageAdd extends AbstractSpec {
 
     @Test(dataProvider=PAGE_DATA, priority=3)
     public void publishPage(JSONObject page) throws Exception {
+        System.out.println(" --- " + new Object(){}.getClass().getEnclosingMethod().getName() + " --- ");
+
         String pageName = page.get(SECTION_TITLE).toString();
 
         Assert.assertEquals(pageAdd.publishPage(pageName), WorkflowState.LIVE.state(), "Couldn't publish New Page properly");
@@ -93,6 +99,8 @@ public class CheckPageAdd extends AbstractSpec {
 
     @Test(dataProvider=PAGE_DATA, priority=4)
     public void revertEditPage(JSONObject page) throws Exception {
+        System.out.println(" --- " + new Object(){}.getClass().getEnclosingMethod().getName() + " --- ");
+
         String pageName = page.get(SECTION_TITLE).toString();
 
         dashboard.openPageFromCommonTasks(pageAdminMenuButton);
@@ -108,6 +116,8 @@ public class CheckPageAdd extends AbstractSpec {
 
     @Test(dataProvider=PAGE_DATA, priority=5)
     public void changeAndSubmitEditPage(JSONObject page) throws Exception {
+        System.out.println(" --- " + new Object(){}.getClass().getEnclosingMethod().getName() + " --- ");
+
         String pageName = page.get(SECTION_TITLE).toString();
 
         Assert.assertEquals(pageAdd.changeAndSubmitPage(page, pageName), WorkflowState.FOR_APPROVAL.state(), "Some fields of New Page didn't changed properly");
@@ -117,6 +127,8 @@ public class CheckPageAdd extends AbstractSpec {
 
     @Test(dataProvider=PAGE_DATA, priority=6)
     public void publishEditPage(JSONObject page) throws Exception {
+        System.out.println(" --- " + new Object(){}.getClass().getEnclosingMethod().getName() + " --- ");
+
         String pageName = page.get(SECTION_TITLE).toString();
 
         Assert.assertEquals(pageAdd.publishPage(pageName), WorkflowState.LIVE.state(), "Couldn't publish New Page properly");
@@ -132,6 +144,8 @@ public class CheckPageAdd extends AbstractSpec {
 
     @Test(dataProvider=PAGE_DATA, priority=7)
     public void deletePage(JSONObject page) throws Exception {
+        System.out.println(" --- " + new Object(){}.getClass().getEnclosingMethod().getName() + " --- ");
+
         String pageName = page.get(SECTION_TITLE).toString();
 
         dashboard.openPageFromCommonTasks(pageAdminMenuButton);
@@ -150,6 +164,8 @@ public class CheckPageAdd extends AbstractSpec {
 
     @Test(dataProvider=PAGE_DATA, priority=8)
     public void removePage(JSONObject page) throws Exception {
+        System.out.println(" --- " + new Object(){}.getClass().getEnclosingMethod().getName() + " --- ");
+
         String pageName = page.get(SECTION_TITLE).toString();
 
         Assert.assertEquals(pageAdd.removePage(page, pageName), WorkflowState.NEW_ITEM.state(), "Couldn't remove New Page. Something went wrong.");

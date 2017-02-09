@@ -4,6 +4,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.Select;
 import pageobjects.AbstractPageObject;
@@ -21,7 +22,7 @@ import static specs.AbstractSpec.propUISystemAdmin;
  */
 public class AlertFilterAdd extends AbstractPageObject {
     private static By moduleTitle, filterNameInput, entityTypeSelect, mailingListSelect;
-    private static By addNewLink, saveBtn, cancelBtn;
+    private static By addNewLink, saveBtn, cancelBtn, deleteBtn;
     private static String sPathToFile, sFileJson;
     private static JSONParser parser;
     private static final long DEFAULT_PAUSE = 2500;
@@ -34,6 +35,7 @@ public class AlertFilterAdd extends AbstractPageObject {
         mailingListSelect = By.xpath(propUISystemAdmin.getProperty("select_MailingList"));
         saveBtn = By.xpath(propUISystemAdmin.getProperty("btn_Save"));
         cancelBtn = By.xpath(propUISystemAdmin.getProperty("btn_Cancel"));
+        deleteBtn = By.xpath(propUISystemAdmin.getProperty("btn_Delete"));
         addNewLink = By.xpath(propUISystemAdmin.getProperty("input_AddNew"));
 
         parser = new JSONParser();
@@ -114,7 +116,7 @@ public class AlertFilterAdd extends AbstractPageObject {
         return null;
     }
 
-    public Boolean checkAlertFilter(JSONObject data, String name) {
+    public Boolean checkAlertFilter(String name) {
         JSONObject jsonObj = new JSONObject();
         JSONObject jsonMain = new JSONObject();
 
@@ -126,7 +128,7 @@ public class AlertFilterAdd extends AbstractPageObject {
             waitForElement(saveBtn);
 
             if (findElement(filterNameInput).getAttribute("value").equals(name)) {
-                System.out.println("Filter Name is correct");
+                //System.out.println("Filter Name is correct");
 
                 try {
                     FileReader readFile = new FileReader(sPathToFile + sFileJson);
@@ -165,4 +167,59 @@ public class AlertFilterAdd extends AbstractPageObject {
 
         return false;
     }
+
+    public Boolean removeAlertFilter (String name) {
+        JSONObject jsonMain = new JSONObject();
+
+        By editBtn = By.xpath("//span[contains(text(), '" + name + "')]/parent::td/parent::tr/td/input[contains(@id, 'btnEdit')]");
+
+        try {
+            waitForElement(moduleTitle);
+            findElement(editBtn).click();
+            waitForElement(deleteBtn);
+
+            try {
+                FileReader readFile = new FileReader(sPathToFile + sFileJson);
+                jsonMain = (JSONObject) parser.parse(readFile);
+            } catch (ParseException e) {
+            }
+
+            if (findElement(filterNameInput).getAttribute("value").equals(name)) {
+
+                findElement(deleteBtn).click();
+
+                Thread.sleep(DEFAULT_PAUSE);
+                waitForElement(moduleTitle);
+
+                try {
+                    waitForElement(editBtn);
+                } catch (TimeoutException e) {
+
+                    jsonMain.remove(name);
+
+                    try {
+                        FileWriter writeFile = new FileWriter(sPathToFile + sFileJson);
+                        writeFile.write(jsonMain.toJSONString().replace("\\", ""));
+                        writeFile.flush();
+                    } catch (FileNotFoundException e1) {
+                        e.printStackTrace();
+                    } catch (IOException e1) {
+                        e.printStackTrace();
+                    }
+
+                    return true;
+                }
+
+                return false;
+            }
+
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+
 }

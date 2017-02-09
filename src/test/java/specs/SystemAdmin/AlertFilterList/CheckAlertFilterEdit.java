@@ -37,6 +37,8 @@ public class CheckAlertFilterEdit extends AbstractSpec {
 
     @Test
     public void checkAlertFilterEdit() throws Exception {
+        System.out.println(" --- " + new Object(){}.getClass().getEnclosingMethod().getName() + " --- ");
+
         final String expectedTitle = "Alert Filter Edit";
 
         Assert.assertNotNull(alertFilterEdit.getUrl());
@@ -52,8 +54,18 @@ public class CheckAlertFilterEdit extends AbstractSpec {
         Assert.assertNotNull(alertFilterEdit.getExcludedTitleItemsTextarea(), "Excluded Title Items textarea doesn't exist");
         Assert.assertNotNull(alertFilterEdit.getExcludedBodyItemsTextarea(), "Excluded Body Items textarea doesn't exist");
 
-        Assert.assertNotNull(alertFilterEdit.getSaveButton(), "Save Button doesn't exist");
+        Assert.assertNotNull(alertFilterEdit.getTagsInclInput(), "Tags Include input doesn't exist");
+        Assert.assertNotNull(alertFilterEdit.getTagsExclInput(), "Tags Exclude input doesn't exist");
 
+        Assert.assertNotNull(alertFilterEdit.getTemplateSelect(), "Template select doesn't exist");
+        Assert.assertNotNull(alertFilterEdit.getMailingListSelect(), "Mailing List select doesn't exist");
+        Assert.assertNotNull(alertFilterEdit.getSendByCountryChk(), "Send By Country checkbox doesn't exist");
+        Assert.assertNotNull(alertFilterEdit.getSendByCountrySelect(), "Send By Country select doesn't exist");
+        Assert.assertNotNull(alertFilterEdit.getCountriesSelect(), "Countries select doesn't exist");
+
+        Assert.assertNotNull(alertFilterEdit.getActiveChk(), "Active checkbox doesn't exist");
+
+        Assert.assertNotNull(alertFilterEdit.getSaveButton(), "Save Button doesn't exist");
     }
 
     @AfterTest

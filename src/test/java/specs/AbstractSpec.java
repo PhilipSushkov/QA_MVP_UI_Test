@@ -30,8 +30,8 @@ public abstract class AbstractSpec extends util.Functions {
 // IMPORTANT:
 // Determines which environment the test suite will run on but can be overridden by command line
 //------------------------------------------------------------------------------
-    //private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.BETA;
-    private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.PRODUCTION;
+    private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.BETA;
+    //private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.PRODUCTION;
 //------------------------------------------------------------------------------
 
     private static final EnvironmentType activeEnvironment = setupEnvironment();
@@ -46,7 +46,6 @@ public abstract class AbstractSpec extends util.Functions {
     private static boolean setupIsDone = false;
     private static final Logger LOG = Logger.getLogger(AbstractSpec.class.getName());
     public static String sessionID = null;
-    public static String testName;
 
     // Declare Properties files for every section
     private static final String PATHTO_SYSTEMADMIN_PROP = "SystemAdmin/SystemAdminMap.properties";
@@ -90,7 +89,6 @@ public abstract class AbstractSpec extends util.Functions {
         }
 
         System.out.println(testContext.getName()); // it prints "Check name test"
-        testName = testContext.getName();
 
         switch (getActiveEnvironment()) {
             case DEVELOP:
@@ -104,7 +102,7 @@ public abstract class AbstractSpec extends util.Functions {
                 setupChromeLocalDriver();
                 break;
             case PRODUCTION:
-                setupWebDriver();
+                setupWebDriver(testContext.getName());
                 break;
         }
 
@@ -161,7 +159,7 @@ public abstract class AbstractSpec extends util.Functions {
     }
 
 
-    private void setupWebDriver() throws Exception {
+    private void setupWebDriver(String testName) throws Exception {
         //String testMethodName = testName.getMethodName();
 
         DesiredCapabilities capability = browser.toDesiredCapability();
