@@ -162,7 +162,6 @@ public class Functions {
         try {
             obj = (JSONObject) parser.parse(new FileReader(sPathToFile));
         } catch (ParseException e) {
-            e.printStackTrace();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -191,11 +190,8 @@ public class Functions {
             JSONObject obj2 = (JSONObject) parser.parse(new FileReader(sPathToFile));
             System.out.println(obj2.toJSONString());
         } catch (ParseException e) {
-            //e.printStackTrace();
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
         }
 
     }
