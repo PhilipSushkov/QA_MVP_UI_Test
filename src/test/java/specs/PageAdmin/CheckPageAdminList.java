@@ -48,7 +48,7 @@ public class CheckPageAdminList extends AbstractSpec {
 
     }
 
-    @Test(priority=2, enabled = false)
+    @Test(priority=2, enabled = true)
     public void clickPageItems() throws Exception {
 
         dashboard.openPageFromCommonTasks(pageAdminMenuButton);
