@@ -8,5 +8,10 @@
             <class name="specs.PageAdmin.CheckPageAdminList" />
         </classes>
     </test>
-
+    <test name="CheckPageAdd">
+        <classes>
+            <class name="specs.PageAdmin.CheckPageAdd" />
+        </classes>
+    </test>
+    
 </suite>
