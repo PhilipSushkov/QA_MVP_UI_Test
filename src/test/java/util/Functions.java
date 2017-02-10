@@ -194,17 +194,6 @@ public class Functions {
         } catch (IOException e) {
         }
 
-
-        try {
-            JSONObject obj2 = (JSONObject) parser.parse(new FileReader(sPathToFile));
-            System.out.println(obj2.toJSONString());
-        } catch (ParseException e) {
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
     }
 
     public static String[] ReadArrayFromJSON(String sPathToFile, String sArrayName) {
