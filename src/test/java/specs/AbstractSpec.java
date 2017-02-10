@@ -12,6 +12,8 @@ import org.openqa.selenium.phantomjs.PhantomJSDriverService;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.ITestContext;
+import org.testng.ITestResult;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import util.BrowserStackCapability;
@@ -30,8 +32,8 @@ public abstract class AbstractSpec extends util.Functions {
 // IMPORTANT:
 // Determines which environment the test suite will run on but can be overridden by command line
 //------------------------------------------------------------------------------
-    private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.BETA;
-    //private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.PRODUCTION;
+    //private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.BETA;
+    private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.PRODUCTION;
 //------------------------------------------------------------------------------
 
     private static final EnvironmentType activeEnvironment = setupEnvironment();
@@ -88,7 +90,7 @@ public abstract class AbstractSpec extends util.Functions {
             setupIsDone = true;
         }
 
-        System.out.println(testContext.getName()); // it prints "Check name test"
+        //System.out.println(testContext.getName()); // it prints "Check name test"
 
         switch (getActiveEnvironment()) {
             case DEVELOP:
@@ -180,9 +182,29 @@ public abstract class AbstractSpec extends util.Functions {
 
     }
 
-    @AfterTest
-    public void teardownWebDriver() throws Exception {
+    @AfterMethod
+    public void afterMethod(ITestResult result) {
 
+        switch (result.getStatus()) {
+            case ITestResult.SUCCESS:
+                System.out.println(result.getMethod().getMethodName()+": PASS");
+                break;
+
+            case ITestResult.FAILURE:
+                System.out.println(result.getMethod().getMethodName()+": FAIL");
+                break;
+
+            case ITestResult.SKIP:
+                System.out.println(result.getMethod().getMethodName()+": SKIP BLOCKED");
+                break;
+
+            default:
+                throw new RuntimeException(result.getTestName() + "Invalid status");
+        }
+    }
+
+    @AfterTest
+    public void teardown() throws Exception {
         /*
         if (getActiveEnvironment() != EnvironmentType.BETA){
             driver.quit();

@@ -1,5 +1,7 @@
 package specs.SystemAdmin.AlertFilterList;
 
+import org.testng.ITestResult;
+import org.testng.Reporter;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -20,6 +22,7 @@ public class CheckAlertFilterEdit extends AbstractSpec {
     private static LoginPage loginPage;
     private static Dashboard dashboard;
     private static AlertFilterEdit alertFilterEdit;
+    ITestResult result;
 
     @BeforeTest
     public void setUp() throws Exception {
@@ -35,10 +38,8 @@ public class CheckAlertFilterEdit extends AbstractSpec {
         dashboard.openEditPageFromAddNew(systemAdminMenuButton, alertFilterListMenuItem, addNewLink);
     }
 
-    @Test
+    @Test (testName="checkAlertFilterEdit")
     public void checkAlertFilterEdit() throws Exception {
-        System.out.println(" --- " + new Object(){}.getClass().getEnclosingMethod().getName() + " --- ");
-
         final String expectedTitle = "Alert Filter Edit";
 
         Assert.assertNotNull(alertFilterEdit.getUrl());
@@ -66,11 +67,14 @@ public class CheckAlertFilterEdit extends AbstractSpec {
         Assert.assertNotNull(alertFilterEdit.getActiveChk(), "Active checkbox doesn't exist");
 
         Assert.assertNotNull(alertFilterEdit.getSaveButton(), "Save Button doesn't exist");
+
+        //System.out.println(" - " + new Object(){}.getClass().getEnclosingMethod().getName() + ": complete");
     }
 
     @AfterTest
     public void tearDown() {
         dashboard.logoutFromAdmin();
+
         //driver.quit();
     }
 
