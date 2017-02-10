@@ -30,8 +30,11 @@ public class LoginPage extends Page {
 
         waitForElementToAppear(emailField);
 
-        findElement(emailField).sendKeys("admintest"+randNum);
-        findElement(passwordField).sendKeys("qwerty@01");
+        //findElement(emailField).sendKeys("admintest"+randNum);
+        //findElement(passwordField).sendKeys("qwerty@01");
+
+        findElement(emailField).sendKeys("admin");
+        findElement(passwordField).sendKeys("Song2Q4!");
 
         pause(1000L);
         retryClick(loginButton);
