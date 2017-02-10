@@ -14,6 +14,8 @@ import static specs.AbstractSpec.propUISystemAdmin;
 public class AlertFilterEdit extends AbstractPageObject {
     private static By moduleTitle, filterNameInput, saveButton, entityTypeSelect, filterTypeSelect;
     private static By includedTitleItems, includedBodyItems, excludedTitleItems, excludedBodyItems;
+    private static By tagsInclInput, tagsExclInput, templateSelect, mailingListSelect, sendByCountryChk;
+    private static By sendByCountrySelect, contriesSelect, activeChk;
     private static final String INCLUDE = "Include", EXCLUDE = "Exclude";
     private static final long DEFAULT_PAUSE = 1000;
 
@@ -27,6 +29,14 @@ public class AlertFilterEdit extends AbstractPageObject {
         includedBodyItems = By.xpath(propUISystemAdmin.getProperty("txtarea_IncludedBodyItems"));
         excludedTitleItems = By.xpath(propUISystemAdmin.getProperty("txtarea_ExcludedTitleItems"));
         excludedBodyItems = By.xpath(propUISystemAdmin.getProperty("txtarea_ExcludedBodyItems"));
+        tagsInclInput = By.xpath(propUISystemAdmin.getProperty("input_TagsIncl"));
+        tagsExclInput = By.xpath(propUISystemAdmin.getProperty("input_TagsExcl"));
+        templateSelect = By.xpath(propUISystemAdmin.getProperty("select_Template"));
+        mailingListSelect = By.xpath(propUISystemAdmin.getProperty("select_MailingList"));
+        sendByCountryChk = By.xpath(propUISystemAdmin.getProperty("chk_SendByCountry"));
+        sendByCountrySelect = By.xpath(propUISystemAdmin.getProperty("select_SendByCountry"));
+        contriesSelect = By.xpath(propUISystemAdmin.getProperty("select_Countries"));
+        activeChk = By.xpath(propUISystemAdmin.getProperty("chk_IsActive"));
         saveButton = By.xpath(propUISystemAdmin.getProperty("btn_Save"));
     }
 
@@ -137,6 +147,118 @@ public class AlertFilterEdit extends AbstractPageObject {
         try {
             waitForElement(excludedBodyItems);
             element = findElement(excludedBodyItems);
+        } catch (ElementNotFoundException e) {
+        } catch (ElementNotVisibleException e) {
+        } catch (TimeoutException e) {
+        }
+
+        return element;
+    }
+
+    public WebElement getTagsInclInput() throws InterruptedException {
+        WebElement element = null;
+
+        try {
+            waitForElement(tagsInclInput);
+            element = findElement(tagsInclInput);
+        } catch (ElementNotFoundException e) {
+        } catch (ElementNotVisibleException e) {
+        } catch (TimeoutException e) {
+        }
+
+        return element;
+    }
+
+    public WebElement getTagsExclInput() throws InterruptedException {
+        WebElement element = null;
+
+        try {
+            waitForElement(tagsExclInput);
+            element = findElement(tagsExclInput);
+        } catch (ElementNotFoundException e) {
+        } catch (ElementNotVisibleException e) {
+        } catch (TimeoutException e) {
+        }
+
+        return element;
+    }
+
+    public WebElement getTemplateSelect() throws InterruptedException {
+        WebElement element = null;
+
+        try {
+            waitForElement(templateSelect);
+            element = findElement(templateSelect);
+        } catch (ElementNotFoundException e) {
+        } catch (ElementNotVisibleException e) {
+        } catch (TimeoutException e) {
+        }
+
+        return element;
+    }
+
+    public WebElement getMailingListSelect() throws InterruptedException {
+        WebElement element = null;
+
+        try {
+            waitForElement(mailingListSelect);
+            element = findElement(mailingListSelect);
+        } catch (ElementNotFoundException e) {
+        } catch (ElementNotVisibleException e) {
+        } catch (TimeoutException e) {
+        }
+
+        return element;
+    }
+
+    public WebElement getSendByCountryChk() throws InterruptedException {
+        WebElement element = null;
+
+        try {
+            waitForElement(sendByCountryChk);
+            element = findElement(sendByCountryChk);
+        } catch (ElementNotFoundException e) {
+        } catch (ElementNotVisibleException e) {
+        } catch (TimeoutException e) {
+        }
+
+        return element;
+    }
+
+    public WebElement getSendByCountrySelect() throws InterruptedException {
+        WebElement element = null;
+
+        try {
+            waitForElement(sendByCountrySelect);
+            element = findElement(sendByCountrySelect);
+        } catch (ElementNotFoundException e) {
+        } catch (ElementNotVisibleException e) {
+        } catch (TimeoutException e) {
+        }
+
+        return element;
+    }
+
+    public WebElement getCountriesSelect() throws InterruptedException {
+        WebElement element = null;
+
+        try {
+            waitForElement(contriesSelect);
+            element = findElement(contriesSelect);
+        } catch (ElementNotFoundException e) {
+        } catch (ElementNotVisibleException e) {
+        } catch (TimeoutException e) {
+        }
+
+        return element;
+    }
+
+    public WebElement getActiveChk() throws InterruptedException {
+        WebElement element = null;
+
+        try {
+            waitForElement(activeChk);
+            element = findElement(activeChk);
         } catch (ElementNotFoundException e) {
         } catch (ElementNotVisibleException e) {
         } catch (TimeoutException e) {

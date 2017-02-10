@@ -1,5 +1,7 @@
 package specs.SystemAdmin.AlertFilterList;
 
+import org.testng.ITestResult;
+import org.testng.Reporter;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -20,6 +22,7 @@ public class CheckAlertFilterEdit extends AbstractSpec {
     private static LoginPage loginPage;
     private static Dashboard dashboard;
     private static AlertFilterEdit alertFilterEdit;
+    ITestResult result;
 
     @BeforeTest
     public void setUp() throws Exception {
@@ -35,7 +38,7 @@ public class CheckAlertFilterEdit extends AbstractSpec {
         dashboard.openEditPageFromAddNew(systemAdminMenuButton, alertFilterListMenuItem, addNewLink);
     }
 
-    @Test
+    @Test (testName="checkAlertFilterEdit")
     public void checkAlertFilterEdit() throws Exception {
         final String expectedTitle = "Alert Filter Edit";
 
@@ -52,13 +55,26 @@ public class CheckAlertFilterEdit extends AbstractSpec {
         Assert.assertNotNull(alertFilterEdit.getExcludedTitleItemsTextarea(), "Excluded Title Items textarea doesn't exist");
         Assert.assertNotNull(alertFilterEdit.getExcludedBodyItemsTextarea(), "Excluded Body Items textarea doesn't exist");
 
+        Assert.assertNotNull(alertFilterEdit.getTagsInclInput(), "Tags Include input doesn't exist");
+        Assert.assertNotNull(alertFilterEdit.getTagsExclInput(), "Tags Exclude input doesn't exist");
+
+        Assert.assertNotNull(alertFilterEdit.getTemplateSelect(), "Template select doesn't exist");
+        Assert.assertNotNull(alertFilterEdit.getMailingListSelect(), "Mailing List select doesn't exist");
+        Assert.assertNotNull(alertFilterEdit.getSendByCountryChk(), "Send By Country checkbox doesn't exist");
+        Assert.assertNotNull(alertFilterEdit.getSendByCountrySelect(), "Send By Country select doesn't exist");
+        Assert.assertNotNull(alertFilterEdit.getCountriesSelect(), "Countries select doesn't exist");
+
+        Assert.assertNotNull(alertFilterEdit.getActiveChk(), "Active checkbox doesn't exist");
+
         Assert.assertNotNull(alertFilterEdit.getSaveButton(), "Save Button doesn't exist");
 
+        //System.out.println(" - " + new Object(){}.getClass().getEnclosingMethod().getName() + ": complete");
     }
 
     @AfterTest
     public void tearDown() {
         dashboard.logoutFromAdmin();
+
         //driver.quit();
     }
 

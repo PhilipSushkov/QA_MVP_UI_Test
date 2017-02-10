@@ -12,6 +12,8 @@ import org.openqa.selenium.phantomjs.PhantomJSDriverService;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.ITestContext;
+import org.testng.ITestResult;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import util.BrowserStackCapability;
@@ -46,7 +48,6 @@ public abstract class AbstractSpec extends util.Functions {
     private static boolean setupIsDone = false;
     private static final Logger LOG = Logger.getLogger(AbstractSpec.class.getName());
     public static String sessionID = null;
-    public static String testName;
 
     // Declare Properties files for every section
     private static final String PATHTO_SYSTEMADMIN_PROP = "SystemAdmin/SystemAdminMap.properties";
@@ -89,8 +90,7 @@ public abstract class AbstractSpec extends util.Functions {
             setupIsDone = true;
         }
 
-        System.out.println(testContext.getName()); // it prints "Check name test"
-        testName = testContext.getName();
+        //System.out.println(testContext.getName()); // it prints "Check name test"
 
         switch (getActiveEnvironment()) {
             case DEVELOP:
@@ -104,7 +104,7 @@ public abstract class AbstractSpec extends util.Functions {
                 setupChromeLocalDriver();
                 break;
             case PRODUCTION:
-                setupWebDriver();
+                setupWebDriver(testContext.getName());
                 break;
         }
 
@@ -161,7 +161,7 @@ public abstract class AbstractSpec extends util.Functions {
     }
 
 
-    private void setupWebDriver() throws Exception {
+    private void setupWebDriver(String testName) throws Exception {
         //String testMethodName = testName.getMethodName();
 
         DesiredCapabilities capability = browser.toDesiredCapability();
@@ -182,9 +182,29 @@ public abstract class AbstractSpec extends util.Functions {
 
     }
 
-    @AfterTest
-    public void teardownWebDriver() throws Exception {
+    @AfterMethod
+    public void afterMethod(ITestResult result) {
 
+        switch (result.getStatus()) {
+            case ITestResult.SUCCESS:
+                System.out.println(result.getMethod().getMethodName()+": PASS");
+                break;
+
+            case ITestResult.FAILURE:
+                System.out.println(result.getMethod().getMethodName()+": FAIL");
+                break;
+
+            case ITestResult.SKIP:
+                System.out.println(result.getMethod().getMethodName()+": SKIP BLOCKED");
+                break;
+
+            default:
+                throw new RuntimeException(result.getTestName() + "Invalid status");
+        }
+    }
+
+    @AfterTest
+    public void teardown() throws Exception {
         /*
         if (getActiveEnvironment() != EnvironmentType.BETA){
             driver.quit();

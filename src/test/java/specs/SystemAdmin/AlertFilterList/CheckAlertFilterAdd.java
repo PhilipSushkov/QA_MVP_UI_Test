@@ -5,10 +5,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.testng.ITestResult;
+import org.testng.annotations.*;
 import org.testng.Assert;
 
 import org.openqa.selenium.By;
@@ -54,6 +52,7 @@ public class CheckAlertFilterAdd extends AbstractSpec {
         loginPage.loginUser();
     }
 
+
     @Test(dataProvider=DATA, priority=1)
     public void saveAlertFilter(JSONObject data) throws Exception {
         String sFilterName = data.get("filter_name").toString();
@@ -66,6 +65,7 @@ public class CheckAlertFilterAdd extends AbstractSpec {
         Assert.assertEquals(alertFilterAdd.saveAlertFilter(data, sFilterName), expectedTitleList, "New Alert Filter didn't save properly");
     }
 
+
     @Test(dataProvider=DATA, priority=2)
     public void checkAlertFilter(JSONObject data) throws Exception {
         String sFilterName = data.get("filter_name").toString();
@@ -73,7 +73,18 @@ public class CheckAlertFilterAdd extends AbstractSpec {
 
         dashboard.openPageFromMenu(systemAdminMenuButton, alertFilterListMenuItem);
 
-        Assert.assertTrue(alertFilterAdd.checkAlertFilter(data, sFilterName), "New Alert Filter didn't find in Alert Filter List (after Save)");
+        Assert.assertTrue(alertFilterAdd.checkAlertFilter(sFilterName), "New Alert Filter didn't find in Alert Filter List (after Save)");
+    }
+
+
+    @Test(dataProvider=DATA, priority=3)
+    public void removeAlertFilter(JSONObject data) throws Exception {
+        //System.out.println(" --- " + new Object(){}.getClass().getEnclosingMethod().getName() + " --- ");
+        String sFilterName = data.get("filter_name").toString();
+
+        dashboard.openPageFromMenu(systemAdminMenuButton, alertFilterListMenuItem);
+
+        Assert.assertTrue(alertFilterAdd.removeAlertFilter(sFilterName), "New Alert Filter shouldn't be shown in Alert Filter List (after Delete)");
     }
 
 
