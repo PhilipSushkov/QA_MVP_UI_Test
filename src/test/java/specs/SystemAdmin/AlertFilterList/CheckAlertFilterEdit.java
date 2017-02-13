@@ -22,7 +22,6 @@ public class CheckAlertFilterEdit extends AbstractSpec {
     private static LoginPage loginPage;
     private static Dashboard dashboard;
     private static AlertFilterEdit alertFilterEdit;
-    ITestResult result;
 
     @BeforeTest
     public void setUp() throws Exception {

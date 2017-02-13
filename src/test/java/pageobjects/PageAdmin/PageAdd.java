@@ -197,15 +197,15 @@ public class PageAdd extends AbstractPageObject {
             driver.switchTo().window(tabs.get(1));
 
             if (driver.getTitle().contains(pageName)) {
-                try {
+                /* try {
                     waitForElement(breadcrumbDiv);
 
-                    if ( (findElement(breadcrumbDiv).getText().contains(pageName)) && (driver.getTitle().contains(pageName)) ) {
+                    if (findElement(breadcrumbDiv).getText().contains(pageName)) { */
                         driver.switchTo().window(tabs.get(1)).close();
                         Thread.sleep(DEFAULT_PAUSE);
                         driver.switchTo().window(tabs.get(0));
                         return true;
-                    } else {
+                    /* } else {
                         driver.switchTo().window(tabs.get(1)).close();
                         Thread.sleep(DEFAULT_PAUSE);
                         driver.switchTo().window(tabs.get(0));
@@ -216,7 +216,7 @@ public class PageAdd extends AbstractPageObject {
                     Thread.sleep(DEFAULT_PAUSE);
                     driver.switchTo().window(tabs.get(0));
                     return false;
-                }
+                } */
             } else {
                 driver.switchTo().window(tabs.get(1)).close();
                 Thread.sleep(DEFAULT_PAUSE);
@@ -258,15 +258,15 @@ public class PageAdd extends AbstractPageObject {
             }
 
             if (driver.getTitle().contains(pageName)) {
-                try {
+                /*try {
                     waitForElement(breadcrumbDiv);
-                    if ((findElement(breadcrumbDiv).getText().contains(pageName))) {
+                    if ((findElement(breadcrumbDiv).getText().contains(pageName))) { */
                         driver.switchTo().window(tabs.get(1)).close();
                         driver.switchTo().window(tabs.get(0));
                         return true;
-                    }
+                    /*}
                 } catch (TimeoutException e) {
-                }
+                } */
             } else if (JsonPath.read(jsonObject, "$.['"+pageName+"'].page_type").toString().equals("External")) {
                 if (driver.getCurrentUrl().contains(JsonPath.read(jsonObject, "$.['" + pageName + "'].external_url").toString())) {
                     driver.switchTo().window(tabs.get(1)).close();
