@@ -15,17 +15,7 @@ import static specs.AbstractSpec.propUISystemAdmin;
 public class UserEdit extends AbstractPageObject {
     private static By moduleTitle, emailField, userNameField, changePasswordCheckbox, passwordField;
     private static By systemAdministratorRole, activeCheckbox, saveButton, deleteButton;
-    /*
-    private final By moduleTitle = By.xpath("//span[contains(@class, 'AdminContent')]/h1/span[contains(@id,'ModuleTitle')]");
-    private final By emailField = By.xpath("//input[contains(@id,'txtEmail')]");
-    private final By userNameField = By.xpath("//input[contains(@id,'txtUserName')]");
-    private final By changePasswordCheckbox = By.xpath("//input[contains(@id,'chkChangePassword')]");
-    private final By passwordField = By.xpath("//input[contains(@id,'txtPassword')]");
-    private final By systemAdministratorRole = By.xpath("//td[contains(.,'System Administrator')]/input");
-    private final By activeCheckbox = By.xpath("//input[contains(@id,'chkActive')]");
-    private final By saveButton = By.cssSelector("[value=Save]");
-    private final By deleteButton = By.cssSelector("[value=Delete]");
-    */
+    private static final long DEFAULT_PAUSE = 1000;
 
     public UserEdit(WebDriver driver) {
         super(driver);
@@ -69,10 +59,10 @@ public class UserEdit extends AbstractPageObject {
         return this;
     }
 
-    public UserEdit changePasswordTo(String password){
+    public UserEdit changePasswordTo(String password) throws InterruptedException {
         waitForElement(changePasswordCheckbox);
         checkIfUnchecked(changePasswordCheckbox);
-        pause(500);
+        Thread.sleep(DEFAULT_PAUSE);
         findElement(passwordField).sendKeys(password);
         return this;
     }
@@ -113,5 +103,33 @@ public class UserEdit extends AbstractPageObject {
         }
 
         return element;
+    }
+
+    public Boolean createUsers() throws InterruptedException {
+        int userNum = 10;
+
+        for(int i=0; i<=userNum; i++) {
+            findElement(emailField).clear();
+            findElement(emailField).sendKeys("admintest"+Integer.toString(i)+"@gmail.com");
+
+            findElement(userNameField).clear();
+            findElement(userNameField).sendKeys("admintest"+Integer.toString(i));
+
+            findElement(passwordField).clear();
+            findElement(passwordField).sendKeys("qwerty@01");
+
+            findElement(By.xpath("//input[contains(@id, 'chkRolesList_2')]")).click();
+            findElement(By.xpath("//input[contains(@id, 'chkRolesList_3')]")).click();
+            findElement(By.xpath("//input[contains(@id, 'chkSiteList_0')]")).click();
+
+            findElement(saveButton).click();
+            Thread.sleep(DEFAULT_PAUSE*2);
+
+            waitForElement(By.xpath("//input[contains(@id, 'btnAddNew')]"));
+            findElement(By.xpath("//input[contains(@id, 'btnAddNew')]")).click();
+        }
+
+
+        return true;
     }
 }

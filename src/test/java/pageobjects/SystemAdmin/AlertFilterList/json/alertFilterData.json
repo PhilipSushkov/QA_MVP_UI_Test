@@ -1,13 +1,15 @@
 {
   "alert_filter": [
     {
-    "do_assertions": true,
-    "filter_name": "Alert_Filter_01",
-    "entity_type": "Press Release"
+      "do_assertions": true,
+      "filter_name": "Alert_Filter_01",
+      "entity_type": "Press Release",
+      "active": false,
+      "active_ch": true
   },
     {
-    "do_assertions": true,
-    "filter_name": "Alert_Filter_02",
-    "entity_type": "Event"
+      "do_assertions": true,
+      "filter_name": "Alert_Filter_02",
+      "entity_type": "Event"
   }]
 }

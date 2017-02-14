@@ -5,7 +5,6 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import org.testng.ITestResult;
 import org.testng.annotations.*;
 import org.testng.Assert;
 
@@ -65,7 +64,6 @@ public class CheckAlertFilterAdd extends AbstractSpec {
         Assert.assertEquals(alertFilterAdd.saveAlertFilter(data, sFilterName), expectedTitleList, "New Alert Filter didn't save properly");
     }
 
-
     @Test(dataProvider=DATA, priority=2)
     public void checkAlertFilter(JSONObject data) throws Exception {
         String sFilterName = data.get("filter_name").toString();
@@ -73,20 +71,30 @@ public class CheckAlertFilterAdd extends AbstractSpec {
 
         dashboard.openPageFromMenu(systemAdminMenuButton, alertFilterListMenuItem);
 
-        Assert.assertTrue(alertFilterAdd.checkAlertFilter(sFilterName), "New Alert Filter didn't find in Alert Filter List (after Save)");
+        Assert.assertTrue(alertFilterAdd.checkAlertFilter(data, sFilterName), "New Alert Filter didn't find in Alert Filter List (after Save)");
     }
 
-
     @Test(dataProvider=DATA, priority=3)
+    public void editAlertFilter(JSONObject data) throws Exception {
+        String sFilterName = data.get("filter_name").toString();
+
+        Assert.assertTrue(alertFilterAdd.editAlertFilter(data, sFilterName), "Alert Filter didn't change properly (after Save)");
+    }
+
+    @Test(dataProvider=DATA, priority=4)
+    public void checkAlertFilterCh(JSONObject data) throws Exception {
+        String sFilterName = data.get("filter_name").toString();
+
+        Assert.assertTrue(alertFilterAdd.checkAlertFilterCh(data, sFilterName), "Alert Filter doesn't fit to entry data (after Edit)");
+    }
+
+    @Test(dataProvider=DATA, priority=5)
     public void removeAlertFilter(JSONObject data) throws Exception {
         //System.out.println(" --- " + new Object(){}.getClass().getEnclosingMethod().getName() + " --- ");
         String sFilterName = data.get("filter_name").toString();
 
-        dashboard.openPageFromMenu(systemAdminMenuButton, alertFilterListMenuItem);
-
         Assert.assertTrue(alertFilterAdd.removeAlertFilter(sFilterName), "New Alert Filter shouldn't be shown in Alert Filter List (after Delete)");
     }
-
 
     @DataProvider
     public Object[][] getData() {

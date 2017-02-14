@@ -129,6 +129,7 @@ public class PageAdminList extends AbstractPageObject {
                 innerWrapPage = By.xpath("//div[contains(@id, 'divContent')]//span[contains(@class, 'innerWrap')][(text()=\""+sa2[pageSection]+"\")]/parent::span/parent::a");
                 waitForElement(innerWrapPage);
                 findElement(innerWrapPage).click();
+                System.out.println("Scanning: "+sa2[pageSection]);
 
                 waitForElement(dataGridTable);
                 waitForElement(editPageImg);
@@ -224,7 +225,7 @@ public class PageAdminList extends AbstractPageObject {
 
             if (Boolean.parseBoolean(findElement(pageTypeInternalRd).getAttribute("checked"))) {
                 mmjson.put("page_type", "Internal");
-                mmjson.put("page_layout", new Select(driver.findElement(pageLayoutSelect)).getFirstSelectedOption().getText());
+                mmjson.put("page_layout", new Select(findElement(pageLayoutSelect)).getFirstSelectedOption().getText());
                 mmjson.put("description", findElement(descriptionTextarea).getText());
                 mmjson.put("domain", new Select(driver.findElement(domainSelect)).getFirstSelectedOption().getText());
 
@@ -236,7 +237,7 @@ public class PageAdminList extends AbstractPageObject {
                 mmjson.put("external_url", findElement(externalURLInput).getAttribute("value"));
             }
 
-            mmjson.put("parent_section", new Select(driver.findElement(parentSectionSelect)).getFirstSelectedOption().getText());
+            mmjson.put("parent_section", new Select(findElement(parentSectionSelect)).getFirstSelectedOption().getText());
             mmjson.put("active", findElement(activeChk).getAttribute("checked"));
             mmjson.put("show_in_navigation", Boolean.parseBoolean(findElement(showNavChk).getAttribute("checked")));
             mmjson.put("open_in_new_window", Boolean.parseBoolean(findElement(openNewWindChk).getAttribute("checked")));

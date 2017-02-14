@@ -185,14 +185,6 @@ public class Functions {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        
-        try {
-            JSONObject obj2 = (JSONObject) parser.parse(new FileReader(sPathToFile));
-            System.out.println(obj2.toJSONString());
-        } catch (ParseException e) {
-        } catch (FileNotFoundException e) {
-        } catch (IOException e) {
-        }
 
     }
 

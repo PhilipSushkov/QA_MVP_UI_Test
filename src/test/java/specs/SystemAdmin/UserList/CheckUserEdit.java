@@ -47,6 +47,11 @@ public class CheckUserEdit extends AbstractSpec {
 
     }
 
+    @Test(enabled=false)
+    public void createUsers() throws Exception {
+        Assert.assertNotNull(userEdit.createUsers());
+    }
+
     @AfterTest
     public void tearDown() {
         dashboard.logoutFromAdmin();
