@@ -179,6 +179,7 @@
                 <configuration>
                     <suiteXmlFiles>
                         <file>src/test/java/testrunner/Navigation_Testng.xml</file>
+                        <file>src/test/java/testrunner/Creation_Testng.xml</file>
                     </suiteXmlFiles>
                     <properties>
                         <property>

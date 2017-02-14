@@ -383,11 +383,9 @@ public class AlertFilterAdd extends AbstractPageObject {
 
 
     public String getPageUrl (JSONObject obj, String name) {
-
         String  sFilterId = JsonPath.read(obj, "$.['"+name+"'].url_query.FilterId");
         String  sLanguageId = JsonPath.read(obj, "$.['"+name+"'].url_query.LanguageId");
         String  sSectionId = JsonPath.read(obj, "$.['"+name+"'].url_query.SectionId");
-
         return desktopUrl.toString()+"default.aspx?FilterId="+sFilterId+"&LanguageId="+sLanguageId+"&SectionId="+sSectionId;
     }
 

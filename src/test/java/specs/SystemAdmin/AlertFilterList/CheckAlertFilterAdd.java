@@ -51,16 +51,14 @@ public class CheckAlertFilterAdd extends AbstractSpec {
         loginPage.loginUser();
     }
 
-    @BeforeMethod
-    public void setUpMethod() throws Exception {
-        dashboard.openPageFromMenu(systemAdminMenuButton, alertFilterListMenuItem);
-    }
 
     @Test(dataProvider=DATA, priority=1)
     public void saveAlertFilter(JSONObject data) throws Exception {
         String sFilterName = data.get("filter_name").toString();
         String expectedTitleEdit = "Alert Filter Edit";
         String expectedTitleList = "Alert Filter List";
+
+        dashboard.openPageFromMenu(systemAdminMenuButton, alertFilterListMenuItem);
 
         Assert.assertEquals(alertFilterAdd.getTitle(), expectedTitleEdit, "Actual Alert Filter Edit page Title doesn't match to expected");
         Assert.assertEquals(alertFilterAdd.saveAlertFilter(data, sFilterName), expectedTitleList, "New Alert Filter didn't save properly");
@@ -70,6 +68,8 @@ public class CheckAlertFilterAdd extends AbstractSpec {
     public void checkAlertFilter(JSONObject data) throws Exception {
         String sFilterName = data.get("filter_name").toString();
         //System.out.println(data.get("filter_name").toString());
+
+        dashboard.openPageFromMenu(systemAdminMenuButton, alertFilterListMenuItem);
 
         Assert.assertTrue(alertFilterAdd.checkAlertFilter(data, sFilterName), "New Alert Filter didn't find in Alert Filter List (after Save)");
     }
