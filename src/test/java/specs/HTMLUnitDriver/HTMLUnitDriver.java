@@ -67,7 +67,7 @@ public class HTMLUnitDriver {
     }
 
     @Test (priority = 0)
-    public void Q4DesktopAuth () throws IOException {
+    public void Q4DesktopAuth() throws IOException {
 
         String urlAuth = "https://staging.q4touch.com/api/auth";
         String appver = "appver=1.2.6";
