@@ -3,8 +3,8 @@
 
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>q4webdriver</groupId>
-    <artifactId>q4webdriver</artifactId>
+    <groupId>Q4WebCMS</groupId>
+    <artifactId>Q4WebCMS</artifactId>
     <version>1.0</version>
     <dependencies>
         <dependency>
@@ -176,6 +176,9 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.19.1</version>
                 <configuration>
+                    <systemPropertyVariables>
+                        <environment>${env.USER}</environment>
+                    </systemPropertyVariables>
                     <suiteXmlFiles>
                         <file>src/test/java/testrunner/${file}</file>
                     </suiteXmlFiles>

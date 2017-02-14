@@ -22,7 +22,7 @@ test:
   post:
     - ? |
         if [ -n "${TEST_ENV}" ]; then
-          mvn clean test -Dfile=${SUITE_NAME} -Dsurefire.rerunFailingTestsCount=1 q4inc.specs=${TEST_ENV}
+          mvn clean test -Dfile=${SUITE_NAME} -Dsurefire.rerunFailingTestsCount=1 -Denv.USER=${TEST_ENV}
         else
           mvn compile
         fi
