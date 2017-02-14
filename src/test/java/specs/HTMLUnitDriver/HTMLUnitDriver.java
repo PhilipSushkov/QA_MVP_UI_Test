@@ -4,14 +4,10 @@ import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
 
-import com.gargoylesoftware.htmlunit.BrowserVersion;
-import com.gargoylesoftware.htmlunit.html.HtmlInput;
 import org.apache.http.util.EntityUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.WebElement;
-//import org.openqa.selenium.By;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriverService;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -28,7 +24,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.HttpEntity;
-//import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
 import org.json.simple.JSONArray;
 import org.json.JSONObject;
