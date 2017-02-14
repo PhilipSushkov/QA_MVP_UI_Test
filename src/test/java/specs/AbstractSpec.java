@@ -32,8 +32,8 @@ public abstract class AbstractSpec extends util.Functions {
 // IMPORTANT:
 // Determines which environment the test suite will run on but can be overridden by command line
 //------------------------------------------------------------------------------
-    //private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.BETA;
-    private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.PRODUCTION;
+    private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.BETA;
+    //private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.PRODUCTION;
 //------------------------------------------------------------------------------
 
     private static final EnvironmentType activeEnvironment = setupEnvironment();
@@ -67,10 +67,6 @@ public abstract class AbstractSpec extends util.Functions {
     private static final String PATHTO_PAGEADMIN_PROP = "PageAdmin/PageAdminMap.properties";
     public static Properties propUIPageAdmin;
 
-    /*
-    @Rule
-    public TestName testName = new TestName();
-    */
 
     @BeforeTest
     public void init(final ITestContext testContext) throws Exception {
@@ -162,8 +158,6 @@ public abstract class AbstractSpec extends util.Functions {
 
 
     private void setupWebDriver(String testName) throws Exception {
-        //String testMethodName = testName.getMethodName();
-
         DesiredCapabilities capability = browser.toDesiredCapability();
         capability.setCapability("project", getActiveEnvironment().name());
         capability.setCapability("build", getActiveEnvironment().name() + " - " + browser.getPlatformType().name() + " " + browser.getBrowserType().getName() + " " + browser.getBrowserType().getLatestVersion()+ " - " + BUILD_ID);

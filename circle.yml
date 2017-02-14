@@ -1,6 +1,9 @@
 machine:
   java:
     version: oraclejdk8
+  environment:
+        _JAVA_OPTIONS: "-Xms512m -Xmx1024m"
+        DBUS_SESSION_BUS_ADDRESS: /dev/null
 
 
 # Only runs a full test suite on CircleCI when build parameters are passed in.
@@ -19,7 +22,7 @@ test:
   post:
     - ? |
         if [ -n "${TEST_ENV}" ]; then
-          mvn clean test -Dfile=${SUITE_NAME}
+          mvn clean test -Dfile=${SUITE_NAME} -Dsurefire.rerunFailingTestsCount=1 q4inc.specs=${TEST_ENV}
         else
           mvn compile
         fi

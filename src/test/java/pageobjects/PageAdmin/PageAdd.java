@@ -171,6 +171,7 @@ public class PageAdd extends AbstractPageObject {
                 e.printStackTrace();
             }
 
+            System.out.println(pageName+ ": New Page has created");
             return findElement(workflowStateSpan).getText();
 
         } catch (Exception e) {
@@ -204,6 +205,8 @@ public class PageAdd extends AbstractPageObject {
                         driver.switchTo().window(tabs.get(1)).close();
                         Thread.sleep(DEFAULT_PAUSE);
                         driver.switchTo().window(tabs.get(0));
+
+                        System.out.println(pageName+ ": New Page Preview has checked");
                         return true;
                     /* } else {
                         driver.switchTo().window(tabs.get(1)).close();
@@ -263,6 +266,8 @@ public class PageAdd extends AbstractPageObject {
                     if ((findElement(breadcrumbDiv).getText().contains(pageName))) { */
                         driver.switchTo().window(tabs.get(1)).close();
                         driver.switchTo().window(tabs.get(0));
+
+                        System.out.println(pageName+ ": New Page Public has checked");
                         return true;
                     /*}
                 } catch (TimeoutException e) {
@@ -271,6 +276,8 @@ public class PageAdd extends AbstractPageObject {
                 if (driver.getCurrentUrl().contains(JsonPath.read(jsonObject, "$.['" + pageName + "'].external_url").toString())) {
                     driver.switchTo().window(tabs.get(1)).close();
                     driver.switchTo().window(tabs.get(0));
+
+                    System.out.println(pageName+ ": New Page Public has checked");
                     return true;
                 } else {
                     driver.switchTo().window(tabs.get(1)).close();
@@ -327,6 +334,7 @@ public class PageAdd extends AbstractPageObject {
             e.printStackTrace();
         }
 
+        System.out.println(pageName+ ": New Page in the list has checked");
         return item;
     }
 
@@ -358,6 +366,7 @@ public class PageAdd extends AbstractPageObject {
             file.write(jsonObject.toJSONString().replace("\\", ""));
             file.flush();
 
+            System.out.println(pageName+ ": New Page has sumbitted");
             return findElement(workflowStateSpan).getText();
         } catch (IOException e) {
             e.printStackTrace();
@@ -414,6 +423,7 @@ public class PageAdd extends AbstractPageObject {
             e.printStackTrace();
         }
 
+        System.out.println(pageName+ ": New Page data has been validated");
         return false;
     }
 
@@ -467,6 +477,7 @@ public class PageAdd extends AbstractPageObject {
                 }
             } catch (NullPointerException e) {}
 
+            System.out.println(pageName+ ": New Page changes have checked");
             return true;
         } catch (IOException e) {
             e.printStackTrace();
@@ -504,6 +515,7 @@ public class PageAdd extends AbstractPageObject {
             file.write(jsonObject.toJSONString().replace("\\", ""));
             file.flush();
 
+            System.out.println(pageName+ ": New Page has been published");
             return findElement(workflowStateSpan).getText();
         } catch (IOException e) {
             e.printStackTrace();
@@ -566,6 +578,7 @@ public class PageAdd extends AbstractPageObject {
                 Thread.sleep(DEFAULT_PAUSE);
                 waitForElement(sectionTitleInput);
 
+                System.out.println(pageName+ ": New Page changes have been submitted");
                 return findElement(workflowStateSpan).getText();
             }
 
@@ -610,6 +623,7 @@ public class PageAdd extends AbstractPageObject {
                 Thread.sleep(DEFAULT_PAUSE);
                 waitForElement(sectionTitleInput);
 
+                System.out.println(pageName+ ": Page reverted to Live");
                 return findElement(workflowStateSpan).getText();
             }
 
@@ -656,6 +670,7 @@ public class PageAdd extends AbstractPageObject {
             file.write(jsonObject.toJSONString().replace("\\", ""));
             file.flush();
 
+            System.out.println(pageName+ ": Page set up as deleted");
             return findElement(currentContentSpan).getText();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -702,6 +717,7 @@ public class PageAdd extends AbstractPageObject {
                 file.write(jsonObject.toJSONString().replace("\\", ""));
                 file.flush();
 
+                System.out.println(pageName+ ": New Page has been removed");
                 return findElement(workflowStateSpan).getText();
             }
 
