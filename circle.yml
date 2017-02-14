@@ -19,7 +19,7 @@ test:
   post:
     - ? |
         if [ -n "${TEST_ENV}" ]; then
-          mvn clean test -DsuiteXmlFile=${SUITE_NAME}
+          mvn clean test -Dfile=${SUITE_NAME}
         else
           mvn compile
         fi
