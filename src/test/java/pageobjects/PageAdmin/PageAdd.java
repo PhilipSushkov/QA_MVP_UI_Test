@@ -515,6 +515,10 @@ public class PageAdd extends AbstractPageObject {
             file.write(jsonObject.toJSONString().replace("\\", ""));
             file.flush();
 
+
+            Thread.sleep(DEFAULT_PAUSE*2);
+            driver.navigate().refresh();
+
             System.out.println(pageName+ ": New Page has been published");
             return findElement(workflowStateSpan).getText();
         } catch (IOException e) {
@@ -733,11 +737,9 @@ public class PageAdd extends AbstractPageObject {
     }
 
     public String getPageUrl (JSONObject obj, String pageName) {
-
         String  sItemID = JsonPath.read(obj, "$.['"+pageName+"'].url_query.ItemID");
         String  sLanguageId = JsonPath.read(obj, "$.['"+pageName+"'].url_query.LanguageId");
         String  sSectionId = JsonPath.read(obj, "$.['"+pageName+"'].url_query.SectionId");
-
         return desktopUrl.toString()+"default.aspx?ItemID="+sItemID+"&LanguageId="+sLanguageId+"&SectionId="+sSectionId;
     }
 

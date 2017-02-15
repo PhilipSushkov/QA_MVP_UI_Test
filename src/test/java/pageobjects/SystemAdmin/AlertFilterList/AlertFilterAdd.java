@@ -194,7 +194,7 @@ public class AlertFilterAdd extends AbstractPageObject {
                     e.printStackTrace();
                 }
 
-                System.out.println(name + ": Filter Alert has checked");
+                System.out.println(name + ": Filter Alert has been checked");
                 return filterID > 0;
             }
 

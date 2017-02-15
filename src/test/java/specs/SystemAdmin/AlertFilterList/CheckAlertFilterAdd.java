@@ -32,7 +32,7 @@ public class CheckAlertFilterAdd extends AbstractSpec {
     private static String sPathToFile, sDataFileJson;
     private static JSONParser parser;
 
-    private final String DATA="getData";
+    private final String DATA="getData", FILTER_NAME="filter_name";
 
     @BeforeTest
     public void setUp() throws Exception {
@@ -54,7 +54,7 @@ public class CheckAlertFilterAdd extends AbstractSpec {
 
     @Test(dataProvider=DATA, priority=1)
     public void saveAlertFilter(JSONObject data) throws Exception {
-        String sFilterName = data.get("filter_name").toString();
+        String sFilterName = data.get(FILTER_NAME).toString();
         String expectedTitleEdit = "Alert Filter Edit";
         String expectedTitleList = "Alert Filter List";
 
@@ -66,7 +66,7 @@ public class CheckAlertFilterAdd extends AbstractSpec {
 
     @Test(dataProvider=DATA, priority=2)
     public void checkAlertFilter(JSONObject data) throws Exception {
-        String sFilterName = data.get("filter_name").toString();
+        String sFilterName = data.get(FILTER_NAME).toString();
         //System.out.println(data.get("filter_name").toString());
 
         dashboard.openPageFromMenu(systemAdminMenuButton, alertFilterListMenuItem);
@@ -76,14 +76,14 @@ public class CheckAlertFilterAdd extends AbstractSpec {
 
     @Test(dataProvider=DATA, priority=3)
     public void editAlertFilter(JSONObject data) throws Exception {
-        String sFilterName = data.get("filter_name").toString();
+        String sFilterName = data.get(FILTER_NAME).toString();
 
         Assert.assertTrue(alertFilterAdd.editAlertFilter(data, sFilterName), "Alert Filter didn't change properly (after Save)");
     }
 
     @Test(dataProvider=DATA, priority=4)
     public void checkAlertFilterCh(JSONObject data) throws Exception {
-        String sFilterName = data.get("filter_name").toString();
+        String sFilterName = data.get(FILTER_NAME).toString();
 
         Assert.assertTrue(alertFilterAdd.checkAlertFilterCh(data, sFilterName), "Alert Filter doesn't fit to entry data (after Edit)");
     }
@@ -91,7 +91,7 @@ public class CheckAlertFilterAdd extends AbstractSpec {
     @Test(dataProvider=DATA, priority=5)
     public void removeAlertFilter(JSONObject data) throws Exception {
         //System.out.println(" --- " + new Object(){}.getClass().getEnclosingMethod().getName() + " --- ");
-        String sFilterName = data.get("filter_name").toString();
+        String sFilterName = data.get(FILTER_NAME).toString();
 
         Assert.assertTrue(alertFilterAdd.removeAlertFilter(sFilterName), "New Alert Filter shouldn't be shown in Alert Filter List (after Delete)");
     }
