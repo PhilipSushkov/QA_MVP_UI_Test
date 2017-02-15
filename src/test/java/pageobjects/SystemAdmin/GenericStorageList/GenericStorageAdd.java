@@ -9,6 +9,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.Select;
 import pageobjects.AbstractPageObject;
 import pageobjects.PageAdmin.WorkflowState;
+import util.Functions;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -26,10 +27,11 @@ import static specs.AbstractSpec.propUISystemAdmin;
 public class GenericStorageAdd extends AbstractPageObject {
     private static By moduleTitle, tokenSelectionSelect, dataContentTextArea, successMsg;
     private static By addNewLink, saveBtn, cancelBtn, deleteBtn, saveAndSubmitBtn, publishBtn;
-    private static By workflowStateSpan, commentsTxt;
+    private static By revertBtn, workflowStateSpan, commentsTxt, currentContentSpan;
     private static String sPathToFile, sFileJson;
     private static JSONParser parser;
     private static final long DEFAULT_PAUSE = 2500;
+    private final String PAGE_NAME="Generic Storage";
 
     public GenericStorageAdd(WebDriver driver) {
         super(driver);
@@ -40,12 +42,14 @@ public class GenericStorageAdd extends AbstractPageObject {
         deleteBtn = By.xpath(propUISystemAdmin.getProperty("btn_Delete"));
         publishBtn = By.xpath(propUISystemAdmin.getProperty("btn_Publish"));
         saveAndSubmitBtn = By.xpath(propUISystemAdmin.getProperty("btn_SaveAndSubmit"));
+        revertBtn = By.xpath(propUISystemAdmin.getProperty("btn_Revert"));
         addNewLink = By.xpath(propUISystemAdmin.getProperty("input_AddNew"));
         tokenSelectionSelect = By.xpath(propUISystemAdmin.getProperty("select_DataToken"));
         dataContentTextArea = By.xpath(propUISystemAdmin.getProperty("txtarea_DataContent"));
         successMsg = By.xpath(propUISystemAdmin.getProperty("msg_Success"));
         workflowStateSpan = By.xpath(propUISystemAdmin.getProperty("select_WorkflowState"));
         commentsTxt = By.xpath(propUISystemAdmin.getProperty("txtarea_Comments"));
+        currentContentSpan = By.xpath(propUISystemAdmin.getProperty("span_CurrentContent"));
 
         parser = new JSONParser();
 
@@ -113,7 +117,7 @@ public class GenericStorageAdd extends AbstractPageObject {
                 e.printStackTrace();
             }
 
-            System.out.println(name + ": Generic Storage has been created");
+            System.out.println(name + ": "+PAGE_NAME+" has been created");
             return findElement(workflowStateSpan).getText();
 
         } catch (Exception e) {
@@ -185,7 +189,7 @@ public class GenericStorageAdd extends AbstractPageObject {
             String pageUrl = getPageUrl(jsonMain, name);
             driver.get(pageUrl);
             Thread.sleep(DEFAULT_PAUSE);
-            waitForElement(publishBtn);
+            waitForElement(commentsTxt);
 
             // Compare field values with entry data
             try {
@@ -203,7 +207,40 @@ public class GenericStorageAdd extends AbstractPageObject {
             }
 
 
-            System.out.println(name+ ": New Generic Storage has been checked");
+            System.out.println(name+ ": New "+PAGE_NAME+" has been checked");
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public Boolean checkGenericStorageCh(JSONObject data, String name) throws InterruptedException {
+        JSONObject jsonMain = new JSONObject();
+
+        try {
+            try {
+                FileReader readFile = new FileReader(sPathToFile + sFileJson);
+                jsonMain = (JSONObject) parser.parse(readFile);
+            } catch (ParseException e) {
+            }
+
+            String pageUrl = getPageUrl(jsonMain, name);
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+            waitForElement(commentsTxt);
+
+            // Compare field values with entry data
+            try {
+                if (!findElement(dataContentTextArea).getAttribute("value").equals(data.get("body_text_ch").toString())) {
+                    return false;
+                }
+            } catch (NullPointerException e) {
+            }
+
+
+            System.out.println(name+ ": "+PAGE_NAME+" changes have been checked");
             return true;
         } catch (IOException e) {
             e.printStackTrace();
@@ -246,7 +283,7 @@ public class GenericStorageAdd extends AbstractPageObject {
             Thread.sleep(DEFAULT_PAUSE*2);
             driver.navigate().refresh();
 
-            System.out.println(name+ ": New Generic Storage has been published");
+            System.out.println(name+ ": New "+PAGE_NAME+" has been published");
             return findElement(workflowStateSpan).getText();
         } catch (IOException e) {
             e.printStackTrace();
@@ -297,8 +334,140 @@ public class GenericStorageAdd extends AbstractPageObject {
             Thread.sleep(DEFAULT_PAUSE);
             waitForElement(workflowStateSpan);
 
-            System.out.println(name+ ": New Generic Storage changes have been submitted");
+            System.out.println(name+ ": New "+PAGE_NAME+" changes have been submitted");
             return findElement(workflowStateSpan).getText();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public String revertToLiveGenericStorage(String name) throws InterruptedException {
+        JSONObject jsonMain = new JSONObject();
+        JSONObject jsonObj = new JSONObject();
+
+        try {
+            try {
+                FileReader readFile = new FileReader(sPathToFile + sFileJson);
+                jsonMain = (JSONObject) parser.parse(readFile);
+                jsonObj = (JSONObject) jsonMain.get(name);
+            } catch (ParseException e) {
+            }
+
+            String pageUrl = getPageUrl(jsonMain, name);
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+            waitForElement(revertBtn);
+
+            if (jsonObj.get("workflow_state").toString().equals(WorkflowState.FOR_APPROVAL.state())) {
+                findElement(revertBtn).click();
+                Thread.sleep(DEFAULT_PAUSE);
+
+                jsonObj.put("workflow_state", WorkflowState.LIVE.state());
+                jsonObj.put("deleted", "false");
+
+                jsonMain.put(name, jsonObj);
+
+                FileWriter file = new FileWriter(sPathToFile + sFileJson);
+                file.write(jsonMain.toJSONString().replace("\\", ""));
+                file.flush();
+
+                driver.get(pageUrl);
+                Thread.sleep(DEFAULT_PAUSE);
+                waitForElement(workflowStateSpan);
+
+                System.out.println(name+ ": "+PAGE_NAME+" has been reverted to Live");
+                return findElement(workflowStateSpan).getText();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public String setupAsDeletedGenericStorage(String name) throws InterruptedException {
+        JSONObject jsonMain = new JSONObject();
+        JSONObject jsonObj = new JSONObject();
+
+        try {
+            try {
+                FileReader readFile = new FileReader(sPathToFile + sFileJson);
+                jsonMain = (JSONObject) parser.parse(readFile);
+                jsonObj = (JSONObject) jsonMain.get(name);
+            } catch (ParseException e) {
+            }
+
+            String pageUrl = getPageUrl(jsonMain, name);
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+
+            waitForElement(commentsTxt);
+            findElement(commentsTxt).sendKeys("Removing the page");
+            findElement(deleteBtn).click();
+            Thread.sleep(DEFAULT_PAUSE);
+
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+            waitForElement(currentContentSpan);
+
+            jsonObj.put("workflow_state", WorkflowState.FOR_APPROVAL.state());
+            jsonObj.put("deleted", "true");
+
+            jsonMain.put(name, jsonObj);
+
+            FileWriter file = new FileWriter(sPathToFile + sFileJson);
+            file.write(jsonMain.toJSONString().replace("\\", ""));
+            file.flush();
+
+            System.out.println(name+ ": "+PAGE_NAME+" set up as deleted");
+            return findElement(currentContentSpan).getText();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public String removeGenericStorage(JSONObject data, String name) throws InterruptedException {
+        JSONObject jsonMain = new JSONObject();
+
+        try {
+            try {
+                FileReader readFile = new FileReader(sPathToFile + sFileJson);
+                jsonMain = (JSONObject) parser.parse(readFile);
+            } catch (ParseException e) {
+            }
+
+            String pageUrl = getPageUrl(jsonMain, name);
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+
+            if (findElement(currentContentSpan).getText().equals(WorkflowState.DELETE_PENDING.state())) {
+
+                waitForElement(commentsTxt);
+                findElement(commentsTxt).sendKeys("Approving the page removal");
+                findElement(publishBtn).click();
+
+                Thread.sleep(DEFAULT_PAUSE*2);
+
+                driver.get(pageUrl);
+                Thread.sleep(DEFAULT_PAUSE);
+
+                jsonMain.remove(name);
+
+                FileWriter file = new FileWriter(sPathToFile + sFileJson);
+                file.write(jsonMain.toJSONString().replace("\\", ""));
+                file.flush();
+
+                Thread.sleep(DEFAULT_PAUSE*2);
+                driver.navigate().refresh();
+
+                System.out.println(name+ ": New "+PAGE_NAME+" has been removed");
+                return findElement(workflowStateSpan).getText();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

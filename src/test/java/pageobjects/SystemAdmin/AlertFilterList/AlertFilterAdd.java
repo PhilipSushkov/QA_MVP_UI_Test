@@ -129,7 +129,7 @@ public class AlertFilterAdd extends AbstractPageObject {
             Thread.sleep(DEFAULT_PAUSE);
             waitForElement(moduleTitle);
 
-            System.out.println(name + ": Filter Alert has created");
+            System.out.println(name + ": Filter Alert has been created");
             return findElement(moduleTitle).getText();
 
         } catch (Exception e) {
@@ -261,7 +261,7 @@ public class AlertFilterAdd extends AbstractPageObject {
             Thread.sleep(DEFAULT_PAUSE);
             waitForElement(editBtn);
 
-            System.out.println(name + ": Filter Alert has changed");
+            System.out.println(name + ": Filter Alert has been changed");
             return true;
 
         }  catch (FileNotFoundException e) {
@@ -314,7 +314,7 @@ public class AlertFilterAdd extends AbstractPageObject {
             }
 
 
-            System.out.println(name + ": Filter Alert Ch has checked");
+            System.out.println(name + ": Filter Alert changes have been checked");
             return true;
 
         }  catch (FileNotFoundException e) {

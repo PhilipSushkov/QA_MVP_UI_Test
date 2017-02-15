@@ -33,7 +33,7 @@ public class CheckGenericStorageAdd extends AbstractSpec {
     private static String sPathToFile, sDataFileJson;
     private static JSONParser parser;
 
-    private final String DATA="getData", STORAGE_NAME="storage_name";
+    private final String DATA="getData", STORAGE_NAME="storage_name", PAGE_NAME="Generic Storage";
 
     @BeforeTest
     public void setUp() throws Exception {
@@ -58,34 +58,64 @@ public class CheckGenericStorageAdd extends AbstractSpec {
         String expectedTitleEdit = "Generic Storage Edit";
 
         dashboard.openPageFromMenu(systemAdminMenuButton, genericStorageListMenuItem);
-        Assert.assertEquals(genericStorageAdd.getTitle(), expectedTitleEdit, "Actual Generic Storage Edit page Title doesn't match to expected");
+        Assert.assertEquals(genericStorageAdd.getTitle(), expectedTitleEdit, "Actual "+PAGE_NAME+" Edit page Title doesn't match to expected");
 
         dashboard.openPageFromMenu(systemAdminMenuButton, genericStorageListMenuItem); // Should be removed after WEB-11158 fixed
-        Assert.assertEquals(genericStorageAdd.saveGenericStorage(data, sStorageName), WorkflowState.IN_PROGRESS.state(), "New Generic Storage didn't save properly (after Save)");
+        Assert.assertEquals(genericStorageAdd.saveGenericStorage(data, sStorageName), WorkflowState.IN_PROGRESS.state(), "New " + PAGE_NAME + " didn't save properly (after Save)");
     }
 
     @Test(dataProvider=DATA, priority=2)
     public void saveAndSubmitGenericStorage(JSONObject data) throws Exception {
         String sStorageName = data.get(STORAGE_NAME).toString();
 
-        Assert.assertEquals(genericStorageAdd.saveAndSubmitGenericStorage(data, sStorageName), WorkflowState.FOR_APPROVAL.state(), "New Generic Storage doesn't submit properly (after Save And Submit)");
-        Assert.assertTrue(genericStorageAdd.checkGenericStorage(data, sStorageName), "Submitted New Generic Storage data doesn't fit well to entry data (after Save and Submit)");
+        Assert.assertEquals(genericStorageAdd.saveAndSubmitGenericStorage(data, sStorageName), WorkflowState.FOR_APPROVAL.state(), "New " + PAGE_NAME + " doesn't submit properly (after Save And Submit)");
+        Assert.assertTrue(genericStorageAdd.checkGenericStorage(data, sStorageName), "Submitted New "+ PAGE_NAME +" data doesn't fit well to entry data (after Save and Submit)");
     }
 
     @Test(dataProvider=DATA, priority=3)
     public void publishGenericStorage(JSONObject data) throws Exception {
         String sStorageName = data.get(STORAGE_NAME).toString();
 
-        Assert.assertEquals(genericStorageAdd.publishGenericStorage(data, sStorageName), WorkflowState.LIVE.state(), "New Generic Storage doesn't publish properly (after Publish)");
+        Assert.assertEquals(genericStorageAdd.publishGenericStorage(data, sStorageName), WorkflowState.LIVE.state(), "New "+ PAGE_NAME +" doesn't publish properly (after Publish)");
     }
 
     @Test(dataProvider=DATA, priority=4)
-    public void revertEditPage(JSONObject data) throws Exception {
+    public void revertGenericStorage(JSONObject data) throws Exception {
         String sStorageName = data.get(STORAGE_NAME).toString();
 
-        Assert.assertEquals(genericStorageAdd.changeAndSubmitGenericStorage(data, sStorageName), WorkflowState.FOR_APPROVAL.state(), "Some fields of New Generic Storage didn't change properly");
-        //Assert.assertEquals(genericStorageAdd.revertToLiveGenericStorage(sStorageName), WorkflowState.LIVE.state(), "Couldn't revert to Live changes for New Generic Storage");
-        //Assert.assertTrue(genericStorageAdd.checkGenericStorage(data, sStorageName), "Submitted New Generic Storage data doesn't fit well to entry data (after Revert To Live)");
+        Assert.assertEquals(genericStorageAdd.changeAndSubmitGenericStorage(data, sStorageName), WorkflowState.FOR_APPROVAL.state(), "Some fields of New "+ PAGE_NAME +" didn't change properly (after Save and Submit)");
+        Assert.assertEquals(genericStorageAdd.revertToLiveGenericStorage(sStorageName), WorkflowState.LIVE.state(), "Couldn't revert to Live changes for New "+ PAGE_NAME);
+        Assert.assertTrue(genericStorageAdd.checkGenericStorage(data, sStorageName), "Submitted New "+ PAGE_NAME +" data doesn't fit well to entry data (after Revert To Live)");
+    }
+
+    @Test(dataProvider=DATA, priority=5)
+    public void changeAndSubmitEditGenericStorage(JSONObject data) throws Exception {
+        String sStorageName = data.get(STORAGE_NAME).toString();
+
+        Assert.assertEquals(genericStorageAdd.changeAndSubmitGenericStorage(data, sStorageName), WorkflowState.FOR_APPROVAL.state(), "Some fields of New "+ PAGE_NAME +" didn't change properly (after Save and Submit)");
+        Assert.assertTrue(genericStorageAdd.checkGenericStorageCh(data, sStorageName), "Submitted New "+ PAGE_NAME +" changes don't fit well to entry data (after Change And Submit)");
+    }
+
+    @Test(dataProvider=DATA, priority=6)
+    public void publishEditGenericStorage(JSONObject data) throws Exception {
+        String sStorageName = data.get(STORAGE_NAME).toString();
+
+        Assert.assertEquals(genericStorageAdd.publishGenericStorage(data, sStorageName), WorkflowState.LIVE.state(), "New "+ PAGE_NAME +" doesn't publish changes properly (after Publish)");
+    }
+
+    @Test(dataProvider=DATA, priority=7)
+    public void deleteGenericStorage(JSONObject data) throws Exception {
+        String sStorageName = data.get(STORAGE_NAME).toString();
+
+        Assert.assertEquals(genericStorageAdd.setupAsDeletedGenericStorage(sStorageName), WorkflowState.DELETE_PENDING.state(), "New "+ PAGE_NAME +" didn't setup as Deleted properly");
+    }
+
+
+    @Test(dataProvider=DATA, priority=8)
+    public void removeGenericStorage(JSONObject data) throws Exception {
+        String sStorageName = data.get(STORAGE_NAME).toString();
+
+        Assert.assertEquals(genericStorageAdd.removeGenericStorage(data, sStorageName), WorkflowState.NEW_ITEM.state(), "Couldn't remove New "+ PAGE_NAME +". Something went wrong.");
     }
 
     @DataProvider

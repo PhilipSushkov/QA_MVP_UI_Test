@@ -171,7 +171,7 @@ public class PageAdd extends AbstractPageObject {
                 e.printStackTrace();
             }
 
-            System.out.println(pageName+ ": New Page has created");
+            System.out.println(pageName+ ": New Page has been created");
             return findElement(workflowStateSpan).getText();
 
         } catch (Exception e) {
@@ -206,7 +206,7 @@ public class PageAdd extends AbstractPageObject {
                         Thread.sleep(DEFAULT_PAUSE);
                         driver.switchTo().window(tabs.get(0));
 
-                        System.out.println(pageName+ ": New Page Preview has checked");
+                        System.out.println(pageName+ ": New Page Preview has been checked");
                         return true;
                     /* } else {
                         driver.switchTo().window(tabs.get(1)).close();
@@ -277,7 +277,7 @@ public class PageAdd extends AbstractPageObject {
                     driver.switchTo().window(tabs.get(1)).close();
                     driver.switchTo().window(tabs.get(0));
 
-                    System.out.println(pageName+ ": New Page Public has checked");
+                    System.out.println(pageName+ ": New Page Public has been checked");
                     return true;
                 } else {
                     driver.switchTo().window(tabs.get(1)).close();
@@ -334,7 +334,7 @@ public class PageAdd extends AbstractPageObject {
             e.printStackTrace();
         }
 
-        System.out.println(pageName+ ": New Page in the list has checked");
+        System.out.println(pageName+ ": New Page in the list has been checked");
         return item;
     }
 
@@ -366,7 +366,7 @@ public class PageAdd extends AbstractPageObject {
             file.write(jsonObject.toJSONString().replace("\\", ""));
             file.flush();
 
-            System.out.println(pageName+ ": New Page has sumbitted");
+            System.out.println(pageName+ ": New Page has been submitted");
             return findElement(workflowStateSpan).getText();
         } catch (IOException e) {
             e.printStackTrace();
@@ -477,7 +477,7 @@ public class PageAdd extends AbstractPageObject {
                 }
             } catch (NullPointerException e) {}
 
-            System.out.println(pageName+ ": New Page changes have checked");
+            System.out.println(pageName+ ": New Page changes have been checked");
             return true;
         } catch (IOException e) {
             e.printStackTrace();
@@ -627,7 +627,7 @@ public class PageAdd extends AbstractPageObject {
                 Thread.sleep(DEFAULT_PAUSE);
                 waitForElement(sectionTitleInput);
 
-                System.out.println(pageName+ ": Page reverted to Live");
+                System.out.println(pageName+ ": Page hes been reverted to Live");
                 return findElement(workflowStateSpan).getText();
             }
 
@@ -720,6 +720,9 @@ public class PageAdd extends AbstractPageObject {
                 FileWriter file = new FileWriter(sPathToFile + sFilePagesJson);
                 file.write(jsonObject.toJSONString().replace("\\", ""));
                 file.flush();
+
+                Thread.sleep(DEFAULT_PAUSE*2);
+                driver.navigate().refresh();
 
                 System.out.println(pageName+ ": New Page has been removed");
                 return findElement(workflowStateSpan).getText();
