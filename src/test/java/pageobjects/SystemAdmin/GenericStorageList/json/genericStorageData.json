@@ -1,0 +1,16 @@
+{
+  "generic_storage": [
+    {
+      "do_assertions": true,
+      "storage_name": "Generic_Storage_01",
+      "data_token": "RequestInfo",
+      "body": "53254657463453",
+      "body_ch": "53254657463453_TR"
+    },
+    {
+      "do_assertions": true,
+      "storage_name": "Generic_Storage_01",
+      "data_token": "RequestInfo",
+      "body": "UVFYWVUHIEIWJ3232"
+    }]
+}

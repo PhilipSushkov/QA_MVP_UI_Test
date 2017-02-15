@@ -170,6 +170,7 @@ public abstract class AbstractSpec extends util.Functions {
 
         driver = new RemoteWebDriver(new URL(BROWSER_STACK_URL), capability);
         driver.manage().timeouts().implicitlyWait(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
+        driver.manage().timeouts().pageLoadTimeout(20, TimeUnit.SECONDS); //Increased to 20 to perhaps reduce timeouts?
         driver.manage().window().setSize(new Dimension(1400, 1400));
 
         driver.get(desktopUrl.toString());
@@ -219,7 +220,7 @@ public abstract class AbstractSpec extends util.Functions {
     }
 
     private static EnvironmentType setupEnvironment () {
-        String overrideEnvironment = System.getProperty("environment");
+        String overrideEnvironment = System.getProperty("environment1");
         if (overrideEnvironment != null) {
             return EnvironmentType.valueOf(overrideEnvironment);
         } else {
