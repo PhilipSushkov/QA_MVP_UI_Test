@@ -6,11 +6,18 @@
             <class name="specs.PageAdmin.CheckPageAdd" />
         </classes>
     </test>
+    <!-- System Admin -->
     <test name="CheckAlertFilterAdd">
         <classes>
             <class name="specs.SystemAdmin.AlertFilterList.CheckAlertFilterAdd" />
         </classes>
     </test>
+    <test name="CheckGenericStorageAdd">
+        <classes>
+            <class name="specs.SystemAdmin.GenericStorageList.CheckGenericStorageAdd" />
+        </classes>
+    </test>
+
     <test name="CreateNewUser">
         <classes>
             <class name="specs.SystemAdmin.UserList.CreateNewUser" />
