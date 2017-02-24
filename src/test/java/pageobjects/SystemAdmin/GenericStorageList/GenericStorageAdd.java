@@ -129,9 +129,12 @@ public class GenericStorageAdd extends AbstractPageObject {
 
     public String saveAndSubmitGenericStorage(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
-        By editBtn = By.xpath("//td[contains(text(), '" + data.get("data_token").toString() + "')]/parent::tr/td/input[contains(@id, 'imgEdit')][contains(@id, 'GenericStorages')]");
+        By editBtn = By.xpath("//td[(text()='" + data.get("data_token").toString() + "')]/parent::tr/td/input[contains(@id, 'imgEdit')][contains(@id, 'GenericStorages')]");
 
         try {
+            waitForElement(moduleTitle);
+            findElement(editBtn).click();
+
             try {
                 FileReader readFile = new FileReader(sPathToFile + sFileJson);
                 jsonMain = (JSONObject) parser.parse(readFile);
@@ -269,6 +272,8 @@ public class GenericStorageAdd extends AbstractPageObject {
             Thread.sleep(DEFAULT_PAUSE*2);
 
             driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE*2);
+            driver.navigate().refresh();
             Thread.sleep(DEFAULT_PAUSE);
 
             jsonObj.put("workflow_state", WorkflowState.LIVE.state());

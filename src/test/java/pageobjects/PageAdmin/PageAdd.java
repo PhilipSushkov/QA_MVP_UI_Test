@@ -127,6 +127,8 @@ public class PageAdd extends AbstractPageObject {
             findElement(saveBtn).click();
             waitForElement(deleteBtn);
 
+            Thread.sleep(DEFAULT_PAUSE);
+
             // Write page parameters to json
             JSONObject jsonObjectNew = new JSONObject();
             JSONArray pageNamesArray = new JSONArray();
@@ -135,6 +137,8 @@ public class PageAdd extends AbstractPageObject {
                 jsonObjectNew = (JSONObject) parser.parse(new FileReader(sPathToFile + sFilePagesJson));
                 pageNamesArray = (JSONArray) jsonObjectNew.get("page_names");
             } catch (ParseException e) {
+                jsonObjectNew = (JSONObject) parser.parse("{\"page_names\":[]}");
+                pageNamesArray = (JSONArray) jsonObjectNew.get("page_names");
             }
 
             if (parent_page.equals("Home")) {

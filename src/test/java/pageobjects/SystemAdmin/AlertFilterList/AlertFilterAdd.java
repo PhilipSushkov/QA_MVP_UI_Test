@@ -142,7 +142,7 @@ public class AlertFilterAdd extends AbstractPageObject {
     public Boolean checkAlertFilter(JSONObject data, String name) {
         JSONObject jsonMain = new JSONObject();
         JSONObject jsonObj = new JSONObject();
-        By editBtn = By.xpath("//span[contains(text(), '" + name + "')]/parent::td/parent::tr/td/input[contains(@id, 'btnEdit')]");
+        By editBtn = By.xpath("//span[(text()='" + name + "')]/parent::td/parent::tr/td/input[contains(@id, 'btnEdit')]");
 
         try {
             waitForElement(moduleTitle);
@@ -210,7 +210,7 @@ public class AlertFilterAdd extends AbstractPageObject {
     public Boolean editAlertFilter(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
         JSONObject jsonObj = (JSONObject) jsonMain.get(name);
-        By editBtn = By.xpath("//span[contains(text(), '" + name + "')]/parent::td/parent::tr/td/input[contains(@id, 'btnEdit')]");
+        By editBtn = By.xpath("//span[(text()='" + name + "')]/parent::td/parent::tr/td/input[contains(@id, 'btnEdit')]");
 
         try {
             try {
@@ -329,7 +329,7 @@ public class AlertFilterAdd extends AbstractPageObject {
 
     public Boolean removeAlertFilter (String name) {
         JSONObject jsonMain = new JSONObject();
-        By editBtn = By.xpath("//span[contains(text(), '" + name + "')]/parent::td/parent::tr/td/input[contains(@id, 'btnEdit')]");
+        By editBtn = By.xpath("//span[(text()='" + name + "')]/parent::td/parent::tr/td/input[contains(@id, 'btnEdit')]");
 
         try {
             try {
