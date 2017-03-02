@@ -100,7 +100,8 @@ public abstract class AbstractSpec extends util.Functions {
                 setupChromeLocalDriver();
                 break;
             case PRODUCTION:
-                setupWebDriver(testContext.getName());
+                setupChromeLocalDriver();
+                //setupWebDriver(testContext.getName());
                 break;
         }
 
