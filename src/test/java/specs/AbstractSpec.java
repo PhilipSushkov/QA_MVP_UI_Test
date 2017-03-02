@@ -129,6 +129,7 @@ public abstract class AbstractSpec extends util.Functions {
         DesiredCapabilities capabilities = DesiredCapabilities.chrome();
         ChromeOptions options = new ChromeOptions();
         options.addArguments("incognito");
+        options.addArguments("no-sandbox");
         capabilities.setCapability(ChromeOptions.CAPABILITY, options);
         driver = new ChromeDriver(capabilities);
 
