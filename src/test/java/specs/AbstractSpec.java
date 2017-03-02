@@ -223,7 +223,7 @@ public abstract class AbstractSpec extends util.Functions {
 
     private static EnvironmentType setupEnvironment () {
         String overrideEnvironment = System.getProperty("environment");
-        if ((overrideEnvironment == "PRODUCTION") || (overrideEnvironment == "BETA") || (overrideEnvironment == "DEVELOP")) {
+        if ((overrideEnvironment.equals("PRODUCTION")) || (overrideEnvironment.equals("BETA")) || (overrideEnvironment.equals("DEVELOP"))) {
             return EnvironmentType.valueOf(overrideEnvironment);
         } else {
             return DEFAULT_ENVIRONMENT;
