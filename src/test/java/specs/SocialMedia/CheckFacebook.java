@@ -37,9 +37,6 @@ public class CheckFacebook extends AbstractSpec{
 
         Assert.assertEquals(socialMediaSummary.getTitle(), expectedTitle,"Actual Social Media Summary page title doesn't match to expected");
 
-        /* Assert.assertThat("Red X is not displayed at start of test (Facebook account not setup state expected)",
-                socialMediaSummary.getFacebookStatusIndicator(),
-                CoreMatchers.containsString("/unchecked.png")); */
         Assert.assertTrue(socialMediaSummary.getFacebookStatusIndicator().contains("/unchecked.png"),
                 "Red X is not displayed at start of test (Facebook account not setup state expected)");
 
@@ -53,9 +50,7 @@ public class CheckFacebook extends AbstractSpec{
         Assert.assertEquals(socialMediaSummary.getFacebookPage(),facebookCompany,"Incorrect company name is displayed");
         Assert.assertTrue(socialMediaSummary.numberOfFacebookFansIsDisplayed(),"Number of followers is improperly displayed.");
 
-        /* Assert.assertThat("Green checkmark is not displayed after authorizing Facebook account",
-                socialMediaSummary.getFacebookStatusIndicator(),
-                CoreMatchers.containsString("/checked.png")); */
+        //socialMediaSummary.enableFacebookAccount();
         Assert.assertTrue(socialMediaSummary.getFacebookStatusIndicator().contains("/checked.png"),
                 "Green checkmark is not displayed after authorizing Facebook account");
 
@@ -67,9 +62,6 @@ public class CheckFacebook extends AbstractSpec{
         // disabling Facebook account
         socialMediaSummary.disableFacebookAccount();
 
-        /*Assert.assertThat("Grey checkmark is not displayed after disabling Facebook account",
-                socialMediaSummary.getFacebookStatusIndicator(),
-                CoreMatchers.containsString("/disabled.png"));*/
         Assert.assertTrue(socialMediaSummary.getFacebookStatusIndicator().contains("/disabled.png"),
                 "Grey checkmark is not displayed after disabling Facebook account");
         Assert.assertFalse(socialMediaSummary.facebookDisableButtonIsDisplayed(),"Disable button is still present after disabling Facebook account.");
@@ -77,9 +69,6 @@ public class CheckFacebook extends AbstractSpec{
 
         // enabling Facebook account
         socialMediaSummary.enableFacebookAccount();
-        /* Assert.assertThat("Green checkmark is not displayed after enabling Facebook account",
-                socialMediaSummary.getFacebookStatusIndicator(),
-                CoreMatchers.containsString("/checked.png")); */
         Assert.assertTrue(socialMediaSummary.getFacebookStatusIndicator().contains("/checked.png"),
                 "Green checkmark is not displayed after enabling Facebook account");
 
@@ -98,9 +87,6 @@ public class CheckFacebook extends AbstractSpec{
         Assert.assertEquals(socialMediaSummary.getFacebookPage(),facebookCompany,"Incorrect company name is displayed after re-authorizing");
         Assert.assertTrue(socialMediaSummary.numberOfFacebookFansIsDisplayed(),"Number of followers is improperly displayed after re-authorizing.");
 
-        /* Assert.assertThat("Green checkmark is not displayed after re-authorizing Facebook account",
-                socialMediaSummary.getFacebookStatusIndicator(),
-                CoreMatchers.containsString("/checked.png")); */
         Assert.assertTrue(socialMediaSummary.getFacebookStatusIndicator().contains("/checked.png"),
                 "Green checkmark is not displayed after re-authorizing Facebook account");
 
@@ -111,9 +97,6 @@ public class CheckFacebook extends AbstractSpec{
 
         // de-authorizing Facebook account
         socialMediaSummary.deAuthorizeFacebookAccount();
-        /* Assert.assertThat("Red X is not displayed after de-authorizing Facebook account",
-                socialMediaSummary.getFacebookStatusIndicator(),
-                CoreMatchers.containsString("/unchecked.png")); */
         Assert.assertTrue(socialMediaSummary.getFacebookStatusIndicator().contains("/unchecked.png"),
                 "Red X is not displayed after de-authorizing Facebook account");
 

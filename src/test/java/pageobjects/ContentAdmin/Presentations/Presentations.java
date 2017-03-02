@@ -14,6 +14,7 @@ import static specs.AbstractSpec.propUIContentAdmin;
 public class Presentations extends AbstractPageObject {
     private static By moduleTitle, grid, gridPresentationList, dataGridPager, inputFilterByTag, publishButton;
     private final Integer columnsNumber = 8;
+    private static final long DEFAULT_PAUSE = 2500;
 
     public Presentations(WebDriver driver) {
         super(driver);
@@ -63,7 +64,7 @@ public class Presentations extends AbstractPageObject {
         return element;
     }
 
-    public Presentations publishPresentation(String headline) {
+    public Presentations publishPresentation(String headline) throws InterruptedException {
 
         By presentationCheckbox;
 
@@ -78,11 +79,7 @@ public class Presentations extends AbstractPageObject {
         wait.until(ExpectedConditions.visibilityOf(findElement(presentationCheckbox)));
         findElement(presentationCheckbox).click();
 
-        //waiting 1 second for publish button to activate
-        try{Thread.sleep(1000);}
-        catch(InterruptedException e){
-            e.printStackTrace();
-        }
+        Thread.sleep(DEFAULT_PAUSE);
 
         findElement(publishButton).click();
 
@@ -91,7 +88,7 @@ public class Presentations extends AbstractPageObject {
 
     public LivePresentations livePresentations(String url) {
 
-        driver.manage().timeouts().pageLoadTimeout(20, TimeUnit.SECONDS);
+        //driver.manage().timeouts().pageLoadTimeout(20, TimeUnit.SECONDS);
         try {
             driver.get(url);
         } catch (TimeoutException e) {

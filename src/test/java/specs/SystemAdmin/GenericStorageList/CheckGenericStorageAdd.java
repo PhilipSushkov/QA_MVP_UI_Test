@@ -68,6 +68,7 @@ public class CheckGenericStorageAdd extends AbstractSpec {
     public void saveAndSubmitGenericStorage(JSONObject data) throws Exception {
         String sStorageName = data.get(STORAGE_NAME).toString();
 
+        dashboard.openPageFromMenu(systemAdminMenuButton, genericStorageListMenuItem);
         Assert.assertEquals(genericStorageAdd.saveAndSubmitGenericStorage(data, sStorageName), WorkflowState.FOR_APPROVAL.state(), "New " + PAGE_NAME + " doesn't submit properly (after Save And Submit)");
         Assert.assertTrue(genericStorageAdd.checkGenericStorage(data, sStorageName), "Submitted New "+ PAGE_NAME +" data doesn't fit well to entry data (after Save and Submit)");
     }
@@ -109,7 +110,6 @@ public class CheckGenericStorageAdd extends AbstractSpec {
 
         Assert.assertEquals(genericStorageAdd.setupAsDeletedGenericStorage(sStorageName), WorkflowState.DELETE_PENDING.state(), "New "+ PAGE_NAME +" didn't setup as Deleted properly");
     }
-
 
     @Test(dataProvider=DATA, priority=8)
     public void removeGenericStorage(JSONObject data) throws Exception {

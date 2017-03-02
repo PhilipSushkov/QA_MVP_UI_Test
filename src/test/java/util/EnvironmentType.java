@@ -6,6 +6,8 @@ public enum EnvironmentType {
   //BETA("chicagotest.s1.q4web.release/admin/"), //chicagotest url
   //BETA("facebook.s1.q4web.newtest/admin/"),
   //BETA("chicagotest.s3.q4web.com/admin/"),
+  //BETA("cornerstone.s1.q4web.newtest/admin/"),
+  //BETA("azuretest.s1.q4preview.com/admin/"),
   BETA("facebook.q4web.newtest"),
 
   //BETA("goldcorptest.s1.q4web.newtest/admin/"), //goldcorp url
