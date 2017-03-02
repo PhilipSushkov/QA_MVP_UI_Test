@@ -34,7 +34,7 @@ public class LoginPage extends Page {
         findElement(passwordField).sendKeys("qwerty@01");
 
         //findElement(emailField).sendKeys("philips");
-        //findElement(passwordField).sendKeys("bwenilf#45#");
+        //findElement(passwordField).sendKeys("q4pass1234!");
 
         pause(1000L);
         retryClick(loginButton);

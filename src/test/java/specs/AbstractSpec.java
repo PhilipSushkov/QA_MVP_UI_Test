@@ -133,7 +133,7 @@ public abstract class AbstractSpec extends util.Functions {
         driver = new ChromeDriver(capabilities);
 
         driver.manage().timeouts().implicitlyWait(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
-        driver.manage().timeouts().pageLoadTimeout(20, TimeUnit.SECONDS); //Increased to 20 to perhaps reduce timeouts?
+        driver.manage().timeouts().pageLoadTimeout(60, TimeUnit.SECONDS); //Increased to 20 to perhaps reduce timeouts?
         driver.manage().window().setSize(new Dimension(1400, 1400));
         driver.get(desktopUrl.toString());
 
@@ -220,8 +220,8 @@ public abstract class AbstractSpec extends util.Functions {
     }
 
     private static EnvironmentType setupEnvironment () {
-        String overrideEnvironment = System.getProperty("environment1");
-        if (overrideEnvironment != null) {
+        String overrideEnvironment = System.getProperty("environment");
+        if ((overrideEnvironment == "PRODUCTION") || (overrideEnvironment == "BETA") || (overrideEnvironment == "DEVELOP")) {
             return EnvironmentType.valueOf(overrideEnvironment);
         } else {
             return DEFAULT_ENVIRONMENT;
