@@ -3,9 +3,9 @@ package util;
 public enum EnvironmentType {
 
   DEVELOP("aestest.s1.q4web.newtest/admin/"),
-  //BETA("chicagotest.s1.q4web.release/admin/"), //chicagotest url
+  BETA("chicagotest.s1.q4web.release/admin/"), //chicagotest url
   //BETA("facebook.s1.q4web.newtest/admin/"),
-  BETA("chicagotest.s3.q4web.com/admin/"),
+  //BETA("chicagotest.s3.q4web.com/admin/"),
   //BETA("facebook.q4web.newtest"),
 
   //BETA("goldcorptest.s1.q4web.newtest/admin/"), //goldcorp url
