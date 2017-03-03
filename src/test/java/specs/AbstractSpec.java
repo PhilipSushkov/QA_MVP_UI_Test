@@ -183,6 +183,12 @@ public abstract class AbstractSpec extends util.Functions {
     @AfterMethod
     public void afterMethod(ITestResult result) {
 
+        /*
+        if (driver != null) {
+            driver.quit();
+        }
+        */
+
         switch (result.getStatus()) {
             case ITestResult.SUCCESS:
                 System.out.println(result.getMethod().getMethodName()+": PASS");
@@ -202,7 +208,7 @@ public abstract class AbstractSpec extends util.Functions {
         }
     }
 
-    @AfterTest
+    @AfterTest(alwaysRun=true)
     public void teardown() throws Exception {
         /*
         if (getActiveEnvironment() != EnvironmentType.BETA){
@@ -215,25 +221,9 @@ public abstract class AbstractSpec extends util.Functions {
         }
         */
 
-        driver.quit();
-    }
-
-    @AfterClass
-    public void tearDownClass() throws Exception {
-        /*
-        if (getActiveEnvironment() != EnvironmentType.BETA){
-            driver.quit();
-        }
-
-        if (getActiveEnvironment() != EnvironmentType.DEVELOP) {
-            if (getActiveEnvironment() != EnvironmentType.BETA) //temp code due to temp use of testing environment
-            driver.quit();
-        }
-        */
         if (driver != null) {
             driver.quit();
         }
-
     }
 
 
