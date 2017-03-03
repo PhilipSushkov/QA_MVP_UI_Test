@@ -13,6 +13,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
@@ -193,6 +194,7 @@ public abstract class AbstractSpec extends util.Functions {
 
             case ITestResult.SKIP:
                 System.out.println(result.getMethod().getMethodName()+": SKIP BLOCKED");
+                driver.quit();
                 break;
 
             default:
@@ -214,6 +216,24 @@ public abstract class AbstractSpec extends util.Functions {
         */
 
         driver.quit();
+    }
+
+    @AfterClass
+    public void tearDownClass() throws Exception {
+        /*
+        if (getActiveEnvironment() != EnvironmentType.BETA){
+            driver.quit();
+        }
+
+        if (getActiveEnvironment() != EnvironmentType.DEVELOP) {
+            if (getActiveEnvironment() != EnvironmentType.BETA) //temp code due to temp use of testing environment
+            driver.quit();
+        }
+        */
+        if (driver != null) {
+            driver.quit();
+        }
+
     }
 
 
