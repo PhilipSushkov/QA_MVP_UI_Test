@@ -47,7 +47,7 @@ public class CheckUserEdit extends AbstractSpec {
 
     }
 
-    @Test(enabled=true)
+    @Test(enabled=false)
     public void createUsers() throws Exception {
         Assert.assertNotNull(userEdit.createUsers());
     }
