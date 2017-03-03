@@ -106,7 +106,7 @@ public class UserEdit extends AbstractPageObject {
     }
 
     public Boolean createUsers() throws InterruptedException {
-        int userNum = 10;
+        int userNum = 20;
 
         for(int i=0; i<=userNum; i++) {
             findElement(emailField).clear();
