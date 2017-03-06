@@ -14,6 +14,7 @@ import static specs.AbstractSpec.propUIContentAdmin;
 public class Events extends AbstractPageObject {
     private static By moduleTitle, grid, gridEventWebcastList, dataGridPager, inputFilterByTag, publishButton;
     private final Integer columnsNumber = 8;
+    private static final long DEFAULT_PAUSE = 2500;
 
     public Events(WebDriver driver) {
         super(driver);
@@ -66,7 +67,7 @@ public class Events extends AbstractPageObject {
         return element;
     }
 
-    public Events publishEvent(String headline) {
+    public Events publishEvent(String headline) throws InterruptedException {
 
         By eventCheckbox;
 
@@ -81,11 +82,7 @@ public class Events extends AbstractPageObject {
         wait.until(ExpectedConditions.visibilityOf(findElement(eventCheckbox)));
         findElement(eventCheckbox).click();
 
-        //waiting 1 second for publish button to activate
-        try{Thread.sleep(1000);}
-        catch(InterruptedException e){
-            e.printStackTrace();
-        }
+        Thread.sleep(DEFAULT_PAUSE);
 
         findElement(publishButton).click();
 

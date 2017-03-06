@@ -21,7 +21,7 @@ public class AbstractPageObject implements PageObject {
 
     private final By logoutButton = By.xpath("//li/a[contains(text(),'Logout')]");
     private static final long DEFAULT_PAUSE = 1500;
-    private static final int ATTEMPTS = 3;
+    private static final int ATTEMPTS = 5;
 
     public AbstractPageObject(WebDriver driver) {
         this.driver = driver;

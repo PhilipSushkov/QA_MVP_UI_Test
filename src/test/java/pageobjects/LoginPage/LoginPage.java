@@ -26,7 +26,7 @@ public class LoginPage extends Page {
     }
 
     public Dashboard loginUser() throws Exception {
-        int randNum = Functions.randInt(1, 9);
+        int randNum = Functions.randInt(0, 19);
 
         waitForElementToAppear(emailField);
 

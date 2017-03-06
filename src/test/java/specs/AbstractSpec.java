@@ -32,8 +32,8 @@ public abstract class AbstractSpec extends util.Functions {
 // IMPORTANT:
 // Determines which environment the test suite will run on but can be overridden by command line
 //------------------------------------------------------------------------------
-    private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.BETA;
-    //private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.PRODUCTION;
+    //private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.BETA;
+    private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.PRODUCTION;
 //------------------------------------------------------------------------------
 
     private static final EnvironmentType activeEnvironment = setupEnvironment();
@@ -100,7 +100,8 @@ public abstract class AbstractSpec extends util.Functions {
                 setupChromeLocalDriver();
                 break;
             case PRODUCTION:
-                setupWebDriver(testContext.getName());
+                setupChromeLocalDriver();
+                //setupWebDriver(testContext.getName());
                 break;
         }
 
@@ -129,6 +130,7 @@ public abstract class AbstractSpec extends util.Functions {
         DesiredCapabilities capabilities = DesiredCapabilities.chrome();
         ChromeOptions options = new ChromeOptions();
         options.addArguments("incognito");
+        options.addArguments("no-sandbox");
         capabilities.setCapability(ChromeOptions.CAPABILITY, options);
         driver = new ChromeDriver(capabilities);
 
@@ -180,6 +182,12 @@ public abstract class AbstractSpec extends util.Functions {
     @AfterMethod
     public void afterMethod(ITestResult result) {
 
+        /*
+        if (driver != null) {
+            driver.quit();
+        }
+        */
+
         switch (result.getStatus()) {
             case ITestResult.SUCCESS:
                 System.out.println(result.getMethod().getMethodName()+": PASS");
@@ -191,6 +199,7 @@ public abstract class AbstractSpec extends util.Functions {
 
             case ITestResult.SKIP:
                 System.out.println(result.getMethod().getMethodName()+": SKIP BLOCKED");
+                driver.quit();
                 break;
 
             default:
@@ -198,7 +207,7 @@ public abstract class AbstractSpec extends util.Functions {
         }
     }
 
-    @AfterTest
+    @AfterTest(alwaysRun=true)
     public void teardown() throws Exception {
         /*
         if (getActiveEnvironment() != EnvironmentType.BETA){
@@ -211,7 +220,9 @@ public abstract class AbstractSpec extends util.Functions {
         }
         */
 
-        driver.quit();
+        if (driver != null) {
+            driver.quit();
+        }
     }
 
 
@@ -221,7 +232,7 @@ public abstract class AbstractSpec extends util.Functions {
 
     private static EnvironmentType setupEnvironment () {
         String overrideEnvironment = System.getProperty("environment");
-        if ((overrideEnvironment == "PRODUCTION") || (overrideEnvironment == "BETA") || (overrideEnvironment == "DEVELOP")) {
+        if ((overrideEnvironment.equals("PRODUCTION")) || (overrideEnvironment.equals("BETA")) || (overrideEnvironment.equals("DEVELOP"))) {
             return EnvironmentType.valueOf(overrideEnvironment);
         } else {
             return DEFAULT_ENVIRONMENT;
