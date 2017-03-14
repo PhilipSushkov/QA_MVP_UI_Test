@@ -54,8 +54,9 @@ public class HTMLUnitDriver {
 
     @AfterTest
     public void tearDown() throws Exception {
-        driver.quit();
-
+        if (driver != null) {
+            driver.quit();
+        }
     }
     
     public void change1() throws Exception {

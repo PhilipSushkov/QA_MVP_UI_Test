@@ -71,7 +71,7 @@ public class CheckAlertFilterAdd extends AbstractSpec {
 
         dashboard.openPageFromMenu(systemAdminMenuButton, alertFilterListMenuItem);
 
-        Assert.assertTrue(alertFilterAdd.checkAlertFilter(data, sFilterName), "New Alert Filter didn't find in Alert Filter List (after Save)");
+        Assert.assertTrue(alertFilterAdd.checkAlertFilter(data, sFilterName), "New Alert Filter doesn't fit to entry data (after Save)");
     }
 
     @Test(dataProvider=DATA, priority=3)
@@ -85,7 +85,7 @@ public class CheckAlertFilterAdd extends AbstractSpec {
     public void checkAlertFilterCh(JSONObject data) throws Exception {
         String sFilterName = data.get(FILTER_NAME).toString();
 
-        Assert.assertTrue(alertFilterAdd.checkAlertFilterCh(data, sFilterName), "Alert Filter doesn't fit to entry data (after Edit)");
+        Assert.assertTrue(alertFilterAdd.checkAlertFilterCh(data, sFilterName), "Alert Filter doesn't fit to change data (after Edit)");
     }
 
     @Test(dataProvider=DATA, priority=5)

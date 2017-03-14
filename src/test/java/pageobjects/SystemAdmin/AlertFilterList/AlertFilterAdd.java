@@ -317,7 +317,7 @@ public class AlertFilterAdd extends AbstractPageObject {
             System.out.println(name + ": Filter Alert changes have been checked");
             return true;
 
-        }  catch (FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();

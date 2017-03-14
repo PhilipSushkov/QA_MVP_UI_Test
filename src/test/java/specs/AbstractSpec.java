@@ -86,16 +86,11 @@ public abstract class AbstractSpec extends util.Functions {
             setupIsDone = true;
         }
 
-        //System.out.println(testContext.getName()); // it prints "Check name test"
-
         switch (getActiveEnvironment()) {
             case DEVELOP:
-                //setupLocalDriver();
                 setupChromeLocalDriver();
                 break;
             case BETA:
-                //temp code due to temp use of testing environment
-                //setupLocalDriver();
                 //setupFirefoxLocalDriver();
                 setupChromeLocalDriver();
                 break;
@@ -108,25 +103,7 @@ public abstract class AbstractSpec extends util.Functions {
         setupPropUI();
     }
 
-    private void setupLocalDriver() throws UnknownHostException {
-
-        DesiredCapabilities caps = new DesiredCapabilities();
-        caps.setJavascriptEnabled(true);
-        caps.setCapability(PhantomJSDriverService.PHANTOMJS_CLI_ARGS, new String[] {"--web-security=no", "--ignore-ssl-errors=yes", "--load-images=false"});
-        driver = new PhantomJSDriver(caps);
-        driver.manage().timeouts().implicitlyWait(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
-        driver.get(desktopUrl.toString());
-
-        //driver.setJavascriptEnabled(true);
-        //driver.manage().window().setSize(new Dimension(1400, 1400));
-        //driver.get("https://aestest.s1.q4web.newtest");
-        //driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-        //System.out.println(driver.getPageSource());
-
-    }
-
     private void setupChromeLocalDriver() {
-
         DesiredCapabilities capabilities = DesiredCapabilities.chrome();
         ChromeOptions options = new ChromeOptions();
         options.addArguments("incognito");
@@ -136,18 +113,8 @@ public abstract class AbstractSpec extends util.Functions {
 
         driver.manage().timeouts().implicitlyWait(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
         driver.manage().timeouts().pageLoadTimeout(60, TimeUnit.SECONDS); //Increased to 20 to perhaps reduce timeouts?
-        driver.manage().window().setSize(new Dimension(1400, 1400));
+        //driver.manage().window().setSize(new Dimension(1400, 1400));
         driver.get(desktopUrl.toString());
-
-
-        /*
-        driver = LocalDriverFactory.createInstance();
-        LocalDriverManager.setWebDriver(driver);
-        System.out.println("Thread id = " + Thread.currentThread().getId());
-        System.out.println("Hashcode of webDriver instance = " + LocalDriverManager.getDriver().hashCode());
-        LocalDriverManager.getDriver().get(desktopUrl.toString());
-        */
-
     }
 
     private void setupFirefoxLocalDriver() {
@@ -169,7 +136,6 @@ public abstract class AbstractSpec extends util.Functions {
         capability.setCapability("browserstack.video","false");
         capability.setCapability("browserstack.debug", "false");
 
-
         driver = new RemoteWebDriver(new URL(BROWSER_STACK_URL), capability);
         driver.manage().timeouts().implicitlyWait(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
         driver.manage().timeouts().pageLoadTimeout(20, TimeUnit.SECONDS); //Increased to 20 to perhaps reduce timeouts?
@@ -181,13 +147,6 @@ public abstract class AbstractSpec extends util.Functions {
 
     @AfterMethod
     public void afterMethod(ITestResult result) {
-
-        /*
-        if (driver != null) {
-            driver.quit();
-        }
-        */
-
         switch (result.getStatus()) {
             case ITestResult.SUCCESS:
                 System.out.println(result.getMethod().getMethodName()+": PASS");
@@ -209,17 +168,6 @@ public abstract class AbstractSpec extends util.Functions {
 
     @AfterTest(alwaysRun=true)
     public void teardown() throws Exception {
-        /*
-        if (getActiveEnvironment() != EnvironmentType.BETA){
-            driver.quit();
-        }
-
-        if (getActiveEnvironment() != EnvironmentType.DEVELOP) {
-            if (getActiveEnvironment() != EnvironmentType.BETA) //temp code due to temp use of testing environment
-            driver.quit();
-        }
-        */
-
         if (driver != null) {
             driver.quit();
         }
@@ -232,8 +180,12 @@ public abstract class AbstractSpec extends util.Functions {
 
     private static EnvironmentType setupEnvironment () {
         String overrideEnvironment = System.getProperty("environment");
-        if ((overrideEnvironment.equals("PRODUCTION")) || (overrideEnvironment.equals("BETA")) || (overrideEnvironment.equals("DEVELOP"))) {
-            return EnvironmentType.valueOf(overrideEnvironment);
+        if (overrideEnvironment != null) {
+            if ((overrideEnvironment.equals("PRODUCTION")) || (overrideEnvironment.equals("BETA")) || (overrideEnvironment.equals("DEVELOP"))) {
+                return EnvironmentType.valueOf(overrideEnvironment);
+            } else {
+                return DEFAULT_ENVIRONMENT;
+            }
         } else {
             return DEFAULT_ENVIRONMENT;
         }
