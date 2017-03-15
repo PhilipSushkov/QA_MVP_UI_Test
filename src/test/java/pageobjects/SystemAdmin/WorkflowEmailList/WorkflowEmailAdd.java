@@ -161,7 +161,309 @@ public class WorkflowEmailAdd extends AbstractPageObject {
     }
 
     public Boolean checkWorkflowEmail(JSONObject data, String name) {
+        JSONObject jsonMain = new JSONObject();
+        JSONObject jsonObj = new JSONObject();
+        By editBtn = By.xpath("//td[(text()='" + name + "')]/parent::tr/td/input[contains(@id, 'btnEdit')]");
 
-        return true;
+        try {
+            waitForElement(moduleTitle);
+            findElement(editBtn).click();
+            waitForElement(saveBtn);
+
+            if (findElement(descriptionField).getAttribute("value").equals(name)) {
+                //System.out.println("Filter Name is correct");
+
+                try {
+                    FileReader readFile = new FileReader(sPathToFile + sFileJson);
+                    jsonMain = (JSONObject) parser.parse(readFile);
+                    jsonObj = (JSONObject) jsonMain.get(name);
+                } catch (ParseException e) {
+                }
+
+                // Compare field values with entry data
+                try {
+                    if (!new Select(findElement(systemTaskSelect)).getFirstSelectedOption().getText().equals(data.get("system_task").toString())) {
+                        return false;
+                    }
+                } catch (NullPointerException e) {
+                }
+
+                try {
+                    if (!new Select(findElement(systemMessageSelect)).getFirstSelectedOption().getText().equals(data.get("system_message").toString())) {
+                        return false;
+                    }
+                } catch (NullPointerException e) {
+                }
+
+                // Compare checkbox values with entry data
+                List<WebElement> rolesListChkElements = findElements(rolesListChk);
+                Boolean bGroup = false;
+                for (WebElement rolesListChkElement:rolesListChkElements)
+                {
+                    //System.out.println(rolesListChkElement.getAttribute("textContent"));
+                    String group = rolesListChkElement.getAttribute("textContent");
+
+                    JSONArray user_groups = (JSONArray) data.get("user_groups");
+
+                    for (Iterator<String> iterator = user_groups.iterator(); iterator.hasNext(); user_groups.size()) {
+                        String user_group = iterator.next();
+                        if (group.equals(user_group)) {
+                            bGroup = true;
+                            break;
+                        } else {
+                            bGroup = false;
+                        }
+                    }
+
+                    By chkBox = By.xpath("//label[(text()='" + group + "')]/parent::td/input[contains(@id, 'chkRolesList')]");
+
+                    if (bGroup) {
+                        if (!Boolean.parseBoolean(findElement(chkBox).getAttribute("checked"))) {
+                            return false;
+                        } else {
+                        }
+                    } else {
+                        if (!Boolean.parseBoolean(findElement(chkBox).getAttribute("checked"))) {
+                        } else {
+                            return false;
+                        }
+                    }
+
+                }
+
+                // Save Url
+                URL url = new URL(getUrl());
+                String[] params = url.getQuery().split("&");
+                JSONObject jsonURLQuery = new JSONObject();
+                for (String param:params) {
+                    jsonURLQuery.put(param.split("=")[0], param.split("=")[1]);
+                }
+                jsonObj.put("url_query", jsonURLQuery);
+
+                int emailAlertID = Integer.parseInt(jsonURLQuery.get("EmailAlertID").toString());
+
+                try {
+                    FileWriter writeFile = new FileWriter(sPathToFile + sFileJson);
+                    writeFile.write(jsonMain.toJSONString().replace("\\", ""));
+                    writeFile.flush();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                System.out.println(name + ": "+PAGE_NAME+" has been checked");
+                return emailAlertID > 0;
+            }
+
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
     }
+
+
+    public Boolean editWorkflowEmail(JSONObject data, String name) throws InterruptedException {
+        JSONObject jsonMain = new JSONObject();
+        JSONObject jsonObj = (JSONObject) jsonMain.get(name);
+        By editBtn = By.xpath("//td[(text()='" + name + "')]/parent::tr/td/input[contains(@id, 'btnEdit')]");
+
+        try {
+            try {
+                FileReader readFile = new FileReader(sPathToFile + sFileJson);
+                jsonMain = (JSONObject) parser.parse(readFile);
+                jsonObj = (JSONObject) jsonMain.get(name);
+            } catch (ParseException e) {
+            }
+
+            waitForElement(moduleTitle);
+            String pageUrl = getPageUrl(jsonMain, name);
+            driver.get(pageUrl);
+
+            waitForElement(deleteBtn);
+
+            try {
+                if (!data.get("system_task_ch").toString().isEmpty()) {
+                    findElement(systemTaskSelect).sendKeys(data.get("system_task_ch").toString());
+                    jsonObj.put("system_task", data.get("system_task_ch").toString());
+                }
+            } catch (NullPointerException e) {}
+
+            try {
+                if (!data.get("system_message_ch").toString().isEmpty()) {
+                    findElement(systemMessageSelect).sendKeys(data.get("system_message_ch").toString());
+                    jsonObj.put("system_message", data.get("system_message_ch").toString());
+                }
+            } catch (NullPointerException e) {}
+
+            Thread.sleep(DEFAULT_PAUSE);
+            findElement(saveBtn).click();
+
+            try {
+                FileWriter writeFile = new FileWriter(sPathToFile + sFileJson);
+                writeFile.write(jsonMain.toJSONString().replace("\\", ""));
+                writeFile.flush();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            Thread.sleep(DEFAULT_PAUSE);
+            waitForElement(editBtn);
+
+            System.out.println(name + ": "+PAGE_NAME+" has been changed");
+            return true;
+
+        }  catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public Boolean checkWorkflowEmailCh(JSONObject data, String name) {
+        JSONObject jsonMain = new JSONObject();
+        JSONObject jsonObj = new JSONObject();
+
+        try {
+            try {
+                FileReader readFile = new FileReader(sPathToFile + sFileJson);
+                jsonMain = (JSONObject) parser.parse(readFile);
+                jsonObj = (JSONObject) jsonMain.get(name);
+            } catch (ParseException e) {
+            }
+
+            waitForElement(moduleTitle);
+            String pageUrl = getPageUrl(jsonMain, name);
+            driver.get(pageUrl);
+
+            waitForElement(deleteBtn);
+
+            // Compare field values with change data
+            try {
+                if (!new Select(findElement(systemTaskSelect)).getFirstSelectedOption().getText().equals(data.get("system_task_ch").toString())) {
+                    return false;
+                }
+            } catch (NullPointerException e) {
+            }
+
+            try {
+                if (!new Select(findElement(systemMessageSelect)).getFirstSelectedOption().getText().equals(data.get("system_message_ch").toString())) {
+                    return false;
+                }
+            } catch (NullPointerException e) {
+            }
+
+            // Compare checkbox values with entry data
+            List<WebElement> rolesListChkElements = findElements(rolesListChk);
+            Boolean bGroup = false;
+            for (WebElement rolesListChkElement:rolesListChkElements)
+            {
+                String group = rolesListChkElement.getAttribute("textContent");
+
+                JSONArray user_groups = (JSONArray) data.get("user_groups");
+
+                for (Iterator<String> iterator = user_groups.iterator(); iterator.hasNext(); user_groups.size()) {
+                    String user_group = iterator.next();
+                    if (group.equals(user_group)) {
+                        bGroup = true;
+                        break;
+                    } else {
+                        bGroup = false;
+                    }
+                }
+
+                By chkBox = By.xpath("//label[(text()='" + group + "')]/parent::td/input[contains(@id, 'chkRolesList')]");
+
+                if (bGroup) {
+                    if (!Boolean.parseBoolean(findElement(chkBox).getAttribute("checked"))) {
+                        return false;
+                    } else {
+                    }
+                } else {
+                    if (!Boolean.parseBoolean(findElement(chkBox).getAttribute("checked"))) {
+                    } else {
+                        return false;
+                    }
+                }
+
+            }
+
+            System.out.println(name + ": " + PAGE_NAME + " changes have been checked");
+            return true;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public Boolean removeWorkflowEmail (String name) {
+        JSONObject jsonMain = new JSONObject();
+        By editBtn = By.xpath("//td[(text()='" + name + "')]/parent::tr/td/input[contains(@id, 'btnEdit')]");
+
+        try {
+            try {
+                FileReader readFile = new FileReader(sPathToFile + sFileJson);
+                jsonMain = (JSONObject) parser.parse(readFile);
+            } catch (ParseException e) {
+            }
+
+            waitForElement(moduleTitle);
+            String pageUrl = getPageUrl(jsonMain, name);
+            driver.get(pageUrl);
+            waitForElement(deleteBtn);
+
+            if (findElement(descriptionField).getAttribute("value").equals(name)) {
+
+                findElement(deleteBtn).click();
+
+                Thread.sleep(DEFAULT_PAUSE);
+                waitForElement(moduleTitle);
+
+                try {
+                    waitForElement(editBtn);
+                } catch (TimeoutException e) {
+
+                    jsonMain.remove(name);
+
+                    try {
+                        FileWriter writeFile = new FileWriter(sPathToFile + sFileJson);
+                        writeFile.write(jsonMain.toJSONString().replace("\\", ""));
+                        writeFile.flush();
+                    } catch (FileNotFoundException e1) {
+                        e.printStackTrace();
+                    } catch (IOException e1) {
+                        e.printStackTrace();
+                    }
+
+                    System.out.println(name + ": " + PAGE_NAME + " has been removed");
+                    return true;
+                }
+
+                return false;
+            }
+
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public String getPageUrl (JSONObject obj, String name) {
+        String  sFilterId = JsonPath.read(obj, "$.['"+name+"'].url_query.EmailAlertID");
+        String  sLanguageId = JsonPath.read(obj, "$.['"+name+"'].url_query.LanguageId");
+        String  sSectionId = JsonPath.read(obj, "$.['"+name+"'].url_query.SectionId");
+        return desktopUrl.toString()+"default.aspx?EmailAlertID="+sFilterId+"&LanguageId="+sLanguageId+"&SectionId="+sSectionId;
+    }
+
 }

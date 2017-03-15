@@ -64,13 +64,40 @@ public class CheckWorkflowEmailAdd extends AbstractSpec {
     }
 
     @Test(dataProvider=DATA, priority=2)
-    public void checkAlertFilter(JSONObject data) throws Exception {
+    public void checkWorkflowEmail(JSONObject data) throws Exception {
         String sWorkflowEmailName = data.get(WORKFLOW_EMAIL_NAME).toString();
         //System.out.println(data.get(WORKFLOW_EMAIL_NAME).toString());
 
         dashboard.openPageFromMenu(systemAdminMenuButton, workflowEmailListMenuItem);
 
-        Assert.assertTrue(workflowEmailAdd.checkWorkflowEmail(data, sWorkflowEmailName), "New "+PAGE_NAME+" didn't find in "+PAGE_NAME+" List (after Save)");
+        Assert.assertTrue(workflowEmailAdd.checkWorkflowEmail(data, sWorkflowEmailName), "New "+PAGE_NAME+" doesn't fit to entry data (after Save)");
+    }
+
+    @Test(dataProvider=DATA, priority=3)
+    public void editWorkflowEmail(JSONObject data) throws Exception {
+        String sWorkflowEmailName = data.get(WORKFLOW_EMAIL_NAME).toString();
+
+        dashboard.openPageFromMenu(systemAdminMenuButton, workflowEmailListMenuItem);
+
+        Assert.assertTrue(workflowEmailAdd.editWorkflowEmail(data, sWorkflowEmailName), PAGE_NAME+" didn't change properly (after Save)");
+    }
+
+    @Test(dataProvider=DATA, priority=4)
+    public void checkWorkflowEmailCh(JSONObject data) throws Exception {
+        String sWorkflowEmailName = data.get(WORKFLOW_EMAIL_NAME).toString();
+
+        dashboard.openPageFromMenu(systemAdminMenuButton, workflowEmailListMenuItem);
+
+        Assert.assertTrue(workflowEmailAdd.checkWorkflowEmailCh(data, sWorkflowEmailName), "New "+PAGE_NAME+" doesn't fit to change data (after Edit)");
+    }
+
+    @Test(dataProvider=DATA, priority=5)
+    public void removeWorkflowEmail(JSONObject data) throws Exception {
+        String sWorkflowEmailName = data.get(WORKFLOW_EMAIL_NAME).toString();
+
+        dashboard.openPageFromMenu(systemAdminMenuButton, workflowEmailListMenuItem);
+
+        Assert.assertTrue(workflowEmailAdd.removeWorkflowEmail(sWorkflowEmailName), "New "+PAGE_NAME+" shouldn't be shown in "+PAGE_NAME+" List (after Delete)");
     }
 
     @DataProvider

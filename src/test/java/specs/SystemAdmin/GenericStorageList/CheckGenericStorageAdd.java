@@ -94,7 +94,7 @@ public class CheckGenericStorageAdd extends AbstractSpec {
         String sStorageName = data.get(STORAGE_NAME).toString();
 
         Assert.assertEquals(genericStorageAdd.changeAndSubmitGenericStorage(data, sStorageName), WorkflowState.FOR_APPROVAL.state(), "Some fields of New "+ PAGE_NAME +" didn't change properly (after Save and Submit)");
-        Assert.assertTrue(genericStorageAdd.checkGenericStorageCh(data, sStorageName), "Submitted New "+ PAGE_NAME +" changes don't fit well to entry data (after Change And Submit)");
+        Assert.assertTrue(genericStorageAdd.checkGenericStorageCh(data, sStorageName), "Submitted New "+ PAGE_NAME +" changes don't fit well to change data (after Change And Submit)");
     }
 
     @Test(dataProvider=DATA, priority=6)
