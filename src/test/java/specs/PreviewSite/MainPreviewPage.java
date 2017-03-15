@@ -13,7 +13,7 @@ import specs.PublicSite.CheckPublicSite;
  */
 public class MainPreviewPage extends AbstractSpec {
 
-    private final String Q4WebVersionNumber = "4.3.0.63";
+    private final String Q4WebVersionNumber = "4.4.0.9";
 
     //// THERE SHOULD BE ONE TEST HERE FOR EVERY TEST ON CheckPublicSite.java \\\\
 
