@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Web CMS Suite Navigation" parallel="tests" thread-count="1">
+
+    <!-- Page Admin -->
+    <!--
+    <test name="CheckPageAdminList">
+        <classes>
+            <class name="specs.PageAdmin.CheckPageAdminList" />
+        </classes>
+    </test>
+    -->
+
+    <!-- Page Admin Edit-->
+    <test name="CheckPageEdit">
+        <classes>
+            <class name="specs.PageAdmin.CheckPageEdit" />
+        </classes>
+    </test>
+
+
+    <!-- System Admin part -->
+    <test name="CheckPDFTemplateEdit">
+        <classes>
+            <class name="specs.SystemAdmin.PDFTemplateEdit.CheckPDFTemplateEdit" />
+        </classes>
+    </test>
+
+
+    <!-- System Admin Edit part -->
+    <test name="CheckUserEdit">
+        <classes>
+            <class name="specs.SystemAdmin.UserList.CheckUserEdit" />
+        </classes>
+    </test>
+    <test name="CheckAlertFilterEdit">
+        <classes>
+            <class name="specs.SystemAdmin.AlertFilterList.CheckAlertFilterEdit" />
+        </classes>
+    </test>
+    <test name="CheckGenericStorageEdit">
+        <classes>
+            <class name="specs.SystemAdmin.GenericStorageList.CheckGenericStorageEdit" />
+        </classes>
+    </test>
+    <test name="CheckWorkflowEmailEdit">
+        <classes>
+            <class name="specs.SystemAdmin.WorkflowEmailList.CheckWorkflowEmailEdit" />
+        </classes>
+    </test>
+    <test name="CheckUserGroupEdit">
+        <classes>
+            <class name="specs.SystemAdmin.UserGroupList.CheckUserGroupEdit" />
+        </classes>
+    </test>
+
+
+    <!-- Site Admin Edit part -->
+    <test name="CheckGlobalModuleEdit">
+        <classes>
+            <class name="specs.SiteAdmin.GlobalModuleList.CheckGlobalModuleEdit" />
+        </classes>
+    </test>
+    <test name="CheckLayoutDefinitionEdit">
+        <classes>
+            <class name="specs.SiteAdmin.LayoutDefinitionList.CheckLayoutDefinitionEdit" />
+        </classes>
+    </test>
+    <test name="CheckModuleDefinitionEdit">
+        <classes>
+            <class name="specs.SiteAdmin.ModuleDefinitionList.CheckModuleDefinitionEdit" />
+        </classes>
+    </test>
+    <test name="CheckCssFileEdit">
+        <classes>
+            <class name="specs.SiteAdmin.CssFileList.CheckCssFileEdit" />
+        </classes>
+    </test>
+    <test name="CheckExternalFeedEdit">
+        <classes>
+            <class name="specs.SiteAdmin.ExternalFeedList.CheckExternalFeedEdit" />
+        </classes>
+    </test>
+    <test name="CheckLinkToPageEdit">
+        <classes>
+            <class name="specs.SiteAdmin.LinkToPageList.CheckLinkToPageEdit" />
+        </classes>
+    </test>
+    <test name="CheckLookupEdit">
+        <classes>
+            <class name="specs.SiteAdmin.LookupList.CheckLookupEdit" />
+        </classes>
+    </test>
+    <test name="CheckAliasEdit">
+        <classes>
+            <class name="specs.SiteAdmin.AliasList.CheckAliasEdit" />
+        </classes>
+    </test>
+    <test name="CheckMobileLinkEdit">
+        <classes>
+            <class name="specs.SiteAdmin.MobileLinkList.CheckMobileLinkEdit" />
+        </classes>
+    </test>
+    <test name="CheckDomainEdit">
+        <classes>
+            <class name="specs.SiteAdmin.DomainList.CheckDomainEdit" />
+        </classes>
+    </test>
+
+
+    <!-- Content Admin Edit part -->
+    <test name="CheckFinancialReportEdit">
+        <classes>
+            <class name="specs.ContentAdmin.FinancialReports.CheckFinancialReportEdit" />
+        </classes>
+    </test>
+    <test name="CheckEventWebcastEdit">
+        <classes>
+            <class name="specs.ContentAdmin.Events.CheckEventWebcastEdit" />
+        </classes>
+    </test>
+    <test name="CheckPresentationEdit">
+        <classes>
+            <class name="specs.ContentAdmin.Presentations.CheckPresentationEdit" />
+        </classes>
+    </test>
+    <test name="CheckPressReleaseEdit">
+        <classes>
+            <class name="specs.ContentAdmin.PressReleases.CheckPressReleaseEdit" />
+        </classes>
+    </test>
+    <test name="CheckPressReleaseCategoryEdit">
+        <classes>
+            <class name="specs.ContentAdmin.PressReleaseCategories.CheckPressReleaseCategoryEdit" />
+        </classes>
+    </test>
+    <test name="CheckQuickLinkEdit">
+        <classes>
+            <class name="specs.ContentAdmin.QuickLinkList.CheckQuickLinkEdit" />
+        </classes>
+    </test>
+    <test name="CheckGlossaryEdit">
+        <classes>
+            <class name="specs.ContentAdmin.Glossary.CheckGlossaryEdit" />
+        </classes>
+    </test>
+    <test name="CheckDownloadEdit">
+        <classes>
+            <class name="specs.ContentAdmin.DownloadList.CheckDownloadEdit" />
+        </classes>
+    </test>
+    <test name="CheckPersonEdit">
+        <classes>
+            <class name="specs.ContentAdmin.PersonList.CheckPersonEdit" />
+        </classes>
+    </test>
+    <test name="CheckDepartmentEdit">
+        <classes>
+            <class name="specs.ContentAdmin.DepartmentList.CheckDepartmentEdit" />
+        </classes>
+    </test>
+    <test name="CheckFaqEdit">
+        <classes>
+            <class name="specs.ContentAdmin.FaqList.CheckFaqEdit" />
+        </classes>
+    </test>
+    <test name="CheckRegulatoryFilingEdit">
+        <classes>
+            <class name="specs.ContentAdmin.RegulatoryFiling.CheckRegulatoryFilingEdit" />
+        </classes>
+    </test>
+    <test name="CheckRegionEdit">
+        <classes>
+            <class name="specs.ContentAdmin.Region.CheckRegionEdit" />
+        </classes>
+    </test>
+    <test name="CheckJobPostingEdit">
+        <classes>
+            <class name="specs.ContentAdmin.JobPostingList.CheckJobPostingEdit" />
+        </classes>
+    </test>
+
+
+    <!-- Email Admin Edit part -->
+    <test name="CheckMailingListsEdit">
+        <classes>
+            <class name="specs.EmailAdmin.ManageList.CheckMailingListsEdit" />
+        </classes>
+    </test>
+    <test name="CheckSubscriberEdit">
+        <classes>
+            <class name="specs.EmailAdmin.Subscribers.CheckSubscriberEdit" />
+        </classes>
+    </test>
+    <test name="CheckTemplateEdit">
+        <classes>
+            <class name="specs.EmailAdmin.Templates.CheckTemplateEdit" />
+        </classes>
+    </test>
+    <test name="CheckSystemMessageEdit">
+        <classes>
+            <class name="specs.EmailAdmin.SystemMessages.CheckSystemMessageEdit" />
+        </classes>
+    </test>
+    <test name="CheckCategoryEdit">
+        <classes>
+            <class name="specs.EmailAdmin.CategoryList.CheckCategoryEdit" />
+        </classes>
+    </test>
+
+
+</suite>
