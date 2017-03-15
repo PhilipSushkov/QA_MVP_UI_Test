@@ -12,7 +12,7 @@ import specs.AbstractSpec;
  */
 public class CheckMainPage extends AbstractSpec {
 
-    private final String Q4WebVersionNumber = "4.3.0.63";
+    private final String Q4WebVersionNumber = "4.4.0.9";
 
     //// WHEN ADDING A TEST TO THIS CLASS, ADD A ENTRY TO IT IN CheckPreviewSite.java \\\\
 
