@@ -9,7 +9,7 @@
       "user_groups": ["Client Administrator", "System Administrator", "System Author", "System Publisher"]
     },
     {
-      "do_assertions": false,
+      "do_assertions": true,
       "description": "Workflow_Email_02 - Publish",
       "system_task": "Submit",
       "system_task_ch": "Publish",

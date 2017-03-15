@@ -366,7 +366,7 @@ public class AlertFilterAdd extends AbstractPageObject {
                         e.printStackTrace();
                     }
 
-                    System.out.println(name + ": Filter Alert has removed");
+                    System.out.println(name + ": Filter Alert has been removed");
                     return true;
                 }
 

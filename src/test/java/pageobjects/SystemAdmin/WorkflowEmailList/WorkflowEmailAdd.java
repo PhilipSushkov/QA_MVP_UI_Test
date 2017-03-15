@@ -405,6 +405,60 @@ public class WorkflowEmailAdd extends AbstractPageObject {
         return false;
     }
 
+    public Boolean removeWorkflowEmail (String name) {
+        JSONObject jsonMain = new JSONObject();
+        By editBtn = By.xpath("//td[(text()='" + name + "')]/parent::tr/td/input[contains(@id, 'btnEdit')]");
+
+        try {
+            try {
+                FileReader readFile = new FileReader(sPathToFile + sFileJson);
+                jsonMain = (JSONObject) parser.parse(readFile);
+            } catch (ParseException e) {
+            }
+
+            waitForElement(moduleTitle);
+            String pageUrl = getPageUrl(jsonMain, name);
+            driver.get(pageUrl);
+            waitForElement(deleteBtn);
+
+            if (findElement(descriptionField).getAttribute("value").equals(name)) {
+
+                findElement(deleteBtn).click();
+
+                Thread.sleep(DEFAULT_PAUSE);
+                waitForElement(moduleTitle);
+
+                try {
+                    waitForElement(editBtn);
+                } catch (TimeoutException e) {
+
+                    jsonMain.remove(name);
+
+                    try {
+                        FileWriter writeFile = new FileWriter(sPathToFile + sFileJson);
+                        writeFile.write(jsonMain.toJSONString().replace("\\", ""));
+                        writeFile.flush();
+                    } catch (FileNotFoundException e1) {
+                        e.printStackTrace();
+                    } catch (IOException e1) {
+                        e.printStackTrace();
+                    }
+
+                    System.out.println(name + ": " + PAGE_NAME + " has been removed");
+                    return true;
+                }
+
+                return false;
+            }
+
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
     public String getPageUrl (JSONObject obj, String name) {
         String  sFilterId = JsonPath.read(obj, "$.['"+name+"'].url_query.EmailAlertID");
         String  sLanguageId = JsonPath.read(obj, "$.['"+name+"'].url_query.LanguageId");

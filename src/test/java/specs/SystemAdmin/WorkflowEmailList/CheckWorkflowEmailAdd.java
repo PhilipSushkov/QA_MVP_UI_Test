@@ -91,6 +91,15 @@ public class CheckWorkflowEmailAdd extends AbstractSpec {
         Assert.assertTrue(workflowEmailAdd.checkWorkflowEmailCh(data, sWorkflowEmailName), "New "+PAGE_NAME+" doesn't fit to change data (after Edit)");
     }
 
+    @Test(dataProvider=DATA, priority=5)
+    public void removeWorkflowEmail(JSONObject data) throws Exception {
+        String sWorkflowEmailName = data.get(WORKFLOW_EMAIL_NAME).toString();
+
+        dashboard.openPageFromMenu(systemAdminMenuButton, workflowEmailListMenuItem);
+
+        Assert.assertTrue(workflowEmailAdd.removeWorkflowEmail(sWorkflowEmailName), "New "+PAGE_NAME+" shouldn't be shown in "+PAGE_NAME+" List (after Delete)");
+    }
+
     @DataProvider
     public Object[][] getData() {
 

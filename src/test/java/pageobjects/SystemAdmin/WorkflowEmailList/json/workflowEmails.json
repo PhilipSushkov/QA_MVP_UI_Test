@@ -1,13 +1,1 @@
-{
-  "Workflow_Email_01 - Submit": {
-    "url_query": {
-      "EmailAlertID": "28",
-      "SectionId": "21488cac-901b-4a16-938f-a426b7fb0327",
-      "LanguageId": "1"
-    },
-    "system_message": "Activation Email",
-    "description": "Workflow_Email_01 - Submit",
-    "system_task": "Submit",
-    "user_groups": ["Client Administrator", "System Administrator", "System Author", "System Publisher"]
-  }
-}
+{}
