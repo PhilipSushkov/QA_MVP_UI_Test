@@ -55,6 +55,14 @@
     </test>
 
 
+    <!-- Site Admin part -->
+    <test name="CheckContentAdminEdit">
+        <classes>
+            <class name="specs.SiteAdmin.ContentAdminEdit.CheckContentAdminEdit" />
+        </classes>
+    </test>
+
+
     <!-- Site Admin Edit part -->
     <test name="CheckGlobalModuleEdit">
         <classes>
