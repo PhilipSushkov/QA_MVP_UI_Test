@@ -169,7 +169,7 @@ public abstract class AbstractSpec extends util.Functions {
     @AfterTest(alwaysRun=true)
     public void teardown() throws Exception {
         if (driver != null) {
-            driver.close();
+            driver.quit();
         }
     }
 
