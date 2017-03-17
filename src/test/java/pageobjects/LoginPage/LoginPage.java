@@ -36,9 +36,9 @@ public class LoginPage extends Page {
         //findElement(emailField).sendKeys("philips");
         //findElement(passwordField).sendKeys("q4pass1234!");
 
-        pause(2000L);
+        pause(1000L);
         retryClick(loginButton);
-        pause(3000);
+        pause(2000);
 
         waitForElement(logoutMenuItem);
 
