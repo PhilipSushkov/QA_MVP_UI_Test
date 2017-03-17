@@ -51,6 +51,11 @@ public class CheckAlertFilterAdd extends AbstractSpec {
         loginPage.loginUser();
     }
 
+    @BeforeMethod
+    public void beforeMethod() throws Exception {
+        dashboard.openPageFromMenu(systemAdminMenuButton, alertFilterListMenuItem);
+    }
+
 
     @Test(dataProvider=DATA, priority=1)
     public void saveAlertFilter(JSONObject data) throws Exception {
@@ -58,7 +63,7 @@ public class CheckAlertFilterAdd extends AbstractSpec {
         String expectedTitleEdit = "Alert Filter Edit";
         String expectedTitleList = "Alert Filter List";
 
-        dashboard.openPageFromMenu(systemAdminMenuButton, alertFilterListMenuItem);
+        //dashboard.openPageFromMenu(systemAdminMenuButton, alertFilterListMenuItem);
 
         Assert.assertEquals(alertFilterAdd.getTitle(), expectedTitleEdit, "Actual Alert Filter Edit page Title doesn't match to expected");
         Assert.assertEquals(alertFilterAdd.saveAlertFilter(data, sFilterName), expectedTitleList, "New Alert Filter didn't save properly");
@@ -69,9 +74,9 @@ public class CheckAlertFilterAdd extends AbstractSpec {
         String sFilterName = data.get(FILTER_NAME).toString();
         //System.out.println(data.get("filter_name").toString());
 
-        dashboard.openPageFromMenu(systemAdminMenuButton, alertFilterListMenuItem);
+        //dashboard.openPageFromMenu(systemAdminMenuButton, alertFilterListMenuItem);
 
-        Assert.assertTrue(alertFilterAdd.checkAlertFilter(data, sFilterName), "New Alert Filter didn't find in Alert Filter List (after Save)");
+        Assert.assertTrue(alertFilterAdd.checkAlertFilter(data, sFilterName), "New Alert Filter doesn't fit to entry data (after Save)");
     }
 
     @Test(dataProvider=DATA, priority=3)
@@ -85,7 +90,7 @@ public class CheckAlertFilterAdd extends AbstractSpec {
     public void checkAlertFilterCh(JSONObject data) throws Exception {
         String sFilterName = data.get(FILTER_NAME).toString();
 
-        Assert.assertTrue(alertFilterAdd.checkAlertFilterCh(data, sFilterName), "Alert Filter doesn't fit to entry data (after Edit)");
+        Assert.assertTrue(alertFilterAdd.checkAlertFilterCh(data, sFilterName), "Alert Filter doesn't fit to change data (after Edit)");
     }
 
     @Test(dataProvider=DATA, priority=5)
