@@ -221,7 +221,7 @@ public abstract class AbstractSpec extends util.Functions {
         */
 
         if (driver != null) {
-            driver.quit();
+            driver.close();
         }
     }
 
@@ -232,8 +232,12 @@ public abstract class AbstractSpec extends util.Functions {
 
     private static EnvironmentType setupEnvironment () {
         String overrideEnvironment = System.getProperty("environment");
-        if ((overrideEnvironment.equals("PRODUCTION")) || (overrideEnvironment.equals("BETA")) || (overrideEnvironment.equals("DEVELOP"))) {
-            return EnvironmentType.valueOf(overrideEnvironment);
+        if (overrideEnvironment != null) {
+            if ((overrideEnvironment.equals("PRODUCTION")) || (overrideEnvironment.equals("BETA")) || (overrideEnvironment.equals("DEVELOP"))) {
+                return EnvironmentType.valueOf(overrideEnvironment);
+            } else {
+                return DEFAULT_ENVIRONMENT;
+            }
         } else {
             return DEFAULT_ENVIRONMENT;
         }
