@@ -129,7 +129,7 @@ public abstract class AbstractSpec extends util.Functions {
 
         DesiredCapabilities capabilities = DesiredCapabilities.chrome();
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("incognito");
+        //options.addArguments("incognito");
         options.addArguments("no-sandbox");
         capabilities.setCapability(ChromeOptions.CAPABILITY, options);
         driver = new ChromeDriver(capabilities);
@@ -231,13 +231,18 @@ public abstract class AbstractSpec extends util.Functions {
     }
 
     private static EnvironmentType setupEnvironment () {
+
         String overrideEnvironment = System.getProperty("environment");
-        if ((overrideEnvironment.equals("PRODUCTION")) || (overrideEnvironment.equals("BETA")) || (overrideEnvironment.equals("DEVELOP"))) {
-            return EnvironmentType.valueOf(overrideEnvironment);
-        } else {
-            return DEFAULT_ENVIRONMENT;
+            if (overrideEnvironment != null) {
+                if ((overrideEnvironment.equals("PRODUCTION")) || (overrideEnvironment.equals("BETA")) || (overrideEnvironment.equals("DEVELOP"))) {
+                    return EnvironmentType.valueOf(overrideEnvironment);
+                } else {
+                    return DEFAULT_ENVIRONMENT;
+                }
+            } else {
+                return DEFAULT_ENVIRONMENT;
+            }
         }
-    }
 
     public static String getSessionID() {
         return sessionID;
