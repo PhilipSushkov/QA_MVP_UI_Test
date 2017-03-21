@@ -129,14 +129,14 @@ public abstract class AbstractSpec extends util.Functions {
 
         DesiredCapabilities capabilities = DesiredCapabilities.chrome();
         ChromeOptions options = new ChromeOptions();
-        //options.addArguments("incognito");
+        options.addArguments("incognito");
         options.addArguments("no-sandbox");
         capabilities.setCapability(ChromeOptions.CAPABILITY, options);
         driver = new ChromeDriver(capabilities);
 
         driver.manage().timeouts().implicitlyWait(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
-        driver.manage().timeouts().pageLoadTimeout(60, TimeUnit.SECONDS); //Increased to 20 to perhaps reduce timeouts?
-        driver.manage().window().setSize(new Dimension(1400, 1400));
+        driver.manage().timeouts().pageLoadTimeout(20, TimeUnit.SECONDS); //Increased to 20 to perhaps reduce timeouts?
+        //driver.manage().window().setSize(new Dimension(1400, 1400));
         driver.get(desktopUrl.toString());
 
 
@@ -182,12 +182,6 @@ public abstract class AbstractSpec extends util.Functions {
     @AfterMethod
     public void afterMethod(ITestResult result) {
 
-        /*
-        if (driver != null) {
-            driver.quit();
-        }
-        */
-
         switch (result.getStatus()) {
             case ITestResult.SUCCESS:
                 System.out.println(result.getMethod().getMethodName()+": PASS");
@@ -199,7 +193,6 @@ public abstract class AbstractSpec extends util.Functions {
 
             case ITestResult.SKIP:
                 System.out.println(result.getMethod().getMethodName()+": SKIP BLOCKED");
-                driver.quit();
                 break;
 
             default:
@@ -209,17 +202,6 @@ public abstract class AbstractSpec extends util.Functions {
 
     @AfterTest(alwaysRun=true)
     public void teardown() throws Exception {
-        /*
-        if (getActiveEnvironment() != EnvironmentType.BETA){
-            driver.quit();
-        }
-
-        if (getActiveEnvironment() != EnvironmentType.DEVELOP) {
-            if (getActiveEnvironment() != EnvironmentType.BETA) //temp code due to temp use of testing environment
-            driver.quit();
-        }
-        */
-
         if (driver != null) {
             driver.quit();
         }
