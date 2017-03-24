@@ -21,12 +21,8 @@ public class RSSFeedsPage extends AbstractPageObject{
     private final By presentationFeeds;
     private final By SECFeeds = By.xpath("//a[contains(@class,'RssLinkTop')]");
     private final By rssFeedIcon;
-    //private final By feedsExist; //amount of VISIBLE lines should be greater than 11
-    //if <rss exists, and there is at least one item
+    private final By numItems = By.cssSelector("#collapsible2 > div.expanded > div:nth-child(1) > span.html-tag");
     private final By feedsExist;
-    private final By itemInFeeds = By.xpath("//item[1]");
-
-    private JavascriptExecutor executor = (JavascriptExecutor) driver;
 
     public RSSFeedsPage(WebDriver driver) {
         super(driver);
@@ -67,7 +63,7 @@ public class RSSFeedsPage extends AbstractPageObject{
 
     }
 
-    public boolean pressReleaseRSSExists() //new issue where the tests can work individually but together, they fail... even with the newly added driver.close
+    public boolean pressReleaseRSSExists()
     {
         String url = findElement(pressReleaseFeeds).getAttribute("href");
 

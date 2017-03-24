@@ -15,9 +15,6 @@ public class CheckRSSFeedPage extends AbstractSpec{
 
     //// Make sure that all tests here are also in a Preview version \\\\
 
-    //NOT DONE!
-    //Still working at it
-
     private static HomePage homePage;
 
     @BeforeTest
