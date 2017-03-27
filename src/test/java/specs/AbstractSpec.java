@@ -109,7 +109,6 @@ public abstract class AbstractSpec extends util.Functions {
     }
 
     private void setupLocalDriver() throws UnknownHostException {
-
         DesiredCapabilities caps = new DesiredCapabilities();
         caps.setJavascriptEnabled(true);
         caps.setCapability(PhantomJSDriverService.PHANTOMJS_CLI_ARGS, new String[] {"--web-security=no", "--ignore-ssl-errors=yes", "--load-images=false"});
@@ -122,7 +121,6 @@ public abstract class AbstractSpec extends util.Functions {
         //driver.get("https://aestest.s1.q4web.newtest");
         //driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
         //System.out.println(driver.getPageSource());
-
     }
 
     private void setupChromeLocalDriver() {
@@ -139,7 +137,6 @@ public abstract class AbstractSpec extends util.Functions {
         //driver.manage().window().setSize(new Dimension(1400, 1400));
         driver.get(desktopUrl.toString());
 
-
         /*
         driver = LocalDriverFactory.createInstance();
         LocalDriverManager.setWebDriver(driver);
@@ -155,7 +152,6 @@ public abstract class AbstractSpec extends util.Functions {
         driver.manage().timeouts().implicitlyWait(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
         driver.manage().window().setSize(new Dimension(1400, 1400));
         driver.get(desktopUrl.toString());
-
     }
 
 
@@ -169,14 +165,11 @@ public abstract class AbstractSpec extends util.Functions {
         capability.setCapability("browserstack.video","false");
         capability.setCapability("browserstack.debug", "false");
 
-
         driver = new RemoteWebDriver(new URL(BROWSER_STACK_URL), capability);
         driver.manage().timeouts().implicitlyWait(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
-        driver.manage().timeouts().pageLoadTimeout(20, TimeUnit.SECONDS); //Increased to 20 to perhaps reduce timeouts?
-        driver.manage().window().setSize(new Dimension(1400, 1400));
-
+        driver.manage().timeouts().pageLoadTimeout(40, TimeUnit.SECONDS); //Increased to 20 to perhaps reduce timeouts?
+        //driver.manage().window().setSize(new Dimension(1400, 1400));
         driver.get(desktopUrl.toString());
-
     }
 
     @AfterMethod
