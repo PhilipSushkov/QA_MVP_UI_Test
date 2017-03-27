@@ -43,4 +43,9 @@
             <class name="specs.PreviewSite.FAQPreviewPage" />
         </classes>
     </test>
+    <test name="CheckSearch">
+        <classes>
+            <class name="specs.PreviewSite.CheckPreviewSearch" />
+        </classes>
+    </test>
 </suite>
