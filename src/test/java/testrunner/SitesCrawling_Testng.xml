@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Web CMS Suite Sites Crawling" parallel="tests" thread-count="1">
+    <test name="CheckSiteVersion">
+        <classes>
+            <class name="specs.PublicSite.CheckSiteVersion" />
+        </classes>
+    </test>
+</suite>

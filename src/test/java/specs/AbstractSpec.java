@@ -158,7 +158,6 @@ public abstract class AbstractSpec extends util.Functions {
 
             case ITestResult.SKIP:
                 System.out.println(result.getMethod().getMethodName()+": SKIP BLOCKED");
-                driver.quit();
                 break;
 
             default:

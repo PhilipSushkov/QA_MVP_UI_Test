@@ -193,7 +193,7 @@ public class CheckPageAdd extends AbstractSpec {
     @AfterTest
     public void tearDown() {
         dashboard.logoutFromAdmin();
-        driver.quit();
+        //driver.quit();
     }
 
 }
