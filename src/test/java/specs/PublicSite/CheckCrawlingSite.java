@@ -4,7 +4,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
 import org.testng.ITestResult;
 import org.testng.annotations.*;
@@ -54,18 +53,24 @@ public class CheckCrawlingSite {
     }
 
     @Test(dataProvider=SITE_DATA, threadPoolSize=NUM_THREADS, priority=2, enabled=false)
-    public void checkSiteMap(String site) throws Exception {
+    public void crawlSiteMap(String site) throws Exception {
         crawlingSite = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile);
         Assert.assertTrue(crawlingSite.getSiteMap(), "sitemap.ashx file doesn't exist for " + site);
     }
 
     @Test(dataProvider=SITE_DATA, threadPoolSize=NUM_THREADS, priority=3, enabled=true)
-    public void checkSiteModule(String site) throws Exception {
+    public void crawlSiteModule(String site) throws Exception {
         crawlingSite = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile);
-        Assert.assertTrue(crawlingSite.getSiteModule(sDataModuleJson), "Mapping Site-Modules isn't done properly " + site);
+        Assert.assertTrue(crawlingSite.mapSiteModule(sDataModuleJson), "Mapping Site-Modules isn't done properly " + site);
     }
 
-    @Test(dataProvider=MODULE_DATA, priority=4, enabled=false)
+    @Test(dataProvider=SITE_DATA, threadPoolSize=NUM_THREADS, priority=4, enabled=true)
+    public void checkSiteModule(String site) throws Exception {
+        crawlingSite = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile);
+        Assert.assertTrue(crawlingSite.getSiteModule(), "Some Modules on the site didn't find " + site);
+    }
+
+    @Test(dataProvider=MODULE_DATA, priority=5, enabled=false)
     public void checkModule(JSONObject module) throws Exception {
         String moduleName = module.get("name").toString();
 
@@ -94,7 +99,6 @@ public class CheckCrawlingSite {
                 throw new RuntimeException(result.getTestName() + "Invalid status");
         }
     }
-
 
     @DataProvider(name=SITE_DATA, parallel=true)
     public Object[][] siteData() {

@@ -15,6 +15,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -62,7 +63,7 @@ public class CrawlingSite {
 
         try {
             FileWriter file = new FileWriter(sPathToFile + sSite + ".json");
-            file.write(jsonObjSite.toJSONString());
+            file.write(jsonObjSite.toJSONString().replace("\\", ""));
             file.flush();
             file.close();
 
@@ -74,13 +75,9 @@ public class CrawlingSite {
 
     }
 
-    public boolean getSiteMap() throws IOException {
+    public boolean getSiteMap() throws Exception {
         final String sPageSitemap = "sitemap.ashx";
-        //HttpClient client = HttpClientBuilder.create().build();
         String sURLSitemap = Functions.UrlAddSlash(sSite, sSlash, sHttp) + sPageSitemap;
-
-        //HttpGet get = new HttpGet(sURLSitemap);
-        //HttpResponse response = client.execute(get);
 
         if (Functions.GetResponseCode(sURLSitemap) == 200) {
 
@@ -95,11 +92,13 @@ public class CrawlingSite {
             }
 
             phDriver.get(sURLSitemap);
+
             List<WebElement> eUrls = phDriver.findElements(By.tagName("loc"));
             for (WebElement eUrl:eUrls) {
                 if (Functions.GetResponseCode(eUrl.getAttribute("textContent")) != 404) {
                     jsonListPage.add( eUrl.getAttribute("textContent"));
-                    //System.out.println(eUrl.getAttribute("textContent") + " " + Integer.toString(Functions.GetResponseCode(eUrl.getAttribute("textContent"))));
+                    int i=0;
+                    System.out.println(Integer.toString(i++)+" "+eUrl.getAttribute("textContent") + " " + Integer.toString(Functions.GetResponseCode(eUrl.getAttribute("textContent"))));
                 }
             }
 
@@ -124,35 +123,42 @@ public class CrawlingSite {
     }
 
 
-    public boolean getSiteModule(String sDataModuleJson) throws Exception {
-        JSONObject jsonListModule = new JSONObject();
-        JSONArray jsonListUrl = new JSONArray();
+    public boolean mapSiteModule(String sDataModuleJson) throws Exception {
 
         try {
             JSONObject jsonObjSite = (JSONObject) parser.parse(new FileReader(sPathToFile + sSite + ".json"));
             JSONArray jsonListPage = (JSONArray) jsonObjSite.get("pages");
+
+            JSONObject jsonListModule = new JSONObject();
+            JSONArray jsonModuleNames = new JSONArray();
+            try {
+                jsonObjSite.remove("modules");
+            } catch (NullPointerException e) {
+            }
+
             for (int j = 0; j < jsonListPage.size(); j++) {
                 String sPageUrl = jsonListPage.get(j).toString();
                 //System.out.println(sSite + ": " + sModuleName + ": " + sPageUrl);
 
                 try {
                     phDriver.get(sPageUrl);
-                    Thread.sleep(DEFAULT_PAUSE);
+                    //Thread.sleep(DEFAULT_PAUSE);
 
                     JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataModuleJson));
                     JSONArray moduleData = (JSONArray) jsonObject.get("modules");
 
                     for (int i = 0; i < moduleData.size(); i++) {
+                        String sModuleName = ((JSONObject) moduleData.get(i)).get("name").toString();
+
                         JSONObject pageObj = (JSONObject) moduleData.get(i);
                         JSONObject jsonObjModule = new JSONObject();
+                        JSONArray jsonListUrl = new JSONArray();
 
                         if (Boolean.parseBoolean(pageObj.get("do_assertions").toString())) {
-                            String sModuleName = ((JSONObject) moduleData.get(i)).get("name").toString();
-                            //System.out.println(sSite + ": " + sModuleName);
 
                             By by_xpath = null;
                             try {
-                                by_xpath = By.xpath("//div[contains(@class, \""+((JSONObject) moduleData.get(i)).get("class").toString()+"\")]");
+                                by_xpath = By.xpath(((JSONObject) moduleData.get(i)).get("xpath").toString());
                                 //System.out.println("//div[contains(@class, \""+((JSONObject) moduleData.get(i)).get("class").toString()+"\")]");
                             } catch (NullPointerException e) {
                             }
@@ -160,15 +166,35 @@ public class CrawlingSite {
                             boolean bElement = phDriver.findElements(by_xpath).size() > 0;
 
                             if (bElement) {
-                                System.out.println(sSite + ": " + sModuleName + ": " + sPageUrl + " - " + bElement);
+                                System.out.println(Integer.toString(j)+" of "+Integer.toString(jsonListPage.size())+" " + sSite + ": " + sModuleName + ": " + sPageUrl + " - " + bElement);
+                                boolean bModuleNameExist = false;
+                                try {
+                                    JSONObject objTempModules = (JSONObject) jsonObjSite.get("modules");
+                                    JSONObject objTempModule = (JSONObject) objTempModules.get(sModuleName);
+                                    JSONArray arrTempModuleNames = (JSONArray) objTempModules.get("module_names");
+
+                                    for (Iterator<String> iterator = arrTempModuleNames.iterator(); iterator.hasNext();) {
+                                        if (iterator.next().equals(sModuleName) ) {
+                                            bModuleNameExist = true;
+                                            break;
+                                        }
+                                    }
+
+                                    jsonListUrl = (JSONArray) objTempModule.get("url");
+                                } catch (NullPointerException e) {
+                                }
 
                                 jsonListUrl.add(sPageUrl);
 
+                                if (!bModuleNameExist) {
+                                    jsonModuleNames.add(sModuleName);
+                                }
+
                                 jsonObjModule.put("url", jsonListUrl);
-                                jsonObjModule.put("class", ((JSONObject) moduleData.get(i)).get("class").toString());
+                                jsonObjModule.put("xpath", ((JSONObject) moduleData.get(i)).get("xpath"));
+                                jsonListModule.put("module_names", jsonModuleNames);
 
                                 jsonListModule.put(sModuleName, jsonObjModule);
-                                //jsonObjSite.put(sModuleName, sPageUrl);
                                 jsonObjSite.put("modules", jsonListModule);
 
                                 try {
@@ -184,7 +210,7 @@ public class CrawlingSite {
                                 }
 
                             } else {
-                                System.out.println(sSite + ": " + bElement);
+                                System.out.println(Integer.toString(j)+" of "+Integer.toString(jsonListPage.size())+" " + sSite + ": " + bElement);
                             }
 
                         }
@@ -204,4 +230,33 @@ public class CrawlingSite {
         return true;
     }
 
+
+    public boolean getSiteModule() throws Exception {
+        JSONObject jsonObjSite;
+        JSONObject jsonListModule = new JSONObject();
+        JSONArray jsonModuleNames = new JSONArray();
+
+        try {
+            jsonObjSite = (JSONObject) parser.parse(new FileReader(sPathToFile + sSite + ".json"));
+            jsonListModule = (JSONObject) jsonObjSite.get("modules");
+            jsonModuleNames = (JSONArray) jsonListModule.get("module_names");
+        } catch (ParseException e) {
+        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
+        }
+
+        for (Iterator<String> iterator = jsonModuleNames.iterator(); iterator.hasNext();) {
+            String sModuleName = iterator.next();
+            System.out.println(sSite+": "+sModuleName);
+
+            JSONObject jsonObjModule = (JSONObject) jsonListModule.get(sModuleName);
+            JSONArray jsonListUrl = (JSONArray) jsonObjModule.get("url");
+            for (int i=0; i<jsonListUrl.size(); i++) {
+                System.out.println(jsonListUrl.get(i));
+            }
+        }
+
+
+        return true;
+    }
 }
