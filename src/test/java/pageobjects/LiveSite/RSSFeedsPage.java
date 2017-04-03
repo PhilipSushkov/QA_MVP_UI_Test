@@ -54,10 +54,14 @@ public class RSSFeedsPage extends AbstractPageObject{
                 driver.switchTo().window(currentHandle);
             }
         }
-        //numItems is the first "item" header. So this will verify that there is at least one item on every RSS Page
-        findVisibleElement(numItems);
-
-        return true;
+        try {
+            //numItems is the first "item" header. So this will verify that there is at least one item on every RSS Page
+            findVisibleElement(numItems);
+            return true;
+        }
+        catch(Exception e){
+            return false;
+        }
     }
 
     public boolean SECReleaseRSSExists(){
@@ -90,10 +94,14 @@ public class RSSFeedsPage extends AbstractPageObject{
                 driver.switchTo().window(currentHandle);
             }
         }
-        //numItems is the first "item" header. So this will verify that there is at least one item on every RSS Page
-        findVisibleElement(numItems);
-
-        return true;
+        try {
+            //numItems is the first "item" header. So this will verify that there is at least one item on every RSS Page
+            findVisibleElement(numItems);
+            return true;
+        }
+        catch(Exception e){
+            return false;
+        }
     }
 
     public boolean pressReleaseRSSExists()
@@ -121,10 +129,14 @@ public class RSSFeedsPage extends AbstractPageObject{
                 driver.switchTo().window(currentHandle);
             }
         }
-        //numItems is the first "item" header. So this will verify that there is at least one item on every RSS Page
-        findVisibleElement(numItems);
-
-        return true;
+        try {
+            //numItems is the first "item" header. So this will verify that there is at least one item on every RSS Page
+            findVisibleElement(numItems);
+            return true;
+        }
+        catch(Exception e){
+            return false;
+        }
     }
 
     public boolean eventRSSExists()
@@ -152,10 +164,14 @@ public class RSSFeedsPage extends AbstractPageObject{
                 driver.switchTo().window(currentHandle);
             }
         }
-        //numItems is the first "item" header. So this will verify that there is at least one item on every RSS Page
-        findVisibleElement(numItems);
-
-        return true;
+        try {
+            //numItems is the first "item" header. So this will verify that there is at least one item on every RSS Page
+            findVisibleElement(numItems);
+            return true;
+        }
+        catch(Exception e){
+            return false;
+        }
     }
 
     public boolean presentationRSSExists()
