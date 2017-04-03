@@ -8,8 +8,13 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
 
 import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.*;
 
 
@@ -240,5 +245,50 @@ public class Functions {
         return jsonArr;
     }
 
+    public static String UrlAddSlash(String searchTerm, String sSlash, String sHttp) {
+        searchTerm = searchTerm.trim();
 
+        String sFirstChar = searchTerm.substring(0, 7);
+
+        if (!sFirstChar.equals(sHttp)) {
+            searchTerm = sHttp + searchTerm;
+        }
+
+        String sLastChar = searchTerm.substring(searchTerm.length()-1, searchTerm.length());
+        if (sLastChar.equals(sSlash)) {
+            return searchTerm;
+        } else {
+            searchTerm = searchTerm + sSlash;
+            return searchTerm;
+        }
+
+    }
+
+    public static String GetVersion(WebDriver driver) {
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        String sVersion = js.executeScript("return GetVersionNumber();").toString();
+        return sVersion;
+    }
+
+    public static int GetResponseCode(String urlString) throws IOException {
+        try {
+            URL url = new URL(urlString);
+            HttpURLConnection huc = (HttpURLConnection)url.openConnection();
+            huc.setRequestMethod("GET");
+            //System.out.println(huc.getContentLength());
+            //huc.connect();
+
+            //System.out.println(Integer.toString(huc.getContentLength()));
+            //System.out.println(Integer.toString(huc.getInputStream().available()));
+
+            int iResponseCode = huc.getResponseCode();
+            huc.disconnect();
+
+            return iResponseCode;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return 404;
+        }
+    }
 }
