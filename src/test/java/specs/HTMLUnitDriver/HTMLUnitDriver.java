@@ -4,10 +4,13 @@ import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
 
+import com.gargoylesoftware.htmlunit.BrowserVersion;
+import com.gargoylesoftware.htmlunit.WebClient;
 import org.apache.http.util.EntityUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriverService;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -123,14 +126,15 @@ public class HTMLUnitDriver {
         String urlHome = "https://aestest.s1.q4web.newtest/admin/";
 
         //WebDriver driver = new ChromeDriver();
-        //HtmlUnitDriver driver = new HtmlUnitDriver(BrowserVersion.CHROME);
+        WebClient webClient = new WebClient(BrowserVersion.FIREFOX_38);
+        HtmlUnitDriver driver = new HtmlUnitDriver(BrowserVersion.CHROME);
         //HtmlUnitDriver driver = new HtmlUnitDriver();
         //driver.setJavascriptEnabled(true);
 
-        DesiredCapabilities caps = new DesiredCapabilities();
-        caps.setJavascriptEnabled(true);
-        caps.setCapability(PhantomJSDriverService.PHANTOMJS_CLI_ARGS, new String[] {"--web-security=no", "--ignore-ssl-errors=yes"});
-        WebDriver driver = new PhantomJSDriver(caps);
+        //DesiredCapabilities caps = new DesiredCapabilities();
+        //caps.setJavascriptEnabled(true);
+        //caps.setCapability(PhantomJSDriverService.PHANTOMJS_CLI_ARGS, new String[] {"--web-security=no", "--ignore-ssl-errors=yes"});
+        //WebDriver driver = new PhantomJSDriver(caps);
 
         //WebDriver driver = new PhantomJSDriver(service_args=['--ignore-ssl-errors=true']);
         //WebDriver driver = new PhantomJSDriver();
