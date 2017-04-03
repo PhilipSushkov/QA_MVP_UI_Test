@@ -27,7 +27,7 @@ public class CrawlingSite {
     private String sSite, sPathToFile;
     private static final String sSlash = "/";
     private static final String sHttp = "http://";
-    private static final long DEFAULT_PAUSE = 2000;
+    private static final long DEFAULT_PAUSE = 1500;
     private JSONParser parser;
 
     public CrawlingSite(WebDriver phDriver, String sSite, String sPathToFile) {
@@ -92,12 +92,12 @@ public class CrawlingSite {
             }
 
             phDriver.get(sURLSitemap);
+            int i=0;
 
             List<WebElement> eUrls = phDriver.findElements(By.tagName("loc"));
             for (WebElement eUrl:eUrls) {
-                if (Functions.GetResponseCode(eUrl.getAttribute("textContent")) != 404) {
+                if ((Functions.GetResponseCode(eUrl.getAttribute("textContent")) != 404) && (Functions.GetResponseCode(eUrl.getAttribute("textContent")) != 500)) {
                     jsonListPage.add( eUrl.getAttribute("textContent"));
-                    int i=0;
                     System.out.println(Integer.toString(i++)+" "+eUrl.getAttribute("textContent") + " " + Integer.toString(Functions.GetResponseCode(eUrl.getAttribute("textContent"))));
                 }
             }

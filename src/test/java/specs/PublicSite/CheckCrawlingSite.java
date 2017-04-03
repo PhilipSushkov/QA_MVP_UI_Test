@@ -52,7 +52,7 @@ public class CheckCrawlingSite {
         Assert.assertEquals(crawlingSite.getSiteVersion(), sSiteVersion, "Site Version number is not correct for " + site);
     }
 
-    @Test(dataProvider=SITE_DATA, threadPoolSize=NUM_THREADS, priority=2, enabled=false)
+    @Test(dataProvider=SITE_DATA, threadPoolSize=NUM_THREADS, priority=2, enabled=true)
     public void crawlSiteMap(String site) throws Exception {
         crawlingSite = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile);
         Assert.assertTrue(crawlingSite.getSiteMap(), "sitemap.ashx file doesn't exist for " + site);
