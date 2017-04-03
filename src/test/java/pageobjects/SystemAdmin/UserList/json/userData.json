@@ -1,0 +1,26 @@
+{
+  "user": [
+    {
+      "do_assertions": true,
+      "email": "user_01@gmail.com",
+      "email_ch": "user_01@yahoo.com",
+      "user_name": "user_01",
+      "password": "qwerty@01",
+      "roles": ["Public Site"],
+      "receives_workflow_email": false,
+      "receives_digest_dmail": false,
+      "active": true,
+      "sites": ["Public Site"]
+    },
+    {
+      "do_assertions": true,
+      "email": "user_02@gmail.com",
+      "user_name": "user_02",
+      "password": "qwerty@01",
+      "roles": ["Public Site", "System Administrator"],
+      "receives_workflow_email": true,
+      "receives_digest_dmail": false,
+      "active": true,
+      "sites": ["Admin Site", "Public Site"]
+    }]
+}

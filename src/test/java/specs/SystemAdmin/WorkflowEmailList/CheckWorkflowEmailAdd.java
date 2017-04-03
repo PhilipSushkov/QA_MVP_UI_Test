@@ -32,7 +32,7 @@ public class CheckWorkflowEmailAdd extends AbstractSpec {
     private static String sPathToFile, sDataFileJson;
     private static JSONParser parser;
 
-    private final String DATA="getData", WORKFLOW_EMAIL_NAME="description", PAGE_NAME="Workflow Email";;
+    private final String DATA="getData", WORKFLOW_EMAIL_NAME="description", PAGE_NAME="Workflow Email";
 
     @BeforeTest
     public void setUp() throws Exception {
@@ -62,8 +62,6 @@ public class CheckWorkflowEmailAdd extends AbstractSpec {
         String expectedTitleList = "Workflow Email List";
         String expectedTitleEdit = "Workflow Email Edit";
 
-        //dashboard.openPageFromMenu(systemAdminMenuButton, workflowEmailListMenuItem);
-
         Assert.assertEquals(workflowEmailAdd.getTitle(), expectedTitleEdit, "Actual "+PAGE_NAME+" Edit page Title doesn't match to expected");
         Assert.assertEquals(workflowEmailAdd.saveWorkflowEmail(data, sWorkflowEmailName), expectedTitleList, "New "+PAGE_NAME+" didn't save properly");
     }
@@ -73,16 +71,12 @@ public class CheckWorkflowEmailAdd extends AbstractSpec {
         String sWorkflowEmailName = data.get(WORKFLOW_EMAIL_NAME).toString();
         //System.out.println(data.get(WORKFLOW_EMAIL_NAME).toString());
 
-        //dashboard.openPageFromMenu(systemAdminMenuButton, workflowEmailListMenuItem);
-
         Assert.assertTrue(workflowEmailAdd.checkWorkflowEmail(data, sWorkflowEmailName), "New "+PAGE_NAME+" doesn't fit to entry data (after Save)");
     }
 
     @Test(dataProvider=DATA, priority=3)
     public void editWorkflowEmail(JSONObject data) throws Exception {
         String sWorkflowEmailName = data.get(WORKFLOW_EMAIL_NAME).toString();
-
-        //ashboard.openPageFromMenu(systemAdminMenuButton, workflowEmailListMenuItem);
 
         Assert.assertTrue(workflowEmailAdd.editWorkflowEmail(data, sWorkflowEmailName), PAGE_NAME+" didn't change properly (after Save)");
     }
@@ -91,16 +85,12 @@ public class CheckWorkflowEmailAdd extends AbstractSpec {
     public void checkWorkflowEmailCh(JSONObject data) throws Exception {
         String sWorkflowEmailName = data.get(WORKFLOW_EMAIL_NAME).toString();
 
-        //dashboard.openPageFromMenu(systemAdminMenuButton, workflowEmailListMenuItem);
-
         Assert.assertTrue(workflowEmailAdd.checkWorkflowEmailCh(data, sWorkflowEmailName), "New "+PAGE_NAME+" doesn't fit to change data (after Edit)");
     }
 
     @Test(dataProvider=DATA, priority=5)
     public void removeWorkflowEmail(JSONObject data) throws Exception {
         String sWorkflowEmailName = data.get(WORKFLOW_EMAIL_NAME).toString();
-
-        //dashboard.openPageFromMenu(systemAdminMenuButton, workflowEmailListMenuItem);
 
         Assert.assertTrue(workflowEmailAdd.removeWorkflowEmail(sWorkflowEmailName), "New "+PAGE_NAME+" shouldn't be shown in "+PAGE_NAME+" List (after Delete)");
     }
