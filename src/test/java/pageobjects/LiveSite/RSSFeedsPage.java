@@ -5,9 +5,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import pageobjects.AbstractPageObject;
-
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import static specs.AbstractSpec.propUIPublicSite;
 
@@ -44,6 +43,23 @@ public class RSSFeedsPage extends AbstractPageObject{
                 doesElementExist(pressReleaseFeeds);   //check for icon and each feed. NOT COMPLETE
     }
 
+    public boolean SECRSSWorks(){
+
+        findElement(SECFeeds).click();
+        String currentHandle = driver.getWindowHandle();
+        List<String> browserTabs = new ArrayList<>(driver.getWindowHandles());
+
+        for (String handle: browserTabs){
+            if (handle != currentHandle){
+                driver.switchTo().window(currentHandle);
+            }
+        }
+        //numItems is the first "item" header. So this will verify that there is at least one item on every RSS Page
+        findVisibleElement(numItems);
+
+        return true;
+    }
+
     public boolean SECReleaseRSSExists(){
 
         boolean results = false;
@@ -63,6 +79,23 @@ public class RSSFeedsPage extends AbstractPageObject{
 
     }
 
+    public boolean pressReleaseRSSWorks(){
+
+        findElement(pressReleaseFeeds).click();
+        String currentHandle = driver.getWindowHandle();
+        List<String> browserTabs = new ArrayList<>(driver.getWindowHandles());
+
+        for (String handle: browserTabs){
+            if (handle != currentHandle){
+                driver.switchTo().window(currentHandle);
+            }
+        }
+        //numItems is the first "item" header. So this will verify that there is at least one item on every RSS Page
+        findVisibleElement(numItems);
+
+        return true;
+    }
+
     public boolean pressReleaseRSSExists()
     {
         String url = findElement(pressReleaseFeeds).getAttribute("href");
@@ -77,6 +110,23 @@ public class RSSFeedsPage extends AbstractPageObject{
         }
     }
 
+    public boolean eventRSSWork(){
+
+        findElement(eventsFeeds).click();
+        String currentHandle = driver.getWindowHandle();
+        List<String> browserTabs = new ArrayList<>(driver.getWindowHandles());
+
+        for (String handle: browserTabs){
+            if (handle != currentHandle){
+                driver.switchTo().window(currentHandle);
+            }
+        }
+        //numItems is the first "item" header. So this will verify that there is at least one item on every RSS Page
+        findVisibleElement(numItems);
+
+        return true;
+    }
+
     public boolean eventRSSExists()
     {
         String url = findElement(eventsFeeds).getAttribute("href");
@@ -89,6 +139,23 @@ public class RSSFeedsPage extends AbstractPageObject{
             System.out.println(url);
             return false;
         }
+    }
+
+    public boolean presentationRSSWork(){
+
+        findElement(presentationFeeds).click();
+        String currentHandle = driver.getWindowHandle();
+        List<String> browserTabs = new ArrayList<>(driver.getWindowHandles());
+
+        for (String handle: browserTabs){
+            if (handle != currentHandle){
+                driver.switchTo().window(currentHandle);
+            }
+        }
+        //numItems is the first "item" header. So this will verify that there is at least one item on every RSS Page
+        findVisibleElement(numItems);
+
+        return true;
     }
 
     public boolean presentationRSSExists()
