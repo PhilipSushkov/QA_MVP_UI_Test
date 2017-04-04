@@ -48,4 +48,9 @@
             <class name="specs.PreviewSite.CheckPreviewSearch" />
         </classes>
     </test>
+    <test name="CheckRSSFeeds">
+        <classes>
+            <class name="specs.PreviewSite.RSSPreviewPage" />
+        </classes>
+    </test>
 </suite>

@@ -46,4 +46,9 @@
             <class name="specs.PublicSite.CheckSearch" />
         </classes>
     </test>
+    <test name="CheckRSSFeeds">
+        <classes>
+            <class name="specs.PublicSite.CheckRSSFeedPage" />
+        </classes>
+    </test>
 </suite>
