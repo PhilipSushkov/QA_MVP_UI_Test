@@ -13,7 +13,7 @@
       "sites": ["Public Site"]
     },
     {
-      "do_assertions": true,
+      "do_assertions": false,
       "email": "user_02@gmail.com",
       "user_name": "user_02",
       "password": "qwerty@01",

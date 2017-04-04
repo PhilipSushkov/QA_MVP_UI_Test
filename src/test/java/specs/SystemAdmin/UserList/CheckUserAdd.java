@@ -56,12 +56,12 @@ public class CheckUserAdd extends AbstractSpec {
 
     @Test(dataProvider=DATA, priority=1)
     public void saveUser(JSONObject data) throws Exception {
-        String sWorkflowEmailName = data.get(USER_NAME).toString();
+        String sUserName = data.get(USER_NAME).toString();
         String expectedTitleList = "User List";
         String expectedTitleEdit = "User Edit";
 
         Assert.assertEquals(userAdd.getTitle(), expectedTitleEdit, "Actual "+PAGE_NAME+" Edit page Title doesn't match to expected");
-        //Assert.assertEquals(userAdd.saveUser(data, sWorkflowEmailName), expectedTitleList, "New "+PAGE_NAME+" didn't save properly");
+        Assert.assertEquals(userAdd.saveUser(data, sUserName), expectedTitleList, "New "+PAGE_NAME+" didn't save properly");
     }
 
     @DataProvider
