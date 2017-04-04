@@ -52,16 +52,23 @@ public class CheckEmailAlertPage extends AbstractSpec {
 
         Assert.assertTrue(emailAlertsPage.clickAllButtonsWorks(buttonsActivated)
                 , "Buttons did not behave as expected");
-        Assert.assertFalse(emailAlertsPage.clickSubmitWorks()
-                , "Selecting no options for the mailing list still allowed submitting");
+        emailAlertsPage.clickAllButtons();
 
         Assert.assertFalse(emailAlertsPage.clickSubmitWorks()
                 , "Entering no credentials allowed submitting");
+
+        emailAlertsPage.enterSubEmailAddress(rightEmail);
+        Assert.assertFalse(emailAlertsPage.clickSubmitWorks()
+                , "Selecting no options for the mailing list still allowed submitting");
+
+        emailAlertsPage.clearAllTextFields();
         emailAlertsPage.enterSubEmailAddress(wrongEmail);
         Assert.assertFalse(emailAlertsPage.clickSubmitWorks()
-                , "Entering an incorrectly formatted password works");
+                , "Entering an incorrectly formatted email works");
+
         emailAlertsPage.clearAllTextFields();
         emailAlertsPage.enterSubEmailAddress(rightEmail);
+        emailAlertsPage.clickAllButtons();
         try{
             Assert.assertTrue(emailAlertsPage.clickSubmitWorks(), "Submitting doesn't work");
         }catch (TimeoutException e){
