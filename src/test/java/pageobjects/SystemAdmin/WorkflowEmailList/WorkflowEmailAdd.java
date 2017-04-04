@@ -11,7 +11,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import pageobjects.AbstractPageObject;
-import pageobjects.PageAdmin.WorkflowState;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;

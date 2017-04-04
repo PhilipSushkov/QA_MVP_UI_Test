@@ -23,10 +23,7 @@ import java.util.Calendar;
 
 public class CheckStockInformationPage extends AbstractSpec{
 
-    private final String Q4WebVersionNumber = "4.4.0.7";
-
     //// WHEN ADDING A TEST TO THIS CLASS, ADD A ENTRY TO IT IN CheckPreviewSite.java \\\\
-
 
     /** Changes necessary to make include removing all the "new XXX(drivers).YYY with a declaration, instead, in the @Before
      and replacing it in all pieces of code. DONE
@@ -48,7 +45,6 @@ public class CheckStockInformationPage extends AbstractSpec{
         Assert.assertTrue(homePage.logoIsPresent(), "Home page of public site has not been loaded.");
 
     }
-
 
     @Test
     public void stockChartXigniteWorks(){

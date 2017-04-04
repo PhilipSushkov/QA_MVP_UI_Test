@@ -13,7 +13,8 @@ import specs.PublicSite.CheckPublicSite;
  */
 public class MainPreviewPage extends AbstractSpec {
 
-    private final String Q4WebVersionNumber = "4.4.0.12";
+    //private final String Q4WebVersionNumber = "4.4.0.12";
+    private String Q4WebVersionNumber;
 
     //// THERE SHOULD BE ONE TEST HERE FOR EVERY TEST ON CheckPublicSite.java \\\\
 
@@ -22,6 +23,7 @@ public class MainPreviewPage extends AbstractSpec {
 
     @BeforeTest
     public void goToPreviewSite() throws Exception {
+        Q4WebVersionNumber = propUIPublicSite.getProperty("siteVersion");
         new LoginPage(driver).loginUser().previewSite().goToInvestorsPage();
         homePage = new HomePage(driver);
     }

@@ -12,7 +12,7 @@ import specs.AbstractSpec;
  */
 public class CheckMainPage extends AbstractSpec {
 
-    private final String Q4WebVersionNumber = "4.4.0.12";
+    private String Q4WebVersionNumber;
 
     //// WHEN ADDING A TEST TO THIS CLASS, ADD A ENTRY TO IT IN CheckPreviewSite.java \\\\
 
@@ -32,7 +32,7 @@ public class CheckMainPage extends AbstractSpec {
 
         driver.get("http://chicagotest.q4web.com/English/Investors/default.aspx");
         //driver.get("http://fiesta.q4web.newtest/stock-information/default.aspx");
-
+        Q4WebVersionNumber = propUIPublicSite.getProperty("siteVersion");
 
         homePage = new HomePage(driver);
 
