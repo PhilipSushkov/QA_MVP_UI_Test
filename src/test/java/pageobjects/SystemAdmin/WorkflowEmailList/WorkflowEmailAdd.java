@@ -343,7 +343,7 @@ public class WorkflowEmailAdd extends AbstractPageObject {
 
             waitForElement(deleteBtn);
 
-            // Compare field values with change data
+            // Compare field values with changed data
             try {
                 if (!new Select(findElement(systemTaskSelect)).getFirstSelectedOption().getText().equals(data.get("system_task_ch").toString())) {
                     return false;
