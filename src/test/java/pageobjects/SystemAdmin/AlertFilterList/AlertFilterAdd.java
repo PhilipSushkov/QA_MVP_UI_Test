@@ -99,20 +99,18 @@ public class AlertFilterAdd extends AbstractPageObject {
                 if (Boolean.parseBoolean(data.get("active").toString())) {
                     if (!Boolean.parseBoolean(findElement(activeIsChk).getAttribute("checked"))) {
                         findElement(activeIsChk).click();
-                        //jsonObj.put("active", true);
+                        jsonObj.put("active", true);
                     } else {
                     }
                 } else {
                     if (!Boolean.parseBoolean(findElement(activeIsChk).getAttribute("checked"))) {
                     } else {
                         findElement(activeIsChk).click();
-                        //jsonObj.put("active", false);
+                        jsonObj.put("active", false);
                     }
                 }
             } catch (NullPointerException e) {
             }
-
-            jsonObj.put("active", Boolean.parseBoolean(data.get("active").toString()));
 
 
             jsonMain.put(name, jsonObj);
