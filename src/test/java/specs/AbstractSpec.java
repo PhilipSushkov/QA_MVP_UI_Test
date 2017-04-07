@@ -7,6 +7,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxProfile;
+import org.openqa.selenium.firefox.internal.ProfilesIni;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriverService;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -41,6 +43,7 @@ public abstract class AbstractSpec extends util.Functions {
     private static final String BROWSER_STACK_URL = "http://jencampbell2:6jEURzbszfaWhLJc7XWx@hub.browserstack.com/wd/hub";
     private static final String BUILD_ID = RandomStringUtils.randomAlphanumeric(6);
     public static final long DEFAULT_TIMEOUT = 5L;
+    private static final long DEFAULT_PAUSE = 2500;
 
     public static URL desktopUrl, desktopUrlPublic;
     public static BrowserStackCapability browser;
@@ -101,6 +104,7 @@ public abstract class AbstractSpec extends util.Functions {
                 break;
             case PRODUCTION:
                 setupChromeLocalDriver();
+                //setupFirefoxLocalDriver();
                 //setupWebDriver(testContext.getName());
                 break;
         }
@@ -123,8 +127,7 @@ public abstract class AbstractSpec extends util.Functions {
         //System.out.println(driver.getPageSource());
     }
 
-    private void setupChromeLocalDriver() {
-
+    private void setupChromeLocalDriver() throws InterruptedException {
         DesiredCapabilities capabilities = DesiredCapabilities.chrome();
         ChromeOptions options = new ChromeOptions();
         options.addArguments("incognito");
@@ -137,19 +140,29 @@ public abstract class AbstractSpec extends util.Functions {
         //driver.manage().window().setSize(new Dimension(1400, 1400));
         driver.get(desktopUrl.toString());
 
-        /*
-        driver = LocalDriverFactory.createInstance();
-        LocalDriverManager.setWebDriver(driver);
-        System.out.println("Thread id = " + Thread.currentThread().getId());
-        System.out.println("Hashcode of webDriver instance = " + LocalDriverManager.getDriver().hashCode());
-        LocalDriverManager.getDriver().get(desktopUrl.toString());
-        */
+        System.out.println(driver.getCurrentUrl());
+
+        int attempts = 5;
+        for (int i=0; i<attempts; i++) {
+            if (!driver.getCurrentUrl().contains(desktopUrl.toString())) {
+                System.out.println("Home site page didn't download yet: "+desktopUrl.toString());
+                System.out.println(driver.getCurrentUrl());
+                //driver.navigate().refresh();
+                driver.get(desktopUrl.toString());
+                Thread.sleep(DEFAULT_PAUSE);
+            } else {
+                break;
+            }
+        }
 
     }
 
     private void setupFirefoxLocalDriver() {
+        FirefoxProfile firefoxProfile = new FirefoxProfile();
+        firefoxProfile.setPreference("browser.privatebrowsing.autostart", true);
         driver = new FirefoxDriver();
         driver.manage().timeouts().implicitlyWait(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
+        driver.manage().timeouts().pageLoadTimeout(40, TimeUnit.SECONDS); //Increased to 20 to perhaps reduce timeouts?
         driver.manage().window().setSize(new Dimension(1400, 1400));
         driver.get(desktopUrl.toString());
     }

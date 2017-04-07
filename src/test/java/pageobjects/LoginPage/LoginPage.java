@@ -33,8 +33,8 @@ public class LoginPage extends Page {
         findElement(emailField).sendKeys("admintest"+randNum);
         findElement(passwordField).sendKeys("qwerty@01");
 
-        //findElement(emailField).sendKeys("admin");
-        //findElement(passwordField).sendKeys("Song2Q4!_");
+        //findElement(emailField).sendKeys("philips");
+        //findElement(passwordField).sendKeys("q4pass1234!");
 
         pause(1000L);
         retryClick(loginButton);

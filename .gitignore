@@ -5,3 +5,4 @@
 target/
 *.orig
 chromedriver.exe
+chromedriver
