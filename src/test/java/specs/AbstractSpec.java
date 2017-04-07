@@ -140,14 +140,13 @@ public abstract class AbstractSpec extends util.Functions {
         //driver.manage().window().setSize(new Dimension(1400, 1400));
         driver.get(desktopUrl.toString());
 
-        System.out.println(driver.getCurrentUrl());
+        //System.out.println(driver.getCurrentUrl());
 
         int attempts = 5;
         for (int i=0; i<attempts; i++) {
             if (!driver.getCurrentUrl().contains(desktopUrl.toString())) {
                 System.out.println("Home site page didn't download yet: "+desktopUrl.toString());
-                System.out.println(driver.getCurrentUrl());
-                //driver.navigate().refresh();
+                //System.out.println(driver.getCurrentUrl());
                 driver.get(desktopUrl.toString());
                 Thread.sleep(DEFAULT_PAUSE);
             } else {

@@ -56,8 +56,8 @@ public class UserAdd extends AbstractPageObject {
 
         parser = new JSONParser();
 
-        sPathToFile = System.getProperty("user.dir") + propUISystemAdmin.getProperty("dataPath_WorkflowEmailList");
-        sFileJson = propUISystemAdmin.getProperty("json_WorkflowEmails");
+        sPathToFile = System.getProperty("user.dir") + propUISystemAdmin.getProperty("dataPath_UserList");
+        sFileJson = propUISystemAdmin.getProperty("json_Users");
     }
 
     public String getTitle() {
@@ -88,13 +88,13 @@ public class UserAdd extends AbstractPageObject {
             }
 
 
-            email = data.get("email").toString();
+            user_name = data.get("user_name").toString()+randNum;
+            findElement(userNameField).sendKeys(user_name);
+            jsonObj.put("user_name", user_name);
+
+            email = user_name + data.get("email").toString();
             findElement(emailField).sendKeys(email);
             jsonObj.put("email", email);
-
-            user_name = data.get("user_name").toString();
-            findElement(userNameField).sendKeys(user_name+randNum);
-            jsonObj.put("user_name", user_name);
 
             password = data.get("password").toString();
             findElement(passwordField).sendKeys(password);
@@ -102,7 +102,7 @@ public class UserAdd extends AbstractPageObject {
 
             // Set roles values
             List<WebElement> rolesListChkElements = findElements(rolesListChk);
-            Boolean bGroup = false;
+            Boolean bRolesGroup = false;
             for (WebElement rolesListChkElement:rolesListChkElements)
             {
                 //System.out.println(rolesListChkElement.getAttribute("textContent"));
@@ -112,18 +112,18 @@ public class UserAdd extends AbstractPageObject {
                 jsonObj.put("roles", roles);
 
                 for (Iterator<String> iterator = roles.iterator(); iterator.hasNext(); roles.size()) {
-                    String user_group = iterator.next();
-                    if (group.equals(user_group)) {
-                        bGroup = true;
+                    String roles_group = iterator.next();
+                    if (group.equals(roles_group)) {
+                        bRolesGroup = true;
                         break;
                     } else {
-                        bGroup = false;
+                        bRolesGroup = false;
                     }
                 }
 
                 By chkBox = By.xpath("//label[(text()='" + group + "')]/parent::td/input[contains(@id, 'chkRolesList')]");
 
-                if (bGroup) {
+                if (bRolesGroup) {
                     if (!Boolean.parseBoolean(findElement(chkBox).getAttribute("checked"))) {
                         findElement(chkBox).click();
                         Thread.sleep(500);
@@ -141,22 +141,97 @@ public class UserAdd extends AbstractPageObject {
 
             // Save Active checkbox
             active = Boolean.parseBoolean(data.get("active").toString());
+            jsonObj.put("active", Boolean.parseBoolean(data.get("active").toString()));
             if (active) {
                 if (!Boolean.parseBoolean(findElement(activeChk).getAttribute("checked"))) {
                     findElement(activeChk).click();
-                    jsonObj.put("active", true);
+                    //jsonObj.put("active", true);
                 } else {
                 }
             } else {
                 if (!Boolean.parseBoolean(findElement(activeChk).getAttribute("checked"))) {
                 } else {
                     findElement(activeChk).click();
-                    jsonObj.put("active", false);
+                    //jsonObj.put("active", false);
                 }
             }
 
-            /*
-            //findElement(saveBtn).click();
+            // Save Receives Workflow Email checkbox
+            receives_workflow_email = Boolean.parseBoolean(data.get("receives_workflow_email").toString());
+            jsonObj.put("receives_workflow_email", Boolean.parseBoolean(data.get("receives_workflow_email").toString()));
+            if (receives_workflow_email) {
+                if (!Boolean.parseBoolean(findElement(receivesWorkflowEmailChk).getAttribute("checked"))) {
+                    findElement(receivesWorkflowEmailChk).click();
+                    //jsonObj.put("receives_workflow_email", true);
+                } else {
+                }
+            } else {
+                if (!Boolean.parseBoolean(findElement(receivesWorkflowEmailChk).getAttribute("checked"))) {
+                } else {
+                    findElement(receivesWorkflowEmailChk).click();
+                    //jsonObj.put("receives_workflow_email", false);
+                }
+            }
+
+            // Save Receives Digest Email checkbox
+            receives_digest_email = Boolean.parseBoolean(data.get("receives_digest_email").toString());
+            jsonObj.put("receives_digest_email", Boolean.parseBoolean(data.get("receives_digest_email").toString()));
+            if (receives_digest_email) {
+                if (!Boolean.parseBoolean(findElement(receivesDigestEmailChk).getAttribute("checked"))) {
+                    findElement(receivesDigestEmailChk).click();
+                    //jsonObj.put("receives_digest_email", true);
+                } else {
+                }
+            } else {
+                if (!Boolean.parseBoolean(findElement(receivesDigestEmailChk).getAttribute("checked"))) {
+                } else {
+                    findElement(receivesDigestEmailChk).click();
+                    //jsonObj.put("receives_digest_email", false);
+                }
+            }
+
+
+            // Set roles values
+            List<WebElement> sitesListChkElements = findElements(sitesListChk);
+            Boolean bSitesGroup = false;
+            for (WebElement sitesListChkElement:sitesListChkElements)
+            {
+                //System.out.println(rolesListChkElement.getAttribute("textContent"));
+                String group = sitesListChkElement.getAttribute("textContent");
+
+                sites = (JSONArray) data.get("sites");
+                jsonObj.put("sites", sites);
+
+                for (Iterator<String> iterator = sites.iterator(); iterator.hasNext(); sites.size()) {
+                    String site_group = iterator.next();
+                    if (group.equals(site_group)) {
+                        bSitesGroup = true;
+                        break;
+                    } else {
+                        bSitesGroup = false;
+                    }
+                }
+
+                By chkBox = By.xpath("//label[(text()='" + group + "')]/parent::td/input[contains(@id, 'chkSiteList')]");
+
+                if (bSitesGroup) {
+                    if (!Boolean.parseBoolean(findElement(chkBox).getAttribute("checked"))) {
+                        findElement(chkBox).click();
+                        Thread.sleep(500);
+                    } else {
+                    }
+                } else {
+                    if (!Boolean.parseBoolean(findElement(chkBox).getAttribute("checked"))) {
+                    } else {
+                        findElement(chkBox).click();
+                        Thread.sleep(500);
+                    }
+                }
+
+            }
+
+
+            findElement(saveBtn).click();
             Thread.sleep(DEFAULT_PAUSE);
 
             jsonMain.put(name, jsonObj);
@@ -176,21 +251,445 @@ public class UserAdd extends AbstractPageObject {
 
             System.out.println(name + ": "+PAGE_NAME+" has been created");
             return findElement(moduleTitle).getText();
-            */
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        //return null;
-        return "User List";
+        return null;
+    }
+
+
+    public Boolean checkUser(JSONObject data, String name) {
+        JSONObject jsonMain = new JSONObject();
+        JSONObject jsonObj = new JSONObject();
+        String user_name;
+
+        try {
+            FileReader readFile = new FileReader(sPathToFile + sFileJson);
+            jsonMain = (JSONObject) parser.parse(readFile);
+            jsonObj = (JSONObject) jsonMain.get(name);
+        } catch (ParseException e) {
+        } catch (IOException e) {
+        }
+
+        user_name = jsonObj.get("user_name").toString();
+
+        By editBtn = By.xpath("//td[(text()='" + user_name + "')]/parent::tr/td/input[contains(@id, 'btnEdit')]");
+
+        try {
+            waitForElement(moduleTitle);
+            findElement(editBtn).click();
+            waitForElement(saveBtn);
+
+            if (findElement(userNameField).getAttribute("value").equals(user_name)) {
+                //System.out.println("Filter Name is correct");
+
+                // Compare field values with entry data
+                try {
+                    if (!findElement(emailField).getAttribute("value").contains(data.get("email").toString())) {
+                        return false;
+                    }
+                } catch (NullPointerException e) {
+                }
+
+                try {
+                    if (!findElement(activeChk).getAttribute("checked").equals(data.get("active").toString())) {
+                        return false;
+                    }
+                } catch (NullPointerException e) {
+                }
+
+                try {
+                    if (!findElement(receivesWorkflowEmailChk).getAttribute("checked").equals(data.get("receives_workflow_email").toString())) {
+                        return false;
+                    }
+                } catch (NullPointerException e) {
+                }
+
+                try {
+                    if (!findElement(receivesDigestEmailChk).getAttribute("checked").equals(data.get("receives_digest_email").toString())) {
+                        return false;
+                    }
+                } catch (NullPointerException e) {
+                }
+
+                // Compare Roles checkbox values with entry data
+                List<WebElement> rolesListChkElements = findElements(rolesListChk);
+                Boolean bRolesGroup = false;
+                for (WebElement rolesListChkElement:rolesListChkElements)
+                {
+                    //System.out.println(rolesListChkElement.getAttribute("textContent"));
+                    String group = rolesListChkElement.getAttribute("textContent");
+
+                    JSONArray roles = (JSONArray) data.get("roles");
+
+                    for (Iterator<String> iterator = roles.iterator(); iterator.hasNext(); roles.size()) {
+                        String roles_group = iterator.next();
+                        if (group.equals(roles_group)) {
+                            bRolesGroup = true;
+                            break;
+                        } else {
+                            bRolesGroup = false;
+                        }
+                    }
+
+                    By chkBox = By.xpath("//label[(text()='" + group + "')]/parent::td/input[contains(@id, 'chkRolesList')]");
+
+                    if (bRolesGroup) {
+                        if (!Boolean.parseBoolean(findElement(chkBox).getAttribute("checked"))) {
+                            return false;
+                        } else {
+                        }
+                    } else {
+                        if (!Boolean.parseBoolean(findElement(chkBox).getAttribute("checked"))) {
+                        } else {
+                            return false;
+                        }
+                    }
+
+                }
+
+
+                // Compare Sites checkbox values with entry data
+                List<WebElement> sitesListChkElements = findElements(sitesListChk);
+                Boolean bSitesGroup = false;
+                for (WebElement sitesListChkElement:sitesListChkElements)
+                {
+                    //System.out.println(rolesListChkElement.getAttribute("textContent"));
+                    String group = sitesListChkElement.getAttribute("textContent");
+
+                    JSONArray sites = (JSONArray) data.get("sites");
+
+                    for (Iterator<String> iterator = sites.iterator(); iterator.hasNext(); sites.size()) {
+                        String sites_group = iterator.next();
+                        if (group.equals(sites_group)) {
+                            bSitesGroup = true;
+                            break;
+                        } else {
+                            bSitesGroup = false;
+                        }
+                    }
+
+                    By chkBox = By.xpath("//label[(text()='" + group + "')]/parent::td/input[contains(@id, 'chkSiteList')]");
+
+                    if (bSitesGroup) {
+                        if (!Boolean.parseBoolean(findElement(chkBox).getAttribute("checked"))) {
+                            return false;
+                        } else {
+                        }
+                    } else {
+                        if (!Boolean.parseBoolean(findElement(chkBox).getAttribute("checked"))) {
+                        } else {
+                            return false;
+                        }
+                    }
+
+                }
+
+
+
+                // Save Url
+                URL url = new URL(getUrl());
+                String[] params = url.getQuery().split("&");
+                JSONObject jsonURLQuery = new JSONObject();
+                for (String param:params) {
+                    jsonURLQuery.put(param.split("=")[0], param.split("=")[1]);
+                }
+                jsonObj.put("url_query", jsonURLQuery);
+
+                int userID = Integer.parseInt(jsonURLQuery.get("UserID").toString());
+
+                try {
+                    FileWriter writeFile = new FileWriter(sPathToFile + sFileJson);
+                    writeFile.write(jsonMain.toJSONString().replace("\\", ""));
+                    writeFile.flush();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                System.out.println(name + ": "+PAGE_NAME+" has been checked");
+                return userID > 0;
+            }
+
+            return false;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public Boolean editUser(JSONObject data, String name) throws InterruptedException {
+        JSONObject jsonMain = new JSONObject();
+        JSONObject jsonObj = new JSONObject();
+        String user_name;
+
+        try {
+            FileReader readFile = new FileReader(sPathToFile + sFileJson);
+            jsonMain = (JSONObject) parser.parse(readFile);
+            jsonObj = (JSONObject) jsonMain.get(name);
+        } catch (ParseException e) {
+        } catch (IOException e) {
+        }
+
+        user_name = jsonObj.get("user_name").toString();
+
+        By editBtn = By.xpath("//td[(text()='" + user_name + "')]/parent::tr/td/input[contains(@id, 'btnEdit')]");
+
+        try {
+
+            waitForElement(moduleTitle);
+            String pageUrl = getPageUrl(jsonMain, name);
+            driver.get(pageUrl);
+
+            waitForElement(deleteBtn);
+
+            try {
+                if (!data.get("email_ch").toString().isEmpty()) {
+                    String sEmail_ch = user_name + data.get("email_ch").toString();
+                    findElement(emailField).clear();
+                    findElement(emailField).sendKeys(sEmail_ch);
+                    jsonObj.put("email", sEmail_ch);
+                }
+            } catch (NullPointerException e) {}
+
+            Thread.sleep(DEFAULT_PAUSE);
+            findElement(saveBtn).click();
+
+            try {
+                FileWriter writeFile = new FileWriter(sPathToFile + sFileJson);
+                writeFile.write(jsonMain.toJSONString().replace("\\", ""));
+                writeFile.flush();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            Thread.sleep(DEFAULT_PAUSE);
+            waitForElement(editBtn);
+
+            System.out.println(name + ": " + PAGE_NAME + " has been changed");
+            return true;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public Boolean checkUserCh(JSONObject data, String name) {
+        JSONObject jsonMain = new JSONObject();
+        JSONObject jsonObj = new JSONObject();
+        String user_name;
+
+        try {
+            FileReader readFile = new FileReader(sPathToFile + sFileJson);
+            jsonMain = (JSONObject) parser.parse(readFile);
+            jsonObj = (JSONObject) jsonMain.get(name);
+        } catch (ParseException e) {
+        } catch (IOException e) {
+        }
+
+        user_name = jsonObj.get("user_name").toString();
+
+        By editBtn = By.xpath("//td[(text()='" + user_name + "')]/parent::tr/td/input[contains(@id, 'btnEdit')]");
+
+        try {
+            waitForElement(moduleTitle);
+            findElement(editBtn).click();
+            waitForElement(saveBtn);
+
+            if (findElement(userNameField).getAttribute("value").equals(user_name)) {
+                //System.out.println("Filter Name is correct");
+
+                // Compare field values with changed data
+                try {
+                    if (!findElement(emailField).getAttribute("value").contains(user_name + data.get("email_ch").toString())) {
+                        return false;
+                    }
+                } catch (NullPointerException e) {
+                }
+
+                try {
+                    if (!findElement(activeChk).getAttribute("checked").equals(data.get("active").toString())) {
+                        return false;
+                    }
+                } catch (NullPointerException e) {
+                }
+
+                try {
+                    if (!findElement(receivesWorkflowEmailChk).getAttribute("checked").equals(data.get("receives_workflow_email").toString())) {
+                        return false;
+                    }
+                } catch (NullPointerException e) {
+                }
+
+                try {
+                    if (!findElement(receivesDigestEmailChk).getAttribute("checked").equals(data.get("receives_digest_email").toString())) {
+                        return false;
+                    }
+                } catch (NullPointerException e) {
+                }
+
+                // Compare Roles checkbox values with entry data
+                List<WebElement> rolesListChkElements = findElements(rolesListChk);
+                Boolean bRolesGroup = false;
+                for (WebElement rolesListChkElement:rolesListChkElements)
+                {
+                    //System.out.println(rolesListChkElement.getAttribute("textContent"));
+                    String group = rolesListChkElement.getAttribute("textContent");
+
+                    JSONArray roles = (JSONArray) data.get("roles");
+
+                    for (Iterator<String> iterator = roles.iterator(); iterator.hasNext(); roles.size()) {
+                        String roles_group = iterator.next();
+                        if (group.equals(roles_group)) {
+                            bRolesGroup = true;
+                            break;
+                        } else {
+                            bRolesGroup = false;
+                        }
+                    }
+
+                    By chkBox = By.xpath("//label[(text()='" + group + "')]/parent::td/input[contains(@id, 'chkRolesList')]");
+
+                    if (bRolesGroup) {
+                        if (!Boolean.parseBoolean(findElement(chkBox).getAttribute("checked"))) {
+                            return false;
+                        } else {
+                        }
+                    } else {
+                        if (!Boolean.parseBoolean(findElement(chkBox).getAttribute("checked"))) {
+                        } else {
+                            return false;
+                        }
+                    }
+
+                }
+
+
+                // Compare Sites checkbox values with entry data
+                List<WebElement> sitesListChkElements = findElements(sitesListChk);
+                Boolean bSitesGroup = false;
+                for (WebElement sitesListChkElement:sitesListChkElements)
+                {
+                    //System.out.println(rolesListChkElement.getAttribute("textContent"));
+                    String group = sitesListChkElement.getAttribute("textContent");
+
+                    JSONArray sites = (JSONArray) data.get("sites");
+
+                    for (Iterator<String> iterator = sites.iterator(); iterator.hasNext(); sites.size()) {
+                        String sites_group = iterator.next();
+                        if (group.equals(sites_group)) {
+                            bSitesGroup = true;
+                            break;
+                        } else {
+                            bSitesGroup = false;
+                        }
+                    }
+
+                    By chkBox = By.xpath("//label[(text()='" + group + "')]/parent::td/input[contains(@id, 'chkSiteList')]");
+
+                    if (bSitesGroup) {
+                        if (!Boolean.parseBoolean(findElement(chkBox).getAttribute("checked"))) {
+                            return false;
+                        } else {
+                        }
+                    } else {
+                        if (!Boolean.parseBoolean(findElement(chkBox).getAttribute("checked"))) {
+                        } else {
+                            return false;
+                        }
+                    }
+
+                }
+
+                System.out.println(name + ": "+PAGE_NAME+" changes have been checked");
+                return true;
+            }
+
+            return false;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public Boolean removeUser (String name) {
+        JSONObject jsonMain = new JSONObject();
+        JSONObject jsonObj = new JSONObject();
+        String user_name;
+
+        try {
+            FileReader readFile = new FileReader(sPathToFile + sFileJson);
+            jsonMain = (JSONObject) parser.parse(readFile);
+            jsonObj = (JSONObject) jsonMain.get(name);
+        } catch (ParseException e) {
+        } catch (IOException e) {
+        }
+
+        user_name = jsonObj.get("user_name").toString();
+
+        By editBtn = By.xpath("//td[(text()='" + user_name + "')]/parent::tr/td/input[contains(@id, 'btnEdit')]");
+
+        try {
+
+            waitForElement(moduleTitle);
+            String pageUrl = getPageUrl(jsonMain, name);
+            driver.get(pageUrl);
+            waitForElement(deleteBtn);
+
+            if (findElement(userNameField).getAttribute("value").equals(user_name)) {
+
+                findElement(deleteBtn).click();
+
+                Thread.sleep(DEFAULT_PAUSE);
+                waitForElement(moduleTitle);
+
+                try {
+                    waitForElement(editBtn);
+                } catch (TimeoutException e) {
+
+                    jsonMain.remove(name);
+
+                    try {
+                        FileWriter writeFile = new FileWriter(sPathToFile + sFileJson);
+                        writeFile.write(jsonMain.toJSONString().replace("\\", ""));
+                        writeFile.flush();
+                    } catch (FileNotFoundException e1) {
+                        e.printStackTrace();
+                    } catch (IOException e1) {
+                        e.printStackTrace();
+                    }
+
+                    System.out.println(name + ": " + PAGE_NAME + " has been removed");
+                    return true;
+                }
+
+                return false;
+            }
+
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
     }
 
     public String getPageUrl (JSONObject obj, String name) {
-        String  sFilterId = JsonPath.read(obj, "$.['"+name+"'].url_query.EmailAlertID");
+        String  sFilterId = JsonPath.read(obj, "$.['"+name+"'].url_query.UserID");
         String  sLanguageId = JsonPath.read(obj, "$.['"+name+"'].url_query.LanguageId");
         String  sSectionId = JsonPath.read(obj, "$.['"+name+"'].url_query.SectionId");
-        return desktopUrl.toString()+"default.aspx?EmailAlertID="+sFilterId+"&LanguageId="+sLanguageId+"&SectionId="+sSectionId;
+        return desktopUrl.toString()+"default.aspx?UserID="+sFilterId+"&LanguageId="+sLanguageId+"&SectionId="+sSectionId;
     }
 
 }

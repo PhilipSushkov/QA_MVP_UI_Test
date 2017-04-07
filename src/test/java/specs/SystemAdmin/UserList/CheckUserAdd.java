@@ -55,13 +55,37 @@ public class CheckUserAdd extends AbstractSpec {
     }
 
     @Test(dataProvider=DATA, priority=1)
-    public void saveUser(JSONObject data) throws Exception {
+    public void saveUser(JSONObject data) {
         String sUserName = data.get(USER_NAME).toString();
         String expectedTitleList = "User List";
         String expectedTitleEdit = "User Edit";
 
         Assert.assertEquals(userAdd.getTitle(), expectedTitleEdit, "Actual "+PAGE_NAME+" Edit page Title doesn't match to expected");
         Assert.assertEquals(userAdd.saveUser(data, sUserName), expectedTitleList, "New "+PAGE_NAME+" didn't save properly");
+    }
+
+    @Test(dataProvider=DATA, priority=2)
+    public void checkUser(JSONObject data) {
+        String sUserName = data.get(USER_NAME).toString();
+        Assert.assertTrue(userAdd.checkUser(data, sUserName), "New "+PAGE_NAME+" doesn't fit to entry data (after Save)");
+    }
+
+    @Test(dataProvider=DATA, priority=3)
+    public void editWorkflowEmail(JSONObject data) throws Exception {
+        String sUserName = data.get(USER_NAME).toString();
+        Assert.assertTrue(userAdd.editUser(data, sUserName), PAGE_NAME+" didn't change properly (after Save)");
+    }
+
+    @Test(dataProvider=DATA, priority=4)
+    public void checkUserCh(JSONObject data) {
+        String sUserName = data.get(USER_NAME).toString();
+        Assert.assertTrue(userAdd.checkUserCh(data, sUserName), "New "+PAGE_NAME+" doesn't fit to change data (after Edit)");
+    }
+
+    @Test(dataProvider=DATA, priority=5)
+    public void removeUser(JSONObject data) {
+        String sUserName = data.get(USER_NAME).toString();
+        Assert.assertTrue(userAdd.removeUser(sUserName), "New "+PAGE_NAME+" shouldn't be shown in "+PAGE_NAME+" List (after Delete)");
     }
 
     @DataProvider
