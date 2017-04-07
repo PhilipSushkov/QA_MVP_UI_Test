@@ -239,7 +239,7 @@ public abstract class AbstractSpec extends util.Functions {
         sessionID = sessionIDCookie;
     }
 
-    public static void setupPropUI() throws IOException {
+    public void setupPropUI() throws IOException {
         propUISystemAdmin = ConnectToPropUI(PATHTO_SYSTEMADMIN_PROP);
         propUISiteAdmin = ConnectToPropUI(PATHTO_SITEADMIN_PROP);
         propUIContentAdmin = ConnectToPropUI(PATHTO_CONTENTADMIN_PROP);
