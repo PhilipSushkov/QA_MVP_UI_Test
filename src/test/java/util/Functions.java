@@ -1,9 +1,5 @@
 package util;
 
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -13,7 +9,6 @@ import org.openqa.selenium.WebDriver;
 
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 
@@ -23,10 +18,10 @@ import java.util.*;
  */
 
 public class Functions {
-    private static Properties propUI;
-    private static String currentDir;
+    public static Properties propUI;
+    public static String currentDir;
 
-    public Properties ConnectToPropUI(String sPathSharedUIMap) throws IOException {
+    public static Properties ConnectToPropUI(String sPathSharedUIMap) throws IOException {
         propUI = new Properties();
         currentDir = System.getProperty("user.dir") + "/src/test/java/specs/";
         propUI.load(new FileInputStream(currentDir + sPathSharedUIMap));

@@ -31,7 +31,7 @@ public class CheckCrawlingSite {
 
     private static final int NUM_THREADS = 3;
     private static final String PATHTO_PUBLICSITE_PROP = "PublicSite/PublicSiteMap.properties";
-    public static Properties propUIPublicSite;
+    public Properties propUIPublicSite;
     private static final String SITE_DATA="siteData", MODULE_DATA="moduleData";
 
 
