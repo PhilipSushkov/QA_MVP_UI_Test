@@ -18,8 +18,8 @@ import java.util.*;
  */
 
 public class Functions {
-    public static Properties propUI;
-    public static String currentDir;
+    private static Properties propUI;
+    private static String currentDir;
 
     public static Properties ConnectToPropUI(String sPathSharedUIMap) throws IOException {
         propUI = new Properties();
