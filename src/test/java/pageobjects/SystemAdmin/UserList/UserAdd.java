@@ -102,7 +102,7 @@ public class UserAdd extends AbstractPageObject {
 
             // Set roles values
             List<WebElement> rolesListChkElements = findElements(rolesListChk);
-            Boolean bGroup = false;
+            Boolean bRolesGroup = false;
             for (WebElement rolesListChkElement:rolesListChkElements)
             {
                 //System.out.println(rolesListChkElement.getAttribute("textContent"));
@@ -114,16 +114,16 @@ public class UserAdd extends AbstractPageObject {
                 for (Iterator<String> iterator = roles.iterator(); iterator.hasNext(); roles.size()) {
                     String user_group = iterator.next();
                     if (group.equals(user_group)) {
-                        bGroup = true;
+                        bRolesGroup = true;
                         break;
                     } else {
-                        bGroup = false;
+                        bRolesGroup = false;
                     }
                 }
 
                 By chkBox = By.xpath("//label[(text()='" + group + "')]/parent::td/input[contains(@id, 'chkRolesList')]");
 
-                if (bGroup) {
+                if (bRolesGroup) {
                     if (!Boolean.parseBoolean(findElement(chkBox).getAttribute("checked"))) {
                         findElement(chkBox).click();
                         Thread.sleep(500);
@@ -155,8 +155,80 @@ public class UserAdd extends AbstractPageObject {
                 }
             }
 
-            /*
-            //findElement(saveBtn).click();
+            // Save Receives Workflow Email checkbox
+            receives_workflow_email = Boolean.parseBoolean(data.get("receives_workflow_email").toString());
+            if (receives_workflow_email) {
+                if (!Boolean.parseBoolean(findElement(receivesWorkflowEmailChk).getAttribute("checked"))) {
+                    findElement(receivesWorkflowEmailChk).click();
+                    jsonObj.put("receives_workflow_email", true);
+                } else {
+                }
+            } else {
+                if (!Boolean.parseBoolean(findElement(receivesWorkflowEmailChk).getAttribute("checked"))) {
+                } else {
+                    findElement(receivesWorkflowEmailChk).click();
+                    jsonObj.put("receives_workflow_email", false);
+                }
+            }
+
+            // Save Receives Digest Email checkbox
+            receives_digest_email = Boolean.parseBoolean(data.get("receives_digest_email").toString());
+            if (receives_digest_email) {
+                if (!Boolean.parseBoolean(findElement(receivesDigestEmailChk).getAttribute("checked"))) {
+                    findElement(receivesDigestEmailChk).click();
+                    jsonObj.put("receives_digest_email", true);
+                } else {
+                }
+            } else {
+                if (!Boolean.parseBoolean(findElement(receivesDigestEmailChk).getAttribute("checked"))) {
+                } else {
+                    findElement(receivesDigestEmailChk).click();
+                    jsonObj.put("receives_digest_email", false);
+                }
+            }
+
+
+            // Set roles values
+            List<WebElement> sitesListChkElements = findElements(rolesListChk);
+            Boolean bSitesGroup = false;
+            for (WebElement sitesListChkElement:sitesListChkElements)
+            {
+                //System.out.println(rolesListChkElement.getAttribute("textContent"));
+                String group = sitesListChkElement.getAttribute("textContent");
+
+                sites = (JSONArray) data.get("sites");
+                jsonObj.put("sites", sites);
+
+                for (Iterator<String> iterator = sites.iterator(); iterator.hasNext(); sites.size()) {
+                    String site_group = iterator.next();
+                    if (group.equals(site_group)) {
+                        bSitesGroup = true;
+                        break;
+                    } else {
+                        bSitesGroup = false;
+                    }
+                }
+
+                By chkBox = By.xpath("//label[(text()='" + group + "')]/parent::td/input[contains(@id, 'chkSiteList')]");
+
+                if (bSitesGroup) {
+                    if (!Boolean.parseBoolean(findElement(chkBox).getAttribute("checked"))) {
+                        findElement(chkBox).click();
+                        Thread.sleep(500);
+                    } else {
+                    }
+                } else {
+                    if (!Boolean.parseBoolean(findElement(chkBox).getAttribute("checked"))) {
+                    } else {
+                        findElement(chkBox).click();
+                        Thread.sleep(500);
+                    }
+                }
+
+            }
+
+
+            findElement(saveBtn).click();
             Thread.sleep(DEFAULT_PAUSE);
 
             jsonMain.put(name, jsonObj);
@@ -176,14 +248,12 @@ public class UserAdd extends AbstractPageObject {
 
             System.out.println(name + ": "+PAGE_NAME+" has been created");
             return findElement(moduleTitle).getText();
-            */
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        //return null;
-        return "User List";
+        return null;
     }
 
     public String getPageUrl (JSONObject obj, String name) {
