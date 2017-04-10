@@ -47,7 +47,7 @@ public class CheckSiteMaintenance extends AbstractSpec {
         Assert.assertNotNull(siteMaintenance.getGoLiveButton(), "Go Live Button doesn't exist");
         Assert.assertNotNull(siteMaintenance.getOneTouchButton(), "One Touch Button doesn't exist");
         Assert.assertNotNull(siteMaintenance.getTwoFactorAuthenticationButton(), "Two Factor Authentication Button doesn't exist");
-
+        Assert.assertNotNull(siteMaintenance.getIFramesButton(), "IFrames Button doesn't exist");
     }
 
     @AfterTest
