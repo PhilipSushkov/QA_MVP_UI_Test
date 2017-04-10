@@ -1,6 +1,7 @@
 package pageobjects.SystemAdmin.SiteMaintenance;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
@@ -12,9 +13,10 @@ import static specs.AbstractSpec.propUISystemAdmin;
  */
 
 public class FunctionalBtn extends AbstractPageObject {
-    private static By btnGoLive, btnOneTouch, spanOneTouch, btnTwoFactorAuthentication, spanTwoFactorAuthentication, btnIFrames, spanIFrames;
+    private static By btnGoLive, btnOneTouch, spanOneTouch, btnTwoFactorAuthentication, spanTwoFactorAuthentication, btnIFrames, spanIFrames, btnUpdateRememberDays;
     private static final String sEnabledLbl = "ENABLED", sDisabledLbl = "DISABLED", sClassNameRed = "ng-binding red", sClassNameGreen = "ng-binding green";
     private static final String sEnableBtn = "ENABLE", sDisableBtn = "DISABLE";
+    private static final long DEFAULT_PAUSE = 2500;
 
     public FunctionalBtn(WebDriver driver) {
         super(driver);
@@ -22,6 +24,7 @@ public class FunctionalBtn extends AbstractPageObject {
         btnOneTouch = By.xpath(propUISystemAdmin.getProperty("btn_OneTouch"));
         spanOneTouch = By.xpath(propUISystemAdmin.getProperty("span_OneTouch"));
         btnTwoFactorAuthentication = By.xpath(propUISystemAdmin.getProperty("btn_TwoFactorAuthentication"));
+        btnUpdateRememberDays = By.xpath(propUISystemAdmin.getProperty("btn_UpdateRememberDays"));
         spanTwoFactorAuthentication = By.xpath(propUISystemAdmin.getProperty("span_TwoFactorAuthentication"));
         btnIFrames = By.xpath(propUISystemAdmin.getProperty("btn_IFrames"));
         spanIFrames = By.xpath(propUISystemAdmin.getProperty("span_IFrames"));
@@ -37,8 +40,8 @@ public class FunctionalBtn extends AbstractPageObject {
                 bGoLiveBtnState = true;
             }
         } catch (NullPointerException e) {
-            System.out.println("The attribute Disabled is not found for GoLive button");
-            return false;
+        } catch (ElementNotFoundException e) {
+        } catch (ElementNotVisibleException e) {
         }
 
         return bGoLiveBtnState;
@@ -46,7 +49,7 @@ public class FunctionalBtn extends AbstractPageObject {
 
 
     public boolean getPressReleasePublishingLoginBtnState() {
-        boolean bState;
+        boolean bState = false;
         wait.until(ExpectedConditions.visibilityOf(findElement(btnOneTouch)));
 
         /*
@@ -56,14 +59,14 @@ public class FunctionalBtn extends AbstractPageObject {
         */
 
         try {
-            if ((findElement(spanOneTouch).getAttribute("innerText").equals(sEnabledLbl)
+            if (findElement(spanOneTouch).getAttribute("innerText").equals(sEnabledLbl)
                     && (findElement(spanOneTouch).getAttribute("className").equals(sClassNameGreen))
-                    && (findElement(btnOneTouch).getAttribute("innerText").equals(sDisableBtn))) ) {
+                    && (findElement(btnOneTouch).getAttribute("innerText").equals(sDisableBtn)) ) {
                 bState = true;
             } else {
-                if ((findElement(spanOneTouch).getAttribute("innerText").equals(sDisabledLbl)
+                if (findElement(spanOneTouch).getAttribute("innerText").equals(sDisabledLbl)
                         && (findElement(spanOneTouch).getAttribute("className").equals(sClassNameRed))
-                        && (findElement(btnOneTouch).getAttribute("innerText").equals(sEnableBtn))) ) {
+                        && (findElement(btnOneTouch).getAttribute("innerText").equals(sEnableBtn)) ) {
                     bState = true;
                 } else {
                     return false;
@@ -71,35 +74,79 @@ public class FunctionalBtn extends AbstractPageObject {
             }
 
         } catch (NullPointerException e) {
-            return false;
+        } catch (ElementNotFoundException e) {
+        } catch (ElementNotVisibleException e) {
         }
 
         return bState;
     }
 
 
-    public boolean clickPressReleasePublishingLoginBtn() {
+    public boolean clickPressReleasePublishingLoginBtn() throws InterruptedException {
         boolean bState = false;
+        String sInnerTextBtn, sInnerTextLbl, sClassNameLbl;
+        wait.until(ExpectedConditions.visibilityOf(findElement(btnOneTouch)));
 
+        try {
+
+            sInnerTextBtn = findElement(btnOneTouch).getAttribute("innerText");
+
+            if (sInnerTextBtn.equals(sDisableBtn)) {
+                findElement(btnOneTouch).click();
+
+                Thread.sleep(DEFAULT_PAUSE);
+
+                sInnerTextBtn = findElement(btnOneTouch).getAttribute("innerText");
+                sInnerTextLbl = findElement(spanOneTouch).getAttribute("innerText");
+                sClassNameLbl = findElement(spanOneTouch).getAttribute("className");
+
+                if (sInnerTextBtn.equals(sEnableBtn)
+                        && sInnerTextLbl.equals(sDisabledLbl)
+                        && sClassNameLbl.equals(sClassNameRed)) {
+                    bState = true;
+                    return bState;
+                }
+            }
+
+            if (sInnerTextBtn.equals(sEnableBtn)) {
+                findElement(btnOneTouch).click();
+
+                Thread.sleep(DEFAULT_PAUSE);
+
+                sInnerTextBtn = findElement(btnOneTouch).getAttribute("innerText");
+                sInnerTextLbl = findElement(spanOneTouch).getAttribute("innerText");
+                sClassNameLbl = findElement(spanOneTouch).getAttribute("className");
+
+                if (sInnerTextBtn.equals(sDisableBtn)
+                        && sInnerTextLbl.equals(sEnabledLbl)
+                        && sClassNameLbl.equals(sClassNameGreen)) {
+                    bState = true;
+                    return bState;
+                }
+            }
+
+        } catch (NullPointerException e) {
+        } catch (ElementNotFoundException e) {
+        } catch (ElementNotVisibleException e) {
+        }
 
         return bState;
     }
 
 
     public boolean getTwoFactorAuthenticationBtnState() {
-
-        boolean bState;
+        boolean bState = false;
         wait.until(ExpectedConditions.visibilityOf(findElement(btnTwoFactorAuthentication)));
 
         try {
-            if ((findElement(spanTwoFactorAuthentication).getAttribute("innerText").equals(sEnabledLbl)
+            if (findElement(spanTwoFactorAuthentication).getAttribute("innerText").equals(sEnabledLbl)
                     && (findElement(spanTwoFactorAuthentication).getAttribute("className").equals(sClassNameGreen))
-                    && (findElement(btnTwoFactorAuthentication).getAttribute("innerText").equals(sDisableBtn))) ) {
+                    && (findElement(btnTwoFactorAuthentication).getAttribute("innerText").equals(sDisableBtn)) ) {
                 bState = true;
             } else {
-                if ((findElement(spanTwoFactorAuthentication).getAttribute("innerText").equals(sDisabledLbl)
+                if (findElement(spanTwoFactorAuthentication).getAttribute("innerText").equals(sDisabledLbl)
                         && (findElement(spanTwoFactorAuthentication).getAttribute("className").equals(sClassNameRed))
-                        && (findElement(btnTwoFactorAuthentication).getAttribute("innerText").equals(sEnableBtn))) ) {
+                        && (findElement(btnTwoFactorAuthentication).getAttribute("innerText").equals(sEnableBtn)) ) {
                     bState = true;
                 } else {
                     return false;
@@ -107,7 +154,61 @@ public class FunctionalBtn extends AbstractPageObject {
             }
 
         } catch (NullPointerException e) {
-            return false;
+        } catch (ElementNotFoundException e) {
+        } catch (ElementNotVisibleException e) {
+        }
+
+        return bState;
+    }
+
+
+    public boolean clickTwoFactorAuthenticationBtn() throws InterruptedException {
+        boolean bState = false;
+        String sInnerTextBtn, sInnerTextLbl, sClassNameLbl;
+        wait.until(ExpectedConditions.visibilityOf(findElement(btnTwoFactorAuthentication)));
+
+        try {
+
+            sInnerTextBtn = findElement(btnTwoFactorAuthentication).getAttribute("innerText");
+
+            if (sInnerTextBtn.equals(sDisableBtn)) {
+                findElement(btnTwoFactorAuthentication).click();
+
+                Thread.sleep(DEFAULT_PAUSE);
+
+                sInnerTextBtn = findElement(btnTwoFactorAuthentication).getAttribute("innerText");
+                sInnerTextLbl = findElement(spanTwoFactorAuthentication).getAttribute("innerText");
+                sClassNameLbl = findElement(spanTwoFactorAuthentication).getAttribute("className");
+
+                if (sInnerTextBtn.equals(sEnableBtn)
+                        && sInnerTextLbl.equals(sDisabledLbl)
+                        && sClassNameLbl.equals(sClassNameRed)) {
+                    bState = true;
+                    return bState;
+                }
+            }
+
+            if (sInnerTextBtn.equals(sEnableBtn)) {
+                findElement(btnTwoFactorAuthentication).click();
+
+                Thread.sleep(DEFAULT_PAUSE);
+                wait.until(ExpectedConditions.visibilityOf(findElement(btnUpdateRememberDays)));
+
+                sInnerTextBtn = findElement(btnTwoFactorAuthentication).getAttribute("innerText");
+                sInnerTextLbl = findElement(spanTwoFactorAuthentication).getAttribute("innerText");
+                sClassNameLbl = findElement(spanTwoFactorAuthentication).getAttribute("className");
+
+                if (sInnerTextBtn.equals(sDisableBtn)
+                        && sInnerTextLbl.equals(sEnabledLbl)
+                        && sClassNameLbl.equals(sClassNameGreen)) {
+                    bState = true;
+                    return bState;
+                }
+            }
+
+        } catch (NullPointerException e) {
+        } catch (ElementNotFoundException e) {
+        } catch (ElementNotVisibleException e) {
         }
 
         return bState;
@@ -115,19 +216,18 @@ public class FunctionalBtn extends AbstractPageObject {
 
 
     public boolean getSecurityBtnState() {
-
-        boolean bState;
+        boolean bState = false;
         wait.until(ExpectedConditions.visibilityOf(findElement(btnIFrames)));
 
         try {
-            if ((findElement(spanIFrames).getAttribute("innerText").equals(sEnabledLbl)
+            if (findElement(spanIFrames).getAttribute("innerText").equals(sEnabledLbl)
                     && (findElement(spanIFrames).getAttribute("className").equals(sClassNameGreen))
-                    && (findElement(btnIFrames).getAttribute("innerText").equals(sDisableBtn))) ) {
+                    && (findElement(btnIFrames).getAttribute("innerText").equals(sDisableBtn)) ) {
                 bState = true;
             } else {
-                if ((findElement(spanIFrames).getAttribute("innerText").equals(sDisabledLbl)
+                if (findElement(spanIFrames).getAttribute("innerText").equals(sDisabledLbl)
                         && (findElement(spanIFrames).getAttribute("className").equals(sClassNameRed))
-                        && (findElement(btnIFrames).getAttribute("innerText").equals(sEnableBtn))) ) {
+                        && (findElement(btnIFrames).getAttribute("innerText").equals(sEnableBtn)) ) {
                     bState = true;
                 } else {
                     return false;
@@ -135,7 +235,60 @@ public class FunctionalBtn extends AbstractPageObject {
             }
 
         } catch (NullPointerException e) {
-            return false;
+        } catch (ElementNotFoundException e) {
+        } catch (ElementNotVisibleException e) {
+        }
+
+        return bState;
+    }
+
+
+    public boolean clickIFramesBtn() throws InterruptedException {
+        boolean bState = false;
+        String sInnerTextBtn, sInnerTextLbl, sClassNameLbl;
+        wait.until(ExpectedConditions.visibilityOf(findElement(btnIFrames)));
+
+        try {
+
+            sInnerTextBtn = findElement(btnIFrames).getAttribute("innerText");
+
+            if (sInnerTextBtn.equals(sDisableBtn)) {
+                findElement(btnIFrames).click();
+
+                Thread.sleep(DEFAULT_PAUSE);
+
+                sInnerTextBtn = findElement(btnIFrames).getAttribute("innerText");
+                sInnerTextLbl = findElement(spanIFrames).getAttribute("innerText");
+                sClassNameLbl = findElement(spanIFrames).getAttribute("className");
+
+                if (sInnerTextBtn.equals(sEnableBtn)
+                        && sInnerTextLbl.equals(sDisabledLbl)
+                        && sClassNameLbl.equals(sClassNameRed)) {
+                    bState = true;
+                    return bState;
+                }
+            }
+
+            if (sInnerTextBtn.equals(sEnableBtn)) {
+                findElement(btnIFrames).click();
+
+                Thread.sleep(DEFAULT_PAUSE);
+
+                sInnerTextBtn = findElement(btnIFrames).getAttribute("innerText");
+                sInnerTextLbl = findElement(spanIFrames).getAttribute("innerText");
+                sClassNameLbl = findElement(spanIFrames).getAttribute("className");
+
+                if (sInnerTextBtn.equals(sDisableBtn)
+                        && sInnerTextLbl.equals(sEnabledLbl)
+                        && sClassNameLbl.equals(sClassNameGreen)) {
+                    bState = true;
+                    return bState;
+                }
+            }
+
+        } catch (NullPointerException e) {
+        } catch (ElementNotFoundException e) {
+        } catch (ElementNotVisibleException e) {
         }
 
         return bState;

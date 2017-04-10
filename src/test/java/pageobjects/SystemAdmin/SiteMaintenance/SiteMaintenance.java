@@ -54,8 +54,8 @@ public class SiteMaintenance extends AbstractPageObject {
         try {
             wait.until(ExpectedConditions.visibilityOf(findElement(btnOneTouch)));
             element = findElement(btnOneTouch);
-        } catch (ElementNotFoundException e1) {
-        } catch (ElementNotVisibleException e2) {
+        } catch (ElementNotFoundException e) {
+        } catch (ElementNotVisibleException e) {
         }
 
         return element;
@@ -69,8 +69,8 @@ public class SiteMaintenance extends AbstractPageObject {
         try {
             wait.until(ExpectedConditions.visibilityOf(findElement(btnTwoFactorAuthentication)));
             element = findElement(btnTwoFactorAuthentication);
-        } catch (ElementNotFoundException e1) {
-        } catch (ElementNotVisibleException e2) {
+        } catch (ElementNotFoundException e) {
+        } catch (ElementNotVisibleException e) {
         }
 
         return element;
