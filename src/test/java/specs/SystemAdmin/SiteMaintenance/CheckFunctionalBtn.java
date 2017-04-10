@@ -41,7 +41,23 @@ public class CheckFunctionalBtn extends AbstractSpec {
 
     @Test(priority=1)
     public void checkGoLiveBtn() throws Exception {
-        Assert.assertFalse(functionalBtn.getGoLiveBtnStatus(), "Actual Go Live button state is supposed to be Disabled");
+        Assert.assertTrue(functionalBtn.getGoLiveBtnState(), "Actual Go Live button state is supposed to be Disabled");
+    }
+
+    @Test(priority=2)
+    public void checkPressReleasePublishingLoginBtn() throws Exception {
+        Assert.assertTrue(functionalBtn.getPressReleasePublishingLoginBtnState(), "Some discrepancies are found for Press Release Publishing Login elements and their states");
+        Assert.assertTrue(functionalBtn.clickPressReleasePublishingLoginBtn(), "Press Release Publishing Login button (Enable/Disable) doesn't work well");
+    }
+
+    @Test(priority=3)
+    public void checkTwoFactorAuthenticationBtn() throws Exception {
+        Assert.assertTrue(functionalBtn.getTwoFactorAuthenticationBtnState(), "Some discrepancies are found for Two-Factor Authentication elements and their states");
+    }
+
+    @Test(priority=4)
+    public void checkSecurityBtn() throws Exception {
+        Assert.assertTrue(functionalBtn.getSecurityBtnState(), "Some discrepancies are found for Security elements and their states");
     }
 
     @AfterTest
