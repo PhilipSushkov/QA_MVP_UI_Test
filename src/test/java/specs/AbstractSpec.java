@@ -138,7 +138,6 @@ public abstract class AbstractSpec extends util.Functions {
         driver.manage().timeouts().implicitlyWait(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
         driver.manage().timeouts().pageLoadTimeout(40, TimeUnit.SECONDS); //Increased to 20 to perhaps reduce timeouts?
         //driver.manage().window().setSize(new Dimension(1400, 1400));
-        Thread.sleep(DEFAULT_PAUSE);
         driver.get(desktopUrl.toString());
 
         //System.out.println(driver.getCurrentUrl());
