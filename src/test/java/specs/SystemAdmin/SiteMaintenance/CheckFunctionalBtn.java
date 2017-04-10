@@ -1,25 +1,26 @@
 package specs.SystemAdmin.SiteMaintenance;
 
 import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import org.testng.Assert;
 
 import org.openqa.selenium.By;
-import pageobjects.SystemAdmin.SiteMaintenance.SiteMaintenance;
+import pageobjects.SystemAdmin.SiteMaintenance.FunctionalBtn;
 import specs.AbstractSpec;
 import pageobjects.LoginPage.LoginPage;
 import pageobjects.Dashboard.Dashboard;
 
 /**
- * Created by philipsushkov on 2016-11-14.
+ * Created by philipsushkov on 2017-04-10.
  */
 
-public class CheckSiteMaintenance extends AbstractSpec {
+public class CheckFunctionalBtn extends AbstractSpec {
     private static By systemAdminMenuButton, siteMaintenanceMenuItem;
     private static LoginPage loginPage;
     private static Dashboard dashboard;
-    private static SiteMaintenance siteMaintenance;
+    private static FunctionalBtn functionalBtn;
 
     @BeforeTest
     public void setUp() throws Exception {
@@ -28,25 +29,19 @@ public class CheckSiteMaintenance extends AbstractSpec {
 
         loginPage = new LoginPage(driver);
         dashboard = new Dashboard(driver);
-        siteMaintenance = new SiteMaintenance(driver);
+        functionalBtn = new FunctionalBtn(driver);
 
         loginPage.loginUser();
     }
 
-    @Test
-    public void checkSiteMaintenance() throws Exception {
-        final String expectedTitle = "Site Maintenance";
-
+    @BeforeMethod
+    public void beforeMethod() throws Exception {
         dashboard.openPageFromMenu(systemAdminMenuButton, siteMaintenanceMenuItem);
+    }
 
-        Assert.assertNotNull(siteMaintenance.getUrl());
-
-        Assert.assertEquals(siteMaintenance.getTitle(), expectedTitle, "Actual PDF Template Edit page Title doesn't match to expected");
-
-        //System.out.println(new SiteMaintenance(driver).getGoLiveButton().getText() );
-        Assert.assertNotNull(siteMaintenance.getGoLiveButton(), "Go Live Button doesn't exist");
-        Assert.assertNotNull(siteMaintenance.getOneTouchButton(), "One Touch Button doesn't exist");
-        Assert.assertNotNull(siteMaintenance.getTwoFactorAuthenticationButton(), "Two Factor Authentication Button doesn't exist");
+    @Test(priority=1)
+    public void checkGoLiveBtn() throws Exception {
+        Assert.assertFalse(functionalBtn.getGoLiveBtnStatus(), "Actual Go Live button state is supposed to be Disabled");
     }
 
     @AfterTest
