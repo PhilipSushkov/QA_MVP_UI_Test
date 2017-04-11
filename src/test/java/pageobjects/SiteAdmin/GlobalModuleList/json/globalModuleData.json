@@ -1,0 +1,21 @@
+{
+  "global_module": [
+    {
+      "do_assertions": true,
+      "global_module_name": "Event 4.3.0 01",
+      "module_definition": "Event 4.3.0",
+      "module_type": "GLOBAL_1",
+      "include_legacy_modules": false,
+      "region_name": "Left Pane",
+      "region_name_ch": "Content Pane"
+    },
+    {
+      "do_assertions": true,
+      "global_module_name": "Press Release 4.3.0 02",
+      "module_definition": "Press Release 4.3.0",
+      "module_type": "GLOBAL_1",
+      "include_legacy_modules": false,
+      "region_name": "Content Pane"
+    }
+  ]
+}
