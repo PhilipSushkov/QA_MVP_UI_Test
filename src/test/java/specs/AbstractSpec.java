@@ -43,7 +43,7 @@ public abstract class AbstractSpec extends util.Functions {
     private static final String BROWSER_STACK_URL = "http://jencampbell2:6jEURzbszfaWhLJc7XWx@hub.browserstack.com/wd/hub";
     private static final String BUILD_ID = RandomStringUtils.randomAlphanumeric(6);
     public static final long DEFAULT_TIMEOUT = 5L;
-    private static final long DEFAULT_PAUSE = 2500;
+    private static final long DEFAULT_PAUSE = 1500;
 
     public static URL desktopUrl, desktopUrlPublic;
     public static BrowserStackCapability browser;
@@ -140,14 +140,13 @@ public abstract class AbstractSpec extends util.Functions {
         //driver.manage().window().setSize(new Dimension(1400, 1400));
         driver.get(desktopUrl.toString());
 
-        System.out.println(driver.getCurrentUrl());
+        //System.out.println(driver.getCurrentUrl());
 
         int attempts = 5;
         for (int i=0; i<attempts; i++) {
             if (!driver.getCurrentUrl().contains(desktopUrl.toString())) {
                 System.out.println("Home site page didn't download yet: "+desktopUrl.toString());
-                System.out.println(driver.getCurrentUrl());
-                //driver.navigate().refresh();
+                //System.out.println(driver.getCurrentUrl());
                 driver.get(desktopUrl.toString());
                 Thread.sleep(DEFAULT_PAUSE);
             } else {

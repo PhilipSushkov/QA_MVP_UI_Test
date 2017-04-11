@@ -112,6 +112,7 @@ public class AlertFilterAdd extends AbstractPageObject {
             } catch (NullPointerException e) {
             }
 
+
             jsonMain.put(name, jsonObj);
 
             findElement(saveBtn).click();

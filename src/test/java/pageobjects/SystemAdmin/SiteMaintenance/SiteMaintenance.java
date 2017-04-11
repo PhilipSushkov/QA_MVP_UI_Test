@@ -14,7 +14,7 @@ import static specs.AbstractSpec.propUISystemAdmin;
  */
 
 public class SiteMaintenance extends AbstractPageObject {
-    private static By moduleTitle, btnGoLive, btnOneTouch, btnTwoFactorAuthentication;
+    private static By moduleTitle, btnGoLive, btnOneTouch, btnTwoFactorAuthentication, btnIFrames;
 
     public SiteMaintenance(WebDriver driver) {
         super(driver);
@@ -22,6 +22,7 @@ public class SiteMaintenance extends AbstractPageObject {
         btnGoLive = By.xpath(propUISystemAdmin.getProperty("btn_GoLive"));
         btnOneTouch = By.xpath(propUISystemAdmin.getProperty("btn_OneTouch"));
         btnTwoFactorAuthentication = By.xpath(propUISystemAdmin.getProperty("btn_TwoFactorAuthentication"));
+        btnIFrames = By.xpath(propUISystemAdmin.getProperty("btn_IFrames"));
     }
 
     public String getUrl() {
@@ -53,8 +54,8 @@ public class SiteMaintenance extends AbstractPageObject {
         try {
             wait.until(ExpectedConditions.visibilityOf(findElement(btnOneTouch)));
             element = findElement(btnOneTouch);
-        } catch (ElementNotFoundException e1) {
-        } catch (ElementNotVisibleException e2) {
+        } catch (ElementNotFoundException e) {
+        } catch (ElementNotVisibleException e) {
         }
 
         return element;
@@ -68,6 +69,19 @@ public class SiteMaintenance extends AbstractPageObject {
         try {
             wait.until(ExpectedConditions.visibilityOf(findElement(btnTwoFactorAuthentication)));
             element = findElement(btnTwoFactorAuthentication);
+        } catch (ElementNotFoundException e) {
+        } catch (ElementNotVisibleException e) {
+        }
+
+        return element;
+    }
+
+    public WebElement getIFramesButton() {
+        WebElement element = null;
+
+        try {
+            wait.until(ExpectedConditions.visibilityOf(findElement(btnIFrames)));
+            element = findElement(btnIFrames);
         } catch (ElementNotFoundException e1) {
         } catch (ElementNotVisibleException e2) {
         }

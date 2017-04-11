@@ -11,4 +11,9 @@
             <class name="specs.Dashboard.CheckChangePassword" />
         </classes>
     </test>
+    <test name="CheckFunctionalBtn">
+        <classes>
+            <class name="specs.SystemAdmin.SiteMaintenance.CheckFunctionalBtn" />
+        </classes>
+    </test>
 </suite>
