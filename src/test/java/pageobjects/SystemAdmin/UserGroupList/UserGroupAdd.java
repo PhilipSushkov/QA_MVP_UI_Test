@@ -45,7 +45,6 @@ public class UserGroupAdd extends AbstractPageObject {
         saveBtn = By.xpath(propUISystemAdmin.getProperty("btn_Save"));
         cancelBtn = By.xpath(propUISystemAdmin.getProperty("btn_Cancel"));
         deleteBtn = By.xpath(propUISystemAdmin.getProperty("btn_Delete"));
-        //successMsg = By.xpath(propUISystemAdmin.getProperty("msg_Success"));
 
         parser = new JSONParser();
 

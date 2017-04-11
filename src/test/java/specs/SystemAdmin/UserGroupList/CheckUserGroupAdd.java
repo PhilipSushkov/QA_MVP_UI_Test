@@ -55,7 +55,7 @@ public class CheckUserGroupAdd extends AbstractSpec {
     }
 
     @Test(dataProvider=DATA, priority=1)
-    public void saveUser(JSONObject data) {
+    public void saveUserGroup(JSONObject data) {
         String sUserGroupName = data.get(USER_GROUP_NAME).toString();
         String expectedTitleList = "User Group List";
         String expectedTitleEdit = "User Group Edit";
