@@ -64,6 +64,18 @@ public class CheckUserGroupAdd extends AbstractSpec {
         Assert.assertEquals(userGroupAdd.saveUserGroup(data, sUserGroupName), expectedTitleList, "New "+PAGE_NAME+" didn't save properly");
     }
 
+    @Test(dataProvider=DATA, priority=2)
+    public void checkUserGroup(JSONObject data) {
+        String sUserGroupName = data.get(USER_GROUP_NAME).toString();
+        Assert.assertTrue(userGroupAdd.checkUserGroup(data, sUserGroupName), "New "+PAGE_NAME+" doesn't fit to entry data (after Save)");
+    }
+
+    @Test(dataProvider=DATA, priority=3)
+    public void editUserGroup(JSONObject data) throws Exception {
+        String sUserName = data.get(USER_GROUP_NAME).toString();
+        Assert.assertTrue(userGroupAdd.editUserGroup(data, sUserName), PAGE_NAME+" didn't change properly (after Save)");
+    }
+
     @DataProvider
     public Object[][] getData() {
 

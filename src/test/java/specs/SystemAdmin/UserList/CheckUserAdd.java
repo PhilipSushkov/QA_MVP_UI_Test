@@ -71,7 +71,7 @@ public class CheckUserAdd extends AbstractSpec {
     }
 
     @Test(dataProvider=DATA, priority=3)
-    public void editWorkflowEmail(JSONObject data) throws Exception {
+    public void editUser(JSONObject data) throws Exception {
         String sUserName = data.get(USER_NAME).toString();
         Assert.assertTrue(userAdd.editUser(data, sUserName), PAGE_NAME+" didn't change properly (after Save)");
     }
