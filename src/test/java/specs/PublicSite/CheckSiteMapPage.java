@@ -22,7 +22,6 @@ public class CheckSiteMapPage extends AbstractSpec {
         driver.get("http://chicagotest.q4web.com/English/Investors/default.aspx");
         homePage = new HomePage(driver);
         Assert.assertTrue(homePage.logoIsPresent(), "Home page of public site has not been loaded.");
-
     }
 
     @Test
@@ -32,13 +31,12 @@ public class CheckSiteMapPage extends AbstractSpec {
         SiteMapPage sitemap = homePage.selectSiteMapFromFooter();
         String url = "fakeurl"+ RandomStringUtils.randomAlphabetic(6);
         Assert.assertTrue(sitemap.pageNotFoundRedirects(url), "Page did not redirect to the site map");
-
     }
 
     @Test
     public void allLinksHave200Code(){
         SiteMapPage siteMapPage = homePage.selectSiteMapFromFooter();
         siteMapPage.checkBtnResponseCode();
-
     }
+
 }

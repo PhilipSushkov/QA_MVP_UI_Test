@@ -53,4 +53,9 @@
             <class name="specs.PreviewSite.RSSPreviewPage" />
         </classes>
     </test>
+    <test name="CheckPreviewSiteMapPage">
+        <classes>
+            <class name="specs.PreviewSite.CheckPreviewSiteMapPage" />
+        </classes>
+    </test>
 </suite>
