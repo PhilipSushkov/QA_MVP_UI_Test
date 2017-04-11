@@ -29,6 +29,11 @@
             <class name="specs.SystemAdmin.WorkflowEmailList.CheckWorkflowEmailAdd" />
         </classes>
     </test>
+    <test name="CheckUserGroupAdd">
+        <classes>
+            <class name="specs.SystemAdmin.UserGroupList.CheckUserGroupAdd" />
+        </classes>
+    </test>
 
     <test name="CreateNewUser">
         <classes>

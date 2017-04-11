@@ -686,10 +686,10 @@ public class UserAdd extends AbstractPageObject {
     }
 
     public String getPageUrl (JSONObject obj, String name) {
-        String  sFilterId = JsonPath.read(obj, "$.['"+name+"'].url_query.UserID");
+        String  sUserID = JsonPath.read(obj, "$.['"+name+"'].url_query.UserID");
         String  sLanguageId = JsonPath.read(obj, "$.['"+name+"'].url_query.LanguageId");
         String  sSectionId = JsonPath.read(obj, "$.['"+name+"'].url_query.SectionId");
-        return desktopUrl.toString()+"default.aspx?UserID="+sFilterId+"&LanguageId="+sLanguageId+"&SectionId="+sSectionId;
+        return desktopUrl.toString()+"default.aspx?UserID="+sUserID+"&LanguageId="+sLanguageId+"&SectionId="+sSectionId;
     }
 
 }
