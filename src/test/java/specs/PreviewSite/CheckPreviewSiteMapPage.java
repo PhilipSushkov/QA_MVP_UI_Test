@@ -1,28 +1,26 @@
-package specs.PublicSite;
+package specs.PreviewSite;
 
 import org.apache.commons.lang.RandomStringUtils;
 import org.testng.Assert;
-import org.testng.annotations.*;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
 import pageobjects.LiveSite.HomePage;
 import pageobjects.LiveSite.SiteMapPage;
+import pageobjects.LoginPage.LoginPage;
 import specs.AbstractSpec;
 
 /**
- * Created by sarahr on 4/6/2017.
+ * Created by sarahr on 4/7/2017.
  */
-public class CheckSiteMapPage extends AbstractSpec {
 
-    //Make sure that what ever tests are in this class, are also in the Preview folder too//
+public class CheckPreviewSiteMapPage extends AbstractSpec {
 
     private static HomePage homePage;
 
     @BeforeTest
-    public void goToPublicSite() {
-
-        driver.get("http://chicagotest.q4web.com/English/Investors/default.aspx");
+    public void goToPreviewSite() throws Exception {
         homePage = new HomePage(driver);
-        Assert.assertTrue(homePage.logoIsPresent(), "Home page of public site has not been loaded.");
-
+        new LoginPage(driver).loginUser().previewSite().goToInvestorsPage();
     }
 
     @Test
@@ -41,4 +39,5 @@ public class CheckSiteMapPage extends AbstractSpec {
         siteMapPage.checkBtnResponseCode();
 
     }
+
 }
