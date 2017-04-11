@@ -283,6 +283,120 @@ public class UserGroupAdd extends AbstractPageObject {
         return false;
     }
 
+    public Boolean checkUserGroupCh(JSONObject data, String name) {
+        JSONObject jsonMain;
+        JSONObject jsonObj = new JSONObject();
+        String user_group_name;
+
+        try {
+            FileReader readFile = new FileReader(sPathToFile + sFileJson);
+            jsonMain = (JSONObject) parser.parse(readFile);
+            jsonObj = (JSONObject) jsonMain.get(name);
+        } catch (ParseException e) {
+        } catch (IOException e) {
+        }
+
+        user_group_name = jsonObj.get("user_group_name").toString();
+
+        By editBtn = By.xpath("//td[(text()='" + user_group_name + "')]/parent::tr/td/input[contains(@id, 'btnEdit')]");
+
+        try {
+            waitForElement(moduleTitle);
+            findElement(editBtn).click();
+            waitForElement(saveBtn);
+
+            if (findElement(userGroupNameField).getAttribute("value").equals(user_group_name)) {
+
+                // Compare field values with changed data
+                try {
+                    if (!findElement(activeChk).getAttribute("checked").equals(data.get("active_ch").toString())) {
+                        return false;
+                    }
+                } catch (NullPointerException e) {
+                }
+
+                try {
+                    if (!new Select(findElement(copyPermissionsFrom)).getFirstSelectedOption().getText().equals(data.get("permissions_from_ch").toString())) {
+                        return false;
+                    }
+                } catch (NullPointerException e) {
+                }
+
+                System.out.println(name + ": "+PAGE_NAME+" changes have been checked");
+                return true;
+            }
+
+            return false;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public Boolean removeUserGroup (String name) {
+        JSONObject jsonMain = new JSONObject();
+        JSONObject jsonObj = new JSONObject();
+        String user_group_name;
+
+        try {
+            FileReader readFile = new FileReader(sPathToFile + sFileJson);
+            jsonMain = (JSONObject) parser.parse(readFile);
+            jsonObj = (JSONObject) jsonMain.get(name);
+        } catch (ParseException e) {
+        } catch (IOException e) {
+        }
+
+        user_group_name = jsonObj.get("user_group_name").toString();
+
+        By editBtn = By.xpath("//td[(text()='" + user_group_name + "')]/parent::tr/td/input[contains(@id, 'btnEdit')]");
+
+        try {
+
+            waitForElement(moduleTitle);
+            String pageUrl = getPageUrl(jsonMain, name);
+            driver.get(pageUrl);
+            waitForElement(deleteBtn);
+
+            if (findElement(userGroupNameField).getAttribute("value").equals(user_group_name)) {
+
+                findElement(deleteBtn).click();
+
+                Thread.sleep(DEFAULT_PAUSE);
+                waitForElement(moduleTitle);
+
+                try {
+                    waitForElement(editBtn);
+                } catch (TimeoutException e) {
+
+                    jsonMain.remove(name);
+
+                    try {
+                        FileWriter writeFile = new FileWriter(sPathToFile + sFileJson);
+                        writeFile.write(jsonMain.toJSONString().replace("\\", ""));
+                        writeFile.flush();
+                    } catch (FileNotFoundException e1) {
+                        e.printStackTrace();
+                    } catch (IOException e1) {
+                        e.printStackTrace();
+                    }
+
+                    System.out.println(name + ": " + PAGE_NAME + " has been removed");
+                    return true;
+                }
+
+                return false;
+            }
+
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
     public String getPageUrl (JSONObject obj, String name) {
         String  sUserGroupID = JsonPath.read(obj, "$.['"+name+"'].url_query.UserGroupID");
         String  sLanguageId = JsonPath.read(obj, "$.['"+name+"'].url_query.LanguageId");

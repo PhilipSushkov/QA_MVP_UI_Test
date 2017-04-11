@@ -72,8 +72,20 @@ public class CheckUserGroupAdd extends AbstractSpec {
 
     @Test(dataProvider=DATA, priority=3)
     public void editUserGroup(JSONObject data) throws Exception {
-        String sUserName = data.get(USER_GROUP_NAME).toString();
-        Assert.assertTrue(userGroupAdd.editUserGroup(data, sUserName), PAGE_NAME+" didn't change properly (after Save)");
+        String sUserGroupName = data.get(USER_GROUP_NAME).toString();
+        Assert.assertTrue(userGroupAdd.editUserGroup(data, sUserGroupName), PAGE_NAME+" didn't change properly (after Save)");
+    }
+
+    @Test(dataProvider=DATA, priority=4)
+    public void checkUserGroupCh(JSONObject data) {
+        String sUserGroupName = data.get(USER_GROUP_NAME).toString();
+        Assert.assertTrue(userGroupAdd.checkUserGroupCh(data, sUserGroupName), "New "+PAGE_NAME+" doesn't fit to change data (after Edit)");
+    }
+
+    @Test(dataProvider=DATA, priority=5)
+    public void removeUserGroup(JSONObject data) {
+        String sUserGroupName = data.get(USER_GROUP_NAME).toString();
+        Assert.assertTrue(userGroupAdd.removeUserGroup(sUserGroupName), "New "+PAGE_NAME+" shouldn't be shown in "+PAGE_NAME+" List (after Delete)");
     }
 
     @DataProvider
