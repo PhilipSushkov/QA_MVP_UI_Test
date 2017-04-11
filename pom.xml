@@ -188,8 +188,8 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.18</version>
                 <configuration>
-                    <parallel>tests</parallel>
-                    <threadCount>5</threadCount>
+                        <parallel>tests</parallel>
+                        <threadCount>10</threadCount>
                     <systemPropertyVariables>
                         <environment>${env.USER}</environment>
                     </systemPropertyVariables>

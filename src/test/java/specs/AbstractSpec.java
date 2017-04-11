@@ -43,7 +43,7 @@ public abstract class AbstractSpec extends util.Functions {
     private static final String BROWSER_STACK_URL = "http://jencampbell2:6jEURzbszfaWhLJc7XWx@hub.browserstack.com/wd/hub";
     private static final String BUILD_ID = RandomStringUtils.randomAlphanumeric(6);
     public static final long DEFAULT_TIMEOUT = 5L;
-    private static final long DEFAULT_PAUSE = 2500;
+    private static final long DEFAULT_PAUSE = 1500;
 
     public static URL desktopUrl, desktopUrlPublic;
     public static BrowserStackCapability browser;
@@ -239,7 +239,7 @@ public abstract class AbstractSpec extends util.Functions {
         sessionID = sessionIDCookie;
     }
 
-    public void setupPropUI() throws IOException {
+    public static void setupPropUI() throws IOException {
         propUISystemAdmin = ConnectToPropUI(PATHTO_SYSTEMADMIN_PROP);
         propUISiteAdmin = ConnectToPropUI(PATHTO_SITEADMIN_PROP);
         propUIContentAdmin = ConnectToPropUI(PATHTO_CONTENTADMIN_PROP);
