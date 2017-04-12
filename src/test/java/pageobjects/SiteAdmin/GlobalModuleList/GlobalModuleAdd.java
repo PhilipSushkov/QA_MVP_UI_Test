@@ -27,7 +27,7 @@ import static specs.AbstractSpec.propUISiteAdmin;
 
 public class GlobalModuleAdd extends AbstractPageObject {
     private static By moduleTitle, moduleTitleField, moduleDefinitionSelect, moduleTypeSelect, regionNameSelect;
-    private static By saveBtn, cancelBtn, deleteBtn, addNewLink, legacyModulesChk, publishBtn;
+    private static By saveBtn, cancelBtn, deleteBtn, addNewLink, legacyModulesChk, publishBtn, activeChk;
     private static By revertBtn, workflowStateSpan, commentsTxt, successMsg, saveAndSubmitBtn;
     private static String sPathToFile, sFileJson;
     private static JSONParser parser;
@@ -52,6 +52,7 @@ public class GlobalModuleAdd extends AbstractPageObject {
         commentsTxt = By.xpath(propUISiteAdmin.getProperty("txtarea_Comments"));
         successMsg = By.xpath(propUISiteAdmin.getProperty("msg_Success"));
         saveAndSubmitBtn = By.xpath(propUISiteAdmin.getProperty("btn_SaveAndSubmit"));
+        activeChk = By.xpath(propUISiteAdmin.getProperty("chk_Active"));
 
         parser = new JSONParser();
 
@@ -292,6 +293,122 @@ public class GlobalModuleAdd extends AbstractPageObject {
 
             System.out.println(name+ ": New "+PAGE_NAME+" has been published");
             return findElement(workflowStateSpan).getText();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public String changeAndSubmitGlobalModule(JSONObject data, String name) throws InterruptedException {
+        JSONObject jsonMain = new JSONObject();
+        JSONObject jsonObj = new JSONObject();
+
+        try {
+            try {
+                FileReader readFile = new FileReader(sPathToFile + sFileJson);
+                jsonMain = (JSONObject) parser.parse(readFile);
+                jsonObj = (JSONObject) jsonMain.get(name);
+            } catch (ParseException e) {
+            }
+
+            String pageUrl = getPageUrl(jsonMain, name);
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+            waitForElement(saveBtn);
+
+            try {
+                if (!data.get("region_name_ch").toString().isEmpty()) {
+                    findElement(regionNameSelect).sendKeys(data.get("region_name_ch").toString());
+                    findElement(commentsTxt).clear();
+                    findElement(commentsTxt).sendKeys(data.get("comment_ch").toString());
+                }
+            } catch (NullPointerException e) {
+            }
+
+            try {
+                // Save Active checkbox
+                if (Boolean.parseBoolean(data.get("active_ch").toString())) {
+                    if (!Boolean.parseBoolean(findElement(activeChk).getAttribute("checked"))) {
+                        findElement(activeChk).click();
+                        findElement(commentsTxt).clear();
+                        findElement(commentsTxt).sendKeys(data.get("comment_ch").toString());
+                    } else {
+                    }
+                } else {
+                    if (!Boolean.parseBoolean(findElement(activeChk).getAttribute("checked"))) {
+                    } else {
+                        findElement(activeChk).click();
+                        findElement(commentsTxt).clear();
+                        findElement(commentsTxt).sendKeys(data.get("comment_ch").toString());
+                    }
+                }
+            } catch (NullPointerException e) {
+            }
+
+            findElement(saveAndSubmitBtn).click();
+            Thread.sleep(DEFAULT_PAUSE);
+
+            jsonObj.put("workflow_state", WorkflowState.FOR_APPROVAL.state());
+            jsonObj.put("deleted", "false");
+
+            jsonMain.put(name, jsonObj);
+
+            FileWriter file = new FileWriter(sPathToFile + sFileJson);
+            file.write(jsonMain.toJSONString().replace("\\", ""));
+            file.flush();
+
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+            waitForElement(workflowStateSpan);
+
+            System.out.println(name+ ": New "+PAGE_NAME+" changes have been submitted");
+            return findElement(workflowStateSpan).getText();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public String revertToLiveGlobalModule(String name) throws InterruptedException {
+        JSONObject jsonMain = new JSONObject();
+        JSONObject jsonObj = new JSONObject();
+
+        try {
+            try {
+                FileReader readFile = new FileReader(sPathToFile + sFileJson);
+                jsonMain = (JSONObject) parser.parse(readFile);
+                jsonObj = (JSONObject) jsonMain.get(name);
+            } catch (ParseException e) {
+            }
+
+            String pageUrl = getPageUrl(jsonMain, name);
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+            waitForElement(revertBtn);
+
+            if (jsonObj.get("workflow_state").toString().equals(WorkflowState.FOR_APPROVAL.state())) {
+                findElement(revertBtn).click();
+                Thread.sleep(DEFAULT_PAUSE);
+
+                jsonObj.put("workflow_state", WorkflowState.LIVE.state());
+                jsonObj.put("deleted", "false");
+
+                jsonMain.put(name, jsonObj);
+
+                FileWriter file = new FileWriter(sPathToFile + sFileJson);
+                file.write(jsonMain.toJSONString().replace("\\", ""));
+                file.flush();
+
+                driver.get(pageUrl);
+                Thread.sleep(DEFAULT_PAUSE);
+                waitForElement(workflowStateSpan);
+
+                System.out.println(name+ ": "+PAGE_NAME+" has been reverted to Live");
+                return findElement(workflowStateSpan).getText();
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }

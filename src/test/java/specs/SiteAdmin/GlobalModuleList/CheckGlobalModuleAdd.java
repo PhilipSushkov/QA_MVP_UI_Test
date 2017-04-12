@@ -73,9 +73,18 @@ public class CheckGlobalModuleAdd extends AbstractSpec {
     }
 
     @Test(dataProvider=DATA, priority=3)
-    public void publishGlobalModule(JSONObject data) throws Exception {
+    public void publishGlobalModule(JSONObject data) throws InterruptedException {
         String sGlobalModuleName = data.get(GLOBAL_MODULE_NAME).toString();
         Assert.assertEquals(globalModuleAdd.publishGlobalModule(data, sGlobalModuleName), WorkflowState.LIVE.state(), "New "+ PAGE_NAME +" doesn't publish properly (after Publish)");
+    }
+
+    @Test(dataProvider=DATA, priority=4)
+    public void revertGlobalModule(JSONObject data) throws InterruptedException {
+        String sGlobalModuleName = data.get(GLOBAL_MODULE_NAME).toString();
+
+        Assert.assertEquals(globalModuleAdd.changeAndSubmitGlobalModule(data, sGlobalModuleName), WorkflowState.FOR_APPROVAL.state(), "Some fields of New "+ PAGE_NAME +" didn't change properly (after Save and Submit)");
+        Assert.assertEquals(globalModuleAdd.revertToLiveGlobalModule(sGlobalModuleName), WorkflowState.LIVE.state(), "Couldn't revert to Live changes for New "+ PAGE_NAME);
+        Assert.assertTrue(globalModuleAdd.checkGlobalModule(data, sGlobalModuleName), "Submitted New "+ PAGE_NAME +" data doesn't fit well to entry data (after Revert To Live)");
     }
 
     @DataProvider
