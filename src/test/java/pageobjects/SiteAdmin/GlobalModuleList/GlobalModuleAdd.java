@@ -8,7 +8,6 @@ import com.jayway.jsonpath.JsonPath;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.support.ui.Select;
 import pageobjects.PageAdmin.WorkflowState;
 
@@ -28,7 +27,7 @@ import static specs.AbstractSpec.propUISiteAdmin;
 public class GlobalModuleAdd extends AbstractPageObject {
     private static By moduleTitle, moduleTitleField, moduleDefinitionSelect, moduleTypeSelect, regionNameSelect;
     private static By saveBtn, cancelBtn, deleteBtn, addNewLink, legacyModulesChk, publishBtn, activeChk;
-    private static By revertBtn, workflowStateSpan, commentsTxt, successMsg, saveAndSubmitBtn;
+    private static By revertBtn, workflowStateSpan, commentsTxt, successMsg, saveAndSubmitBtn, currentContentSpan;
     private static String sPathToFile, sFileJson;
     private static JSONParser parser;
     private static final long DEFAULT_PAUSE = 2500;
@@ -53,6 +52,7 @@ public class GlobalModuleAdd extends AbstractPageObject {
         successMsg = By.xpath(propUISiteAdmin.getProperty("msg_Success"));
         saveAndSubmitBtn = By.xpath(propUISiteAdmin.getProperty("btn_SaveAndSubmit"));
         activeChk = By.xpath(propUISiteAdmin.getProperty("chk_Active"));
+        currentContentSpan = By.xpath(propUISiteAdmin.getProperty("span_CurrentContent"));
 
         parser = new JSONParser();
 
@@ -474,6 +474,93 @@ public class GlobalModuleAdd extends AbstractPageObject {
 
             System.out.println(name+ ": New "+PAGE_NAME+" has been checked");
             return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public String setupAsDeletedGlobalModule(String name) throws InterruptedException {
+        JSONObject jsonMain = new JSONObject();
+        JSONObject jsonObj = new JSONObject();
+
+        try {
+            try {
+                FileReader readFile = new FileReader(sPathToFile + sFileJson);
+                jsonMain = (JSONObject) parser.parse(readFile);
+                jsonObj = (JSONObject) jsonMain.get(name);
+            } catch (ParseException e) {
+            }
+
+            String pageUrl = getPageUrl(jsonMain, name);
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+
+            waitForElement(commentsTxt);
+            findElement(commentsTxt).sendKeys("Removing "+PAGE_NAME);
+            findElement(deleteBtn).click();
+            Thread.sleep(DEFAULT_PAUSE);
+
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+            waitForElement(currentContentSpan);
+
+            jsonObj.put("workflow_state", WorkflowState.FOR_APPROVAL.state());
+            jsonObj.put("deleted", "true");
+
+            jsonMain.put(name, jsonObj);
+
+            FileWriter file = new FileWriter(sPathToFile + sFileJson);
+            file.write(jsonMain.toJSONString().replace("\\", ""));
+            file.flush();
+
+            System.out.println(name+ ": "+PAGE_NAME+" set up as deleted");
+            return findElement(currentContentSpan).getText();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public String removeGlobalModule(JSONObject data, String name) throws InterruptedException {
+        JSONObject jsonMain = new JSONObject();
+
+        try {
+            try {
+                FileReader readFile = new FileReader(sPathToFile + sFileJson);
+                jsonMain = (JSONObject) parser.parse(readFile);
+            } catch (ParseException e) {
+            }
+
+            String pageUrl = getPageUrl(jsonMain, name);
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+
+            if (findElement(currentContentSpan).getText().equals(WorkflowState.DELETE_PENDING.state())) {
+
+                waitForElement(commentsTxt);
+                findElement(commentsTxt).sendKeys("Approving "+PAGE_NAME+" removal");
+                findElement(publishBtn).click();
+
+                Thread.sleep(DEFAULT_PAUSE*2);
+
+                driver.get(pageUrl);
+                Thread.sleep(DEFAULT_PAUSE);
+
+                jsonMain.remove(name);
+
+                FileWriter file = new FileWriter(sPathToFile + sFileJson);
+                file.write(jsonMain.toJSONString().replace("\\", ""));
+                file.flush();
+
+                Thread.sleep(DEFAULT_PAUSE*2);
+                driver.navigate().refresh();
+
+                System.out.println(name+ ": New "+PAGE_NAME+" has been removed");
+                return findElement(workflowStateSpan).getText();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -35,6 +35,14 @@
         </classes>
     </test>
 
+    <!-- Site Admin -->
+    <test name="CheckGlobalModuleAdd">
+        <classes>
+            <class name="specs.SiteAdmin.GlobalModuleList.CheckGlobalModuleAdd" />
+        </classes>
+    </test>
+
+
     <test name="CreateNewUser">
         <classes>
             <class name="specs.SystemAdmin.UserList.CreateNewUser" />
