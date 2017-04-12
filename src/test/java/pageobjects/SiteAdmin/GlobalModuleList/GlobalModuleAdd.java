@@ -1,15 +1,15 @@
-package pageobjects.SystemAdmin.GenericStorageList;
+package pageobjects.SiteAdmin.GlobalModuleList;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import pageobjects.AbstractPageObject;
 
 import com.jayway.jsonpath.JsonPath;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.Select;
-import pageobjects.AbstractPageObject;
 import pageobjects.PageAdmin.WorkflowState;
-import util.Functions;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -18,43 +18,46 @@ import java.io.IOException;
 import java.net.URL;
 
 import static specs.AbstractSpec.desktopUrl;
-import static specs.AbstractSpec.propUISystemAdmin;
+import static specs.AbstractSpec.propUISiteAdmin;
 
 /**
- * Created by philipsushkov on 2017-02-15.
+ * Created by philipsushkov on 2017-04-11.
  */
 
-public class GenericStorageAdd extends AbstractPageObject {
-    private static By moduleTitle, tokenSelectionSelect, dataContentTextArea, successMsg;
-    private static By addNewLink, saveBtn, cancelBtn, deleteBtn, saveAndSubmitBtn, publishBtn;
-    private static By revertBtn, workflowStateSpan, commentsTxt, currentContentSpan;
+public class GlobalModuleAdd extends AbstractPageObject {
+    private static By moduleTitle, moduleTitleField, moduleDefinitionSelect, moduleTypeSelect, regionNameSelect;
+    private static By saveBtn, cancelBtn, deleteBtn, addNewLink, legacyModulesChk, publishBtn, activeChk;
+    private static By revertBtn, workflowStateSpan, commentsTxt, successMsg, saveAndSubmitBtn, currentContentSpan;
     private static String sPathToFile, sFileJson;
     private static JSONParser parser;
     private static final long DEFAULT_PAUSE = 2500;
-    private final String PAGE_NAME="Generic Storage";
+    private final String PAGE_NAME="Global Module";
 
-    public GenericStorageAdd(WebDriver driver) {
+    public GlobalModuleAdd(WebDriver driver) {
         super(driver);
-
-        moduleTitle = By.xpath(propUISystemAdmin.getProperty("spanModule_Title"));
-        saveBtn = By.xpath(propUISystemAdmin.getProperty("btn_Save"));
-        cancelBtn = By.xpath(propUISystemAdmin.getProperty("btn_Cancel"));
-        deleteBtn = By.xpath(propUISystemAdmin.getProperty("btn_Delete"));
-        publishBtn = By.xpath(propUISystemAdmin.getProperty("btn_Publish"));
-        saveAndSubmitBtn = By.xpath(propUISystemAdmin.getProperty("btn_SaveAndSubmit"));
-        revertBtn = By.xpath(propUISystemAdmin.getProperty("btn_Revert"));
-        addNewLink = By.xpath(propUISystemAdmin.getProperty("input_AddNew"));
-        tokenSelectionSelect = By.xpath(propUISystemAdmin.getProperty("select_DataToken"));
-        dataContentTextArea = By.xpath(propUISystemAdmin.getProperty("txtarea_DataContent"));
-        successMsg = By.xpath(propUISystemAdmin.getProperty("msg_Success"));
-        workflowStateSpan = By.xpath(propUISystemAdmin.getProperty("select_WorkflowState"));
-        commentsTxt = By.xpath(propUISystemAdmin.getProperty("txtarea_Comments"));
-        currentContentSpan = By.xpath(propUISystemAdmin.getProperty("span_CurrentContent"));
+        moduleTitle = By.xpath(propUISiteAdmin.getProperty("spanSection_Title"));
+        saveBtn = By.xpath(propUISiteAdmin.getProperty("btn_Save"));
+        cancelBtn = By.xpath(propUISiteAdmin.getProperty("btn_Cancel"));
+        deleteBtn = By.xpath(propUISiteAdmin.getProperty("btn_Delete"));
+        publishBtn = By.xpath(propUISiteAdmin.getProperty("btn_Publish"));
+        addNewLink = By.xpath(propUISiteAdmin.getProperty("input_AddNew"));
+        moduleTitleField = By.xpath(propUISiteAdmin.getProperty("input_ModuleTitle"));
+        moduleDefinitionSelect = By.xpath(propUISiteAdmin.getProperty("select_ModuleDefinition"));
+        moduleTypeSelect = By.xpath(propUISiteAdmin.getProperty("select_ModuleType"));
+        regionNameSelect = By.xpath(propUISiteAdmin.getProperty("select_RegionName"));
+        legacyModulesChk = By.xpath(propUISiteAdmin.getProperty("chk_LegacyModules"));
+        revertBtn = By.xpath(propUISiteAdmin.getProperty("btn_Revert"));
+        workflowStateSpan = By.xpath(propUISiteAdmin.getProperty("select_WorkflowState"));
+        commentsTxt = By.xpath(propUISiteAdmin.getProperty("txtarea_Comments"));
+        successMsg = By.xpath(propUISiteAdmin.getProperty("msg_Success"));
+        saveAndSubmitBtn = By.xpath(propUISiteAdmin.getProperty("btn_SaveAndSubmit"));
+        activeChk = By.xpath(propUISiteAdmin.getProperty("chk_Active"));
+        currentContentSpan = By.xpath(propUISiteAdmin.getProperty("span_CurrentContent"));
 
         parser = new JSONParser();
 
-        sPathToFile = System.getProperty("user.dir") + propUISystemAdmin.getProperty("dataPath_GenericStorageList");
-        sFileJson = propUISystemAdmin.getProperty("json_GenericStorage");
+        sPathToFile = System.getProperty("user.dir") + propUISiteAdmin.getProperty("dataPath_GlobalModuleList");
+        sFileJson = propUISiteAdmin.getProperty("json_GlobalModules");
     }
 
     public String getTitle() {
@@ -65,9 +68,9 @@ public class GenericStorageAdd extends AbstractPageObject {
         return sTitle;
     }
 
-
-    public String saveGenericStorage(JSONObject data, String name) {
-        String data_token, body_text;
+    public String saveGlobalModule(JSONObject data, String name) {
+        String module_title, module_definition, module_type, region_name;
+        Boolean include_legacy_modules;
         JSONObject jsonObj = new JSONObject();
         JSONObject jsonMain = new JSONObject();
 
@@ -82,19 +85,41 @@ public class GenericStorageAdd extends AbstractPageObject {
             } catch (ParseException e) {
             }
 
-            data_token = data.get("data_token").toString();
-            findElement(tokenSelectionSelect).sendKeys(data_token);
-            jsonObj.put("data_token", data_token);
+            module_title = data.get("module_title").toString();
+            findElement(moduleTitleField).sendKeys(module_title);
+            jsonObj.put("module_title", module_title);
 
-            body_text = data.get("body_text").toString();
-            findElement(dataContentTextArea).sendKeys(body_text);
-            jsonObj.put("body_text", body_text);
+            module_definition = data.get("module_definition").toString();
+            findElement(moduleDefinitionSelect).sendKeys(module_definition);
+            jsonObj.put("module_definition", module_definition);
+
+            module_type = data.get("module_type").toString().split(";")[0];
+            findElement(moduleTypeSelect).sendKeys(module_type);
+            jsonObj.put("module_type", module_type);
+
+            region_name = data.get("region_name").toString();
+            findElement(regionNameSelect).sendKeys(region_name);
+            jsonObj.put("region_name", region_name);
+
+            include_legacy_modules = Boolean.parseBoolean(data.get("include_legacy_modules").toString());
+            jsonObj.put("include_legacy_modules", Boolean.parseBoolean(data.get("include_legacy_modules").toString()));
+            if (include_legacy_modules) {
+                if (!Boolean.parseBoolean(findElement(legacyModulesChk).getAttribute("checked"))) {
+                    findElement(legacyModulesChk).click();
+                } else {
+                }
+            } else {
+                if (!Boolean.parseBoolean(findElement(legacyModulesChk).getAttribute("checked"))) {
+                } else {
+                    findElement(legacyModulesChk).click();
+                }
+            }
 
             findElement(saveBtn).click();
             Thread.sleep(DEFAULT_PAUSE);
             waitForElement(successMsg);
 
-            // Save Generic Storage
+            // Save Global Module Url
             URL url = new URL(getUrl());
             String[] params = url.getQuery().split("&");
             JSONObject jsonURLQuery = new JSONObject();
@@ -127,13 +152,13 @@ public class GenericStorageAdd extends AbstractPageObject {
         return null;
     }
 
-    public String saveAndSubmitGenericStorage(JSONObject data, String name) throws InterruptedException {
+    public String saveAndSubmitGlobalModule(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
-        By editBtn = By.xpath("//td[(text()='" + data.get("data_token").toString() + "')]/parent::tr/td/input[contains(@id, 'imgEdit')][contains(@id, 'GenericStorages')]");
+        By editBtn = By.xpath("//td/span[(text()='" + data.get("module_title").toString() + "')]/parent::td/parent::tr/td/input[contains(@id, 'btnEdit')][contains(@id, 'ModuleInstances')]");
+        System.out.println(findElement(editBtn).getAttribute("innerText"));
 
         try {
             waitForElement(moduleTitle);
-            findElement(editBtn).click();
 
             try {
                 FileReader readFile = new FileReader(sPathToFile + sFileJson);
@@ -141,25 +166,21 @@ public class GenericStorageAdd extends AbstractPageObject {
             } catch (ParseException e) {
             }
 
+            String pageUrl = getPageUrl(jsonMain, name);
+            driver.get(pageUrl);
+            //findElement(editBtn).click();
+            Thread.sleep(DEFAULT_PAUSE);
+
             waitForElement(commentsTxt);
             findElement(commentsTxt).sendKeys(data.get("comment").toString());
             findElement(saveAndSubmitBtn).click();
             Thread.sleep(DEFAULT_PAUSE);
 
             waitForElement(editBtn);
-            findElement(editBtn).click();
+            driver.get(pageUrl);
             Thread.sleep(DEFAULT_PAUSE);
 
             JSONObject jsonObj = (JSONObject) jsonMain.get(name);
-
-            // Save Generic Storage Url
-            URL url = new URL(getUrl());
-            String[] params = url.getQuery().split("&");
-            JSONObject jsonURLQuery = new JSONObject();
-            for (String param:params) {
-                jsonURLQuery.put(param.split("=")[0], param.split("=")[1]);
-            }
-            jsonObj.put("url_query", jsonURLQuery);
 
             jsonObj.put("workflow_state", WorkflowState.FOR_APPROVAL.state());
             jsonObj.put("deleted", "false");
@@ -170,7 +191,7 @@ public class GenericStorageAdd extends AbstractPageObject {
             file.write(jsonMain.toJSONString().replace("\\", ""));
             file.flush();
 
-            System.out.println(name+ ": New Generic Storage has been sumbitted");
+            System.out.println(name+ ": "+PAGE_NAME+" has been sumbitted");
             return findElement(workflowStateSpan).getText();
         } catch (IOException e) {
             e.printStackTrace();
@@ -179,7 +200,7 @@ public class GenericStorageAdd extends AbstractPageObject {
         return null;
     }
 
-    public Boolean checkGenericStorage(JSONObject data, String name) throws InterruptedException {
+    public Boolean checkGlobalModule(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
 
         try {
@@ -196,14 +217,28 @@ public class GenericStorageAdd extends AbstractPageObject {
 
             // Compare field values with entry data
             try {
-                if (!new Select(findElement(tokenSelectionSelect)).getFirstSelectedOption().getText().equals(data.get("data_token").toString())) {
+                if (findElement(moduleTitleField).toString().equals(data.get("module_title").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
             }
 
             try {
-                if (!findElement(dataContentTextArea).getAttribute("value").equals(data.get("body_text").toString())) {
+                if (!new Select(findElement(moduleDefinitionSelect)).getFirstSelectedOption().getText().equals(data.get("module_definition").toString())) {
+                    return false;
+                }
+            } catch (NullPointerException e) {
+            }
+
+            try {
+                if (!new Select(findElement(moduleTypeSelect)).getFirstSelectedOption().getText().equals(data.get("module_type").toString().split(";")[1])) {
+                    return false;
+                }
+            } catch (NullPointerException e) {
+            }
+
+            try {
+                if (!new Select(findElement(regionNameSelect)).getFirstSelectedOption().getText().equals(data.get("region_name").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
@@ -219,40 +254,7 @@ public class GenericStorageAdd extends AbstractPageObject {
         return null;
     }
 
-    public Boolean checkGenericStorageCh(JSONObject data, String name) throws InterruptedException {
-        JSONObject jsonMain = new JSONObject();
-
-        try {
-            try {
-                FileReader readFile = new FileReader(sPathToFile + sFileJson);
-                jsonMain = (JSONObject) parser.parse(readFile);
-            } catch (ParseException e) {
-            }
-
-            String pageUrl = getPageUrl(jsonMain, name);
-            driver.get(pageUrl);
-            Thread.sleep(DEFAULT_PAUSE);
-            waitForElement(commentsTxt);
-
-            // Compare field values with entry data
-            try {
-                if (!findElement(dataContentTextArea).getAttribute("value").equals(data.get("body_text_ch").toString())) {
-                    return false;
-                }
-            } catch (NullPointerException e) {
-            }
-
-
-            System.out.println(name+ ": "+PAGE_NAME+" changes have been checked");
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
-    public String publishGenericStorage(JSONObject data, String name) throws InterruptedException {
+    public String publishGlobalModule(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
         JSONObject jsonObj = new JSONObject();
 
@@ -267,6 +269,7 @@ public class GenericStorageAdd extends AbstractPageObject {
             String pageUrl = getPageUrl(jsonMain, name);
             driver.get(pageUrl);
             Thread.sleep(DEFAULT_PAUSE);
+
             waitForElement(publishBtn);
             findElement(publishBtn).click();
             Thread.sleep(DEFAULT_PAUSE*2);
@@ -297,7 +300,7 @@ public class GenericStorageAdd extends AbstractPageObject {
         return null;
     }
 
-    public String changeAndSubmitGenericStorage(JSONObject data, String name) throws InterruptedException {
+    public String changeAndSubmitGlobalModule(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
         JSONObject jsonObj = new JSONObject();
 
@@ -312,16 +315,40 @@ public class GenericStorageAdd extends AbstractPageObject {
             String pageUrl = getPageUrl(jsonMain, name);
             driver.get(pageUrl);
             Thread.sleep(DEFAULT_PAUSE);
-            waitForElement(saveBtn);
+            waitForElement(saveAndSubmitBtn);
 
             try {
-                if (!data.get("body_text_ch").toString().isEmpty()) {
-                    findElement(dataContentTextArea).clear();
-                    findElement(dataContentTextArea).sendKeys(data.get("body_text_ch").toString());
-                    findElement(commentsTxt).clear();
-                    findElement(commentsTxt).sendKeys(data.get("comment_ch").toString());
+                if (!data.get("region_name_ch").toString().isEmpty()) {
+                    findElement(regionNameSelect).sendKeys(data.get("region_name_ch").toString());
+                    jsonObj.put("region_name", data.get("region_name_ch").toString());
                 }
-            } catch (NullPointerException e) {}
+            } catch (NullPointerException e) {
+            }
+
+            jsonObj.put("active", Boolean.parseBoolean(data.get("active").toString()));
+            try {
+                // Save Active checkbox
+                if (Boolean.parseBoolean(data.get("active_ch").toString())) {
+                    if (!Boolean.parseBoolean(findElement(activeChk).getAttribute("checked"))) {
+                        findElement(activeChk).click();
+                        jsonObj.put("active", true);
+                    } else {
+                    }
+                } else {
+                    if (!Boolean.parseBoolean(findElement(activeChk).getAttribute("checked"))) {
+                    } else {
+                        findElement(activeChk).click();
+                        jsonObj.put("active", false);
+                    }
+                }
+            } catch (NullPointerException e) {
+            }
+
+            try {
+                findElement(commentsTxt).clear();
+                findElement(commentsTxt).sendKeys(data.get("comment_ch").toString());
+            } catch (NullPointerException e) {
+            }
 
             findElement(saveAndSubmitBtn).click();
             Thread.sleep(DEFAULT_PAUSE);
@@ -348,7 +375,7 @@ public class GenericStorageAdd extends AbstractPageObject {
         return null;
     }
 
-    public String revertToLiveGenericStorage(String name) throws InterruptedException {
+    public String revertToLiveGlobalModule(String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
         JSONObject jsonObj = new JSONObject();
 
@@ -393,7 +420,68 @@ public class GenericStorageAdd extends AbstractPageObject {
         return null;
     }
 
-    public String setupAsDeletedGenericStorage(String name) throws InterruptedException {
+    public Boolean checkGlobalModuleCh(JSONObject data, String name) throws InterruptedException {
+        JSONObject jsonMain = new JSONObject();
+
+        try {
+            try {
+                FileReader readFile = new FileReader(sPathToFile + sFileJson);
+                jsonMain = (JSONObject) parser.parse(readFile);
+            } catch (ParseException e) {
+            }
+
+            String pageUrl = getPageUrl(jsonMain, name);
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+            waitForElement(commentsTxt);
+
+            // Compare field values with entry data
+            try {
+                if (findElement(moduleTitleField).toString().equals(data.get("module_title").toString())) {
+                    return false;
+                }
+            } catch (NullPointerException e) {
+            }
+
+            try {
+                if (!new Select(findElement(moduleDefinitionSelect)).getFirstSelectedOption().getText().equals(data.get("module_definition").toString())) {
+                    return false;
+                }
+            } catch (NullPointerException e) {
+            }
+
+            try {
+                if (!new Select(findElement(moduleTypeSelect)).getFirstSelectedOption().getText().equals(data.get("module_type").toString().split(";")[1])) {
+                    return false;
+                }
+            } catch (NullPointerException e) {
+            }
+
+            try {
+                if (!new Select(findElement(regionNameSelect)).getFirstSelectedOption().getText().equals(data.get("region_name_ch").toString())) {
+                    return false;
+                }
+            } catch (NullPointerException e) {
+            }
+
+            try {
+                if (!findElement(activeChk).getAttribute("checked").equals(data.get("active_ch").toString())) {
+                    return false;
+                }
+            } catch (NullPointerException e) {
+            }
+
+
+            System.out.println(name+ ": New "+PAGE_NAME+" has been checked");
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public String setupAsDeletedGlobalModule(String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
         JSONObject jsonObj = new JSONObject();
 
@@ -410,7 +498,7 @@ public class GenericStorageAdd extends AbstractPageObject {
             Thread.sleep(DEFAULT_PAUSE);
 
             waitForElement(commentsTxt);
-            findElement(commentsTxt).sendKeys("Removing the page");
+            findElement(commentsTxt).sendKeys("Removing "+PAGE_NAME);
             findElement(deleteBtn).click();
             Thread.sleep(DEFAULT_PAUSE);
 
@@ -436,7 +524,7 @@ public class GenericStorageAdd extends AbstractPageObject {
         return null;
     }
 
-    public String removeGenericStorage(JSONObject data, String name) throws InterruptedException {
+    public String removeGlobalModule(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
 
         try {
@@ -453,7 +541,7 @@ public class GenericStorageAdd extends AbstractPageObject {
             if (findElement(currentContentSpan).getText().equals(WorkflowState.DELETE_PENDING.state())) {
 
                 waitForElement(commentsTxt);
-                findElement(commentsTxt).sendKeys("Approving the page removal");
+                findElement(commentsTxt).sendKeys("Approving "+PAGE_NAME+" removal");
                 findElement(publishBtn).click();
 
                 Thread.sleep(DEFAULT_PAUSE*2);
@@ -480,10 +568,10 @@ public class GenericStorageAdd extends AbstractPageObject {
         return null;
     }
 
-    public String getPageUrl (JSONObject obj, String pageName) {
-        String  sItemID = JsonPath.read(obj, "$.['"+pageName+"'].url_query.ItemID");
-        String  sLanguageId = JsonPath.read(obj, "$.['"+pageName+"'].url_query.LanguageId");
-        String  sSectionId = JsonPath.read(obj, "$.['"+pageName+"'].url_query.SectionId");
+    public String getPageUrl (JSONObject obj, String name) {
+        String  sItemID = JsonPath.read(obj, "$.['"+name+"'].url_query.ItemID");
+        String  sLanguageId = JsonPath.read(obj, "$.['"+name+"'].url_query.LanguageId");
+        String  sSectionId = JsonPath.read(obj, "$.['"+name+"'].url_query.SectionId");
         return desktopUrl.toString()+"default.aspx?ItemID="+sItemID+"&LanguageId="+sLanguageId+"&SectionId="+sSectionId;
     }
 

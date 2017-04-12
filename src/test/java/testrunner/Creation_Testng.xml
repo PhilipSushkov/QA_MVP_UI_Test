@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="Web CMS Suite Creation" parallel="tests" thread-count="4">
-
+<suite name="Web CMS Suite Creation" parallel="tests" thread-count="5">
+  
     <test name="CheckPageAdd">
         <classes>
             <class name="specs.PageAdmin.CheckPageAdd" />
@@ -34,6 +34,14 @@
             <class name="specs.SystemAdmin.UserGroupList.CheckUserGroupAdd" />
         </classes>
     </test>
+
+    <!-- Site Admin -->
+    <test name="CheckGlobalModuleAdd">
+        <classes>
+            <class name="specs.SiteAdmin.GlobalModuleList.CheckGlobalModuleAdd" />
+        </classes>
+    </test>
+
 
     <test name="CreateNewUser">
         <classes>
