@@ -94,7 +94,7 @@ public class GenericStorageAdd extends AbstractPageObject {
             Thread.sleep(DEFAULT_PAUSE);
             waitForElement(successMsg);
 
-            // Save Filter Url
+            // Save Generic Storage
             URL url = new URL(getUrl());
             String[] params = url.getQuery().split("&");
             JSONObject jsonURLQuery = new JSONObject();
@@ -152,7 +152,7 @@ public class GenericStorageAdd extends AbstractPageObject {
 
             JSONObject jsonObj = (JSONObject) jsonMain.get(name);
 
-            // Save Filter Url
+            // Save Generic Storage Url
             URL url = new URL(getUrl());
             String[] params = url.getQuery().split("&");
             JSONObject jsonURLQuery = new JSONObject();

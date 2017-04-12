@@ -10,6 +10,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.support.ui.Select;
+import pageobjects.PageAdmin.WorkflowState;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -25,8 +26,13 @@ import static specs.AbstractSpec.propUISiteAdmin;
  */
 
 public class GlobalModuleAdd extends AbstractPageObject {
-    private static By moduleTitle, addNewLink;
-    private static By saveBtn, cancelBtn, deleteBtn;
+    private static By moduleTitle, moduleTitleField, moduleDefinitionSelect, moduleTypeSelect, regionNameSelect;
+    private static By saveBtn, cancelBtn, deleteBtn, addNewLink, legacyModulesChk;
+    private static By revertBtn, workflowStateSpan, commentsTxt, successMsg, saveAndSubmitBtn;
+    private static String sPathToFile, sFileJson;
+    private static JSONParser parser;
+    private static final long DEFAULT_PAUSE = 2500;
+    private final String PAGE_NAME="Global Module";
 
     public GlobalModuleAdd(WebDriver driver) {
         super(driver);
@@ -35,6 +41,21 @@ public class GlobalModuleAdd extends AbstractPageObject {
         cancelBtn = By.xpath(propUISiteAdmin.getProperty("btn_Cancel"));
         deleteBtn = By.xpath(propUISiteAdmin.getProperty("btn_Delete"));
         addNewLink = By.xpath(propUISiteAdmin.getProperty("input_AddNew"));
+        moduleTitleField = By.xpath(propUISiteAdmin.getProperty("input_ModuleTitle"));
+        moduleDefinitionSelect = By.xpath(propUISiteAdmin.getProperty("select_ModuleDefinition"));
+        moduleTypeSelect = By.xpath(propUISiteAdmin.getProperty("select_ModuleType"));
+        regionNameSelect = By.xpath(propUISiteAdmin.getProperty("select_RegionName"));
+        legacyModulesChk = By.xpath(propUISiteAdmin.getProperty("chk_LegacyModules"));
+        revertBtn = By.xpath(propUISiteAdmin.getProperty("btn_Revert"));
+        workflowStateSpan = By.xpath(propUISiteAdmin.getProperty("select_WorkflowState"));
+        commentsTxt = By.xpath(propUISiteAdmin.getProperty("txtarea_Comments"));
+        successMsg = By.xpath(propUISiteAdmin.getProperty("msg_Success"));
+        saveAndSubmitBtn = By.xpath(propUISiteAdmin.getProperty("btn_SaveAndSubmit"));
+
+        parser = new JSONParser();
+
+        sPathToFile = System.getProperty("user.dir") + propUISiteAdmin.getProperty("dataPath_GlobalModuleList");
+        sFileJson = propUISiteAdmin.getProperty("json_GlobalModules");
     }
 
     public String getTitle() {
@@ -46,9 +67,135 @@ public class GlobalModuleAdd extends AbstractPageObject {
     }
 
     public String saveGlobalModule(JSONObject data, String name) {
-        System.out.println(name);
-        //return null;
-        return "Global Module List";
+        String module_title, module_definition, module_type, region_name;
+        Boolean include_legacy_modules;
+        JSONObject jsonObj = new JSONObject();
+        JSONObject jsonMain = new JSONObject();
+
+        waitForElement(addNewLink);
+        findElement(addNewLink).click();
+        waitForElement(saveBtn);
+
+        try {
+            try {
+                FileReader readFile = new FileReader(sPathToFile + sFileJson);
+                jsonMain = (JSONObject) parser.parse(readFile);
+            } catch (ParseException e) {
+            }
+
+            module_title = data.get("module_title").toString();
+            findElement(moduleTitleField).sendKeys(module_title);
+            jsonObj.put("module_title", module_title);
+
+            module_definition = data.get("module_definition").toString();
+            findElement(moduleDefinitionSelect).sendKeys(module_definition);
+            jsonObj.put("module_definition", module_definition);
+
+            module_type = data.get("module_type").toString();
+            findElement(moduleTypeSelect).sendKeys(module_type);
+            jsonObj.put("module_type", module_type);
+
+            region_name = data.get("region_name").toString();
+            findElement(regionNameSelect).sendKeys(region_name);
+            jsonObj.put("region_name", region_name);
+
+            include_legacy_modules = Boolean.parseBoolean(data.get("include_legacy_modules").toString());
+            jsonObj.put("include_legacy_modules", Boolean.parseBoolean(data.get("include_legacy_modules").toString()));
+            if (include_legacy_modules) {
+                if (!Boolean.parseBoolean(findElement(legacyModulesChk).getAttribute("checked"))) {
+                    findElement(legacyModulesChk).click();
+                } else {
+                }
+            } else {
+                if (!Boolean.parseBoolean(findElement(legacyModulesChk).getAttribute("checked"))) {
+                } else {
+                    findElement(legacyModulesChk).click();
+                }
+            }
+
+            findElement(saveBtn).click();
+            Thread.sleep(DEFAULT_PAUSE);
+            waitForElement(successMsg);
+
+            // Save Global Module Url
+            URL url = new URL(getUrl());
+            String[] params = url.getQuery().split("&");
+            JSONObject jsonURLQuery = new JSONObject();
+            for (String param:params) {
+                jsonURLQuery.put(param.split("=")[0], param.split("=")[1]);
+            }
+            jsonObj.put("url_query", jsonURLQuery);
+
+            jsonObj.put("workflow_state", WorkflowState.IN_PROGRESS.state());
+
+            jsonMain.put(name, jsonObj);
+
+            try {
+                FileWriter writeFile = new FileWriter(sPathToFile + sFileJson);
+                writeFile.write(jsonMain.toJSONString().replace("\\", ""));
+                writeFile.flush();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            System.out.println(name + ": "+PAGE_NAME+" has been created");
+            return findElement(workflowStateSpan).getText();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public String saveAndSubmitGlobalModule(JSONObject data, String name) throws InterruptedException {
+        JSONObject jsonMain = new JSONObject();
+        By editBtn = By.xpath("//td/span[(text()='" + data.get("module_title").toString() + "')]/parent::td/parent::tr/td/input[contains(@id, 'btnEdit')][contains(@id, 'ModuleInstances')]");
+        System.out.println(findElement(editBtn).getAttribute("innerText"));
+
+        try {
+            waitForElement(moduleTitle);
+
+            try {
+                FileReader readFile = new FileReader(sPathToFile + sFileJson);
+                jsonMain = (JSONObject) parser.parse(readFile);
+            } catch (ParseException e) {
+            }
+
+            String pageUrl = getPageUrl(jsonMain, name);
+            driver.get(pageUrl);
+            //findElement(editBtn).click();
+            Thread.sleep(DEFAULT_PAUSE);
+
+            waitForElement(commentsTxt);
+            findElement(commentsTxt).sendKeys(data.get("comment").toString());
+            findElement(saveAndSubmitBtn).click();
+            Thread.sleep(DEFAULT_PAUSE);
+
+            waitForElement(editBtn);
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+
+            JSONObject jsonObj = (JSONObject) jsonMain.get(name);
+
+            jsonObj.put("workflow_state", WorkflowState.FOR_APPROVAL.state());
+            jsonObj.put("deleted", "false");
+
+            jsonMain.put(name, jsonObj);
+
+            FileWriter file = new FileWriter(sPathToFile + sFileJson);
+            file.write(jsonMain.toJSONString().replace("\\", ""));
+            file.flush();
+
+            System.out.println(name+ ": "+PAGE_NAME+" has been sumbitted");
+            return findElement(workflowStateSpan).getText();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     public String getPageUrl (JSONObject obj, String name) {

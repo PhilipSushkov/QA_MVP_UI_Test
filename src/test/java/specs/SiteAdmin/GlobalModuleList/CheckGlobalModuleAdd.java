@@ -9,6 +9,7 @@ import org.testng.Assert;
 import org.testng.annotations.*;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.LoginPage.LoginPage;
+import pageobjects.PageAdmin.WorkflowState;
 import pageobjects.SiteAdmin.GlobalModuleList.GlobalModuleAdd;
 import specs.AbstractSpec;
 
@@ -30,7 +31,7 @@ public class CheckGlobalModuleAdd extends AbstractSpec {
     private static String sPathToFile, sDataFileJson;
     private static JSONParser parser;
 
-    private final String DATA="getData", GLOBAL_MODULE_NAME="global_module_name", PAGE_NAME="Global Module";
+    private final String DATA="getData", GLOBAL_MODULE_NAME="module_title", PAGE_NAME="Global Module";
 
     @BeforeTest
     public void setUp() throws Exception {
@@ -57,11 +58,18 @@ public class CheckGlobalModuleAdd extends AbstractSpec {
     @Test(dataProvider=DATA, priority=1)
     public void saveGlobalModule(JSONObject data) {
         String sGlobalModuleName = data.get(GLOBAL_MODULE_NAME).toString();
-        String expectedTitleList = "Global Module List";
         String expectedTitleEdit = "Global Module Edit";
 
         Assert.assertEquals(globalModuleAdd.getTitle(), expectedTitleEdit, "Actual "+PAGE_NAME+" Edit page Title doesn't match to expected");
-        Assert.assertEquals(globalModuleAdd.saveGlobalModule(data, sGlobalModuleName), expectedTitleList, "New "+PAGE_NAME+" didn't save properly");
+        Assert.assertEquals(globalModuleAdd.saveGlobalModule(data, sGlobalModuleName), WorkflowState.IN_PROGRESS.state(), "New "+PAGE_NAME+" didn't save properly");
+    }
+
+    @Test(dataProvider=DATA, priority=2)
+    public void saveAndSubmitGlobalModule(JSONObject data) throws InterruptedException {
+        String sGlobalModuleName = data.get(GLOBAL_MODULE_NAME).toString();
+
+        Assert.assertEquals(globalModuleAdd.saveAndSubmitGlobalModule(data, sGlobalModuleName), WorkflowState.FOR_APPROVAL.state(), "New " + PAGE_NAME + " doesn't submit properly (after Save And Submit)");
+        //Assert.assertTrue(globalModuleAdd.checkGlobalModule(data, sGlobalModuleName), "Submitted New "+ PAGE_NAME +" data doesn't fit well to entry data (after Save and Submit)");
     }
 
     @DataProvider

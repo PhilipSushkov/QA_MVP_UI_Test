@@ -13,7 +13,7 @@ import static specs.AbstractSpec.propUISystemAdmin;
  */
 
 public class GenericStorageEdit extends AbstractPageObject {
-    private static By moduleTitle, dataTokenSelect, dataContentTextarea,saveAndSubmitButton;
+    private static By moduleTitle, dataTokenSelect, dataContentTextarea, saveAndSubmitButton;
 
     public GenericStorageEdit(WebDriver driver) {
         super(driver);
