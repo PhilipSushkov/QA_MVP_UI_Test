@@ -69,7 +69,13 @@ public class CheckGlobalModuleAdd extends AbstractSpec {
         String sGlobalModuleName = data.get(GLOBAL_MODULE_NAME).toString();
 
         Assert.assertEquals(globalModuleAdd.saveAndSubmitGlobalModule(data, sGlobalModuleName), WorkflowState.FOR_APPROVAL.state(), "New " + PAGE_NAME + " doesn't submit properly (after Save And Submit)");
-        //Assert.assertTrue(globalModuleAdd.checkGlobalModule(data, sGlobalModuleName), "Submitted New "+ PAGE_NAME +" data doesn't fit well to entry data (after Save and Submit)");
+        Assert.assertTrue(globalModuleAdd.checkGlobalModule(data, sGlobalModuleName), "Submitted New "+ PAGE_NAME +" data doesn't fit well to entry data (after Save and Submit)");
+    }
+
+    @Test(dataProvider=DATA, priority=3)
+    public void publishGlobalModule(JSONObject data) throws Exception {
+        String sGlobalModuleName = data.get(GLOBAL_MODULE_NAME).toString();
+        Assert.assertEquals(globalModuleAdd.publishGlobalModule(data, sGlobalModuleName), WorkflowState.LIVE.state(), "New "+ PAGE_NAME +" doesn't publish properly (after Publish)");
     }
 
     @DataProvider
