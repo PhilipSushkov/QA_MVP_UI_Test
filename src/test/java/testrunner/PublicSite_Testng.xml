@@ -51,4 +51,9 @@
             <class name="specs.PublicSite.CheckRSSFeedPage" />
         </classes>
     </test>
+    <test name="CheckSiteMapPage">
+        <classes>
+            <class name="specs.PublicSite.CheckSiteMapPage" />
+        </classes>
+    </test>
 </suite>
