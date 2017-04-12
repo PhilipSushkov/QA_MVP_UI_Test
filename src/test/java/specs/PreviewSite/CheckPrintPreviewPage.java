@@ -1,26 +1,25 @@
-package specs.PublicSite;
+package specs.PreviewSite;
 
-import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import pageobjects.LiveSite.HomePage;
 import pageobjects.LiveSite.PrintPreviewPage;
+import pageobjects.LoginPage.LoginPage;
 import specs.AbstractSpec;
 
 /**
- * Created by sarahr on 4/11/2017.
+ * Created by sarahr on 4/12/2017.
  */
-public class CheckPrintPreview extends AbstractSpec{
+public class CheckPrintPreviewPage extends AbstractSpec {
+    //This is the Preview class for the print preview tests
+    //Couldn't keep normal naming conditions as it would be PrintPreviewPreviewPage and that's weird
 
     private static HomePage homePage;
 
     @BeforeTest
-    public void goToPublicSite() {
-
-        driver.get("http://chicagotest.q4web.com/English/Investors/default.aspx");
+    public void goToPreviewSite() throws Exception {
+        new LoginPage(driver).loginUser().previewSite().goToInvestorsPage();
         homePage = new HomePage(driver);
-        Assert.assertTrue(homePage.logoIsPresent(), "Home page of public site has not been loaded.");
-
     }
 
     @Test
@@ -45,5 +44,4 @@ public class CheckPrintPreview extends AbstractSpec{
         print.clickPrintPreviewBtn();
         print.contentIsSameOnPP();
     }
-
 }
