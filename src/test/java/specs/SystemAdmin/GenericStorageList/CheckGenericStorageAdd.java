@@ -100,21 +100,18 @@ public class CheckGenericStorageAdd extends AbstractSpec {
     @Test(dataProvider=DATA, priority=6)
     public void publishEditGenericStorage(JSONObject data) throws Exception {
         String sStorageName = data.get(STORAGE_NAME).toString();
-
         Assert.assertEquals(genericStorageAdd.publishGenericStorage(data, sStorageName), WorkflowState.LIVE.state(), "New "+ PAGE_NAME +" doesn't publish changes properly (after Publish)");
     }
 
     @Test(dataProvider=DATA, priority=7)
     public void deleteGenericStorage(JSONObject data) throws Exception {
         String sStorageName = data.get(STORAGE_NAME).toString();
-
         Assert.assertEquals(genericStorageAdd.setupAsDeletedGenericStorage(sStorageName), WorkflowState.DELETE_PENDING.state(), "New "+ PAGE_NAME +" didn't setup as Deleted properly");
     }
 
     @Test(dataProvider=DATA, priority=8)
     public void removeGenericStorage(JSONObject data) throws Exception {
         String sStorageName = data.get(STORAGE_NAME).toString();
-
         Assert.assertEquals(genericStorageAdd.removeGenericStorage(data, sStorageName), WorkflowState.NEW_ITEM.state(), "Couldn't remove New "+ PAGE_NAME +". Something went wrong.");
     }
 

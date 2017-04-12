@@ -87,6 +87,32 @@ public class CheckGlobalModuleAdd extends AbstractSpec {
         Assert.assertTrue(globalModuleAdd.checkGlobalModule(data, sGlobalModuleName), "Submitted New "+ PAGE_NAME +" data doesn't fit well to entry data (after Revert To Live)");
     }
 
+    @Test(dataProvider=DATA, priority=5)
+    public void changeAndSubmitEditGlobalModule(JSONObject data) throws Exception {
+        String sGlobalModuleName = data.get(GLOBAL_MODULE_NAME).toString();
+
+        Assert.assertEquals(globalModuleAdd.changeAndSubmitGlobalModule(data, sGlobalModuleName), WorkflowState.FOR_APPROVAL.state(), "Some fields of New "+ PAGE_NAME +" didn't change properly (after Save and Submit)");
+        Assert.assertTrue(globalModuleAdd.checkGlobalModuleCh(data, sGlobalModuleName), "Submitted New "+ PAGE_NAME +" changes don't fit well to change data (after Change And Submit)");
+    }
+
+    @Test(dataProvider=DATA, priority=6)
+    public void publishEditGlobalModule(JSONObject data) throws InterruptedException {
+        String sGlobalModuleName = data.get(GLOBAL_MODULE_NAME).toString();
+        Assert.assertEquals(globalModuleAdd.publishGlobalModule(data, sGlobalModuleName), WorkflowState.LIVE.state(), "New "+ PAGE_NAME +" doesn't publish properly (after Publish)");
+    }
+
+    @Test(dataProvider=DATA, priority=7)
+    public void deleteGlobalModule(JSONObject data) throws Exception {
+        String sGlobalModuleName = data.get(GLOBAL_MODULE_NAME).toString();
+        Assert.assertEquals(globalModuleAdd.setupAsDeletedGlobalModule(sGlobalModuleName), WorkflowState.DELETE_PENDING.state(), "New "+ PAGE_NAME +" didn't setup as Deleted properly");
+    }
+
+    @Test(dataProvider=DATA, priority=8)
+    public void removeGlobalModule(JSONObject data) throws Exception {
+        String sGlobalModuleName = data.get(GLOBAL_MODULE_NAME).toString();
+        Assert.assertEquals(globalModuleAdd.removeGlobalModule(data, sGlobalModuleName), WorkflowState.NEW_ITEM.state(), "Couldn't remove New "+ PAGE_NAME +". Something went wrong.");
+    }
+
     @DataProvider
     public Object[][] getData() {
 

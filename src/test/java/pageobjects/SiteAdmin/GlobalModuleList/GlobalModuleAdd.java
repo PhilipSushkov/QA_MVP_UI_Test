@@ -315,34 +315,38 @@ public class GlobalModuleAdd extends AbstractPageObject {
             String pageUrl = getPageUrl(jsonMain, name);
             driver.get(pageUrl);
             Thread.sleep(DEFAULT_PAUSE);
-            waitForElement(saveBtn);
+            waitForElement(saveAndSubmitBtn);
 
             try {
                 if (!data.get("region_name_ch").toString().isEmpty()) {
                     findElement(regionNameSelect).sendKeys(data.get("region_name_ch").toString());
-                    findElement(commentsTxt).clear();
-                    findElement(commentsTxt).sendKeys(data.get("comment_ch").toString());
+                    jsonObj.put("region_name", data.get("region_name_ch").toString());
                 }
             } catch (NullPointerException e) {
             }
 
+            jsonObj.put("active", Boolean.parseBoolean(data.get("active").toString()));
             try {
                 // Save Active checkbox
                 if (Boolean.parseBoolean(data.get("active_ch").toString())) {
                     if (!Boolean.parseBoolean(findElement(activeChk).getAttribute("checked"))) {
                         findElement(activeChk).click();
-                        findElement(commentsTxt).clear();
-                        findElement(commentsTxt).sendKeys(data.get("comment_ch").toString());
+                        jsonObj.put("active", true);
                     } else {
                     }
                 } else {
                     if (!Boolean.parseBoolean(findElement(activeChk).getAttribute("checked"))) {
                     } else {
                         findElement(activeChk).click();
-                        findElement(commentsTxt).clear();
-                        findElement(commentsTxt).sendKeys(data.get("comment_ch").toString());
+                        jsonObj.put("active", false);
                     }
                 }
+            } catch (NullPointerException e) {
+            }
+
+            try {
+                findElement(commentsTxt).clear();
+                findElement(commentsTxt).sendKeys(data.get("comment_ch").toString());
             } catch (NullPointerException e) {
             }
 
@@ -409,6 +413,67 @@ public class GlobalModuleAdd extends AbstractPageObject {
                 return findElement(workflowStateSpan).getText();
             }
 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public Boolean checkGlobalModuleCh(JSONObject data, String name) throws InterruptedException {
+        JSONObject jsonMain = new JSONObject();
+
+        try {
+            try {
+                FileReader readFile = new FileReader(sPathToFile + sFileJson);
+                jsonMain = (JSONObject) parser.parse(readFile);
+            } catch (ParseException e) {
+            }
+
+            String pageUrl = getPageUrl(jsonMain, name);
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+            waitForElement(commentsTxt);
+
+            // Compare field values with entry data
+            try {
+                if (findElement(moduleTitleField).toString().equals(data.get("module_title").toString())) {
+                    return false;
+                }
+            } catch (NullPointerException e) {
+            }
+
+            try {
+                if (!new Select(findElement(moduleDefinitionSelect)).getFirstSelectedOption().getText().equals(data.get("module_definition").toString())) {
+                    return false;
+                }
+            } catch (NullPointerException e) {
+            }
+
+            try {
+                if (!new Select(findElement(moduleTypeSelect)).getFirstSelectedOption().getText().equals(data.get("module_type").toString().split(";")[1])) {
+                    return false;
+                }
+            } catch (NullPointerException e) {
+            }
+
+            try {
+                if (!new Select(findElement(regionNameSelect)).getFirstSelectedOption().getText().equals(data.get("region_name_ch").toString())) {
+                    return false;
+                }
+            } catch (NullPointerException e) {
+            }
+
+            try {
+                if (!findElement(activeChk).getAttribute("checked").equals(data.get("active_ch").toString())) {
+                    return false;
+                }
+            } catch (NullPointerException e) {
+            }
+
+
+            System.out.println(name+ ": New "+PAGE_NAME+" has been checked");
+            return true;
         } catch (IOException e) {
             e.printStackTrace();
         }
