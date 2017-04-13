@@ -58,4 +58,9 @@
             <class name="specs.PreviewSite.CheckPreviewSiteMapPage" />
         </classes>
     </test>
+    <test name="CheckPrintPreviewPage">
+        <classes>
+            <class name="specs.PreviewSite.CheckPrintPreviewPage" />
+        </classes>
+    </test>
 </suite>
