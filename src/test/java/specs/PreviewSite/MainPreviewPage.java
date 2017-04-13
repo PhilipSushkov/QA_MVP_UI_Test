@@ -24,6 +24,7 @@ public class MainPreviewPage extends AbstractSpec {
     @BeforeTest
     public void goToPreviewSite() throws Exception {
         Q4WebVersionNumber = propUIPublicSite.getProperty("siteVersion");
+        System.out.println("Preview version number: "+ Q4WebVersionNumber);
         new LoginPage(driver).loginUser().previewSite().goToInvestorsPage();
         homePage = new HomePage(driver);
     }
