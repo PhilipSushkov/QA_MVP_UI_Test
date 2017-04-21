@@ -25,8 +25,9 @@ import static specs.AbstractSpec.propUISiteAdmin;
  */
 
 public class LayoutDefinitionAdd extends AbstractPageObject {
-    private static By moduleTitle;
-    private static By saveBtn, cancelBtn, deleteBtn, addNewLink, legacyModulesChk, publishBtn, activeChk;
+    private static By moduleTitle, friendlyNameField, descriptionField, defaultLayoutSelect;
+    private static By layoutPathRb, userControlContentRb, activeChk, isAdminChk, viewStateChk;
+    private static By saveBtn, cancelBtn, deleteBtn, addNewLink, publishBtn;
     private static By revertBtn, workflowStateSpan, commentsTxt, successMsg, saveAndSubmitBtn, currentContentSpan;
     private static String sPathToFile, sFileJson;
     private static JSONParser parser;
@@ -35,13 +36,19 @@ public class LayoutDefinitionAdd extends AbstractPageObject {
 
     public LayoutDefinitionAdd(WebDriver driver) {
         super(driver);
-        moduleTitle = By.xpath(propUISiteAdmin.getProperty("spanSection_Title"));
+        moduleTitle = By.xpath(propUISiteAdmin.getProperty("spanModule_Title"));
+        friendlyNameField = By.xpath(propUISiteAdmin.getProperty("input_FriendlyName"));
+        descriptionField = By.xpath(propUISiteAdmin.getProperty("input_Description"));
+        defaultLayoutSelect = By.xpath(propUISiteAdmin.getProperty("select_DefaultLayout"));
+        isAdminChk = By.xpath(propUISiteAdmin.getProperty("chk_IsAdmin"));
+        viewStateChk = By.xpath(propUISiteAdmin.getProperty("chk_ViewState"));
+        layoutPathRb = By.xpath(propUISiteAdmin.getProperty("rb_LayoutPath"));
+        userControlContentRb = By.xpath(propUISiteAdmin.getProperty("rb_UserControlContent"));
         saveBtn = By.xpath(propUISiteAdmin.getProperty("btn_Save"));
         cancelBtn = By.xpath(propUISiteAdmin.getProperty("btn_Cancel"));
         deleteBtn = By.xpath(propUISiteAdmin.getProperty("btn_Delete"));
         publishBtn = By.xpath(propUISiteAdmin.getProperty("btn_Publish"));
         addNewLink = By.xpath(propUISiteAdmin.getProperty("input_AddNew"));
-        legacyModulesChk = By.xpath(propUISiteAdmin.getProperty("chk_LegacyModules"));
         revertBtn = By.xpath(propUISiteAdmin.getProperty("btn_Revert"));
         workflowStateSpan = By.xpath(propUISiteAdmin.getProperty("select_WorkflowState"));
         commentsTxt = By.xpath(propUISiteAdmin.getProperty("txtarea_Comments"));
@@ -56,6 +63,132 @@ public class LayoutDefinitionAdd extends AbstractPageObject {
         sFileJson = propUISiteAdmin.getProperty("json_GlobalModules");
     }
 
+    public String getTitle() {
+        findElement(addNewLink).click();
+        waitForElement(moduleTitle);
+        String sTitle = getText(moduleTitle);
+        findElement(cancelBtn).click();
+        return sTitle;
+    }
+
+    public String saveLayoutDefinition(JSONObject data, String name) {
+        String friendly_name, description, layout_type, default_layout;
+        Boolean is_admin, active, enable_viewState;
+        JSONObject jsonObj = new JSONObject();
+        JSONObject jsonMain = new JSONObject();
+
+        waitForElement(addNewLink);
+        findElement(addNewLink).click();
+        waitForElement(saveBtn);
+
+        try {
+            try {
+                FileReader readFile = new FileReader(sPathToFile + sFileJson);
+                jsonMain = (JSONObject) parser.parse(readFile);
+            } catch (ParseException e) {
+            }
+
+            friendly_name = data.get("friendly_name").toString();
+            findElement(friendlyNameField).sendKeys(friendly_name);
+            jsonObj.put("module_title", friendly_name);
+
+            description = data.get("description").toString();
+            findElement(descriptionField).sendKeys(description);
+            jsonObj.put("description", description);
+
+            layout_type = data.get("layout_type").toString();
+            jsonObj.put("layout_type", layout_type);
+            if (layout_type.equals("Default Layout")) {
+                findElement(layoutPathRb).click();
+            }
+            if (layout_type.equals("Custom Layout")) {
+                findElement(userControlContentRb).click();
+            }
+
+            default_layout = data.get("default_layout").toString();
+            findElement(defaultLayoutSelect).sendKeys(default_layout);
+            jsonObj.put("default_layout", default_layout);
+
+            is_admin = Boolean.parseBoolean(data.get("is_admin").toString());
+            jsonObj.put("is_admin", Boolean.parseBoolean(data.get("is_admin").toString()));
+            if (is_admin) {
+                if (!Boolean.parseBoolean(findElement(isAdminChk).getAttribute("checked"))) {
+                    findElement(isAdminChk).click();
+                } else {
+                }
+            } else {
+                if (!Boolean.parseBoolean(findElement(isAdminChk).getAttribute("checked"))) {
+                } else {
+                    findElement(isAdminChk).click();
+                }
+            }
+
+            active = Boolean.parseBoolean(data.get("active").toString());
+            jsonObj.put("active", Boolean.parseBoolean(data.get("active").toString()));
+            if (active) {
+                if (!Boolean.parseBoolean(findElement(activeChk).getAttribute("checked"))) {
+                    findElement(activeChk).click();
+                } else {
+                }
+            } else {
+                if (!Boolean.parseBoolean(findElement(activeChk).getAttribute("checked"))) {
+                } else {
+                    findElement(activeChk).click();
+                }
+            }
+
+            enable_viewState = Boolean.parseBoolean(data.get("enable_viewState").toString());
+            jsonObj.put("enable_viewState", Boolean.parseBoolean(data.get("enable_viewState").toString()));
+            if (enable_viewState) {
+                if (!Boolean.parseBoolean(findElement(viewStateChk).getAttribute("checked"))) {
+                    findElement(viewStateChk).click();
+                } else {
+                }
+            } else {
+                if (!Boolean.parseBoolean(findElement(viewStateChk).getAttribute("checked"))) {
+                } else {
+                    findElement(viewStateChk).click();
+                }
+            }
+
+
+            findElement(saveBtn).click();
+            Thread.sleep(DEFAULT_PAUSE);
+            waitForElement(successMsg);
+
+            // Save LayoutDefinition Url
+            URL url = new URL(getUrl());
+            String[] params = url.getQuery().split("&");
+            JSONObject jsonURLQuery = new JSONObject();
+            for (String param:params) {
+                jsonURLQuery.put(param.split("=")[0], param.split("=")[1]);
+            }
+            jsonObj.put("url_query", jsonURLQuery);
+
+            jsonObj.put("workflow_state", WorkflowState.IN_PROGRESS.state());
+
+            jsonMain.put(name, jsonObj);
+
+            try {
+                FileWriter writeFile = new FileWriter(sPathToFile + sFileJson);
+                writeFile.write(jsonMain.toJSONString().replace("\\", ""));
+                writeFile.flush();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            System.out.println(name + ": "+PAGE_NAME+" has been created");
+            return findElement(workflowStateSpan).getText();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+
+    }
 
     public String getPageUrl (JSONObject obj, String name) {
         String  sItemID = JsonPath.read(obj, "$.['"+name+"'].url_query.ItemID");

@@ -10,7 +10,6 @@ import org.testng.annotations.*;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.LoginPage.LoginPage;
 import pageobjects.PageAdmin.WorkflowState;
-import pageobjects.SiteAdmin.GlobalModuleList.GlobalModuleAdd;
 import pageobjects.SiteAdmin.LayoutDefinitionList.LayoutDefinitionAdd;
 import specs.AbstractSpec;
 
@@ -56,9 +55,14 @@ public class CheckLayoutDefinitionAdd extends AbstractSpec {
         dashboard.openPageFromMenu(siteAdminMenuButton, layoutDefinitionListMenuItem);
     }
 
+    @Test(dataProvider=DATA, priority=1)
+    public void saveGlobalModule(JSONObject data) {
+        String sLayoutDefinitionName = data.get(LAYOUT_DEFINITION_NAME).toString();
+        String expectedTitleEdit = "Layout Definition Edit";
 
-
-
+        Assert.assertEquals(layoutDefinitionAdd.getTitle(), expectedTitleEdit, "Actual "+PAGE_NAME+" Edit page Title doesn't match to expected");
+        Assert.assertEquals(layoutDefinitionAdd.saveLayoutDefinition(data, sLayoutDefinitionName), WorkflowState.IN_PROGRESS.state(), "New "+PAGE_NAME+" didn't save properly");
+    }
 
     @DataProvider
     public Object[][] getData() {
