@@ -8,6 +8,7 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import pageobjects.LiveSite.*;
 import specs.AbstractSpec;
+import yahoofinance.Stock;
 import yahoofinance.YahooFinance;
 import yahoofinance.histquotes.HistoricalQuote;
 import yahoofinance.histquotes.Interval;
@@ -233,12 +234,22 @@ public class CheckStockInformationPage extends AbstractSpec{
             // checking historical values from last trading day
             Calendar lastTradingDay = stockInformationPage.getCurrentDate(); //getting date from date dropdowns in module
             HistoricalQuote lastTradingDayQuotes;
+            System.out.println(lastTradingDay.getTime());
             // fetching data from Yahoo
             try {
-                lastTradingDayQuotes = YahooFinance.get("TXRH").getHistory(lastTradingDay, lastTradingDay
-                        , Interval.DAILY).get(0);
+                // Just to check if YahooFinance works well
+                //Stock tesla = YahooFinance.get("TSLA", true);
+                //System.out.println(tesla.getHistory());
+
+                lastTradingDayQuotes = YahooFinance.get("TXRH").getHistory(lastTradingDay, lastTradingDay, Interval.DAILY).get(0);
+                //lastTradingDayQuotes = YahooFinance.get("TXRH").getHistory().get(0);
+                //lastTradingDayQuotes = null;
+                //System.out.println(YahooFinance.get("AAPL").getHistory(lastTradingDay, lastTradingDay, Interval.DAILY).size());
             } catch (IOException e) {
                 fail("Problem retrieving last trading day stock data from Yahoo Finance.");
+                return;
+            } catch (IndexOutOfBoundsException e) {
+                fail(e.toString());
                 return;
             }
             // comparing Yahoo data with displayed values
@@ -253,6 +264,7 @@ public class CheckStockInformationPage extends AbstractSpec{
                     , 0.01, "Last trading day opening price isn't accurate");
             Assert.assertEquals(stockInformationPage.getHistoricalLast(), lastTradingDayQuotes.getClose().doubleValue()
                     , 0.01, "Last trading day last price isn't accurate" );
+
 
             // checking historical values from older day
             stockInformationPage.changeQuoteDate();

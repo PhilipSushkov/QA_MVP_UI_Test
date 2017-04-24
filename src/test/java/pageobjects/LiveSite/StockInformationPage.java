@@ -451,6 +451,7 @@ public class StockInformationPage extends AbstractPageObject {
         calendar.set(Integer.parseInt(yearDropdown.getFirstSelectedOption().getAttribute("value")),
                 Integer.parseInt(monthDropdown.getFirstSelectedOption().getAttribute("value"))-1,
                 Integer.parseInt(dayDropdown.getFirstSelectedOption().getAttribute("value")));
+        //System.out.println(calendar.getTime());
         return calendar;
     }
 

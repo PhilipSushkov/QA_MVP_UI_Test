@@ -1,11 +1,14 @@
 package util;
 
+import org.apache.commons.io.FileUtils;
+import org.im4java.core.CompareCmd;
+import org.im4java.core.IMOperation;
+import org.im4java.process.StandardStream;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.*;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -18,14 +21,16 @@ import java.util.*;
  */
 
 public class Functions {
-    private static Properties propUI;
-    private static String currentDir;
 
     public static Properties ConnectToPropUI(String sPathSharedUIMap) {
+        Properties propUI = null;
+        String currentDir = null;
+
         try {
             propUI = new Properties();
             currentDir = System.getProperty("user.dir") + "/src/test/java/specs/";
-            propUI.load(new FileInputStream(currentDir + sPathSharedUIMap));            
+            propUI.load(new FileInputStream(currentDir + sPathSharedUIMap));
+            //System.out.println("File "+currentDir + sPathSharedUIMap+" load properly!");
         } catch (IOException e) {
             System.out.println("File "+currentDir + sPathSharedUIMap+" didn't load properly!");
         }
@@ -177,4 +182,57 @@ public class Functions {
             return 404;
         }
     }
+
+    public static boolean compareImages (String exp, String cur, String diff) {
+        // This instance wraps the compare command
+        CompareCmd compare = new CompareCmd();
+
+        // For metric-output
+        compare.setErrorConsumer(StandardStream.STDERR);
+        IMOperation cmpOp = new IMOperation();
+        // Set the compare metric
+        cmpOp.metric("mae");
+
+        // Add the expected image
+        cmpOp.addImage(exp);
+
+        // Add the current image
+        cmpOp.addImage(cur);
+
+        // This stores the difference
+        cmpOp.addImage(diff);
+
+        try {
+            // Do the compare
+            compare.run(cmpOp);
+            return true;
+        }
+        catch (Exception ex) {
+            return false;
+        }
+    }
+
+    public static String takeScreenshot (WebDriver driver, String sShotName, String sPageName) {
+        String path = null;
+
+        try {
+            // Take screenshot and save it in source object
+            File source = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+
+            // Define path where Screenshot will be saved
+            path = System.getProperty("user.dir") + "/src/test/java/specs/ImageComparison/ScreenShots/" + sPageName + "/" + sShotName + ".png";
+            //System.out.println(path);
+
+            //Copy the source file at the screenshot path
+            FileUtils.copyFile(source,  new File(path));
+            System.out.println("Screenshot " + sShotName + " captured");
+        } catch (IOException e) {
+            System.out.println("Failed to capture screenshot:" + e.getMessage());
+        } catch (WebDriverException wde) {
+            System.out.println("Failed to capture screenshot:" + wde.getMessage());
+        }
+
+        return path;
+    }
+
 }
