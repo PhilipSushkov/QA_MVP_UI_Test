@@ -16,7 +16,7 @@ import specs.AbstractSpec;
  */
 public class CheckEmailAlertPage extends AbstractSpec {
 
-    //// WHEN ADDING A TEST TO THIS CLASS, ADD A ENTRY TO IT IN CheckPreviewSite.java \\\\
+    //// WHEN ADDING A TEST TO THIS CLASS, ADD A ENTRY TO IT IN CheckSitePr.java \\\\
 
 
     /** Changes necessary to make include removing all the "new XXX(drivers).YYY with a declaration, instead, in the @Before

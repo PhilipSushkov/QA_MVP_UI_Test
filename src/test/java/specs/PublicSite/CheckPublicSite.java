@@ -25,7 +25,7 @@ import static org.testng.Assert.fail;
 public class CheckPublicSite extends AbstractSpec {
     private final String Q4WebVersionNumber = "4.4.0.12";
 
-    //// WHEN ADDING A TEST TO THIS CLASS, ADD A ENTRY TO IT IN CheckPreviewSite.java \\\\
+    //// WHEN ADDING A TEST TO THIS CLASS, ADD A ENTRY TO IT IN CheckSitePr.java \\\\
 
 
     /** Changes necessary to make include removing all the "new XXX(drivers).YYY with a declaration, instead, in the @Before

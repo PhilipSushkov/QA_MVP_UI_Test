@@ -11,7 +11,7 @@ import specs.PublicSite.CheckPublicSite;
 /**
  * Created by easong on 1/24/17.
  */
-public class MainPreviewPage extends AbstractSpec {
+public class CheckMainPr extends AbstractSpec {
 
     //private final String Q4WebVersionNumber = "4.4.0.12";
     private String Q4WebVersionNumber;

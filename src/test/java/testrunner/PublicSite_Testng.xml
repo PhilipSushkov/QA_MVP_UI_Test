@@ -56,6 +56,11 @@
             <class name="specs.PublicSite.CheckSiteMapPage" />
         </classes>
     </test>
+    <test name="CheckSECFilingsPage">
+        <classes>
+            <class name="specs.PublicSite.CheckSECFilingsPage" />
+        </classes>
+    </test>
     <test name="CheckPrintPreviewPage">
         <classes>
             <class name="specs.PublicSite.CheckPrintPreview" />

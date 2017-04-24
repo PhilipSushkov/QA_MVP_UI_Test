@@ -15,7 +15,7 @@ import specs.PublicSite.CheckPublicSite;
 /**
  * Created by easong on 1/24/17.
  */
-public class FinancialReportsPreviewPage extends AbstractSpec {
+public class CheckFinancialReportsPr extends AbstractSpec {
 
     //// THERE SHOULD BE ONE TEST HERE FOR EVERY TEST ON CheckPublicSite.java \\\\
 

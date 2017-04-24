@@ -13,7 +13,7 @@ import specs.AbstractSpec;
  * Created by sarahr on 4/7/2017.
  */
 
-public class CheckPreviewSiteMapPage extends AbstractSpec {
+public class CheckSiteMapPr extends AbstractSpec {
 
     private static HomePage homePage;
 

@@ -12,7 +12,7 @@ import static org.junit.Assert.fail;
 /**
  * Created by jasons on 2016-11-30.
  */
-public class CheckPreviewSite extends AbstractSpec {
+public class CheckSitePr extends AbstractSpec {
 
     //// THERE SHOULD BE ONE TEST HERE FOR EVERY TEST ON CheckPublicSite.java \\\\
 

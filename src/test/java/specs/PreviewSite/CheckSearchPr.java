@@ -13,9 +13,9 @@ import static org.hamcrest.CoreMatchers.containsString;
 /**
  * Created by sarahr on 3/17/2017.
  */
-public class CheckPreviewSearch extends AbstractSpec{
+public class CheckSearchPr extends AbstractSpec{
 
-    //// WHEN ADDING A TEST TO THIS CLASS, ADD A ENTRY TO IT IN CheckPreviewSite.java \\\\
+    //// WHEN ADDING A TEST TO THIS CLASS, ADD A ENTRY TO IT IN CheckSitePr.java \\\\
 
     private static HomePage homePage;
 

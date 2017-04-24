@@ -10,7 +10,7 @@ import specs.AbstractSpec;
 /**
  * Created by sarahr on 4/12/2017.
  */
-public class CheckPrintPreviewPage extends AbstractSpec {
+public class CheckPrintPr extends AbstractSpec {
     //This is the Preview class for the print preview tests
     //Couldn't keep normal naming conditions as it would be PrintPreviewPreviewPage and that's weird
 

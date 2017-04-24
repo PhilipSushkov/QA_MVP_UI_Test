@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="Web CMS Suite Preview Site" parallel="tests" thread-count="5">
-    <test name="CheckMainPage">
+
+    <test name="CheckMainPr">
         <classes>
-            <class name="specs.PreviewSite.MainPreviewPage" />
+            <class name="specs.PreviewSite.CheckMainPr" />
         </classes>
     </test>
-    <test name="CheckFinancialReportsPage">
+    <test name="CheckFinancialReportsPr">
         <classes>
-            <class name="specs.PreviewSite.FinancialReportsPreviewPage" />
+            <class name="specs.PreviewSite.CheckFinancialReportsPr" />
         </classes>
     </test>
     <test name="CheckStockInformationPage">
@@ -21,31 +22,31 @@
             <class name="specs.PreviewSite.PressReleasePreviewPage" />
         </classes>
     </test>
-    <test name="CheckEventsPage">
+    <test name="CheckEventsPr">
         <classes>
-            <class name="specs.PreviewSite.EventsPreviewPage" />
+            <class name="specs.PreviewSite.CheckEventsPr" />
         </classes>
     </test>
-    <test name="CheckPresentationsPage">
+    <test name="CheckPresentationPr">
         <classes>
-            <class name="specs.PreviewSite.PresentationPreviewPage" />
+            <class name="specs.PreviewSite.CheckPresentationPr" />
         </classes>
     </test>
     <!--
     <test name="CheckEmailAlertsPage">
         <classes>
-            <class name="specs.PreviewSite.EmailAlertPreviewPage" />
+            <class name="specs.PreviewSite.CheckEmailAlertPr
         </classes>
     </test>
     -->
     <test name="CheckFAQPage">
         <classes>
-            <class name="specs.PreviewSite.FAQPreviewPage" />
+            <class name="specs.PreviewSite.CheckFAQPr" />
         </classes>
     </test>
-    <test name="CheckSearch">
+    <test name="CheckSearchPr">
         <classes>
-            <class name="specs.PreviewSite.CheckPreviewSearch" />
+            <class name="specs.PreviewSite.CheckSearchPr" />
         </classes>
     </test>
     <test name="CheckRSSFeeds">
@@ -53,14 +54,19 @@
             <class name="specs.PreviewSite.RSSPreviewPage" />
         </classes>
     </test>
-    <test name="CheckPreviewSiteMapPage">
+    <test name="CheckSiteMapPr">
         <classes>
-            <class name="specs.PreviewSite.CheckPreviewSiteMapPage" />
+            <class name="specs.PreviewSite.CheckSiteMapPr" />
         </classes>
     </test>
-    <test name="CheckPrintPreviewPage">
+    <test name="SECFilingPreviewPage">
         <classes>
-            <class name="specs.PreviewSite.CheckPrintPreviewPage" />
+            <class name="specs.PreviewSite.SECFilingPreviewPage" />
+        </classes>
+    </test>
+    <test name="CheckPrintPr">
+        <classes>
+            <class name="specs.PreviewSite.CheckPrintPr" />
         </classes>
     </test>
 </suite>
