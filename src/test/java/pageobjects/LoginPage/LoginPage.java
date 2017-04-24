@@ -25,7 +25,6 @@ public class LoginPage extends Page {
 
     public LoginPage(WebDriver driver) {
         super(driver);
-        dashboard = new Dashboard(driver);
     }
 
     public Dashboard loginUser() throws Exception {
@@ -42,12 +41,10 @@ public class LoginPage extends Page {
         Thread.sleep(DEFAULT_PAUSE);
         retryClick(loginButton);
         Thread.sleep(DEFAULT_PAUSE);
-
         waitForElement(logoutMenuItem);
-
-        //new Dashboard(driver).getUrl();
-
-        return dashboard;
+        new Dashboard(driver).getUrl();
+        
+        return new Dashboard(getDriver());
 
         /*
         if (AbstractSpec.getSessionID() != null) {
