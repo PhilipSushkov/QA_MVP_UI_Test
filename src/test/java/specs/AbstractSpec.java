@@ -210,6 +210,15 @@ public abstract class AbstractSpec extends util.Functions {
         if (driver != null) {
             driver.quit();
         }
+        
+        propUISiteAdmin.clear();
+        propUISystemAdmin.clear();
+        propUIContentAdmin.clear();
+        propUIEmailAdmin.clear();
+        propUICommon.clear();
+        propUIPublicSite.clear();
+        propUISocialMedia.clear();
+        propUIPageAdmin.clear();
     }
 
 
