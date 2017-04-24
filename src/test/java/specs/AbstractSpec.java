@@ -210,7 +210,7 @@ public abstract class AbstractSpec extends util.Functions {
         if (driver != null) {
             driver.quit();
         }
-        
+        /*
         propUISiteAdmin.clear();
         propUISystemAdmin.clear();
         propUIContentAdmin.clear();
@@ -219,6 +219,7 @@ public abstract class AbstractSpec extends util.Functions {
         propUIPublicSite.clear();
         propUISocialMedia.clear();
         propUIPageAdmin.clear();
+        */
     }
 
 
