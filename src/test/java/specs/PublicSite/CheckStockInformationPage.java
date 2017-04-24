@@ -8,6 +8,7 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import pageobjects.LiveSite.*;
 import specs.AbstractSpec;
+import yahoofinance.Stock;
 import yahoofinance.YahooFinance;
 import yahoofinance.histquotes.HistoricalQuote;
 import yahoofinance.histquotes.Interval;
@@ -236,6 +237,10 @@ public class CheckStockInformationPage extends AbstractSpec{
             System.out.println(lastTradingDay.getTime());
             // fetching data from Yahoo
             try {
+                // Just to check if YahooFinance works well
+                //Stock tesla = YahooFinance.get("TSLA", true);
+                //System.out.println(tesla.getHistory());
+
                 lastTradingDayQuotes = YahooFinance.get("TXRH").getHistory(lastTradingDay, lastTradingDay, Interval.DAILY).get(0);
                 //lastTradingDayQuotes = YahooFinance.get("TXRH").getHistory().get(0);
                 //lastTradingDayQuotes = null;

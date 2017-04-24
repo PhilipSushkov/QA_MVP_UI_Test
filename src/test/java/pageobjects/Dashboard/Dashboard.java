@@ -20,8 +20,8 @@ public class Dashboard extends AbstractPageObject {
     public Dashboard(WebDriver driver) {
         super(driver);
 
-        previewSiteButton = By.linkText(propUICommon.getProperty("btn_PreviewSite"));
-        socialMediaDashboard = By.linkText(propUICommon.getProperty("btnMenu_SocialMedia"));
+        previewSiteButton = By.xpath(propUICommon.getProperty("btn_PreviewSite"));
+        socialMediaDashboard = By.xpath(propUICommon.getProperty("btnMenu_SocialMedia"));
 
         invalidateCacheButton = By.xpath(propUICommon.getProperty("btn_InvalidateCache"));
         invalidateCacheMessage = By.xpath(propUICommon.getProperty("msg_InvalidateCache"));

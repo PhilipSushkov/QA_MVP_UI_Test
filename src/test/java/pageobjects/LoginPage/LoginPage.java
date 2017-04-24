@@ -13,16 +13,19 @@ import static org.junit.Assert.fail;
  * Created by philips on 2016-11-02.
  */
 public class LoginPage extends Page {
+    private static Dashboard dashboard;
     private final By emailField = By.id("txtUserName");
     private final By passwordField = By.name("txtPassword");
     private final By loginButton = By.id("btnSubmit");
     private final By loginErrorMessage = By.id("errLogin");
     private final By dashboardLabel = By.cssSelector(".AdminContentDiv2 h1"); //this is actually on the dashboard page; used to confirm that login is successful
     private final By logoutMenuItem = By.xpath("//li/a[contains(text(),'Logout')]");
+    private static final long DEFAULT_PAUSE = 2500;
 
 
     public LoginPage(WebDriver driver) {
         super(driver);
+        dashboard = new Dashboard(driver);
     }
 
     public Dashboard loginUser() throws Exception {
@@ -36,15 +39,15 @@ public class LoginPage extends Page {
         //findElement(emailField).sendKeys("philips");
         //findElement(passwordField).sendKeys("q4pass1234!");
 
-        pause(1000L);
+        Thread.sleep(DEFAULT_PAUSE);
         retryClick(loginButton);
-        pause(2000);
+        Thread.sleep(DEFAULT_PAUSE);
 
         waitForElement(logoutMenuItem);
 
-        new Dashboard(driver).getUrl();
+        //new Dashboard(driver).getUrl();
 
-        return new Dashboard(getDriver());
+        return dashboard;
 
         /*
         if (AbstractSpec.getSessionID() != null) {
