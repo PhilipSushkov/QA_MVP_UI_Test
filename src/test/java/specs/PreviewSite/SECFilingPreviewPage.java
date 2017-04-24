@@ -1,6 +1,7 @@
 package specs.PreviewSite;
 
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import pageobjects.LiveSite.HomePage;
@@ -22,6 +23,11 @@ public class SECFilingPreviewPage extends AbstractSpec {
     public void goToPreviewSite() throws Exception {
         new LoginPage(driver).loginUser().previewSite().goToInvestorsPage();
         homePage = new HomePage(driver);
+        homePage.selectSECFilingsFromMenu();
+    }
+    
+    @BeforeMethod
+    public void goToPage(){
         homePage.selectSECFilingsFromMenu();
     }
 

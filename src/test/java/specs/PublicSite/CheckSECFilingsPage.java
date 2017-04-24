@@ -1,6 +1,7 @@
 package specs.PublicSite;
 
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import pageobjects.LiveSite.HomePage;
@@ -20,15 +21,21 @@ public class CheckSECFilingsPage extends AbstractSpec {
     @BeforeTest
     public void goToPublicSite() {
 
-        driver.get("https://chicagotest.q4web.com/English/Investors/SEC-Filings/default.aspx");
+        driver.get("http://chicagotest.q4web.com/English/Investors/default.aspx");
         homePage = new HomePage(driver);
         Assert.assertTrue(homePage.logoIsPresent(), "Home page of public site has not been loaded.");
 
     }
 
+    @BeforeMethod
+    public void goToPage(){
+        homePage.selectSECFilingsFromMenu();
+    }
+
     @Test
     public void checkIfDetailsPageWorks(){
         SECFilingsPage sec = new SECFilingsPage(driver);
+
         int year = currentYear;
         boolean yearLoop = false;
 
