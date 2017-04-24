@@ -56,12 +56,20 @@ public class CheckLayoutDefinitionAdd extends AbstractSpec {
     }
 
     @Test(dataProvider=DATA, priority=1)
-    public void saveGlobalModule(JSONObject data) {
+    public void saveLayoutDefinition(JSONObject data) {
         String sLayoutDefinitionName = data.get(LAYOUT_DEFINITION_NAME).toString();
         String expectedTitleEdit = "Layout Definition Edit";
 
         Assert.assertEquals(layoutDefinitionAdd.getTitle(), expectedTitleEdit, "Actual "+PAGE_NAME+" Edit page Title doesn't match to expected");
         Assert.assertEquals(layoutDefinitionAdd.saveLayoutDefinition(data, sLayoutDefinitionName), WorkflowState.IN_PROGRESS.state(), "New "+PAGE_NAME+" didn't save properly");
+    }
+
+    @Test(dataProvider=DATA, priority=2)
+    public void saveAndSubmitLayoutDefinition(JSONObject data) throws InterruptedException {
+        String sLayoutDefinitionName = data.get(LAYOUT_DEFINITION_NAME).toString();
+
+        Assert.assertEquals(layoutDefinitionAdd.saveAndSubmitLayoutDefinition(data, sLayoutDefinitionName), WorkflowState.FOR_APPROVAL.state(), "New " + PAGE_NAME + " doesn't submit properly (after Save And Submit)");
+        //Assert.assertTrue(layoutDefinitionAdd.checkLayoutDefinition(data, sLayoutDefinitionName), "Submitted New "+ PAGE_NAME +" data doesn't fit well to entry data (after Save and Submit)");
     }
 
     @DataProvider

@@ -27,7 +27,7 @@ import static specs.AbstractSpec.propUISiteAdmin;
 public class LayoutDefinitionAdd extends AbstractPageObject {
     private static By moduleTitle, friendlyNameField, descriptionField, defaultLayoutSelect;
     private static By layoutPathRb, userControlContentRb, activeChk, isAdminChk, viewStateChk;
-    private static By saveBtn, cancelBtn, deleteBtn, addNewLink, publishBtn;
+    private static By saveBtn, cancelBtn, deleteBtn, addNewLink, publishBtn, backBtn;
     private static By revertBtn, workflowStateSpan, commentsTxt, successMsg, saveAndSubmitBtn, currentContentSpan;
     private static String sPathToFile, sFileJson;
     private static JSONParser parser;
@@ -44,6 +44,7 @@ public class LayoutDefinitionAdd extends AbstractPageObject {
         viewStateChk = By.xpath(propUISiteAdmin.getProperty("chk_ViewState"));
         layoutPathRb = By.xpath(propUISiteAdmin.getProperty("rb_LayoutPath"));
         userControlContentRb = By.xpath(propUISiteAdmin.getProperty("rb_UserControlContent"));
+        backBtn = By.xpath(propUISiteAdmin.getProperty("btn_Back"));
         saveBtn = By.xpath(propUISiteAdmin.getProperty("btn_Save"));
         cancelBtn = By.xpath(propUISiteAdmin.getProperty("btn_Cancel"));
         deleteBtn = By.xpath(propUISiteAdmin.getProperty("btn_Delete"));
@@ -188,6 +189,55 @@ public class LayoutDefinitionAdd extends AbstractPageObject {
 
         return null;
 
+    }
+
+    public String saveAndSubmitLayoutDefinition(JSONObject data, String name) throws InterruptedException {
+        JSONObject jsonMain = new JSONObject();
+        By editBtn = By.xpath("//td[(text()='" + data.get("friendly_name").toString() + "')]/parent::tr/td/input[contains(@id, 'imgEdit')][contains(@id, 'LayoutDefinition')]");
+        // //td[(text()='Home Page Layout 01')]/parent::tr/td/input[contains(@id, 'imgEdit')][contains(@id, 'LayoutDefinition')]
+        System.out.println(findElement(editBtn).getAttribute("innerText"));
+
+        try {
+            waitForElement(moduleTitle);
+
+            try {
+                FileReader readFile = new FileReader(sPathToFile + sFileJson);
+                jsonMain = (JSONObject) parser.parse(readFile);
+            } catch (ParseException e) {
+            }
+
+            String pageUrl = getPageUrl(jsonMain, name);
+            //driver.get(pageUrl);
+            findElement(editBtn).click();
+            Thread.sleep(DEFAULT_PAUSE);
+
+            waitForElement(commentsTxt);
+            findElement(commentsTxt).sendKeys(data.get("comment").toString());
+            findElement(saveAndSubmitBtn).click();
+            Thread.sleep(DEFAULT_PAUSE);
+
+            waitForElement(editBtn);
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+
+            JSONObject jsonObj = (JSONObject) jsonMain.get(name);
+
+            jsonObj.put("workflow_state", WorkflowState.FOR_APPROVAL.state());
+            jsonObj.put("deleted", "false");
+
+            jsonMain.put(name, jsonObj);
+
+            FileWriter file = new FileWriter(sPathToFile + sFileJson);
+            file.write(jsonMain.toJSONString().replace("\\", ""));
+            file.flush();
+
+            System.out.println(name+ ": "+PAGE_NAME+" has been sumbitted");
+            return findElement(workflowStateSpan).getText();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     public String getPageUrl (JSONObject obj, String name) {
