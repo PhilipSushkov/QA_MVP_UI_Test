@@ -21,14 +21,16 @@ import java.util.*;
  */
 
 public class Functions {
-    private static Properties propUI;
-    private static String currentDir;
 
     public static Properties ConnectToPropUI(String sPathSharedUIMap) {
+        Properties propUI = null;
+        String currentDir = null;
+
         try {
             propUI = new Properties();
             currentDir = System.getProperty("user.dir") + "/src/test/java/specs/";
-            propUI.load(new FileInputStream(currentDir + sPathSharedUIMap));            
+            propUI.load(new FileInputStream(currentDir + sPathSharedUIMap));
+            //System.out.println("File "+currentDir + sPathSharedUIMap+" load properly!");
         } catch (IOException e) {
             System.out.println("File "+currentDir + sPathSharedUIMap+" didn't load properly!");
         }
