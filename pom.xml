@@ -200,8 +200,6 @@
                     </dependency>
                 </dependencies>
                 <configuration>
-                        <parallel>tests</parallel>
-                        <threadCount>10</threadCount>
                     <systemPropertyVariables>
                         <environment>${env.USER}</environment>
                     </systemPropertyVariables>
