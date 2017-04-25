@@ -210,16 +210,6 @@ public abstract class AbstractSpec extends util.Functions {
         if (driver != null) {
             driver.quit();
         }
-        /*
-        propUISiteAdmin.clear();
-        propUISystemAdmin.clear();
-        propUIContentAdmin.clear();
-        propUIEmailAdmin.clear();
-        propUICommon.clear();
-        propUIPublicSite.clear();
-        propUISocialMedia.clear();
-        propUIPageAdmin.clear();
-        */
     }
 
 
@@ -249,7 +239,7 @@ public abstract class AbstractSpec extends util.Functions {
         sessionID = sessionIDCookie;
     }
 
-    public void setupPropUI() throws IOException {
+    public static void setupPropUI() throws IOException {
         propUISystemAdmin = ConnectToPropUI(PATHTO_SYSTEMADMIN_PROP);
         propUISiteAdmin = ConnectToPropUI(PATHTO_SITEADMIN_PROP);
         propUIContentAdmin = ConnectToPropUI(PATHTO_CONTENTADMIN_PROP);

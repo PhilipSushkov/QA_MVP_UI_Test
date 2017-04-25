@@ -21,7 +21,6 @@ public class CheckAlertFilterList extends AbstractSpec {
     private static Dashboard dashboard;
     private static AlertFilterList alertFilterList;
 
-
     @BeforeTest
     public void setUp() throws Exception {
         systemAdminMenuButton = By.xpath(propUISystemAdmin.getProperty("btnMenu_SystemAdmin"));

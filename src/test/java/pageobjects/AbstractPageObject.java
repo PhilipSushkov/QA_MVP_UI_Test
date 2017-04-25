@@ -59,7 +59,7 @@ public class AbstractPageObject implements PageObject {
     public LoginPage logoutFromAdmin(){
         waitForElement(logoutButton);
         findElement(logoutButton).click();
-        return new LoginPage(getDriver());
+        return new LoginPage(driver);
     }
 
     // Get current URL
