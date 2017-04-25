@@ -12,7 +12,7 @@ import specs.AbstractSpec;
 /**
  * Created by sarahr on 3/22/2017.
  */
-public class RSSPreviewPage extends AbstractSpec{
+public class CheckRSSFeedsPr extends AbstractSpec{
 
     //// THERE SHOULD BE ONE TEST HERE FOR EVERY TEST ON CheckPublicSite.java \\\\
 

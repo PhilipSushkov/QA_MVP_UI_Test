@@ -24,7 +24,7 @@ import static org.testng.Assert.fail;
 /**
  * Created by easong on 1/24/17.
  */
-public class StockInformationPreviewPage extends AbstractSpec {
+public class CheckStockInformationPr extends AbstractSpec {
 
     //// THERE SHOULD BE ONE TEST HERE FOR EVERY TEST ON CheckPublicSite.java \\\\
 

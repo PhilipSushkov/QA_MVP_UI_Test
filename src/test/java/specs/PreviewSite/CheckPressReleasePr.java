@@ -18,7 +18,7 @@ import java.time.Year;
 /**
  * Created by easong on 1/24/17.
  */
-public class PressReleasePreviewPage extends AbstractSpec {
+public class CheckPressReleasePr extends AbstractSpec {
 
     //// THERE SHOULD BE ONE TEST HERE FOR EVERY TEST ON CheckPublicSite.java \\\\
 

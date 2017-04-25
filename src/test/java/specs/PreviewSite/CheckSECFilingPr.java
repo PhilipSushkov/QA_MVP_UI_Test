@@ -14,7 +14,7 @@ import java.util.Calendar;
 /**
  * Created by sarahr on 4/20/2017.
  */
-public class SECFilingPreviewPage extends AbstractSpec {
+public class CheckSECFilingPr extends AbstractSpec {
 
     private static HomePage homePage;
     int currentYear = Calendar.getInstance().get(Calendar.YEAR);
