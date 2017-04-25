@@ -30,7 +30,7 @@ public class CheckSECFilingPr extends AbstractSpec {
         homePage.selectSECFilingsFromMenu();
     }
 
-    @Test
+    @Test(priority=1)
     public void checkIfDetailsPageWorks() throws InterruptedException {
         SECFilingsPage sec = new SECFilingsPage(driver);
         int year = currentYear;
@@ -58,14 +58,14 @@ public class CheckSECFilingPr extends AbstractSpec {
     }
 
     //This year checks 2017, and if there is no filings for that year, then it goes back a year
-    @Test
+    @Test(priority=2)
     public void checkIfYearFilteringWorks() throws InterruptedException {
         SECFilingsPage sec = new SECFilingsPage(driver);
         Assert.assertTrue(sec.checkAllYears(),"Nope.");
     }
 
     //test to see if they are from the proper filter
-    @Test
+    @Test(priority=3)
     public void checkIfTypeFilteringWorks() throws InterruptedException {
         SECFilingsPage sec = new SECFilingsPage(driver);
         Assert.assertTrue(sec.checkAllFilters(),"Filtering is not working properly");
@@ -73,7 +73,7 @@ public class CheckSECFilingPr extends AbstractSpec {
 
     //Checks to see if filing exists for All Forms. If it does,'t it switches year until it finds a filing
     //Once there is a filing, checks the pfd to see if it works
-    @Test
+    @Test(priority=4)
     public void checkIfPDFWorks() throws InterruptedException {
         SECFilingsPage sec = new SECFilingsPage(driver);
         int year = currentYear;
