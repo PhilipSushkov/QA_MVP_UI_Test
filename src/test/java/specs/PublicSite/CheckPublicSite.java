@@ -454,7 +454,7 @@ public class CheckPublicSite extends AbstractSpec {
     }
 
     @Test
-    public void secFilingsWork(){
+    public void secFilingsWork() throws InterruptedException {
         // going to SEC Filings page and checking that at least one filing is displayed
         try {
             Assert.assertTrue(homePage.selectSECFilingsFromMenu().filingsAreDisplayed()
@@ -475,7 +475,7 @@ public class CheckPublicSite extends AbstractSpec {
     }
 
     @Test
-    public void peopleWork(){
+    public void peopleWork() {
         // going to Board of Directors page and checking that at least one person is displayed
         try {
             Assert.assertTrue(homePage.selectBoardOfDirectorsFromMenu().peopleAreDisplayed()

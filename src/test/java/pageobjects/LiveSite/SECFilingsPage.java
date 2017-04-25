@@ -17,7 +17,7 @@ import static specs.AbstractSpec.propUIPublicSite;
  * Created by jasons on 2016-11-11.
  */
 public class SECFilingsPage extends AbstractPageObject {
-
+    private static final long DEFAULT_PAUSE = 2000;
     private final By filingDate;
     private final By yearLink_Sec;
     private final By pdfIcon;
@@ -36,7 +36,7 @@ public class SECFilingsPage extends AbstractPageObject {
         pdfIcon = By.cssSelector(propUIPublicSite.getProperty("pdfIcon"));
     }
 
-    public boolean doFilingsExist(){
+    public boolean doFilingsExist() throws InterruptedException {
         //point of this test is to run before all the other tests
         //So if there isn't any filings, it doesn't fail all of our tests
         boolean FailedTest;
@@ -58,7 +58,8 @@ public class SECFilingsPage extends AbstractPageObject {
         }
     }
 
-    public boolean filingsAreDisplayed(){
+    public boolean filingsAreDisplayed() throws InterruptedException {
+        Thread.sleep(DEFAULT_PAUSE);
         return doesElementExist(filingDate) && findElement(filingDate).isDisplayed();
     }
 
@@ -76,13 +77,14 @@ public class SECFilingsPage extends AbstractPageObject {
     }
 
     //This test doesn't do a great check for Other Filings
-    public boolean checkAllFilters(){
+    public boolean checkAllFilters() throws InterruptedException {
         int totalNumberOfSECFiles=0;
         String[] expectedTitles = {"","Annual","Quarterly","Current","Proxy","Registration","Beneficial Ownership",""};
         //All Forms will be counting the rest and THEN check
         //Check Quarterly Filings
-        for(int i = 1; i < filter.length; i++){
+        for(int i = 1; i < filter.length; i++) {
             switchFilterTo(filter[i]);
+            Thread.sleep(DEFAULT_PAUSE);
             if(doFilingsExist()) {
                 //files exist, so we loop to see if each file is correct
                 //nextFile is so we know if there is another SEC File for that filter
@@ -133,7 +135,7 @@ public class SECFilingsPage extends AbstractPageObject {
         return true;
     }
 
-    public boolean checkAllYears(){
+    public boolean checkAllYears() throws InterruptedException {
         int listNum;
         boolean files = false;
 
@@ -144,6 +146,7 @@ public class SECFilingsPage extends AbstractPageObject {
             By yearList = By.xpath("//div[contains(@class,'YearNavContainer')]//a["+listNum+"][contains(@class,'ModuleYearLink')]");
             String year = findElement(yearList).getText();
             findElement(yearList).click();
+            Thread.sleep(DEFAULT_PAUSE);
             //check if there are filings for that year
             files = doFilingsExist();
 
@@ -159,22 +162,26 @@ public class SECFilingsPage extends AbstractPageObject {
         return true;
     }
 
-    public void switchYearTo(String year){
+    public void switchYearTo(String year) throws InterruptedException {
         List<WebElement> yearLinks = findElements(yearLink_Sec);
         for (int i=0; i<yearLinks.size(); i++){
             if (yearLinks.get(i).getText().equals(year)){
                 yearLinks.get(i).click();
+                Thread.sleep(DEFAULT_PAUSE);
                 return;
             }
         }
     }
 
-    public void switchFilterTo(String type){
+    public void switchFilterTo(String type) throws InterruptedException {
         String filter = type;
         By DropdownOption = By.xpath("//option[contains(string(),'"+filter+"')]");
 
         findVisibleElement(FilterDropdown).click();
+        Thread.sleep(DEFAULT_PAUSE);
+
         findVisibleElement(DropdownOption).click();
+        Thread.sleep(DEFAULT_PAUSE);
     }
 
     public boolean pdfIconsLinkToPDF(){

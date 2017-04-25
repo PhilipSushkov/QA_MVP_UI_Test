@@ -43,7 +43,8 @@ public class CheckSitePr extends AbstractSpec {
     public void stockQuoteValuesAreAccurate(){
         publicTests.stockQuoteValuesAreAccurate();
     }
-/*
+
+    /*
     @Test TODO fix later
     public void stockChartTickertechWorks(){
         publicTests.stockChartTickertechWorks();
@@ -81,7 +82,7 @@ public class CheckSitePr extends AbstractSpec {
     }
 
     @Test
-    public void secFilingsWork(){
+    public void secFilingsWork() throws InterruptedException {
         publicTests.secFilingsWork();
     }
 
