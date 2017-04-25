@@ -61,7 +61,7 @@ public class LayoutDefinitionAdd extends AbstractPageObject {
         parser = new JSONParser();
 
         sPathToFile = System.getProperty("user.dir") + propUISiteAdmin.getProperty("dataPath_LayoutDefinitionList");
-        sFileJson = propUISiteAdmin.getProperty("json_LayoutDefinitions");
+        sFileJson = propUISiteAdmin.getProperty("json_LayoutDefinition");
     }
 
     public String getTitle() {
