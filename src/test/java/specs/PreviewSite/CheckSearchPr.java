@@ -26,7 +26,7 @@ public class CheckSearchPr extends AbstractSpec{
         Assert.assertTrue(homePage.logoIsPresent(), "Home page of public site has not been loaded.");
     }
 
-    @Test
+    @Test(priority=1)
     public void regularSearchWorks(){
         //this test goes the the presentations page, finds a recent presentation,
         //then uses it as a search term, searches it, then sees if that presentation is a result
@@ -44,7 +44,7 @@ public class CheckSearchPr extends AbstractSpec{
         Assert.assertTrue(searchPage.isTermInResults(searchTerm));
     }
 
-    @Test
+    @Test(priority=2)
     public void badSearchReturnsNoResults(){
         SearchPage searchPage = new SearchPage(driver);
 
@@ -59,7 +59,7 @@ public class CheckSearchPr extends AbstractSpec{
 
     }
 
-    @Test
+    @Test(priority=3)
     public void nextPageWork(){
         SearchPage searchPage = new SearchPage(driver);
         //Need a search term to guarantee more than one page of results
