@@ -42,8 +42,8 @@ public class CheckModuleDefinitionAdd extends AbstractSpec {
         dashboard = new Dashboard(driver);
         moduleDefinitionAdd = new ModuleDefinitionAdd(driver);
 
-        sPathToFile = System.getProperty("user.dir") + propUISiteAdmin.getProperty("dataPath_LayoutDefinitionList");
-        sDataFileJson = propUISiteAdmin.getProperty("json_LayoutDefinitionData");
+        sPathToFile = System.getProperty("user.dir") + propUISiteAdmin.getProperty("dataPath_ModuleDefinitionList");
+        sDataFileJson = propUISiteAdmin.getProperty("json_ModuleDefinitionData");
 
         parser = new JSONParser();
 
@@ -60,8 +60,8 @@ public class CheckModuleDefinitionAdd extends AbstractSpec {
         String sModuleDefinitionName = data.get(MODULE_DEFINITION_NAME).toString();
         String expectedTitleEdit = "Module Definition Edit";
 
-        //Assert.assertEquals(moduleDefinitionAdd.getTitle(), expectedTitleEdit, "Actual "+PAGE_NAME+" Edit page Title doesn't match to expected");
-        //Assert.assertEquals(moduleDefinitionAdd.saveModuleDefinition(data, sLayoutDefinitionName), WorkflowState.IN_PROGRESS.state(), "New "+PAGE_NAME+" didn't save properly");
+        Assert.assertEquals(moduleDefinitionAdd.getTitle(), expectedTitleEdit, "Actual "+PAGE_NAME+" Edit page Title doesn't match to expected");
+        Assert.assertEquals(moduleDefinitionAdd.saveModuleDefinition(data, sModuleDefinitionName), WorkflowState.IN_PROGRESS.state(), "New "+PAGE_NAME+" didn't save properly");
     }
 
     @DataProvider

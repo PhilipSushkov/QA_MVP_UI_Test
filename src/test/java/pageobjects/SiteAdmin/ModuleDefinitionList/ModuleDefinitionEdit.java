@@ -21,9 +21,9 @@ public class ModuleDefinitionEdit extends AbstractPageObject {
         moduleTitle = By.xpath(propUISiteAdmin.getProperty("spanModule_Title"));
         friendlyNameField = By.xpath(propUISiteAdmin.getProperty("input_FriendlyName"));
         qualifiedPathField = By.xpath(propUISiteAdmin.getProperty("input_QualifiedPath"));
-        linkToEditPageSelect = By.xpath(propUISiteAdmin.getProperty("input_LinkToEditPage"));
-        linkToListPageSelect = By.xpath(propUISiteAdmin.getProperty("input_LinkToListPage"));
-        linkToAdminPageSelect = By.xpath(propUISiteAdmin.getProperty("input_LinkToAdminPage"));
+        linkToEditPageSelect = By.xpath(propUISiteAdmin.getProperty("select_LinkToEditPage"));
+        linkToListPageSelect = By.xpath(propUISiteAdmin.getProperty("select_LinkToListPage"));
+        linkToAdminPageSelect = By.xpath(propUISiteAdmin.getProperty("select_LinkToAdminPage"));
         activeCheckbox = By.xpath(propUISiteAdmin.getProperty("chk_Active"));
         saveAndSubmitButton = By.xpath(propUISiteAdmin.getProperty("btn_SaveAndSubmit"));
     }
