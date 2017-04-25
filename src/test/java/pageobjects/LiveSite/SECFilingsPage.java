@@ -41,6 +41,7 @@ public class SECFilingsPage extends AbstractPageObject {
         //So if there isn't any filings, it doesn't fail all of our tests
         boolean FailedTest;
         waitForAjaxLoader();
+        Thread.sleep(DEFAULT_PAUSE);
         if(!doesElementExist(filingDate)) {
 
             try {
