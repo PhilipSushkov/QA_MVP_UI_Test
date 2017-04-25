@@ -40,14 +40,20 @@ public class SECFilingsPage extends AbstractPageObject {
         //point of this test is to run before all the other tests
         //So if there isn't any filings, it doesn't fail all of our tests
         boolean FailedTest;
-
+        waitForAjaxLoader();
         if(!doesElementExist(filingDate)) {
 
             try {
                 findElement(noFilingsMessage);
                 FailedTest=false;
             } catch(Exception e){
-                FailedTest=true;
+                //adding in a double check
+                if(!doesElementExist(filingDate)) {
+                    FailedTest = true;
+                }
+                else{
+                    FailedTest = false;
+                }
             }
             Assert.assertFalse("No SEC Filings but missing error message", FailedTest);
             return false;
