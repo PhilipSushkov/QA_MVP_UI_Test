@@ -21,9 +21,8 @@ public class CheckSECFilingPr extends AbstractSpec {
 
     @BeforeTest
     public void goToPreviewSite() throws Exception {
-        new LoginPage(driver).loginUser().previewSite().goToInvestorsPage();
         homePage = new HomePage(driver);
-        homePage.selectSECFilingsFromMenu();
+        new LoginPage(driver).loginUser().previewSite().goToInvestorsPage();
     }
     
     @BeforeMethod
