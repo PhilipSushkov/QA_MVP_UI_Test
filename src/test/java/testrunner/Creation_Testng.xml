@@ -46,6 +46,11 @@
             <class name="specs.SiteAdmin.LayoutDefinitionList.CheckLayoutDefinitionAdd" />
         </classes>
     </test>
+    <test name="CheckModuleDefinitionAdd">
+        <classes>
+            <class name="specs.SiteAdmin.ModuleDefinitionList.CheckModuleDefinitionAdd" />
+        </classes>
+    </test>
 
 
     <test name="CreateNewUser">
