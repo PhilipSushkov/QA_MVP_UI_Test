@@ -64,6 +64,55 @@ public class CheckModuleDefinitionAdd extends AbstractSpec {
         Assert.assertEquals(moduleDefinitionAdd.saveModuleDefinition(data, sModuleDefinitionName), WorkflowState.IN_PROGRESS.state(), "New "+PAGE_NAME+" didn't save properly");
     }
 
+    @Test(dataProvider=DATA, priority=2)
+    public void saveAndSubmitModuleDefinition(JSONObject data) throws InterruptedException {
+        String sModuleDefinitionName = data.get(MODULE_DEFINITION_NAME).toString();
+
+        Assert.assertEquals(moduleDefinitionAdd.saveAndSubmitModuleDefinition(data, sModuleDefinitionName), WorkflowState.FOR_APPROVAL.state(), "New " + PAGE_NAME + " doesn't submit properly (after Save And Submit)");
+        Assert.assertTrue(moduleDefinitionAdd.checkModuleDefinition(data, sModuleDefinitionName), "Submitted New "+ PAGE_NAME +" data doesn't fit well to entry data (after Save and Submit)");
+    }
+
+    @Test(dataProvider=DATA, priority=3)
+    public void publishModuleDefinition(JSONObject data) throws InterruptedException {
+        String sModuleDefinitionName = data.get(MODULE_DEFINITION_NAME).toString();
+        Assert.assertEquals(moduleDefinitionAdd.publishModuleDefinition(data, sModuleDefinitionName), WorkflowState.LIVE.state(), "New "+ PAGE_NAME +" doesn't publish properly (after Publish)");
+    }
+
+    @Test(dataProvider=DATA, priority=4)
+    public void revertModuleDefinition(JSONObject data) throws InterruptedException {
+        String sModuleDefinitionName = data.get(MODULE_DEFINITION_NAME).toString();
+
+        Assert.assertEquals(moduleDefinitionAdd.changeAndSubmitModuleDefinition(data, sModuleDefinitionName), WorkflowState.FOR_APPROVAL.state(), "Some fields of New "+ PAGE_NAME +" didn't change properly (after Save and Submit)");
+        Assert.assertEquals(moduleDefinitionAdd.revertToLiveModuleDefinition(data, sModuleDefinitionName), WorkflowState.LIVE.state(), "Couldn't revert to Live changes for New "+ PAGE_NAME);
+        Assert.assertTrue(moduleDefinitionAdd.checkModuleDefinition(data, sModuleDefinitionName), "Submitted New "+ PAGE_NAME +" data doesn't fit well to entry data (after Revert To Live)");
+    }
+
+    @Test(dataProvider=DATA, priority=5)
+    public void changeAndSubmitEditModuleDefinition(JSONObject data) throws Exception {
+        String sModuleDefinitionName = data.get(MODULE_DEFINITION_NAME).toString();
+
+        Assert.assertEquals(moduleDefinitionAdd.changeAndSubmitModuleDefinition(data, sModuleDefinitionName), WorkflowState.FOR_APPROVAL.state(), "Some fields of New "+ PAGE_NAME +" didn't change properly (after Save and Submit)");
+        Assert.assertTrue(moduleDefinitionAdd.checkModuleDefinitionCh(data, sModuleDefinitionName), "Submitted New "+ PAGE_NAME +" changes don't fit well to change data (after Change And Submit)");
+    }
+
+    @Test(dataProvider=DATA, priority=6)
+    public void publishEditModuleDefinition(JSONObject data) throws InterruptedException {
+        String sModuleDefinitionName = data.get(MODULE_DEFINITION_NAME).toString();
+        Assert.assertEquals(moduleDefinitionAdd.publishModuleDefinition(data, sModuleDefinitionName), WorkflowState.LIVE.state(), "New "+ PAGE_NAME +" doesn't publish properly (after Publish)");
+    }
+
+    @Test(dataProvider=DATA, priority=7)
+    public void deleteModuleDefinition(JSONObject data) throws Exception {
+        String sModuleDefinitionName = data.get(MODULE_DEFINITION_NAME).toString();
+        Assert.assertEquals(moduleDefinitionAdd.setupAsDeletedModuleDefinition(sModuleDefinitionName), WorkflowState.DELETE_PENDING.state(), "New "+ PAGE_NAME +" didn't setup as Deleted properly");
+    }
+
+    @Test(dataProvider=DATA, priority=8)
+    public void removeModuleDefinition(JSONObject data) throws Exception {
+        String sModuleDefinitionName = data.get(MODULE_DEFINITION_NAME).toString();
+        Assert.assertEquals(moduleDefinitionAdd.removeModuleDefinition(data, sModuleDefinitionName), WorkflowState.NEW_ITEM.state(), "Couldn't remove New "+ PAGE_NAME +". Something went wrong.");
+    }
+
     @DataProvider
     public Object[][] getData() {
 
