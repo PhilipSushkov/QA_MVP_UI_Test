@@ -65,6 +65,18 @@ public class CheckExternalFeedAdd extends AbstractSpec {
         Assert.assertEquals(externalFeedAdd.saveExternalFeed(data, sExternalFeedName), expectedTitleList, "New "+PAGE_NAME+" didn't save properly");
     }
 
+    @Test(dataProvider=DATA, priority=2)
+    public void checkExternalFeed(JSONObject data) {
+        String sExternalFeedName = data.get(FEED_NAME).toString();
+        Assert.assertTrue(externalFeedAdd.checkExternalFeed(data, sExternalFeedName), "New "+PAGE_NAME+" doesn't fit to entry data (after Save)");
+    }
+
+    @Test(dataProvider=DATA, priority=5)
+    public void removeExternalFeed(JSONObject data) {
+        String sExternalFeedName = data.get(FEED_NAME).toString();
+        Assert.assertTrue(externalFeedAdd.removeExternalFeed(sExternalFeedName), "New "+PAGE_NAME+" shouldn't be shown in "+PAGE_NAME+" List (after Delete)");
+    }
+
     @DataProvider
     public Object[][] getData() {
 

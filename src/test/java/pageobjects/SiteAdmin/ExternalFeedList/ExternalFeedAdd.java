@@ -1,7 +1,9 @@
 package pageobjects.SiteAdmin.ExternalFeedList;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.Select;
 import pageobjects.AbstractPageObject;
 
 import com.jayway.jsonpath.JsonPath;
@@ -165,6 +167,208 @@ public class ExternalFeedAdd extends AbstractPageObject {
         }
 
         return null;
+    }
+
+    public Boolean checkExternalFeed(JSONObject data, String name) {
+        JSONObject jsonMain = new JSONObject();
+        JSONObject jsonObj = new JSONObject();
+        String feed, details_name = null;
+
+        try {
+            FileReader readFile = new FileReader(sPathToFile + sFileJson);
+            jsonMain = (JSONObject) parser.parse(readFile);
+            jsonObj = (JSONObject) jsonMain.get(name);
+        } catch (ParseException e) {
+        } catch (IOException e) {
+        }
+
+        feed = data.get("feed").toString();
+
+        switch (feed) {
+            case PRESS_RELEASE:
+                details_name = "ClientId: " + jsonObj.get("comp_id").toString();
+                break;
+
+            case EOD_MAIL:
+                details_name = jsonObj.get("stock_exchange").toString() + " : " + jsonObj.get("stock_symbol").toString();
+                break;
+
+            default:
+                break;
+        }
+
+        By editBtn = By.xpath("//td[(text()='" + details_name + "')]/parent::tr/td/input[contains(@id, 'btnEdit')]");
+
+        try {
+            waitForElement(moduleTitle);
+            findElement(editBtn).click();
+            waitForElement(saveBtn);
+
+            try {
+                if (!new Select(findElement(feedSelect)).getFirstSelectedOption().getText().equals(data.get("feed").toString())) {
+                    return false;
+                }
+            } catch (NullPointerException e) {
+                return false;
+            }
+
+            try {
+                if (findElement(tagListInput).toString().equals(data.get("tag_list").toString())) {
+                    return false;
+                }
+            } catch (NullPointerException e) {
+            }
+
+
+            switch (feed) {
+                case PRESS_RELEASE:
+                    try {
+                        if (!new Select(findElement(languageSelect)).getFirstSelectedOption().getText().equals(data.get("language").toString())) {
+                            return false;
+                        }
+                    } catch (NullPointerException e) {
+                        return false;
+                    }
+
+                    try {
+                        if (!new Select(findElement(categorySelect)).getFirstSelectedOption().getText().equals(data.get("category").toString())) {
+                            return false;
+                        }
+                    } catch (NullPointerException e) {
+                        return false;
+                    }
+
+                    try {
+                        if (findElement(compIdInput).toString().equals(data.get("comp_id").toString())) {
+                            return false;
+                        }
+                    } catch (NullPointerException e) {
+                    }
+
+                    break;
+
+                case EOD_MAIL:
+                    try {
+                        if (findElement(stockExchangeInput).toString().equals(data.get("stock_exchange").toString())) {
+                            return false;
+                        }
+                    } catch (NullPointerException e) {
+                    }
+
+                    try {
+                        if (findElement(stockSymbolInput).toString().equals(data.get("stock_symbol").toString())) {
+                            return false;
+                        }
+                    } catch (NullPointerException e) {
+                    }
+
+                    break;
+
+                default:
+                    break;
+
+            }
+
+
+                try {
+                    if (!findElement(activeChk).getAttribute("checked").equals(data.get("active").toString())) {
+                        return false;
+                    }
+                } catch (NullPointerException e) {
+                    return false;
+                }
+
+                // Save Url
+                URL url = new URL(getUrl());
+                String[] params = url.getQuery().split("&");
+                JSONObject jsonURLQuery = new JSONObject();
+                for (String param:params) {
+                    jsonURLQuery.put(param.split("=")[0], param.split("=")[1]);
+                }
+                jsonObj.put("url_query", jsonURLQuery);
+
+                int ExternalFeedID = Integer.parseInt(jsonURLQuery.get("ExternalFeedID").toString());
+
+                try {
+                    FileWriter writeFile = new FileWriter(sPathToFile + sFileJson);
+                    writeFile.write(jsonMain.toJSONString().replace("\\", ""));
+                    writeFile.flush();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                System.out.println(name + ": "+PAGE_NAME+" has been checked");
+                return ExternalFeedID > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public Boolean removeExternalFeed(String name) {
+        JSONObject jsonMain = new JSONObject();
+        JSONObject jsonObj = new JSONObject();
+        String user_group_name;
+
+        try {
+            FileReader readFile = new FileReader(sPathToFile + sFileJson);
+            jsonMain = (JSONObject) parser.parse(readFile);
+            jsonObj = (JSONObject) jsonMain.get(name);
+        } catch (ParseException e) {
+        } catch (IOException e) {
+        }
+
+        user_group_name = jsonObj.get("user_group_name").toString();
+
+        By editBtn = By.xpath("//td[(text()='" + user_group_name + "')]/parent::tr/td/input[contains(@id, 'btnEdit')]");
+
+        try {
+
+            waitForElement(moduleTitle);
+            String pageUrl = getPageUrl(jsonMain, name);
+            driver.get(pageUrl);
+            waitForElement(deleteBtn);
+
+            if (new Select(findElement(feedSelect)).getFirstSelectedOption().getText().equals(user_group_name)) {
+
+                findElement(deleteBtn).click();
+
+                Thread.sleep(DEFAULT_PAUSE);
+                waitForElement(moduleTitle);
+
+                try {
+                    waitForElement(editBtn);
+                } catch (TimeoutException e) {
+
+                    jsonMain.remove(name);
+
+                    try {
+                        FileWriter writeFile = new FileWriter(sPathToFile + sFileJson);
+                        writeFile.write(jsonMain.toJSONString().replace("\\", ""));
+                        writeFile.flush();
+                    } catch (FileNotFoundException e1) {
+                        e.printStackTrace();
+                    } catch (IOException e1) {
+                        e.printStackTrace();
+                    }
+
+                    System.out.println(name + ": " + PAGE_NAME + " has been removed");
+                    return true;
+                }
+
+                return false;
+            }
+
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
     }
 
     public String getPageUrl (JSONObject obj, String name) {
