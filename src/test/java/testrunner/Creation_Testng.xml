@@ -51,6 +51,11 @@
             <class name="specs.SiteAdmin.ModuleDefinitionList.CheckModuleDefinitionAdd" />
         </classes>
     </test>
+    <test name="CheckCssFileAdd">
+        <classes>
+            <class name="specs.SiteAdmin.CssFileList.CheckCssFileAdd" />
+        </classes>
+    </test>
 
 
     <test name="CreateNewUser">

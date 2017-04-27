@@ -4,7 +4,6 @@
       "do_assertions": true,
       "css_name": "client 01",
       "css_highlighting": true,
-      "css_highlighting_ch": false,
       "css_body": "/* Header Area */ \n.ClientLogo img { \n  display: block; \n}",
       "css_body_ch": "/* Header Area */ \n.ClientLogo { \n  float: left; \n} \n.ClientLogo img { \n  display: block; \n}",
       "active": true,
@@ -13,7 +12,7 @@
     },
     {
       "do_assertions": true,
-      "css_name": "client 01",
+      "css_name": "client 02",
       "css_highlighting": true,
       "css_body": "/* Header Area */ \n.ClientLogo img { \n  display: block; \n}",
       "active": true,

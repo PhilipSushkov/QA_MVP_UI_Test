@@ -64,6 +64,55 @@ public class CheckCssFileAdd extends AbstractSpec {
         Assert.assertEquals(cssFileAdd.saveCssFile(data, sCssFileName), WorkflowState.IN_PROGRESS.state(), "New "+PAGE_NAME+" didn't save properly");
     }
 
+    @Test(dataProvider=DATA, priority=2)
+    public void saveAndSubmitCssFile(JSONObject data) throws InterruptedException {
+        String sCssFileName = data.get(CSS_FILE_NAME).toString();
+
+        Assert.assertEquals(cssFileAdd.saveAndSubmitCssFile(data, sCssFileName), WorkflowState.FOR_APPROVAL.state(), "New " + PAGE_NAME + " doesn't submit properly (after Save And Submit)");
+        Assert.assertTrue(cssFileAdd.checkCssFile(data, sCssFileName), "Submitted New "+ PAGE_NAME +" data doesn't fit well to entry data (after Save and Submit)");
+    }
+
+    @Test(dataProvider=DATA, priority=3)
+    public void publishCssFile(JSONObject data) throws InterruptedException {
+        String sCssFileName = data.get(CSS_FILE_NAME).toString();
+        Assert.assertEquals(cssFileAdd.publishCssFile(data, sCssFileName), WorkflowState.LIVE.state(), "New "+ PAGE_NAME +" doesn't publish properly (after Publish)");
+    }
+
+    @Test(dataProvider=DATA, priority=4)
+    public void revertCssFile(JSONObject data) throws InterruptedException {
+        String sCssFileName = data.get(CSS_FILE_NAME).toString();
+
+        Assert.assertEquals(cssFileAdd.changeAndSubmitCssFile(data, sCssFileName), WorkflowState.FOR_APPROVAL.state(), "Some fields of New "+ PAGE_NAME +" didn't change properly (after Save and Submit)");
+        Assert.assertEquals(cssFileAdd.revertToLiveCssFile(sCssFileName), WorkflowState.LIVE.state(), "Couldn't revert to Live changes for New "+ PAGE_NAME);
+        Assert.assertTrue(cssFileAdd.checkCssFile(data, sCssFileName), "Submitted New "+ PAGE_NAME +" data doesn't fit well to entry data (after Revert To Live)");
+    }
+
+    @Test(dataProvider=DATA, priority=5)
+    public void changeAndSubmitCssFile(JSONObject data) throws Exception {
+        String sCssFileName = data.get(CSS_FILE_NAME).toString();
+
+        Assert.assertEquals(cssFileAdd.changeAndSubmitCssFile(data, sCssFileName), WorkflowState.FOR_APPROVAL.state(), "Some fields of New "+ PAGE_NAME +" didn't change properly (after Save and Submit)");
+        Assert.assertTrue(cssFileAdd.checkCssFileCh(data, sCssFileName), "Submitted New "+ PAGE_NAME +" changes don't fit well to change data (after Change And Submit)");
+    }
+
+    @Test(dataProvider=DATA, priority=6)
+    public void publishEditCssFile(JSONObject data) throws InterruptedException {
+        String sCssFileName = data.get(CSS_FILE_NAME).toString();
+        Assert.assertEquals(cssFileAdd.publishCssFile(data, sCssFileName), WorkflowState.LIVE.state(), "New "+ PAGE_NAME +" doesn't publish properly (after Publish)");
+    }
+
+    @Test(dataProvider=DATA, priority=7)
+    public void deleteCssFile(JSONObject data) throws Exception {
+        String sCssFileName = data.get(CSS_FILE_NAME).toString();
+        Assert.assertEquals(cssFileAdd.setupAsDeletedCssFile(sCssFileName), WorkflowState.DELETE_PENDING.state(), "New "+ PAGE_NAME +" didn't setup as Deleted properly");
+    }
+
+    @Test(dataProvider=DATA, priority=8)
+    public void removeCssFile(JSONObject data) throws Exception {
+        String sCssFileName = data.get(CSS_FILE_NAME).toString();
+        Assert.assertEquals(cssFileAdd.removeCssFile(data, sCssFileName), WorkflowState.NEW_ITEM.state(), "Couldn't remove New "+ PAGE_NAME +". Something went wrong.");
+    }
+
     @DataProvider
     public Object[][] getData() {
 
