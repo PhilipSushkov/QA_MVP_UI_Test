@@ -8,7 +8,6 @@ import com.jayway.jsonpath.JsonPath;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.openqa.selenium.support.ui.Select;
 import pageobjects.PageAdmin.WorkflowState;
 
 import java.io.FileNotFoundException;
