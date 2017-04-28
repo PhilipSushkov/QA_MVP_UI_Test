@@ -107,6 +107,7 @@ public class ModuleDefinitionAdd extends AbstractPageObject {
             jsonObj.put("source_file", source_file);
 
             qualified_path = data.get("qualified_path").toString();
+            findElement(qualifiedPathField).clear();
             findElement(qualifiedPathField).sendKeys(qualified_path);
             jsonObj.put("qualified_path", qualified_path);
 
@@ -442,6 +443,7 @@ public class ModuleDefinitionAdd extends AbstractPageObject {
 
             try {
                 if (!data.get("source_file_ch").toString().isEmpty()) {
+                    findElement(sourceFileField).clear();
                     findElement(sourceFileField).sendKeys(data.get("source_file_ch").toString());
                     jsonObj.put("source_file", data.get("source_file_ch").toString());
                 }
