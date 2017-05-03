@@ -550,7 +550,7 @@ public class CssFileAdd extends AbstractPageObject {
         return null;
     }
 
-    public String getPageUrl (JSONObject obj, String name) {
+    public String getPageUrl(JSONObject obj, String name) {
         String  sItemID = JsonPath.read(obj, "$.['"+name+"'].url_query.ItemID");
         String  sLanguageId = JsonPath.read(obj, "$.['"+name+"'].url_query.LanguageId");
         String  sSectionId = JsonPath.read(obj, "$.['"+name+"'].url_query.SectionId");
