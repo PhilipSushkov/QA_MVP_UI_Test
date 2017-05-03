@@ -71,10 +71,23 @@ public class CheckExternalFeedAdd extends AbstractSpec {
         Assert.assertTrue(externalFeedAdd.checkExternalFeed(data, sExternalFeedName), "New "+PAGE_NAME+" doesn't fit to entry data (after Save)");
     }
 
+    @Test(dataProvider=DATA, priority=3)
+    public void editExternalFeed(JSONObject data) throws Exception {
+        String sExternalFeedName = data.get(FEED_NAME).toString();
+
+        Assert.assertTrue(externalFeedAdd.editExternalFeed(data, sExternalFeedName), PAGE_NAME+" didn't change properly (after Save)");
+    }
+
+    @Test(dataProvider=DATA, priority=4)
+    public void checkExternalFeedCh(JSONObject data) {
+        String sExternalFeedName = data.get(FEED_NAME).toString();
+        Assert.assertTrue(externalFeedAdd.checkExternalFeedCh(data, sExternalFeedName), "New "+PAGE_NAME+" doesn't fit to change data (after Edit)");
+    }
+
     @Test(dataProvider=DATA, priority=5)
     public void removeExternalFeed(JSONObject data) {
         String sExternalFeedName = data.get(FEED_NAME).toString();
-        Assert.assertTrue(externalFeedAdd.removeExternalFeed(sExternalFeedName), "New "+PAGE_NAME+" shouldn't be shown in "+PAGE_NAME+" List (after Delete)");
+        Assert.assertTrue(externalFeedAdd.removeExternalFeed(data, sExternalFeedName), "New "+PAGE_NAME+" shouldn't be shown in "+PAGE_NAME+" List (after Delete)");
     }
 
     @DataProvider

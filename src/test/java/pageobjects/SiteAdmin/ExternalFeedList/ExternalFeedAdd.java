@@ -309,10 +309,10 @@ public class ExternalFeedAdd extends AbstractPageObject {
         return false;
     }
 
-    public Boolean removeExternalFeed(String name) {
+    public Boolean editExternalFeed(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
         JSONObject jsonObj = new JSONObject();
-        String user_group_name;
+        String feed, details_name = null;
 
         try {
             FileReader readFile = new FileReader(sPathToFile + sFileJson);
@@ -322,18 +322,122 @@ public class ExternalFeedAdd extends AbstractPageObject {
         } catch (IOException e) {
         }
 
-        user_group_name = jsonObj.get("user_group_name").toString();
+        feed = data.get("feed").toString();
 
-        By editBtn = By.xpath("//td[(text()='" + user_group_name + "')]/parent::tr/td/input[contains(@id, 'btnEdit')]");
+        switch (feed) {
+            case PRESS_RELEASE:
+                details_name = "ClientId: " + jsonObj.get("comp_id").toString();
+                break;
+
+            case EOD_MAIL:
+                details_name = jsonObj.get("stock_exchange").toString() + " : " + jsonObj.get("stock_symbol").toString();
+                break;
+
+            default:
+                break;
+        }
+
+        By editBtn = By.xpath("//td[(text()='" + details_name + "')]/parent::tr/td/input[contains(@id, 'btnEdit')]");
 
         try {
 
             waitForElement(moduleTitle);
             String pageUrl = getPageUrl(jsonMain, name);
-            driver.get(pageUrl);
+            //driver.get(pageUrl);
+            findElement(editBtn).click();
             waitForElement(deleteBtn);
 
-            if (new Select(findElement(feedSelect)).getFirstSelectedOption().getText().equals(user_group_name)) {
+            try {
+                if (!data.get("tag_list_ch").toString().isEmpty()) {
+                    String tag_list_ch = data.get("tag_list_ch").toString();
+                    findElement(tagListInput).clear();
+                    findElement(tagListInput).sendKeys(tag_list_ch);
+                    jsonObj.put("tag_list", tag_list_ch);
+                }
+            } catch (NullPointerException e) {}
+
+            try {
+                if (!data.get("active_ch").toString().isEmpty()) {
+                    if (Boolean.parseBoolean(data.get("active_ch").toString())) {
+                        if (!Boolean.parseBoolean(findElement(activeChk).getAttribute("checked"))) {
+                            findElement(activeChk).click();
+                            jsonObj.put("active", true);
+                        } else {
+                        }
+                    } else {
+                        if (!Boolean.parseBoolean(findElement(activeChk).getAttribute("checked"))) {
+                        } else {
+                            findElement(activeChk).click();
+                            jsonObj.put("active", false);
+                        }
+                    }
+                }
+            } catch (NullPointerException e) {
+            }
+
+            Thread.sleep(DEFAULT_PAUSE);
+            findElement(saveBtn).click();
+
+            try {
+                FileWriter writeFile = new FileWriter(sPathToFile + sFileJson);
+                writeFile.write(jsonMain.toJSONString().replace("\\", ""));
+                writeFile.flush();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            Thread.sleep(DEFAULT_PAUSE);
+            waitForElement(editBtn);
+
+            System.out.println(name + ": " + PAGE_NAME + " has been changed");
+            return true;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public Boolean removeExternalFeed(JSONObject data, String name) {
+        JSONObject jsonMain = new JSONObject();
+        JSONObject jsonObj = new JSONObject();
+        String feed, details_name = null;
+
+        try {
+            FileReader readFile = new FileReader(sPathToFile + sFileJson);
+            jsonMain = (JSONObject) parser.parse(readFile);
+            jsonObj = (JSONObject) jsonMain.get(name);
+        } catch (ParseException e) {
+        } catch (IOException e) {
+        }
+
+        feed = data.get("feed").toString();
+
+        switch (feed) {
+            case PRESS_RELEASE:
+                details_name = "ClientId: " + jsonObj.get("comp_id").toString();
+                break;
+
+            case EOD_MAIL:
+                details_name = jsonObj.get("stock_exchange").toString() + " : " + jsonObj.get("stock_symbol").toString();
+                break;
+
+            default:
+                break;
+        }
+
+        By editBtn = By.xpath("//td[(text()='" + details_name + "')]/parent::tr/td/input[contains(@id, 'btnEdit')]");
+
+        try {
+
+            waitForElement(moduleTitle);
+            String pageUrl = getPageUrl(jsonMain, name);
+            //driver.get(pageUrl);
+            findElement(editBtn).click();
+            waitForElement(deleteBtn);
 
                 findElement(deleteBtn).click();
 
@@ -360,10 +464,143 @@ public class ExternalFeedAdd extends AbstractPageObject {
                     return true;
                 }
 
-                return false;
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public Boolean checkExternalFeedCh(JSONObject data, String name) {
+        JSONObject jsonMain = new JSONObject();
+        JSONObject jsonObj = new JSONObject();
+        String feed, details_name = null;
+
+        try {
+            FileReader readFile = new FileReader(sPathToFile + sFileJson);
+            jsonMain = (JSONObject) parser.parse(readFile);
+            jsonObj = (JSONObject) jsonMain.get(name);
+        } catch (ParseException e) {
+        } catch (IOException e) {
+        }
+
+        feed = data.get("feed").toString();
+
+        switch (feed) {
+            case PRESS_RELEASE:
+                details_name = "ClientId: " + jsonObj.get("comp_id").toString();
+                break;
+
+            case EOD_MAIL:
+                details_name = jsonObj.get("stock_exchange").toString() + " : " + jsonObj.get("stock_symbol").toString();
+                break;
+
+            default:
+                break;
+        }
+
+        By editBtn = By.xpath("//td[(text()='" + details_name + "')]/parent::tr/td/input[contains(@id, 'btnEdit')]");
+
+        try {
+            waitForElement(moduleTitle);
+            findElement(editBtn).click();
+            waitForElement(saveBtn);
+
+            try {
+                if (!new Select(findElement(feedSelect)).getFirstSelectedOption().getText().equals(data.get("feed").toString())) {
+                    return false;
+                }
+            } catch (NullPointerException e) {
             }
 
-            return false;
+            try {
+                if (findElement(tagListInput).toString().equals(data.get("tag_list_ch").toString())) {
+                    return false;
+                }
+            } catch (NullPointerException e) {
+            }
+
+
+            switch (feed) {
+                case PRESS_RELEASE:
+                    try {
+                        if (!new Select(findElement(languageSelect)).getFirstSelectedOption().getText().equals(data.get("language").toString())) {
+                            return false;
+                        }
+                    } catch (NullPointerException e) {
+                    }
+
+                    try {
+                        if (!new Select(findElement(categorySelect)).getFirstSelectedOption().getText().equals(data.get("category").toString())) {
+                            return false;
+                        }
+                    } catch (NullPointerException e) {
+                    }
+
+                    try {
+                        if (findElement(compIdInput).toString().equals(data.get("comp_id").toString())) {
+                            return false;
+                        }
+                    } catch (NullPointerException e) {
+                    }
+
+                    break;
+
+                case EOD_MAIL:
+                    try {
+                        if (findElement(stockExchangeInput).toString().equals(data.get("stock_exchange").toString())) {
+                            return false;
+                        }
+                    } catch (NullPointerException e) {
+                    }
+
+                    try {
+                        if (findElement(stockSymbolInput).toString().equals(data.get("stock_symbol").toString())) {
+                            return false;
+                        }
+                    } catch (NullPointerException e) {
+                    }
+
+                    break;
+
+                default:
+                    break;
+
+            }
+
+
+            try {
+                if (!findElement(activeChk).getAttribute("checked").equals(data.get("active_ch").toString())) {
+                    return false;
+                }
+            } catch (NullPointerException e) {
+            }
+
+            // Save Url
+            URL url = new URL(getUrl());
+            String[] params = url.getQuery().split("&");
+            JSONObject jsonURLQuery = new JSONObject();
+            for (String param:params) {
+                jsonURLQuery.put(param.split("=")[0], param.split("=")[1]);
+            }
+            jsonObj.put("url_query", jsonURLQuery);
+
+            int ExternalFeedID = Integer.parseInt(jsonURLQuery.get("ExternalFeedID").toString());
+
+            try {
+                FileWriter writeFile = new FileWriter(sPathToFile + sFileJson);
+                writeFile.write(jsonMain.toJSONString().replace("\\", ""));
+                writeFile.flush();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            System.out.println(name + ": "+PAGE_NAME+" has been checked");
+            return ExternalFeedID > 0;
+
         } catch (Exception e) {
             e.printStackTrace();
         }
