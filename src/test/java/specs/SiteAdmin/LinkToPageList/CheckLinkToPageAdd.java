@@ -87,6 +87,32 @@ public class CheckLinkToPageAdd extends AbstractSpec {
         Assert.assertTrue(linkToPageAdd.checkLinkToPage(data, sLinkToPageName), "Submitted New "+ PAGE_NAME +" data doesn't fit well to entry data (after Revert To Live)");
     }
 
+    @Test(dataProvider=DATA, priority=5)
+    public void changeAndSubmitLinkToPage(JSONObject data) throws Exception {
+        String sLinkToPageName = data.get(KEY_NAME).toString();
+
+        Assert.assertEquals(linkToPageAdd.changeAndSubmitLinkToPage(data, sLinkToPageName), WorkflowState.FOR_APPROVAL.state(), "Some fields of New "+ PAGE_NAME +" didn't change properly (after Save and Submit)");
+        Assert.assertTrue(linkToPageAdd.checkLinkToPageCh(data, sLinkToPageName), "Submitted New "+ PAGE_NAME +" changes don't fit well to change data (after Change And Submit)");
+    }
+
+    @Test(dataProvider=DATA, priority=6)
+    public void publishEditLinkToPage(JSONObject data) throws InterruptedException {
+        String sLinkToPageName = data.get(KEY_NAME).toString();
+        Assert.assertEquals(linkToPageAdd.publishLinkToPage(data, sLinkToPageName), WorkflowState.LIVE.state(), "New "+ PAGE_NAME +" doesn't publish properly (after Publish)");
+    }
+
+    @Test(dataProvider=DATA, priority=7)
+    public void deleteLinkToPage(JSONObject data) throws Exception {
+        String sLinkToPageName = data.get(KEY_NAME).toString();
+        Assert.assertEquals(linkToPageAdd.setupAsDeletedLinkToPage(sLinkToPageName), WorkflowState.DELETE_PENDING.state(), "New "+ PAGE_NAME +" didn't setup as Deleted properly");
+    }
+
+    @Test(dataProvider=DATA, priority=8)
+    public void removeLinkToPage(JSONObject data) throws Exception {
+        String sLinkToPageName = data.get(KEY_NAME).toString();
+        Assert.assertEquals(linkToPageAdd.removeLinkToPage(data, sLinkToPageName), WorkflowState.NEW_ITEM.state(), "Couldn't remove New "+ PAGE_NAME +". Something went wrong.");
+    }
+
     @DataProvider
     public Object[][] getData() {
 
