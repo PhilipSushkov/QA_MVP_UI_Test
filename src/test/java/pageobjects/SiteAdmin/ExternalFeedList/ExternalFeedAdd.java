@@ -125,7 +125,6 @@ public class ExternalFeedAdd extends AbstractPageObject {
             }
 
 
-
             // Save Active checkbox
             active = Boolean.parseBoolean(data.get("active").toString());
             jsonObj.put("active", Boolean.parseBoolean(data.get("active").toString()));
@@ -205,7 +204,7 @@ public class ExternalFeedAdd extends AbstractPageObject {
             waitForElement(saveBtn);
 
             try {
-                if (!new Select(findElement(feedSelect)).getFirstSelectedOption().getText().equals(data.get("feed").toString())) {
+                if (!new Select(findElement(feedSelect)).getFirstSelectedOption().getText().trim().equals(data.get("feed").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
