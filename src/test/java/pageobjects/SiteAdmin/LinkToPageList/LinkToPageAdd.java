@@ -1,7 +1,8 @@
-package pageobjects.SiteAdmin.CssFileList;
+package pageobjects.SiteAdmin.LinkToPageList;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.Select;
 import pageobjects.AbstractPageObject;
 
 import com.jayway.jsonpath.JsonPath;
@@ -20,24 +21,23 @@ import static specs.AbstractSpec.desktopUrl;
 import static specs.AbstractSpec.propUISiteAdmin;
 
 /**
- * Created by philipsushkov on 2017-04-26.
+ * Created by philipsushkov on 2017-05-03.
  */
 
-public class CssFileAdd extends AbstractPageObject {
-    private static By moduleTitle, cssNameField, cssHighlightingChk, cssBodyTextarea;
-    private static By saveBtn, cancelBtn, deleteBtn, addNewLink, publishBtn, activeChk;
-    private static By revertBtn, workflowStateSpan, commentsTxt, successMsg, saveAndSubmitBtn, currentContentSpan;
+public class LinkToPageAdd extends AbstractPageObject {
+    private static By moduleTitle, keyNameField, linkToPageSelect;
+    private static By saveBtn, revertBtn, cancelBtn, deleteBtn, addNewLink, publishBtn;
+    private static By workflowStateSpan, commentsTxt, successMsg, saveAndSubmitBtn, currentContentSpan;
     private static String sPathToFile, sFileJson;
     private static JSONParser parser;
     private static final long DEFAULT_PAUSE = 2500;
-    private final String PAGE_NAME="CSS File";
+    private final String PAGE_NAME="Link To Page";
 
-    public CssFileAdd(WebDriver driver) {
+    public LinkToPageAdd(WebDriver driver) {
         super(driver);
         moduleTitle = By.xpath(propUISiteAdmin.getProperty("spanModule_Title"));
-        cssNameField = By.xpath(propUISiteAdmin.getProperty("input_CssName"));
-        cssHighlightingChk = By.xpath(propUISiteAdmin.getProperty("chk_CssHighlighting"));
-        cssBodyTextarea = By.xpath(propUISiteAdmin.getProperty("txtarea_CssBody"));
+        keyNameField = By.xpath(propUISiteAdmin.getProperty("input_KeyName"));
+        linkToPageSelect = By.xpath(propUISiteAdmin.getProperty("select_LinkToPage"));
         saveBtn = By.xpath(propUISiteAdmin.getProperty("btn_Save"));
         cancelBtn = By.xpath(propUISiteAdmin.getProperty("btn_Cancel"));
         deleteBtn = By.xpath(propUISiteAdmin.getProperty("btn_Delete"));
@@ -48,13 +48,12 @@ public class CssFileAdd extends AbstractPageObject {
         commentsTxt = By.xpath(propUISiteAdmin.getProperty("txtarea_Comments"));
         successMsg = By.xpath(propUISiteAdmin.getProperty("msg_Success"));
         saveAndSubmitBtn = By.xpath(propUISiteAdmin.getProperty("btn_SaveAndSubmit"));
-        activeChk = By.xpath(propUISiteAdmin.getProperty("chk_Active"));
         currentContentSpan = By.xpath(propUISiteAdmin.getProperty("span_CurrentContent"));
 
         parser = new JSONParser();
 
-        sPathToFile = System.getProperty("user.dir") + propUISiteAdmin.getProperty("dataPath_CssFileList");
-        sFileJson = propUISiteAdmin.getProperty("json_CssFile");
+        sPathToFile = System.getProperty("user.dir") + propUISiteAdmin.getProperty("dataPath_LinkToPageList");
+        sFileJson = propUISiteAdmin.getProperty("json_LinkToPage");
     }
 
     public String getTitle() {
@@ -65,9 +64,8 @@ public class CssFileAdd extends AbstractPageObject {
         return sTitle;
     }
 
-    public String saveCssFile(JSONObject data, String name) {
-        String css_name, css_body;
-        Boolean css_highlighting, active;
+    public String saveLinkToPage(JSONObject data, String name) {
+        String key_name, link_to_page;
         JSONObject jsonObj = new JSONObject();
         JSONObject jsonMain = new JSONObject();
 
@@ -82,56 +80,18 @@ public class CssFileAdd extends AbstractPageObject {
             } catch (ParseException e) {
             }
 
-            css_name = data.get("css_name").toString();
-            findElement(cssNameField).sendKeys(css_name);
-            jsonObj.put("css_name", css_name);
+            key_name = data.get("key_name").toString();
+            findElement(keyNameField).clear();
+            findElement(keyNameField).sendKeys(key_name);
+            jsonObj.put("key_name", key_name);
 
-            css_body = data.get("css_body").toString();
-            findElement(cssBodyTextarea).click();
-            findElement(cssBodyTextarea).sendKeys(css_body);
-            jsonObj.put("css_body", css_body);
-
-            css_highlighting = Boolean.parseBoolean(data.get("css_highlighting").toString());
-            jsonObj.put("css_highlighting", Boolean.parseBoolean(data.get("css_highlighting").toString()));
-            if (css_highlighting) {
-                if (!Boolean.parseBoolean(findElement(cssHighlightingChk).getAttribute("checked"))) {
-                    findElement(cssHighlightingChk).click();
-                } else {
-                }
-            } else {
-                if (!Boolean.parseBoolean(findElement(cssHighlightingChk).getAttribute("checked"))) {
-                } else {
-                    findElement(cssHighlightingChk).click();
-                }
-            }
-
-            active = Boolean.parseBoolean(data.get("active").toString());
-            jsonObj.put("active", Boolean.parseBoolean(data.get("active").toString()));
-            if (active) {
-                if (!Boolean.parseBoolean(findElement(activeChk).getAttribute("checked"))) {
-                    findElement(activeChk).click();
-                } else {
-                }
-            } else {
-                if (!Boolean.parseBoolean(findElement(activeChk).getAttribute("checked"))) {
-                } else {
-                    findElement(activeChk).click();
-                }
-            }
-
+            link_to_page = data.get("link_to_page").toString();
+            findElement(linkToPageSelect).sendKeys(link_to_page);
+            jsonObj.put("link_to_page", link_to_page);
 
             findElement(saveBtn).click();
             Thread.sleep(DEFAULT_PAUSE);
             waitForElement(successMsg);
-
-            // Save Css File Url
-            URL url = new URL(getUrl());
-            String[] params = url.getQuery().split("&");
-            JSONObject jsonURLQuery = new JSONObject();
-            for (String param:params) {
-                jsonURLQuery.put(param.split("=")[0], param.split("=")[1]);
-            }
-            jsonObj.put("url_query", jsonURLQuery);
 
             jsonObj.put("workflow_state", WorkflowState.IN_PROGRESS.state());
 
@@ -157,9 +117,9 @@ public class CssFileAdd extends AbstractPageObject {
         return null;
     }
 
-    public String saveAndSubmitCssFile(JSONObject data, String name) throws InterruptedException {
+    public String saveAndSubmitLinkToPage(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
-        By editBtn = By.xpath("//td[(text()='" + data.get("css_name").toString() + "')]/parent::tr/td/input[contains(@id, 'imgEdit')][contains(@id, 'CssFiles')]");
+        By editBtn = By.xpath("//td[(text()='" + data.get("key_name").toString() + "')]/parent::tr/td/input[contains(@id, 'imgEdit')][contains(@id, 'ModuleInstanceKeys')]");
 
         try {
             waitForElement(moduleTitle);
@@ -170,8 +130,9 @@ public class CssFileAdd extends AbstractPageObject {
             } catch (ParseException e) {
             }
 
-            String pageUrl = getPageUrl(jsonMain, name);
+            //String pageUrl = getPageUrl(jsonMain, name);
             //driver.get(pageUrl);
+            waitForElement(editBtn);
             findElement(editBtn).click();
             Thread.sleep(DEFAULT_PAUSE);
 
@@ -181,13 +142,23 @@ public class CssFileAdd extends AbstractPageObject {
             Thread.sleep(DEFAULT_PAUSE);
 
             waitForElement(editBtn);
-            driver.get(pageUrl);
+            findElement(editBtn).click();
             Thread.sleep(DEFAULT_PAUSE);
 
             JSONObject jsonObj = (JSONObject) jsonMain.get(name);
 
             jsonObj.put("workflow_state", WorkflowState.FOR_APPROVAL.state());
             jsonObj.put("deleted", "false");
+
+            // Save Link To Page Url
+            URL url = new URL(getUrl());
+            String[] params = url.getQuery().split("&");
+            JSONObject jsonURLQuery = new JSONObject();
+            for (String param:params) {
+                jsonURLQuery.put(param.split("=")[0], param.split("=")[1]);
+            }
+            jsonObj.put("url_query", jsonURLQuery);
+
 
             jsonMain.put(name, jsonObj);
 
@@ -204,7 +175,7 @@ public class CssFileAdd extends AbstractPageObject {
         return null;
     }
 
-    public Boolean checkCssFile(JSONObject data, String name) throws InterruptedException {
+    public Boolean checkLinkToPage(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
 
         try {
@@ -221,21 +192,14 @@ public class CssFileAdd extends AbstractPageObject {
 
             // Compare field values with entry data
             try {
-                if (findElement(cssNameField).toString().equals(data.get("css_name").toString())) {
+                if (findElement(keyNameField).toString().equals(data.get("key_name").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
             }
 
             try {
-                if (findElement(cssBodyTextarea).toString().equals(data.get("css_body").toString())) {
-                    return false;
-                }
-            } catch (NullPointerException e) {
-            }
-
-            try {
-                if (!findElement(activeChk).getAttribute("checked").equals(data.get("active").toString())) {
+                if (!new Select(findElement(linkToPageSelect)).getFirstSelectedOption().getText().trim().equals(data.get("link_to_page").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
@@ -250,7 +214,7 @@ public class CssFileAdd extends AbstractPageObject {
         return null;
     }
 
-    public String publishCssFile(JSONObject data, String name) throws InterruptedException {
+    public String publishLinkToPage(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
         JSONObject jsonObj = new JSONObject();
 
@@ -296,7 +260,7 @@ public class CssFileAdd extends AbstractPageObject {
         return null;
     }
 
-    public String changeAndSubmitCssFile(JSONObject data, String name) throws InterruptedException {
+    public String changeAndSubmitLinkToPage(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
         JSONObject jsonObj = new JSONObject();
 
@@ -314,29 +278,18 @@ public class CssFileAdd extends AbstractPageObject {
             waitForElement(saveAndSubmitBtn);
 
             try {
-                if (!data.get("css_body_ch").toString().isEmpty()) {
-                    findElement(cssBodyTextarea).clear();
-                    findElement(cssBodyTextarea).sendKeys(data.get("css_body_ch").toString());
-                    jsonObj.put("css_body_ch", data.get("css_body_ch").toString());
+                if (!data.get("key_name_ch").toString().isEmpty()) {
+                    findElement(keyNameField).clear();
+                    findElement(keyNameField).sendKeys(data.get("key_name_ch").toString());
+                    jsonObj.put("key_name", data.get("key_name_ch").toString());
                 }
             } catch (NullPointerException e) {
             }
 
-            jsonObj.put("active", Boolean.parseBoolean(data.get("active").toString()));
             try {
-                // Save Active checkbox
-                if (Boolean.parseBoolean(data.get("active_ch").toString())) {
-                    if (!Boolean.parseBoolean(findElement(activeChk).getAttribute("checked"))) {
-                        findElement(activeChk).click();
-                        jsonObj.put("active", true);
-                    } else {
-                    }
-                } else {
-                    if (!Boolean.parseBoolean(findElement(activeChk).getAttribute("checked"))) {
-                    } else {
-                        findElement(activeChk).click();
-                        jsonObj.put("active", false);
-                    }
+                if (!data.get("link_to_page_ch").toString().isEmpty()) {
+                    findElement(linkToPageSelect).sendKeys(data.get("link_to_page_ch").toString());
+                    jsonObj.put("link_to_page", data.get("link_to_page_ch").toString());
                 }
             } catch (NullPointerException e) {
             }
@@ -372,7 +325,7 @@ public class CssFileAdd extends AbstractPageObject {
         return null;
     }
 
-    public String revertToLiveCssFile(String name) throws InterruptedException {
+    public String revertToLiveLinkToPage(String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
         JSONObject jsonObj = new JSONObject();
 
@@ -417,7 +370,7 @@ public class CssFileAdd extends AbstractPageObject {
         return null;
     }
 
-    public Boolean checkCssFileCh(JSONObject data, String name) throws InterruptedException {
+    public Boolean checkLinkToPageCh(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
 
         try {
@@ -434,21 +387,14 @@ public class CssFileAdd extends AbstractPageObject {
 
             // Compare field values with entry data
             try {
-                if (findElement(cssNameField).toString().equals(data.get("css_name").toString())) {
+                if (findElement(keyNameField).toString().equals(data.get("key_name_ch").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
             }
 
             try {
-                if (findElement(cssBodyTextarea).toString().equals(data.get("css_body_ch").toString())) {
-                    return false;
-                }
-            } catch (NullPointerException e) {
-            }
-
-            try {
-                if (!findElement(activeChk).getAttribute("checked").equals(data.get("active_ch").toString())) {
+                if (!new Select(findElement(linkToPageSelect)).getFirstSelectedOption().getText().trim().equals(data.get("link_to_page_ch").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
@@ -463,7 +409,7 @@ public class CssFileAdd extends AbstractPageObject {
         return null;
     }
 
-    public String setupAsDeletedCssFile(String name) throws InterruptedException {
+    public String setupAsDeletedLinkToPage(String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
         JSONObject jsonObj = new JSONObject();
 
@@ -506,7 +452,7 @@ public class CssFileAdd extends AbstractPageObject {
         return null;
     }
 
-    public String removeCssFile(JSONObject data, String name) throws InterruptedException {
+    public String removeLinkToPage(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
 
         try {
@@ -556,5 +502,4 @@ public class CssFileAdd extends AbstractPageObject {
         String  sSectionId = JsonPath.read(obj, "$.['"+name+"'].url_query.SectionId");
         return desktopUrl.toString()+"default.aspx?ItemID="+sItemID+"&LanguageId="+sLanguageId+"&SectionId="+sSectionId;
     }
-
 }
