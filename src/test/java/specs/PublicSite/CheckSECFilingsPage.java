@@ -72,7 +72,7 @@ public class CheckSECFilingsPage extends AbstractSpec {
     }
 
     //test to see if they are from the proper filter
-    @Test
+    @Test(enabled=false)
     public void checkIfTypeFilteringWorks() throws InterruptedException {
         SECFilingsPage sec = new SECFilingsPage(driver);
         Assert.assertTrue(sec.checkAllFilters(),"Filtering is not working properly");
