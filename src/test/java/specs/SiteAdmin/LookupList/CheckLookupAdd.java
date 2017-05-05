@@ -95,6 +95,24 @@ public class CheckLookupAdd extends AbstractSpec {
         Assert.assertTrue(lookupAdd.checkLookupCh(data, sLookupName), "Submitted New "+ PAGE_NAME +" changes don't fit well to change data (after Change And Submit)");
     }
 
+    @Test(dataProvider=DATA, priority=6)
+    public void publishEditLookup(JSONObject data) throws InterruptedException {
+        String sLookupName = data.get(LOOKUP_NAME).toString();
+        Assert.assertEquals(lookupAdd.publishLookup(data, sLookupName), WorkflowState.LIVE.state(), "New "+ PAGE_NAME +" doesn't publish properly (after Publish)");
+    }
+
+    @Test(dataProvider=DATA, priority=7)
+    public void deleteLookup(JSONObject data) throws Exception {
+        String sLookupName = data.get(LOOKUP_NAME).toString();
+        Assert.assertEquals(lookupAdd.setupAsDeletedLookup(sLookupName), WorkflowState.DELETE_PENDING.state(), "New "+ PAGE_NAME +" didn't setup as Deleted properly");
+    }
+
+    @Test(dataProvider=DATA, priority=8)
+    public void removeLookup(JSONObject data) throws Exception {
+        String sLookupName = data.get(LOOKUP_NAME).toString();
+        Assert.assertEquals(lookupAdd.removeLookup(data, sLookupName), WorkflowState.NEW_ITEM.state(), "Couldn't remove New "+ PAGE_NAME +". Something went wrong.");
+    }
+
     @DataProvider
     public Object[][] getData() {
 
