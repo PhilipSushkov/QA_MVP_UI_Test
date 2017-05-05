@@ -1,4 +1,4 @@
-package pageobjects.SiteAdmin.CssFileList;
+package pageobjects.SiteAdmin.LookupList;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -20,24 +20,27 @@ import static specs.AbstractSpec.desktopUrl;
 import static specs.AbstractSpec.propUISiteAdmin;
 
 /**
- * Created by philipsushkov on 2017-04-26.
+ * Created by philipsushkov on 2017-05-05.
  */
 
-public class CssFileAdd extends AbstractPageObject {
-    private static By moduleTitle, cssNameField, cssHighlightingChk, cssBodyTextarea;
-    private static By saveBtn, cancelBtn, deleteBtn, addNewLink, publishBtn, activeChk;
-    private static By revertBtn, workflowStateSpan, commentsTxt, successMsg, saveAndSubmitBtn, currentContentSpan;
+public class LookupAdd extends AbstractPageObject {
+    private static By moduleTitle, lookupTypeField, lookupTextField, lookupValueField, additionalInfoField, lookupTypeSelect;
+    private static By activeChk, saveBtn, revertBtn, cancelBtn, deleteBtn, addNewLink, publishBtn;
+    private static By workflowStateSpan, commentsTxt, successMsg, saveAndSubmitBtn, currentContentSpan;
     private static String sPathToFile, sFileJson;
     private static JSONParser parser;
     private static final long DEFAULT_PAUSE = 2500;
-    private final String PAGE_NAME="CSS File";
+    private final String PAGE_NAME="Lookup";
 
-    public CssFileAdd(WebDriver driver) {
+    public LookupAdd(WebDriver driver) {
         super(driver);
         moduleTitle = By.xpath(propUISiteAdmin.getProperty("spanModule_Title"));
-        cssNameField = By.xpath(propUISiteAdmin.getProperty("input_CssName"));
-        cssHighlightingChk = By.xpath(propUISiteAdmin.getProperty("chk_CssHighlighting"));
-        cssBodyTextarea = By.xpath(propUISiteAdmin.getProperty("txtarea_CssBody"));
+        lookupTypeField = By.xpath(propUISiteAdmin.getProperty("input_LookupType"));
+        lookupTextField = By.xpath(propUISiteAdmin.getProperty("input_LookupText"));
+        lookupValueField = By.xpath(propUISiteAdmin.getProperty("input_LookupValue"));
+        additionalInfoField = By.xpath(propUISiteAdmin.getProperty("input_AdditionalInfo"));
+        lookupTypeSelect = By.xpath(propUISiteAdmin.getProperty("select_LookupType"));
+        activeChk = By.xpath(propUISiteAdmin.getProperty("chk_Active"));
         saveBtn = By.xpath(propUISiteAdmin.getProperty("btn_Save"));
         cancelBtn = By.xpath(propUISiteAdmin.getProperty("btn_Cancel"));
         deleteBtn = By.xpath(propUISiteAdmin.getProperty("btn_Delete"));
@@ -48,13 +51,12 @@ public class CssFileAdd extends AbstractPageObject {
         commentsTxt = By.xpath(propUISiteAdmin.getProperty("txtarea_Comments"));
         successMsg = By.xpath(propUISiteAdmin.getProperty("msg_Success"));
         saveAndSubmitBtn = By.xpath(propUISiteAdmin.getProperty("btn_SaveAndSubmit"));
-        activeChk = By.xpath(propUISiteAdmin.getProperty("chk_Active"));
         currentContentSpan = By.xpath(propUISiteAdmin.getProperty("span_CurrentContent"));
 
         parser = new JSONParser();
 
-        sPathToFile = System.getProperty("user.dir") + propUISiteAdmin.getProperty("dataPath_CssFileList");
-        sFileJson = propUISiteAdmin.getProperty("json_CssFile");
+        sPathToFile = System.getProperty("user.dir") + propUISiteAdmin.getProperty("dataPath_LookupList");
+        sFileJson = propUISiteAdmin.getProperty("json_Lookup");
     }
 
     public String getTitle() {
@@ -65,9 +67,9 @@ public class CssFileAdd extends AbstractPageObject {
         return sTitle;
     }
 
-    public String saveCssFile(JSONObject data, String name) {
-        String css_name, css_body;
-        Boolean css_highlighting, active;
+    public String saveLookup(JSONObject data, String name) {
+        String lookup_type, lookup_text, lookup_value, additional_info;
+        Boolean active;
         JSONObject jsonObj = new JSONObject();
         JSONObject jsonMain = new JSONObject();
 
@@ -82,29 +84,27 @@ public class CssFileAdd extends AbstractPageObject {
             } catch (ParseException e) {
             }
 
-            css_name = data.get("css_name").toString();
-            findElement(cssNameField).sendKeys(css_name);
-            jsonObj.put("css_name", css_name);
+            lookup_type = data.get("lookup_type").toString();
+            findElement(lookupTypeField).clear();
+            findElement(lookupTypeField).sendKeys(lookup_type);
+            jsonObj.put("lookup_type", lookup_type);
 
-            css_body = data.get("css_body").toString();
-            findElement(cssBodyTextarea).click();
-            findElement(cssBodyTextarea).sendKeys(css_body);
-            jsonObj.put("css_body", css_body);
+            lookup_text = data.get("lookup_text").toString();
+            findElement(lookupTextField).clear();
+            findElement(lookupTextField).sendKeys(lookup_text);
+            jsonObj.put("lookup_text", lookup_text);
 
-            css_highlighting = Boolean.parseBoolean(data.get("css_highlighting").toString());
-            jsonObj.put("css_highlighting", Boolean.parseBoolean(data.get("css_highlighting").toString()));
-            if (css_highlighting) {
-                if (!Boolean.parseBoolean(findElement(cssHighlightingChk).getAttribute("checked"))) {
-                    findElement(cssHighlightingChk).click();
-                } else {
-                }
-            } else {
-                if (!Boolean.parseBoolean(findElement(cssHighlightingChk).getAttribute("checked"))) {
-                } else {
-                    findElement(cssHighlightingChk).click();
-                }
-            }
+            lookup_value = data.get("lookup_value").toString();
+            findElement(lookupValueField).clear();
+            findElement(lookupValueField).sendKeys(lookup_value);
+            jsonObj.put("lookup_value", lookup_value);
 
+            additional_info = data.get("additional_info").toString();
+            findElement(additionalInfoField).clear();
+            findElement(additionalInfoField).sendKeys(additional_info);
+            jsonObj.put("additional_info", additional_info);
+
+            // Save Active checkbox
             active = Boolean.parseBoolean(data.get("active").toString());
             jsonObj.put("active", Boolean.parseBoolean(data.get("active").toString()));
             if (active) {
@@ -119,19 +119,9 @@ public class CssFileAdd extends AbstractPageObject {
                 }
             }
 
-
             findElement(saveBtn).click();
             Thread.sleep(DEFAULT_PAUSE);
             waitForElement(successMsg);
-
-            // Save Css File Url
-            URL url = new URL(getUrl());
-            String[] params = url.getQuery().split("&");
-            JSONObject jsonURLQuery = new JSONObject();
-            for (String param:params) {
-                jsonURLQuery.put(param.split("=")[0], param.split("=")[1]);
-            }
-            jsonObj.put("url_query", jsonURLQuery);
 
             jsonObj.put("workflow_state", WorkflowState.IN_PROGRESS.state());
 
@@ -157,9 +147,9 @@ public class CssFileAdd extends AbstractPageObject {
         return null;
     }
 
-    public String saveAndSubmitCssFile(JSONObject data, String name) throws InterruptedException {
+    public String saveAndSubmitLookup(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
-        By editBtn = By.xpath("//td[(text()='" + data.get("css_name").toString() + "')]/parent::tr/td/input[contains(@id, 'imgEdit')][contains(@id, 'CssFiles')]");
+        By editBtn = By.xpath("//td[(text()='" + data.get("lookup_text").toString() + "')]/parent::tr/td/input[contains(@id, 'imgEdit')][contains(@id, 'Lookup')]");
 
         try {
             waitForElement(moduleTitle);
@@ -170,8 +160,13 @@ public class CssFileAdd extends AbstractPageObject {
             } catch (ParseException e) {
             }
 
-            String pageUrl = getPageUrl(jsonMain, name);
+            waitForElement(lookupTypeSelect);
+            findElement(lookupTypeSelect).sendKeys(data.get("lookup_type").toString());
+            Thread.sleep(DEFAULT_PAUSE);
+
+            //String pageUrl = getPageUrl(jsonMain, name);
             //driver.get(pageUrl);
+            waitForElement(editBtn);
             findElement(editBtn).click();
             Thread.sleep(DEFAULT_PAUSE);
 
@@ -181,13 +176,23 @@ public class CssFileAdd extends AbstractPageObject {
             Thread.sleep(DEFAULT_PAUSE);
 
             waitForElement(editBtn);
-            driver.get(pageUrl);
+            findElement(editBtn).click();
             Thread.sleep(DEFAULT_PAUSE);
 
             JSONObject jsonObj = (JSONObject) jsonMain.get(name);
 
             jsonObj.put("workflow_state", WorkflowState.FOR_APPROVAL.state());
             jsonObj.put("deleted", "false");
+
+            // Save Link To Page Url
+            URL url = new URL(getUrl());
+            String[] params = url.getQuery().split("&");
+            JSONObject jsonURLQuery = new JSONObject();
+            for (String param:params) {
+                jsonURLQuery.put(param.split("=")[0], param.split("=")[1]);
+            }
+            jsonObj.put("url_query", jsonURLQuery);
+
 
             jsonMain.put(name, jsonObj);
 
@@ -204,7 +209,7 @@ public class CssFileAdd extends AbstractPageObject {
         return null;
     }
 
-    public Boolean checkCssFile(JSONObject data, String name) throws InterruptedException {
+    public Boolean checkLookup(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
 
         try {
@@ -221,14 +226,28 @@ public class CssFileAdd extends AbstractPageObject {
 
             // Compare field values with entry data
             try {
-                if (findElement(cssNameField).toString().equals(data.get("css_name").toString())) {
+                if (findElement(lookupTypeField).toString().equals(data.get("lookup_type").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
             }
 
             try {
-                if (findElement(cssBodyTextarea).toString().equals(data.get("css_body").toString())) {
+                if (findElement(lookupTextField).toString().equals(data.get("lookup_text").toString())) {
+                    return false;
+                }
+            } catch (NullPointerException e) {
+            }
+
+            try {
+                if (findElement(lookupValueField).toString().equals(data.get("lookup_value").toString())) {
+                    return false;
+                }
+            } catch (NullPointerException e) {
+            }
+
+            try {
+                if (findElement(additionalInfoField).toString().equals(data.get("additional_info").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
@@ -250,7 +269,7 @@ public class CssFileAdd extends AbstractPageObject {
         return null;
     }
 
-    public String publishCssFile(JSONObject data, String name) throws InterruptedException {
+    public String publishLookup(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
         JSONObject jsonObj = new JSONObject();
 
@@ -296,7 +315,7 @@ public class CssFileAdd extends AbstractPageObject {
         return null;
     }
 
-    public String changeAndSubmitCssFile(JSONObject data, String name) throws InterruptedException {
+    public String changeAndSubmitLookup(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
         JSONObject jsonObj = new JSONObject();
 
@@ -314,10 +333,10 @@ public class CssFileAdd extends AbstractPageObject {
             waitForElement(saveAndSubmitBtn);
 
             try {
-                if (!data.get("css_body_ch").toString().isEmpty()) {
-                    findElement(cssBodyTextarea).clear();
-                    findElement(cssBodyTextarea).sendKeys(data.get("css_body_ch").toString());
-                    jsonObj.put("css_body", data.get("css_body_ch").toString());
+                if (!data.get("lookup_value_ch").toString().isEmpty()) {
+                    findElement(lookupValueField).clear();
+                    findElement(lookupValueField).sendKeys(data.get("lookup_value_ch").toString());
+                    jsonObj.put("lookup_value", data.get("lookup_value_ch").toString());
                 }
             } catch (NullPointerException e) {
             }
@@ -372,7 +391,7 @@ public class CssFileAdd extends AbstractPageObject {
         return null;
     }
 
-    public String revertToLiveCssFile(String name) throws InterruptedException {
+    public String revertToLiveLookup(String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
         JSONObject jsonObj = new JSONObject();
 
@@ -417,7 +436,7 @@ public class CssFileAdd extends AbstractPageObject {
         return null;
     }
 
-    public Boolean checkCssFileCh(JSONObject data, String name) throws InterruptedException {
+    public Boolean checkLookupCh(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
 
         try {
@@ -434,14 +453,28 @@ public class CssFileAdd extends AbstractPageObject {
 
             // Compare field values with entry data
             try {
-                if (findElement(cssNameField).toString().equals(data.get("css_name").toString())) {
+                if (findElement(lookupTypeField).toString().equals(data.get("lookup_type").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
             }
 
             try {
-                if (findElement(cssBodyTextarea).toString().equals(data.get("css_body_ch").toString())) {
+                if (findElement(lookupTextField).toString().equals(data.get("lookup_text").toString())) {
+                    return false;
+                }
+            } catch (NullPointerException e) {
+            }
+
+            try {
+                if (findElement(lookupValueField).toString().equals(data.get("lookup_value_ch").toString())) {
+                    return false;
+                }
+            } catch (NullPointerException e) {
+            }
+
+            try {
+                if (findElement(additionalInfoField).toString().equals(data.get("additional_info").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
@@ -463,7 +496,7 @@ public class CssFileAdd extends AbstractPageObject {
         return null;
     }
 
-    public String setupAsDeletedCssFile(String name) throws InterruptedException {
+    public String setupAsDeletedLookup(String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
         JSONObject jsonObj = new JSONObject();
 
@@ -506,7 +539,7 @@ public class CssFileAdd extends AbstractPageObject {
         return null;
     }
 
-    public String removeCssFile(JSONObject data, String name) throws InterruptedException {
+    public String removeLookup(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
 
         try {

@@ -66,7 +66,12 @@
             <class name="specs.SiteAdmin.LinkToPageList.CheckLinkToPageAdd" />
         </classes>
     </test>
-
+    <test name="CheckLookupAdd">
+        <classes>
+            <class name="specs.SiteAdmin.LookupList.CheckLookupAdd" />
+        </classes>
+    </test>
+  
 
     <test name="CreateNewUser">
         <classes>
