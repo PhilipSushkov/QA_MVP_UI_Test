@@ -1,0 +1,30 @@
+{
+  "XNAS:AAPL 01": {
+    "url_query": {
+      "ItemID": "bdf6ae34-3e2f-4784-8f5b-f619be230915",
+      "SectionId": "0db8319d-0218-44a1-9595-129f7e64bcfd",
+      "LanguageId": "1"
+    },
+    "deleted": "false",
+    "lookup_text": "XNAS:AAPL 01",
+    "additional_info": "",
+    "lookup_value": "XNAS:AAPL",
+    "lookup_type": "indices",
+    "active": true,
+    "workflow_state": "For Approval"
+  },
+  "SECindices 02": {
+    "url_query": {
+      "ItemID": "5146c494-e447-4b51-98c3-0a7203668e21",
+      "SectionId": "0db8319d-0218-44a1-9595-129f7e64bcfd",
+      "LanguageId": "1"
+    },
+    "deleted": "false",
+    "lookup_text": "SECindices 02",
+    "additional_info": "",
+    "lookup_value": "CIK:0001172781",
+    "lookup_type": "SECindices",
+    "active": false,
+    "workflow_state": "For Approval"
+  }
+}

@@ -317,7 +317,7 @@ public class CssFileAdd extends AbstractPageObject {
                 if (!data.get("css_body_ch").toString().isEmpty()) {
                     findElement(cssBodyTextarea).clear();
                     findElement(cssBodyTextarea).sendKeys(data.get("css_body_ch").toString());
-                    jsonObj.put("css_body_ch", data.get("css_body_ch").toString());
+                    jsonObj.put("css_body", data.get("css_body_ch").toString());
                 }
             } catch (NullPointerException e) {
             }
