@@ -1,5 +1,6 @@
 package specs.PublicSite;
 
+import org.apache.commons.lang.RandomStringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -15,6 +16,7 @@ import pageobjects.LiveSite.FormBuilderPage;
 import pageobjects.LiveSite.HomePage;
 import specs.AbstractSpec;
 
+import javax.mail.MessagingException;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -25,23 +27,17 @@ import java.io.IOException;
 
 public class CheckFormBuilderPage extends AbstractSpec {
 
-    private final String firstName = "Winston";
-    private final String lastName = "Smith";
-    private final String email = "winston@bigbrother.com";
-    private final String company = "Ministry of Truth";
-    private final String address = "Airstrip One";
-    private final String city = "London";
-    private final String country = "United Kingdom";
-    private final String phone = "1984";
-    private final String comments = "I love Big Brother";
-
     private static HomePage homePage;
     private static FormBuilderPage formBuilderPage;
 
     private static String sPathToFile, sDataFileJson;
     private static JSONParser parser;
 
-    private final String DATA="getData", FILTER_NAME="filter_name";
+    private final String DATA="getData";
+
+    private final String testAccount = "test@q4websystems.com", testPassword = "testing!";
+
+    private final Long EMAIL_WAIT = 15000L;
 
     @BeforeTest
     public void setUp() {
@@ -73,9 +69,13 @@ public class CheckFormBuilderPage extends AbstractSpec {
 
     @Test(dataProvider = DATA)
     public void canSubmitForm(JSONObject data) {
+
+        String randLastName = RandomStringUtils.randomAlphanumeric(6);
+
         homePage.selectFormBuilderFromMenu();
+
         formBuilderPage.enterFields(data.get("first_name").toString(),
-                                    data.get("last_name").toString(),
+                                    randLastName,                       // email subjectID
                                     data.get("email").toString(),
                                     data.get("company").toString(),
                                     data.get("address").toString(),
@@ -83,11 +83,29 @@ public class CheckFormBuilderPage extends AbstractSpec {
                                     data.get("country").toString(),
                                     data.get("phone").toString(),
                                     data.get("comments").toString());
+
         formBuilderPage.submitForm();
 
         Assert.assertEquals(formBuilderPage.successDisplayed(), data.get("expect_success"));
 
-        //Assert.assertTrue(formBuilderPage.successDisplayed());
+        try {
+            Thread.sleep(EMAIL_WAIT);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (Boolean.valueOf(data.get("expect_success").toString())) {
+            try {
+                String content = getRecentMail(testAccount, testPassword, randLastName).getContent().toString();
+                Assert.assertTrue(content.contains(data.get("first_name").toString()));
+                Assert.assertTrue(content.contains(data.get("email").toString()));
+                Assert.assertTrue(content.contains(data.get("comments").toString()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Test
