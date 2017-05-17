@@ -81,6 +81,23 @@ public class JobApplicationsPage extends AbstractPageObject {
 
     }
 
+    public void clearFields(){
+        waitForElementToAppear(applicationsHeader);
+        findElement(firstNameField).clear();
+        findElement(lastNameField).clear();
+        findElement(addressField).clear();
+        findElement(cityField).clear();
+        findElement(provinceField).clear();
+        findElement(countryField).clear();
+        findElement(postalCodeField).clear();
+        findElement(homePhoneField).clear();
+        findElement(businessPhoneField).clear();
+        findElement(faxField).clear();
+        findElement(emailField).clear();
+        findElement(coverLetterTextField).clear();
+        findElement(resumeTextField).clear();
+    }
+
     public void enterEmail(String email){
         waitForElementToAppear(applicationsHeader);
         findElement(emailField).clear();

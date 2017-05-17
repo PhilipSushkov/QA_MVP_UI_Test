@@ -52,6 +52,7 @@ public class CheckJobApplicationsPage extends AbstractSpec {
 
     @Test
     public void firstNameFieldNotFilled(){
+        jobApplicationsPage.clearFields();
         jobApplicationsPage.enterFields("",lastName, address, city, province, country, postalCode,
                 homePhone, businessPhone, fax, email, coverLetterText, resumeText);
         jobApplicationsPage.submitApplication();
@@ -64,6 +65,7 @@ public class CheckJobApplicationsPage extends AbstractSpec {
 
     @Test
     public void wrongEmailFormatting() {
+        jobApplicationsPage.clearFields();
         String wrongEmail = "dogdog";
         String wrongEmail2 = "dogdog@dog";
         String wrongEmail3 = "dogdog@dog.";
@@ -91,8 +93,9 @@ public class CheckJobApplicationsPage extends AbstractSpec {
 
     }
 
-    @Test
+    @Test(dependsOnMethods = {"wrongEmailFormatting"})
     public void successfulSubmission(){
+        jobApplicationsPage.clearFields();
         jobApplicationsPage.enterFields(firstName,lastName, address, city, province, country, postalCode,
                 homePhone, businessPhone, fax, email, coverLetterText, resumeText);
         jobApplicationsPage.submitApplication();
