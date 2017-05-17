@@ -1,0 +1,25 @@
+{
+  "form_builder": [
+    {"first_name": "Winston",
+    "last_name": "Smith",
+    "email": "winston@bigbrother.com",
+    "company": "Ministry of Truth",
+    "address": "Airstrip One",
+    "city": "London",
+    "country": "United Kingdom",
+    "phone": "1984",
+    "comments": "I love Big Brother",
+    "expect_success": true},
+
+    {"first_name": "</div>",
+      "last_name": "</body>",
+      "email": "test",
+      "company": "test",
+      "address": "test",
+      "city": "test",
+      "country": "test",
+      "phone": "test",
+      "comments": "test",
+      "expect_success": false}
+  ]
+}

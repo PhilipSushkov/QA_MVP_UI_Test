@@ -43,7 +43,7 @@ public class CheckAlertFilterAdd extends AbstractSpec {
         dashboard = new Dashboard(driver);
         alertFilterAdd = new AlertFilterAdd(driver);
 
-        sPathToFile = System.getProperty("user.dir") + propUISystemAdmin.getProperty("dataPath_AlertFilterList");
+        sPathToFile = System.getProperty("user.diDa") + propUISystemAdmin.getProperty("dataPath_AlertFilterList");
         sDataFileJson = propUISystemAdmin.getProperty("json_AlertFilterData");
 
         parser = new JSONParser();
