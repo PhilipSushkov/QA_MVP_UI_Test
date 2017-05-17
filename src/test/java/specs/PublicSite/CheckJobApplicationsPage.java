@@ -1,50 +1,44 @@
 package specs.PublicSite;
 
-import org.junit.Before;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.TimeoutException;
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
+
 import org.testng.annotations.Test;
-import pageobjects.LiveSite.*;
+import pageobjects.LiveSite.HomePage;
+import pageobjects.LiveSite.JobApplicationsPage;
 import specs.AbstractSpec;
 
-import java.io.IOException;
-import java.util.Calendar;
-
-import static org.testng.Assert.fail;
-
 /**
- * Created by easong on 1/26/17.
+ * Created by andyp on 2017-05-17.
  */
 public class CheckJobApplicationsPage extends AbstractSpec {
-
-    private final String firstName = "Luke";
-    private final String lastName = "Skywalker";
-    private final String address = "55 Darth Street";
-    private final String country = "tattooine";
-    private final String city = "JabbaVille";
-    private final String province = "the farming part";
-    private final String postalCode = "C3POBB8";
-    private final String homePhone = "r2d2";
-    private final String email = "jedimaster227@rebels.com";
-    private final String coverLetter = "I am his father - Darth Vader";
+    //Data
+    private final String firstName = "First";
+    private final String lastName = "Last";
+    private final String address = "Street";
+    private final String country = "Country";
+    private final String city = "City";
+    private final String province = "Province";
+    private final String postalCode = "Postal Code";
+    private final String homePhone = "111-111-1111";
+    private final String businessPhone = "222-222-2222";
+    private final String fax = "idk fax";
+    private final String email = "email@email.com";
+    private final String coverLetterText = "Hire me";
+    private final String resumeText = "Resume";
 
     private static HomePage homePage;
     private static JobApplicationsPage jobApplicationsPage;
 
     @BeforeTest
-    public void goToPublicSite() {
-
+    public void setUp(){
         driver.get("http://chicagotest.q4web.com/English/Investors/default.aspx");
-        //driver.get("http://fiesta.q4web.newtest/stock-information/default.aspx");
-
         homePage = new HomePage(driver);
         jobApplicationsPage = new JobApplicationsPage(driver);
-
-        Assert.assertTrue(homePage.logoIsPresent(), "Home page of public site has not been loaded.");
-
+        homePage.selectJobApplicationFromMenu();
     }
 
     @Test
@@ -56,23 +50,45 @@ public class CheckJobApplicationsPage extends AbstractSpec {
         }
     }
 
+    @Test
+    public void firstNameFieldNotFilled(){
+        jobApplicationsPage.enterFields("",lastName, address, city, province, country, postalCode,
+                homePhone, businessPhone, fax, email, coverLetterText, resumeText);
+        jobApplicationsPage.submitApplication();
 
-        @Test
-        public void canSubmitJobApplication ()
-        {
-            homePage.selectJobApplicationFromMenu();
-            jobApplicationsPage.enterFirstName(firstName);
-            jobApplicationsPage.enterAddress(address);
-            jobApplicationsPage.enterLastName(lastName);
-            jobApplicationsPage.enterCity(city);
-            jobApplicationsPage.enterCountry(country);
-            jobApplicationsPage.enterHomePhone(homePhone);
-            jobApplicationsPage.enterProvince(province);
-            jobApplicationsPage.enterPostalCodeField(postalCode);
-            jobApplicationsPage.enterEmailField(email);
-            jobApplicationsPage.enterCoverLetterField(coverLetter);
-            jobApplicationsPage.submitApplication();
-
-        }
+        //Checking to see if you get validation error
+        Assert.assertNotNull(jobApplicationsPage.checkErrorMessages(), "There are no error messages");
+        //Checking if it is a "First Name is required" error
+        Assert.assertTrue(jobApplicationsPage.getErrorMessage("First Name is required"));
     }
 
+    @Test
+    public void wrongEmailFormatting() {
+        String wrongEmail = "dogdog";
+        String wrongEmail2 = "dogdog@dog";
+        String wrongEmail3 = "dogdog@dog.";
+
+        jobApplicationsPage.enterEmail(wrongEmail);
+        jobApplicationsPage.submitApplication();
+        Assert.assertNotNull(jobApplicationsPage.checkErrorMessages(), "There are no error messages");
+        Assert.assertTrue(jobApplicationsPage.getErrorMessage("Email is invalid"));
+
+        jobApplicationsPage.enterEmail(wrongEmail2);
+        jobApplicationsPage.submitApplication();
+        Assert.assertNotNull(jobApplicationsPage.checkErrorMessages(), "There are no error messages");
+        Assert.assertTrue(jobApplicationsPage.getErrorMessage("Email is invalid"));
+
+        jobApplicationsPage.enterEmail(wrongEmail3);
+        jobApplicationsPage.submitApplication();
+        Assert.assertNotNull(jobApplicationsPage.checkErrorMessages(), "There are no error messages");
+        Assert.assertTrue(jobApplicationsPage.getErrorMessage("Email is invalid"));
+
+        //Checking to see if the error for invalid email is gone
+        jobApplicationsPage.enterEmail(email);
+        jobApplicationsPage.submitApplication();
+        Assert.assertNotNull(jobApplicationsPage.checkErrorMessages(), "There are no error messages");
+        Assert.assertFalse(jobApplicationsPage.getErrorMessage("Email is invalid"));
+
+
+    }
+}

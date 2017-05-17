@@ -11,7 +11,14 @@ Feature: Test filling out job application on the website
     And Email address does not have correct formatting "something@something.whatever"
     When Submit application button is pressed
     Then Application should not be submitted
-    And Warning for incorrect formatting
+    And Warning for incorrect formatting should show up
+
+  Scenario: Check if incorrect formatting for error is gone after fixing it
+    Given I complete the test for correct email formatting
+    And I input an email with correct formatting
+    When Submit application button is pressed
+    Then Application should not be submitted
+    And Warning for incorrect formatting should show NOT up
 
   Scenario Outline: Check if a required field is missing
     Given I fill out the form
@@ -25,7 +32,8 @@ Feature: Test filling out job application on the website
     Given I am logged into test@q4websystems.com account
     When I fill out all the required fields for the page
     And I click "Submit Application"
-    Then I should see an email for job application
+    Then I should see success message
+    And I should see an email for job application
     And Content of the application should match the fields that were put in
 
   Scenario: Check if I can upload a file on the page
