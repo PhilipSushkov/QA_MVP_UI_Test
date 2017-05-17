@@ -113,6 +113,7 @@ public class CheckFormBuilderPage extends AbstractSpec {
         homePage.selectFormBuilderFromMenu();
         formBuilderPage.submitForm();
 
+        Assert.assertFalse(formBuilderPage.successDisplayed());
         Assert.assertTrue(formBuilderPage.formBuilderPageDisplayed());
     }
 

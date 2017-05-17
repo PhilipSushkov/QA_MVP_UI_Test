@@ -16,14 +16,14 @@ Feature: I can fill out a FormBuilder form
       And the First Name is what I entered in the form
       And Email and Comments are blank
 
+  Scenario: An invalid form is rejected
+    When I fill in the form with invalid text in at least one required field (eg. first name = </div>)
+    And I click submit
+    Then the message "_____ contains invalid texts." appears
+    And the rest of the form remains unchanged
+
   Scenario: An incomplete form is rejected
     When I fill in the form without completing at least one required field
       And I click submit
     Then the unfilled required fields are marked with the word "Required!"
-      And the rest of the form remains unchanged
-
-  Scenario: An invalid form is rejected
-    When I fill in the form with invalid text in at least one required field (eg. first name = </div>)
-      And I click submit
-    Then the message "_____ contains invalid texts." appears
       And the rest of the form remains unchanged
