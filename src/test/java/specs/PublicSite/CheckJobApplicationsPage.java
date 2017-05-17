@@ -89,6 +89,14 @@ public class CheckJobApplicationsPage extends AbstractSpec {
         Assert.assertNotNull(jobApplicationsPage.checkErrorMessages(), "There are no error messages");
         Assert.assertFalse(jobApplicationsPage.getErrorMessage("Email is invalid"));
 
+    }
 
+    @Test
+    public void successfulSubmission(){
+        jobApplicationsPage.enterFields(firstName,lastName, address, city, province, country, postalCode,
+                homePhone, businessPhone, fax, email, coverLetterText, resumeText);
+        jobApplicationsPage.submitApplication();
+
+        Assert.assertTrue(jobApplicationsPage.getSuccessMessage());
     }
 }

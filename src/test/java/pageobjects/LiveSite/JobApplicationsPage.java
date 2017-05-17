@@ -34,6 +34,7 @@ public class JobApplicationsPage extends AbstractPageObject {
     private final By submitApplication;
     private final By applicationsHeader;
     private final By errorMessages;
+    private final By successMessage;
 
     Actions actions = new Actions(driver);
 
@@ -56,7 +57,8 @@ public class JobApplicationsPage extends AbstractPageObject {
         resumeTextField = By.xpath(propUIPublicSite.getProperty("field_resumeText"));
         submitApplication = By.xpath(propUIPublicSite.getProperty("btn_submit"));
         applicationsHeader = By.xpath(propUIPublicSite.getProperty("applicationHeader"));
-        errorMessages = By.xpath((propUIPublicSite).getProperty("errorMessage"));
+        errorMessages = By.xpath(propUIPublicSite.getProperty("errorMessage"));
+        successMessage = By.xpath(propUIPublicSite.getProperty("successMessage"));
     }
 
     public void enterFields(String firstName, String lastName, String address, String city, String province,
@@ -112,4 +114,9 @@ public class JobApplicationsPage extends AbstractPageObject {
     public boolean getErrorMessage(String missingField){
         return findElement(errorMessages).getText().contains(missingField);
     }
+
+    public boolean getSuccessMessage(){
+        return findElement(successMessage).getText().contains("Your application has been submitted");
+    }
+
 }
