@@ -46,7 +46,7 @@ public class CheckJobApplicationsPage extends AbstractSpec {
         homePage.selectJobApplicationFromMenu();
     }
 
-    @Test
+    @Test(priority = -1)
     public void canNavigateToJobApplicationsPage() {
         try {
             Assert.assertTrue(homePage.selectJobApplicationFromMenu().applicationPageDisplayed(), "Job Applications Page couldn't be opened");
@@ -80,7 +80,7 @@ public class CheckJobApplicationsPage extends AbstractSpec {
         Assert.assertTrue(jobApplicationsPage.getErrorMessage("First Name is required"));
     }
 
-    @Test(dataProvider = DATA)
+    @Test(dataProvider = DATA, priority = -1)
     public void wrongEmailFormatting(JSONObject data) {
         jobApplicationsPage.clearFields();
 
@@ -97,10 +97,14 @@ public class CheckJobApplicationsPage extends AbstractSpec {
 
     }
 
-    //Test for uploading file
+    /*Test for uploading file
 
-    @Test(dataProvider = DATA, dependsOnMethods = "wrongEmailFormatting")
+
+    */
+
+    @Test(dataProvider = DATA)
     public void successfulSubmission(JSONObject data){
+        //Boolean checks if active field from json is true and skips if it is not
         if (Boolean.parseBoolean(data.get("active").toString())) {
             jobApplicationsPage.clearFields();
             jobApplicationsPage.enterFields(
