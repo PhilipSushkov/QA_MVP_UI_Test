@@ -19,44 +19,6 @@
     "resume_text" : "Resume",
     "active" : true
   },
-    {
-      "do_assertions" : true,
-      "test_name": "Person",
-      "first_name": "First name",
-      "last_name": "Last name",
-      "address": "Street",
-      "city" : "City",
-      "province": "Province",
-      "country": "Country",
-      "postal_code" : "Postal Code",
-      "home_phone" : "111-111-1111",
-      "business_phone" : "222-222-222",
-      "fax" : "333-333-3333",
-      "email_fail": "email@email",
-      "email": "email@email.com",
-      "coverletter_text" : "Hire me",
-      "resume_text" : "Resume",
-      "active" : false
-  },
-    {
-      "do_assertions" : true,
-      "test_name": "Person",
-      "first_name": "First name",
-      "last_name": "Last name",
-      "address": "Street",
-      "city" : "City",
-      "province": "Province",
-      "country": "Country",
-      "postal_code" : "Postal Code",
-      "home_phone" : "111-111-1111",
-      "business_phone" : "222-222-222",
-      "fax" : "333-333-3333",
-      "email_fail": "email@email.",
-      "email": "email@email.com",
-      "coverletter_text" : "Hire me",
-      "resume_text" : "Resume",
-      "active" : false
-  }
   ]
 }
 

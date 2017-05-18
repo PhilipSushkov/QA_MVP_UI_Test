@@ -1,5 +1,6 @@
 package pageobjects.LiveSite;
 
+import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
@@ -40,9 +41,7 @@ public class JobApplicationsPage extends AbstractPageObject {
     private static JSONParser parser;
 
     public JobApplicationsPage(WebDriver driver) {
-
         super(driver);
-
         firstNameField = By.xpath(propUIPublicSite.getProperty("field_firstName"));
         lastNameField = By.xpath(propUIPublicSite.getProperty("field_lastName"));
         addressField = By.xpath(propUIPublicSite.getProperty("field_address"));
@@ -64,6 +63,54 @@ public class JobApplicationsPage extends AbstractPageObject {
         parser = new JSONParser();
 
         sDataFileJson = propUIPublicSite.getProperty("json_AlertFilterData");
+    }
+
+    public Boolean checkFirstNameRequiredField(JSONObject data){
+        clearFields();
+        enterFields(
+                "",
+                data.get("last_name").toString(),
+                data.get("address").toString(),
+                data.get("city").toString(),
+                data.get("province").toString(),
+                data.get("country").toString(),
+                data.get("postal_code").toString(),
+                data.get("home_phone").toString(),
+                data.get("business_phone").toString(),
+                data.get("fax").toString(),
+                data.get("email").toString(),
+                data.get("coverletter_text").toString(),
+                data.get("resume_text").toString());
+        submitApplication();
+
+        return(getErrorMessage("First Name is required."));
+    }
+
+    public Boolean checkEmailFormat(JSONObject data){
+        clearFields();
+        enterEmail(data.get("email_fail").toString());
+        submitApplication();
+        return(getErrorMessage("Email is invalid"));
+    }
+
+    public Boolean checkSuccessSubmission(JSONObject data){
+        clearFields();
+        enterFields(
+                data.get("first_name").toString(),
+                data.get("last_name").toString(),
+                data.get("address").toString(),
+                data.get("city").toString(),
+                data.get("province").toString(),
+                data.get("country").toString(),
+                data.get("postal_code").toString(),
+                data.get("home_phone").toString(),
+                data.get("business_phone").toString(),
+                data.get("fax").toString(),
+                data.get("email").toString(),
+                data.get("coverletter_text").toString(),
+                data.get("resume_text").toString());
+        submitApplication();
+        return(getSuccessMessage());
     }
 
     public void enterFields(String firstName, String lastName, String address, String city, String province,
@@ -134,6 +181,7 @@ public class JobApplicationsPage extends AbstractPageObject {
     }
 
     public boolean getErrorMessage(String missingFieldMessage){
+        System.out.print(findElement(errorMessages).getText());
         return findElement(errorMessages).getText().contains(missingFieldMessage);
     }
 

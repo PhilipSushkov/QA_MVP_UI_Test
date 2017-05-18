@@ -15,6 +15,15 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.*;
 
+import java.util.Properties;
+
+import javax.mail.Folder;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.NoSuchProviderException;
+import javax.mail.Session;
+import javax.mail.Store;
+
 
 /**
  * Created by philipsushkov on 2016-12-08.
@@ -235,4 +244,43 @@ public class Functions {
         return path;
     }
 
+    public static Message getRecentMail(String user, String password, String subjectID) {
+
+        // Gets the first email message whose subject contains subjectID
+        // Use with javax.mail api
+
+        try {
+
+            Properties properties = new Properties();
+
+            properties.put("mail.pop3.host", "pop.gmail.com");
+            properties.put("mail.pop3.port", "995");
+            properties.put("mail.pop3.starttls.enable", "true");
+            Session emailSession = Session.getDefaultInstance(properties);
+
+            javax.mail.Store store = emailSession.getStore("pop3s");
+
+            store.connect("pop.gmail.com", user, password);
+
+            Folder emailFolder = store.getFolder("INBOX");
+            emailFolder.open(Folder.READ_ONLY);
+
+            Message[] messages = emailFolder.getMessages();
+
+            for (int i = 0; i < messages.length; i++) {
+                if (messages[i].getSubject().contains(subjectID)) {
+                    return messages[i];
+                }
+            }
+
+            return null;
+
+        } catch (NoSuchProviderException e) {
+            e.printStackTrace();
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
 }

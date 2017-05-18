@@ -46,7 +46,7 @@ public class CheckJobApplicationsPage extends AbstractSpec {
         homePage.selectJobApplicationFromMenu();
     }
 
-    @Test(priority = -1)
+    @Test
     public void canNavigateToJobApplicationsPage() {
         try {
             Assert.assertTrue(homePage.selectJobApplicationFromMenu().applicationPageDisplayed(), "Job Applications Page couldn't be opened");
@@ -55,46 +55,17 @@ public class CheckJobApplicationsPage extends AbstractSpec {
         }
     }
 
-    @Test(dataProvider = DATA)
+    @Test(dataProvider = DATA, priority = 1)
     public void firstNameFieldNotFilled(JSONObject data){
-        jobApplicationsPage.clearFields();
-        jobApplicationsPage.enterFields(
-                "",
-                data.get("last_name").toString(),
-                data.get("address").toString(),
-                data.get("city").toString(),
-                data.get("province").toString(),
-                data.get("country").toString(),
-                data.get("postal_code").toString(),
-                data.get("home_phone").toString(),
-                data.get("business_phone").toString(),
-                data.get("fax").toString(),
-                data.get("email").toString(),
-                data.get("coverletter_text").toString(),
-                data.get("resume_text").toString());
-        jobApplicationsPage.submitApplication();
-
-        //Checking to see if you get validation error
         Assert.assertNotNull(jobApplicationsPage.checkErrorMessages(), "There are no error messages");
-        //Checking if it is a "First Name is required" error
-        Assert.assertTrue(jobApplicationsPage.getErrorMessage("First Name is required"));
+        Assert.assertTrue(jobApplicationsPage.checkFirstNameRequiredField(data),"Error message should be there for first name");
     }
 
-    @Test(dataProvider = DATA, priority = -1)
+    @Test(dataProvider = DATA, priority = 2)
     public void wrongEmailFormatting(JSONObject data) {
-        jobApplicationsPage.clearFields();
 
-        jobApplicationsPage.enterEmail(data.get("email_fail").toString());
-        jobApplicationsPage.submitApplication();
         Assert.assertNotNull(jobApplicationsPage.checkErrorMessages(), "There are no error messages");
-        Assert.assertTrue(jobApplicationsPage.getErrorMessage("Email is invalid"));
-
-        //Checking to see if the error for invalid email is gone
-        jobApplicationsPage.enterEmail(data.get("email").toString());
-        jobApplicationsPage.submitApplication();
-        Assert.assertNotNull(jobApplicationsPage.checkErrorMessages(), "There are no error messages");
-        Assert.assertFalse(jobApplicationsPage.getErrorMessage("Email is invalid"));
-
+        Assert.assertTrue(jobApplicationsPage.checkEmailFormat(data), "Error message should be there for invalid email formatting");
     }
 
     /*Test for uploading file
@@ -102,30 +73,11 @@ public class CheckJobApplicationsPage extends AbstractSpec {
 
     */
 
-    @Test(dataProvider = DATA)
+    @Test(dataProvider = DATA, priority = 3)
     public void successfulSubmission(JSONObject data){
-        //Boolean checks if active field from json is true and skips if it is not
-        if (Boolean.parseBoolean(data.get("active").toString())) {
-            jobApplicationsPage.clearFields();
-            jobApplicationsPage.enterFields(
-                    data.get("first_name").toString(),
-                    data.get("last_name").toString(),
-                    data.get("address").toString(),
-                    data.get("city").toString(),
-                    data.get("province").toString(),
-                    data.get("country").toString(),
-                    data.get("postal_code").toString(),
-                    data.get("home_phone").toString(),
-                    data.get("business_phone").toString(),
-                    data.get("fax").toString(),
-                    data.get("email").toString(),
-                    data.get("coverletter_text").toString(),
-                    data.get("resume_text").toString());
-            jobApplicationsPage.submitApplication();
 
-            Assert.assertTrue(jobApplicationsPage.getSuccessMessage());
+            Assert.assertTrue(jobApplicationsPage.checkSuccessSubmission(data), "Submission success message should be there");
         }
-  }
 
     @DataProvider
     public Object[][] getData() {
