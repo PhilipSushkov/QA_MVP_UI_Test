@@ -47,6 +47,15 @@ public class CheckJobApplicationsPage extends AbstractSpec {
         homePage.selectJobApplicationFromMenu();
     }
 
+    @Test(dataProvider = DATA, priority = 1)
+    public void submitJobApplication(JSONObject data) {
+        String sMessage = data.get("expected").toString();
+
+        Assert.assertTrue(homePage.selectJobApplicationFromMenu().applicationPageDisplayed(), "Job Applications Page couldn't be opened");
+        Assert.assertTrue(jobApplicationsPage.submitJobApplication(data).contains(sMessage),"Job Application Submission doesn't work properly");
+    }
+
+    /*
     @Test
     public void canNavigateToJobApplicationsPage() {
         try {
@@ -69,16 +78,19 @@ public class CheckJobApplicationsPage extends AbstractSpec {
         Assert.assertTrue(jobApplicationsPage.checkEmailFormat(data), "Error message should be there for invalid email formatting");
     }
 
+*/
     /*Test for uploading file
 
 
     */
 
+    /*
     @Test(dataProvider = DATA, priority = 3)
     public void successfulSubmission(JSONObject data){
 
             Assert.assertTrue(jobApplicationsPage.checkSuccessSubmission(data), "Submission success message should be there");
         }
+    */
 
     @Test(dataProvider = DATA, dependsOnMethods = { "successfulSubmission"} )
     public void checkEmailForApplication(JSONObject data) throws IOException, MessagingException {
