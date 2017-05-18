@@ -2,23 +2,26 @@
   "job_application": [
   {
     "do_assertions" : true,
-    "test_name": "Person",
-    "first_name": "First name",
-    "last_name": "Last name",
-    "address": "Street",
-    "city" : "City",
-    "province": "Province",
-    "country": "Country",
-    "postal_code" : "Postal Code",
+    "test_name": "Applicant",
+    "first_name": "Yon",
+    "last_name": "Yonson",
+    "address": "ABC St.",
+    "city" : "Berlin",
+    "province": "Winsconsin",
+    "country": "United States",
+    "postal_code" : "99812",
     "home_phone" : "111-111-1111",
-    "business_phone" : "222-222-222",
+    "business_phone" : "222-222-2222",
     "fax" : "333-333-3333",
-    "email_fail": "email",
-    "email": "email@email.com",
-    "coverletter_text" : "Hire me",
-    "resume_text" : "Resume",
-    "active" : true
-  },
+    "email_fail": "notrealemail",
+    "email": "yon@yonson.com",
+    "coverletter_text" : "Something something",
+    "resume_text" : "dog dog",
+    "successMessage": "Your application has been submitted",
+    "firstNameMissing": "First Name is required",
+    "invalidEmail":"Email is invalid"
+  }
+
   ]
 }
 

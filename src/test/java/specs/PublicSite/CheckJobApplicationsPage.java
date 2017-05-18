@@ -15,6 +15,7 @@ import pageobjects.LiveSite.HomePage;
 import pageobjects.LiveSite.JobApplicationsPage;
 import specs.AbstractSpec;
 
+import javax.mail.MessagingException;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -78,6 +79,12 @@ public class CheckJobApplicationsPage extends AbstractSpec {
 
             Assert.assertTrue(jobApplicationsPage.checkSuccessSubmission(data), "Submission success message should be there");
         }
+
+    @Test(dataProvider = DATA, dependsOnMethods = { "successfulSubmission"} )
+    public void checkEmailForApplication(JSONObject data) throws IOException, MessagingException {
+
+        Assert.assertTrue(jobApplicationsPage.getEmailContents(data));
+    }
 
     @DataProvider
     public Object[][] getData() {

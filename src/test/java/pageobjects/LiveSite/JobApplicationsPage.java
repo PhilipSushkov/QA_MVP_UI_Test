@@ -7,12 +7,15 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.Select;
 import pageobjects.AbstractPageObject;
 
+import javax.mail.MessagingException;
+import java.io.IOException;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Locale;
 
 import static specs.AbstractSpec.propUIPublicSite;
+import static util.Functions.getRecentMail;
 
 /**
  * Created by easong on 1/26/17.
@@ -39,6 +42,8 @@ public class JobApplicationsPage extends AbstractPageObject {
 
     private static String sPathToFile, sDataFileJson;
     private static JSONParser parser;
+
+    private static String testAccount = "test@q4websystems.com", testPassword = "testing!";
 
     public JobApplicationsPage(WebDriver driver) {
         super(driver);
@@ -83,14 +88,14 @@ public class JobApplicationsPage extends AbstractPageObject {
                 data.get("resume_text").toString());
         submitApplication();
 
-        return(getErrorMessage("First Name is required."));
+        return(findElement(errorMessages).getText().contains(data.get("firstNameMissing").toString()));
     }
 
     public Boolean checkEmailFormat(JSONObject data){
         clearFields();
         enterEmail(data.get("email_fail").toString());
         submitApplication();
-        return(getErrorMessage("Email is invalid"));
+        return(findElement(errorMessages).getText().contains(data.get("invalidEmail").toString()));
     }
 
     public Boolean checkSuccessSubmission(JSONObject data){
@@ -110,8 +115,31 @@ public class JobApplicationsPage extends AbstractPageObject {
                 data.get("coverletter_text").toString(),
                 data.get("resume_text").toString());
         submitApplication();
-        return(getSuccessMessage());
+        return(findElement(successMessage).getText().contains(data.get("successMessage").toString()));
     }
+
+    public Boolean getEmailContents(JSONObject data) throws IOException, MessagingException {
+        String content = getRecentMail(testAccount, testPassword, "Job Application for position" ).getContent().toString();
+        System.out.print(content);
+        if (
+                content.contains(data.get("first_name").toString()) &&
+                content.contains(data.get("last_name").toString()) &&
+                content.contains(data.get("address").toString()) &&
+                content.contains(data.get("city").toString()) &&
+                content.contains(data.get("province").toString()) &&
+                content.contains(data.get("country").toString()) &&
+                content.contains(data.get("postal_code").toString()) &&
+                content.contains(data.get("home_phone").toString()) &&
+                content.contains(data.get("business_phone").toString()) &&
+                content.contains(data.get("fax").toString()) &&
+                content.contains(data.get("email").toString()) &&
+                content.contains(data.get("coverletter_text").toString()) &&
+                content.contains(data.get("resume_text").toString()))
+            return true;
+        return false;
+    }
+
+
 
     public void enterFields(String firstName, String lastName, String address, String city, String province,
                             String country, String postalCode, String homePhone, String businessPhone,
@@ -180,13 +208,5 @@ public class JobApplicationsPage extends AbstractPageObject {
         return element;
     }
 
-    public boolean getErrorMessage(String missingFieldMessage){
-        System.out.print(findElement(errorMessages).getText());
-        return findElement(errorMessages).getText().contains(missingFieldMessage);
-    }
-
-    public boolean getSuccessMessage(){
-        return findElement(successMessage).getText().contains("Your application has been submitted");
-    }
 
 }
