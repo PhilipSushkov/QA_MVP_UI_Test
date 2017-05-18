@@ -12,8 +12,11 @@ import org.testng.annotations.*;
 import org.testng.Assert;
 
 import org.openqa.selenium.By;
+import pageobjects.Dashboard.Dashboard;
 import pageobjects.LiveSite.FormBuilderPage;
 import pageobjects.LiveSite.HomePage;
+import pageobjects.LoginPage.LoginPage;
+import pageobjects.SystemAdmin.SiteMaintenance.FunctionalBtn;
 import specs.AbstractSpec;
 
 import javax.mail.MessagingException;
@@ -33,22 +36,42 @@ public class CheckFormBuilderPage extends AbstractSpec {
     private static String sPathToFile, sDataFileJson;
     private static JSONParser parser;
 
+    private static By systemAdminMenuButton, siteMaintenanceMenuItem;
+    private static LoginPage loginPage;
+    private static Dashboard dashboard;
+    private static FunctionalBtn functionalBtn;
+
     private final String DATA="getData";
 
     private final String testAccount = "test@q4websystems.com", testPassword = "testing!";
 
-    private final Long EMAIL_WAIT = 15000L;
+    private final Long LONG_WAIT = 15000L;
+
+    private final Long SHORT_WAIT = 3000L;
 
     @BeforeTest
-    public void setUp() {
+    public void setUp() throws Exception {
         parser = new JSONParser();
 
         sPathToFile = System.getProperty("user.dir") + propUIPublicSite.getProperty("dataPath_FormBuilderData");
         sDataFileJson = propUIPublicSite.getProperty("json_FormBuilderData");
-    }
 
-    @BeforeClass
-    public void goToPublicSite() {
+        // Enable SendGrid
+
+        systemAdminMenuButton = By.xpath(propUISystemAdmin.getProperty("btnMenu_SystemAdmin"));
+        siteMaintenanceMenuItem = By.xpath(propUISystemAdmin.getProperty("itemMenu_SiteMaintenance"));
+
+        loginPage = new LoginPage(driver);
+        dashboard = new Dashboard(driver);
+        functionalBtn = new FunctionalBtn(driver);
+
+        loginPage.loginUser();
+
+        dashboard.openPageFromMenu(systemAdminMenuButton, siteMaintenanceMenuItem);
+
+        functionalBtn.enableSendGrid();
+
+        // Navigate to public homepage
 
         driver.get("http://chicagotest.q4web.com/English/Investors/default.aspx");
 
@@ -58,7 +81,7 @@ public class CheckFormBuilderPage extends AbstractSpec {
         Assert.assertTrue(homePage.logoIsPresent(), "Home page of public site has not been loaded.");
     }
 
-    @Test
+    @Test(priority = 1)
     public void canNavigateToFormBuilderPage() {
         try{
             Assert.assertTrue(homePage.selectFormBuilderFromMenu().formBuilderPageDisplayed(), "FormBuilder Page couldn't be opened");
@@ -67,34 +90,26 @@ public class CheckFormBuilderPage extends AbstractSpec {
         }
     }
 
-    @Test(dataProvider = DATA)
-    public void canSubmitForm(JSONObject data) {
+    @Test(dataProvider = DATA, priority = 2)
+    public void canSubmitForm(JSONObject data) throws InterruptedException {
 
-        String randLastName = RandomStringUtils.randomAlphanumeric(6);
+        String randLastName = "Last Name: " + RandomStringUtils.randomAlphanumeric(6);
 
         homePage.selectFormBuilderFromMenu();
 
-        formBuilderPage.enterFields(data.get("first_name").toString(),
-                                    randLastName,                       // email subjectID
-                                    data.get("email").toString(),
-                                    data.get("company").toString(),
-                                    data.get("address").toString(),
-                                    data.get("city").toString(),
-                                    data.get("country").toString(),
-                                    data.get("phone").toString(),
-                                    data.get("comments").toString());
-
+        formBuilderPage.enterFields(data, randLastName);
         formBuilderPage.submitForm();
 
-        Assert.assertEquals(formBuilderPage.successDisplayed(), data.get("expect_success"));
+        Thread.sleep(SHORT_WAIT);
 
-        try {
-            Thread.sleep(EMAIL_WAIT);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Assert.assertTrue(formBuilderPage.correctMessageDisplayed(data.get("expected_message").toString()));
 
         if (Boolean.valueOf(data.get("expect_success").toString())) {
+
+            // Wait for email in inbox
+
+            Thread.sleep(LONG_WAIT);
+
             try {
                 String content = getRecentMail(testAccount, testPassword, randLastName).getContent().toString();
                 Assert.assertTrue(content.contains(data.get("first_name").toString()));
@@ -108,12 +123,12 @@ public class CheckFormBuilderPage extends AbstractSpec {
         }
     }
 
-    @Test
+    @Test(priority = 3)
     public void submitIncompleteForm() {
+
         homePage.selectFormBuilderFromMenu();
         formBuilderPage.submitForm();
 
-        Assert.assertFalse(formBuilderPage.successDisplayed());
         Assert.assertTrue(formBuilderPage.formBuilderPageDisplayed());
     }
 

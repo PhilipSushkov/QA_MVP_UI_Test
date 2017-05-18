@@ -282,4 +282,10 @@ public class Functions {
 
         return null;
     }
+
+    public static void cleanTextFields(List<WebElement> fields) {
+        for (WebElement e : fields) {
+            e.clear();
+        }
+    }
 }
