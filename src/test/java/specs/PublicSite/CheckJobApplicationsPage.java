@@ -92,11 +92,11 @@ public class CheckJobApplicationsPage extends AbstractSpec {
         }
     */
 
-    @Test(dataProvider = DATA, dependsOnMethods = { "successfulSubmission"} )
-    public void checkEmailForApplication(JSONObject data) throws IOException, MessagingException {
-
-        Assert.assertTrue(jobApplicationsPage.getEmailContents(data));
-    }
+//    @Test(dataProvider = DATA, dependsOnMethods = { "successfulSubmission"} )
+//    public void checkEmailForApplication(JSONObject data) throws IOException, MessagingException {
+//
+//        Assert.assertTrue(jobApplicationsPage.getEmailContents(data));
+//    }
 
     @DataProvider
     public Object[][] getData() {

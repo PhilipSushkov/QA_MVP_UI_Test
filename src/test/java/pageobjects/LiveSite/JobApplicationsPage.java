@@ -24,8 +24,8 @@ import static util.Functions.getRecentMail;
 
 public class JobApplicationsPage extends AbstractPageObject {
     private final By firstNameField, addressField, lastNameField, cityField, countryField, homePhoneField;
-    private final By businessPhoneField, faxField, provinceField, postalCodeField, emailField, successMessage;
-    private final By coverLetterTextField, resumeTextField, submitApplication, applicationsHeader, errorMessages;
+    private final By businessPhoneField, faxField, provinceField, postalCodeField, emailField;
+    private final By coverLetterTextField, resumeTextField, submitApplication, applicationsHeader;
 
     private static String testAccount = "test@q4websystems.com", testPassword = "testing!";
 
@@ -46,8 +46,7 @@ public class JobApplicationsPage extends AbstractPageObject {
         resumeTextField = By.xpath(propUIPublicSite.getProperty("field_resumeText"));
         submitApplication = By.xpath(propUIPublicSite.getProperty("btn_submit"));
         applicationsHeader = By.xpath(propUIPublicSite.getProperty("applicationHeader"));
-        errorMessages = By.xpath(propUIPublicSite.getProperty("errorMessage"));
-        successMessage = By.xpath(propUIPublicSite.getProperty("successMessage"));
+
     }
 
     /*
@@ -101,6 +100,7 @@ public class JobApplicationsPage extends AbstractPageObject {
 
     public Boolean getEmailContents(JSONObject data) throws IOException, MessagingException {
         String content = getRecentMail(testAccount, testPassword, "Job Application for position" ).getContent().toString();
+        System.out.print(getRecentMail(testAccount, testPassword, "Job Application for position" ).getSentDate());
         System.out.print(content);
         if (
                 content.contains(data.get("first_name").toString()) &&
@@ -123,41 +123,37 @@ public class JobApplicationsPage extends AbstractPageObject {
 
     public String submitJobApplication(JSONObject data) {
         String sMessage = null;
-        List<WebElement> elements = null;
+        List<WebElement> elements = findElements(By.xpath("//input[@type='text']"));
+        elements.add(findElement(By.xpath("//textarea")));
 
         clearFields(elements);
+        enterFields(data);
+        submitApplication();
 
-
+        sMessage = getSysMessage(data).getText();
 
         return sMessage;
     }
 
-
-
-
-    public void enterFields(String firstName, String lastName, String address, String city, String province,
-                            String country, String postalCode, String homePhone, String businessPhone,
-                            String fax, String email, String coverLetter, String resume){
-        waitForElementToAppear(applicationsHeader);
-        findElement(firstNameField).sendKeys(firstName);
-        findElement(lastNameField).sendKeys(lastName);
-        findElement(addressField).sendKeys(address);
-        findElement(cityField).sendKeys(city);
-        findElement(provinceField).sendKeys(province);
-        findElement(countryField).sendKeys(country);
-        findElement(postalCodeField).sendKeys(postalCode);
-        findElement(homePhoneField).sendKeys(homePhone);
-        findElement(businessPhoneField).sendKeys(businessPhone);
-        findElement(faxField).sendKeys(fax);
-        findElement(emailField).sendKeys(email);
-        findElement(coverLetterTextField).sendKeys(coverLetter);
-        findElement(resumeTextField).sendKeys(resume);
-
+    public void enterFields(JSONObject data){
+        findElement(firstNameField).sendKeys(data.get("first_name").toString());
+        findElement(lastNameField).sendKeys(data.get("last_name").toString());
+        findElement(addressField).sendKeys(data.get("address").toString());
+        findElement(cityField).sendKeys(data.get("city").toString());
+        findElement(provinceField).sendKeys(data.get("province").toString());
+        findElement(countryField).sendKeys(data.get("country").toString());
+        findElement(postalCodeField).sendKeys(data.get("postal_code").toString());
+        findElement(homePhoneField).sendKeys(data.get("home_phone").toString());
+        findElement(businessPhoneField).sendKeys(data.get("business_phone").toString());
+        findElement(faxField).sendKeys(data.get("fax").toString());
+        findElement(emailField).sendKeys(data.get("email").toString());
+        findElement(coverLetterTextField).sendKeys(data.get("coverletter_text").toString());
+        findElement(resumeTextField).sendKeys(data.get("resume_text").toString());
     }
 
 
     public void clearFields(List<WebElement> elements) {
-
+        elements.clear();
     }
 
     /*
@@ -195,12 +191,12 @@ public class JobApplicationsPage extends AbstractPageObject {
         return findElement(applicationsHeader).isDisplayed();
     }
 
-    public WebElement checkErrorMessages() {
+    public WebElement getSysMessage(JSONObject data) {
         WebElement element = null;
 
         try {
-            waitForElement(errorMessages);
-            element = findElement(errorMessages);
+            By sysMessage = By.xpath(data.get("expected_path").toString());
+            element = findElement(sysMessage);
         } catch (ElementNotFoundException e1) {
         } catch (ElementNotVisibleException e2) {
         } catch (TimeoutException e3) {

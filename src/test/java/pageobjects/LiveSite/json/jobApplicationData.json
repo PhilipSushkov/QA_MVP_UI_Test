@@ -3,7 +3,7 @@
     "do_assertions": true,
     "test_name": "Person 01",
     "first_name": "First name 01",
-    "last_name": "",
+    "last_name": "Hello",
     "address": "Street",
     "city": "City",
     "province": "Province",
@@ -15,13 +15,15 @@
     "email_fail": "email",
     "email": "email@email.com",
     "coverletter_text": "Hire me",
-    "expected": "Your application has been submitted"
+    "resume_text": "Hello",
+    "expected": "Your application has been submitted",
+    "expected_path": "//div[@class= 'ModuleInnerContainer']"
   },
     {
       "do_assertions": true,
       "test_name": "Person 02",
       "first_name": "First name 02",
-      "last_name": "",
+      "last_name": "Lastname",
       "address": "Street",
       "city": "City",
       "province": "Province",
@@ -33,7 +35,9 @@
       "email_fail": "email",
       "email": "email_email.com",
       "coverletter_text": "Hire me",
-      "expected": "Email is invalid"
+      "resume_text": "Hello",
+      "expected": "Email is invalid",
+      "expected_path": "//div[contains(@id,'validationsummary')]"
     }
   ]
 }
