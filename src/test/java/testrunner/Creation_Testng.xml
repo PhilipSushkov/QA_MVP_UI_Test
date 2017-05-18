@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="Web CMS Suite Creation" parallel="tests" thread-count="1">
+<suite name="Web CMS Suite Creation" parallel="tests" thread-count="2">
   
     <test name="CheckPageAdd">
         <classes>
@@ -56,7 +56,22 @@
             <class name="specs.SiteAdmin.CssFileList.CheckCssFileAdd" />
         </classes>
     </test>
-
+    <test name="CheckExternalFeedAdd">
+        <classes>
+            <class name="specs.SiteAdmin.ExternalFeedList.CheckExternalFeedAdd" />
+        </classes>
+    </test>
+      <test name="CheckLinkToPageAdd">
+        <classes>
+            <class name="specs.SiteAdmin.LinkToPageList.CheckLinkToPageAdd" />
+        </classes>
+    </test>
+    <test name="CheckLookupAdd">
+        <classes>
+            <class name="specs.SiteAdmin.LookupList.CheckLookupAdd" />
+        </classes>
+    </test>
+  
 
     <test name="CreateNewUser">
         <classes>

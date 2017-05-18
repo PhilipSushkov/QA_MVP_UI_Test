@@ -631,7 +631,7 @@ public class PageAdd extends AbstractPageObject {
                 Thread.sleep(DEFAULT_PAUSE);
                 waitForElement(sectionTitleInput);
 
-                System.out.println(pageName+ ": Page hes been reverted to Live");
+                System.out.println(pageName+ ": Page has been reverted to Live");
                 return findElement(workflowStateSpan).getText();
             }
 
