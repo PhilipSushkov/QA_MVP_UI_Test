@@ -1,40 +1,45 @@
 package specs.PublicSite;
 
+import org.json.simple.JSONObject;
+import org.json.simple.JSONArray;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.TimeoutException;
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
-
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import pageobjects.LiveSite.HomePage;
 import pageobjects.LiveSite.JobApplicationsPage;
 import specs.AbstractSpec;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+
 /**
  * Created by andyp on 2017-05-17.
  */
 public class CheckJobApplicationsPage extends AbstractSpec {
-    //Data
-    private final String firstName = "First";
-    private final String lastName = "Last";
-    private final String address = "Street";
-    private final String country = "Country";
-    private final String city = "City";
-    private final String province = "Province";
-    private final String postalCode = "Postal Code";
-    private final String homePhone = "111-111-1111";
-    private final String businessPhone = "222-222-2222";
-    private final String fax = "idk fax";
-    private final String email = "email@email.com";
-    private final String coverLetterText = "Hire me";
-    private final String resumeText = "Resume";
 
     private static HomePage homePage;
     private static JobApplicationsPage jobApplicationsPage;
 
+    private static String sPathToFile, sDataFileJson;
+    private static JSONParser parser;
+
+    private final String DATA="getData";
+
     @BeforeTest
     public void setUp(){
+        sPathToFile = System.getProperty("user.dir") + propUIPublicSite.getProperty("dataPath_LiveSite");
+        sDataFileJson = propUIPublicSite.getProperty("json_JobApplicationData");
+
+        parser = new JSONParser();
+
         driver.get("http://chicagotest.q4web.com/English/Investors/default.aspx");
         homePage = new HomePage(driver);
         jobApplicationsPage = new JobApplicationsPage(driver);
@@ -50,11 +55,23 @@ public class CheckJobApplicationsPage extends AbstractSpec {
         }
     }
 
-    @Test
-    public void firstNameFieldNotFilled(){
+    @Test(dataProvider = DATA)
+    public void firstNameFieldNotFilled(JSONObject data){
         jobApplicationsPage.clearFields();
-        jobApplicationsPage.enterFields("",lastName, address, city, province, country, postalCode,
-                homePhone, businessPhone, fax, email, coverLetterText, resumeText);
+        jobApplicationsPage.enterFields(
+                "",
+                data.get("last_name").toString(),
+                data.get("address").toString(),
+                data.get("city").toString(),
+                data.get("province").toString(),
+                data.get("country").toString(),
+                data.get("postal_code").toString(),
+                data.get("home_phone").toString(),
+                data.get("business_phone").toString(),
+                data.get("fax").toString(),
+                data.get("email").toString(),
+                data.get("coverletter_text").toString(),
+                data.get("resume_text").toString());
         jobApplicationsPage.submitApplication();
 
         //Checking to see if you get validation error
@@ -63,43 +80,79 @@ public class CheckJobApplicationsPage extends AbstractSpec {
         Assert.assertTrue(jobApplicationsPage.getErrorMessage("First Name is required"));
     }
 
-    @Test
-    public void wrongEmailFormatting() {
+    @Test(dataProvider = DATA)
+    public void wrongEmailFormatting(JSONObject data) {
         jobApplicationsPage.clearFields();
-        String wrongEmail = "dogdog";
-        String wrongEmail2 = "dogdog@dog";
-        String wrongEmail3 = "dogdog@dog.";
 
-        jobApplicationsPage.enterEmail(wrongEmail);
-        jobApplicationsPage.submitApplication();
-        Assert.assertNotNull(jobApplicationsPage.checkErrorMessages(), "There are no error messages");
-        Assert.assertTrue(jobApplicationsPage.getErrorMessage("Email is invalid"));
-
-        jobApplicationsPage.enterEmail(wrongEmail2);
-        jobApplicationsPage.submitApplication();
-        Assert.assertNotNull(jobApplicationsPage.checkErrorMessages(), "There are no error messages");
-        Assert.assertTrue(jobApplicationsPage.getErrorMessage("Email is invalid"));
-
-        jobApplicationsPage.enterEmail(wrongEmail3);
+        jobApplicationsPage.enterEmail(data.get("email_fail").toString());
         jobApplicationsPage.submitApplication();
         Assert.assertNotNull(jobApplicationsPage.checkErrorMessages(), "There are no error messages");
         Assert.assertTrue(jobApplicationsPage.getErrorMessage("Email is invalid"));
 
         //Checking to see if the error for invalid email is gone
-        jobApplicationsPage.enterEmail(email);
+        jobApplicationsPage.enterEmail(data.get("email").toString());
         jobApplicationsPage.submitApplication();
         Assert.assertNotNull(jobApplicationsPage.checkErrorMessages(), "There are no error messages");
         Assert.assertFalse(jobApplicationsPage.getErrorMessage("Email is invalid"));
 
     }
 
-    @Test(dependsOnMethods = {"wrongEmailFormatting"})
-    public void successfulSubmission(){
-        jobApplicationsPage.clearFields();
-        jobApplicationsPage.enterFields(firstName,lastName, address, city, province, country, postalCode,
-                homePhone, businessPhone, fax, email, coverLetterText, resumeText);
-        jobApplicationsPage.submitApplication();
+    //Test for uploading file
 
-        Assert.assertTrue(jobApplicationsPage.getSuccessMessage());
+    @Test(dataProvider = DATA, dependsOnMethods = "wrongEmailFormatting")
+    public void successfulSubmission(JSONObject data){
+        if (Boolean.parseBoolean(data.get("active").toString())) {
+            jobApplicationsPage.clearFields();
+            jobApplicationsPage.enterFields(
+                    data.get("first_name").toString(),
+                    data.get("last_name").toString(),
+                    data.get("address").toString(),
+                    data.get("city").toString(),
+                    data.get("province").toString(),
+                    data.get("country").toString(),
+                    data.get("postal_code").toString(),
+                    data.get("home_phone").toString(),
+                    data.get("business_phone").toString(),
+                    data.get("fax").toString(),
+                    data.get("email").toString(),
+                    data.get("coverletter_text").toString(),
+                    data.get("resume_text").toString());
+            jobApplicationsPage.submitApplication();
+
+            Assert.assertTrue(jobApplicationsPage.getSuccessMessage());
+        }
+  }
+
+    @DataProvider
+    public Object[][] getData() {
+
+        try {
+            JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFileJson));
+            JSONArray jsonArray = (JSONArray) jsonObject.get("job_application");
+            ArrayList<Object> zoom = new ArrayList();
+
+            for (int i = 0; i < jsonArray.size(); i++) {
+                JSONObject pageObj = (JSONObject) jsonArray.get(i);
+                if (Boolean.parseBoolean(pageObj.get("do_assertions").toString())) {
+                    zoom.add(jsonArray.get(i));
+                }
+            }
+
+            Object[][] data = new Object[zoom.size()][1];
+            for (int i = 0; i < zoom.size(); i++) {
+                data[i][0] = zoom.get(i);
+            }
+
+            return data;
+
+        }  catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }

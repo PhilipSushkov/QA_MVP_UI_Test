@@ -1,5 +1,6 @@
 package pageobjects.LiveSite;
 
+import org.json.simple.parser.JSONParser;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.Select;
@@ -17,7 +18,6 @@ import static specs.AbstractSpec.propUIPublicSite;
  */
 
 public class JobApplicationsPage extends AbstractPageObject {
-
     private final By firstNameField;
     private final By addressField;
     private final By lastNameField;
@@ -36,7 +36,8 @@ public class JobApplicationsPage extends AbstractPageObject {
     private final By errorMessages;
     private final By successMessage;
 
-    Actions actions = new Actions(driver);
+    private static String sPathToFile, sDataFileJson;
+    private static JSONParser parser;
 
     public JobApplicationsPage(WebDriver driver) {
 
@@ -59,6 +60,10 @@ public class JobApplicationsPage extends AbstractPageObject {
         applicationsHeader = By.xpath(propUIPublicSite.getProperty("applicationHeader"));
         errorMessages = By.xpath(propUIPublicSite.getProperty("errorMessage"));
         successMessage = By.xpath(propUIPublicSite.getProperty("successMessage"));
+
+        parser = new JSONParser();
+
+        sDataFileJson = propUIPublicSite.getProperty("json_AlertFilterData");
     }
 
     public void enterFields(String firstName, String lastName, String address, String city, String province,
@@ -128,8 +133,8 @@ public class JobApplicationsPage extends AbstractPageObject {
         return element;
     }
 
-    public boolean getErrorMessage(String missingField){
-        return findElement(errorMessages).getText().contains(missingField);
+    public boolean getErrorMessage(String missingFieldMessage){
+        return findElement(errorMessages).getText().contains(missingFieldMessage);
     }
 
     public boolean getSuccessMessage(){
