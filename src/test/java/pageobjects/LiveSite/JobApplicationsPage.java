@@ -10,6 +10,7 @@ import pageobjects.AbstractPageObject;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 import static specs.AbstractSpec.propUIPublicSite;
@@ -19,26 +20,9 @@ import static specs.AbstractSpec.propUIPublicSite;
  */
 
 public class JobApplicationsPage extends AbstractPageObject {
-    private final By firstNameField;
-    private final By addressField;
-    private final By lastNameField;
-    private final By cityField;
-    private final By countryField;
-    private final By homePhoneField;
-    private final By businessPhoneField;
-    private final By faxField;
-    private final By provinceField;
-    private final By postalCodeField;
-    private final By emailField;
-    private final By coverLetterTextField;
-    private final By resumeTextField;
-    private final By submitApplication;
-    private final By applicationsHeader;
-    private final By errorMessages;
-    private final By successMessage;
-
-    private static String sPathToFile, sDataFileJson;
-    private static JSONParser parser;
+    private final By firstNameField, addressField, lastNameField, cityField, countryField, homePhoneField;
+    private final By businessPhoneField, faxField, provinceField, postalCodeField, emailField, successMessage;
+    private final By coverLetterTextField, resumeTextField, submitApplication, applicationsHeader, errorMessages;
 
     public JobApplicationsPage(WebDriver driver) {
         super(driver);
@@ -59,12 +43,9 @@ public class JobApplicationsPage extends AbstractPageObject {
         applicationsHeader = By.xpath(propUIPublicSite.getProperty("applicationHeader"));
         errorMessages = By.xpath(propUIPublicSite.getProperty("errorMessage"));
         successMessage = By.xpath(propUIPublicSite.getProperty("successMessage"));
-
-        parser = new JSONParser();
-
-        sDataFileJson = propUIPublicSite.getProperty("json_AlertFilterData");
     }
 
+    /*
     public Boolean checkFirstNameRequiredField(JSONObject data){
         clearFields();
         enterFields(
@@ -112,6 +93,19 @@ public class JobApplicationsPage extends AbstractPageObject {
         submitApplication();
         return(getSuccessMessage());
     }
+    */
+
+    public String submitJobApplication(JSONObject data) {
+        String sMessage = null;
+        List<WebElement> elements = null;
+
+        clearFields(elements);
+
+
+
+        return sMessage;
+    }
+
 
     public void enterFields(String firstName, String lastName, String address, String city, String province,
                             String country, String postalCode, String homePhone, String businessPhone,
@@ -133,6 +127,12 @@ public class JobApplicationsPage extends AbstractPageObject {
 
     }
 
+
+    public void clearFields(List<WebElement> elements) {
+
+    }
+
+    /*
     public void clearFields(){
         waitForElementToAppear(applicationsHeader);
         findElement(firstNameField).clear();
@@ -149,6 +149,7 @@ public class JobApplicationsPage extends AbstractPageObject {
         findElement(coverLetterTextField).clear();
         findElement(resumeTextField).clear();
     }
+    */
 
     public void enterEmail(String email){
         waitForElementToAppear(applicationsHeader);
