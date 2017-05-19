@@ -258,7 +258,7 @@ public class Functions {
             properties.put("mail.pop3.starttls.enable", "true");
             Session emailSession = Session.getDefaultInstance(properties);
 
-            javax.mail.Store store = emailSession.getStore("pop3s");
+            Store store = emailSession.getStore("pop3s");
 
             store.connect("pop.gmail.com", user, password);
 
@@ -282,5 +282,11 @@ public class Functions {
         }
 
         return null;
+    }
+
+    public static void cleanTextFields(List<WebElement> fields) {
+        for (WebElement e : fields) {
+            e.clear();
+        }
     }
 }

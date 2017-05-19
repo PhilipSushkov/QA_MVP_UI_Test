@@ -6,6 +6,8 @@ import pageobjects.AbstractPageObject;
 import java.util.List;
 
 import static specs.AbstractSpec.propUIPublicSite;
+import static util.Functions.cleanTextFields;
+
 
 /**
  * Created by easong on 1/26/17.
@@ -38,10 +40,9 @@ public class JobApplicationsPage extends AbstractPageObject {
 
     public String submitJobApplication(JSONObject data) {
         String sMessage;
-        List<WebElement> elements = findElements(By.xpath("//input[@type='text']"));
-        elements.add(findElement(By.xpath("//textarea")));
 
-        clearFields(elements);
+        cleanTextFields(findElements(By.xpath("//input[@type='text']")));
+        cleanTextFields(findElements(By.xpath("//textarea")));
         enterFields(data);
         submitApplication();
 
@@ -64,13 +65,6 @@ public class JobApplicationsPage extends AbstractPageObject {
         findElement(emailField).sendKeys(data.get("email").toString());
         findElement(coverLetterTextField).sendKeys(data.get("coverletter_text").toString());
         findElement(resumeTextField).sendKeys(data.get("resume_text").toString());
-    }
-
-
-    public static void clearFields(List<WebElement> elements) {
-        for (WebElement e : elements) {
-            e.clear();
-        }
     }
 
 
