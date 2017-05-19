@@ -1,106 +1,72 @@
 package pageobjects.LiveSite;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.Select;
+import org.json.simple.JSONObject;
+import org.openqa.selenium.*;
 import pageobjects.AbstractPageObject;
-
-import java.text.NumberFormat;
-import java.text.ParseException;
-import java.util.Calendar;
-import java.util.Locale;
+import java.util.List;
 
 import static specs.AbstractSpec.propUIPublicSite;
+import static util.Functions.cleanTextFields;
+
 
 /**
  * Created by easong on 1/26/17.
  */
 
 public class JobApplicationsPage extends AbstractPageObject {
-
-    private final By firstNameField;
-    private final By addressField;
-    private final By lastNameField;
-    private final By cityField;
-    private final By countryField;
-    private final By homePhoneField;
-    private final By provinceField;
-    private final By postalCodeField;
-    private final By emailField;
-    private final By coverLetterField;
-    private final By submitApplication;
-    private final By applicationsHeader;
-
-    Actions actions = new Actions(driver);
+    private final By firstNameField, addressField, lastNameField, cityField, countryField, homePhoneField;
+    private final By businessPhoneField, faxField, provinceField, postalCodeField, emailField;
+    private final By coverLetterTextField, resumeTextField, submitApplication, applicationsHeader;
 
     public JobApplicationsPage(WebDriver driver) {
-
         super(driver);
-        firstNameField = By.xpath("/html/body[@class='BodyBackground']//input[contains(@id,'FirstName')]");
-        addressField = By.xpath("/html/body[@class='BodyBackground']//input[contains(@id,'Address')]");
-        lastNameField = By.xpath("/html/body[@class='BodyBackground']//input[contains(@id,'LastName')]");
-        cityField = By.xpath("/html/body[@class='BodyBackground']//input[contains(@id,'City')]");
-        countryField = By.xpath("/html/body[@class='BodyBackground']//input[contains(@id,'Country')]");
-        homePhoneField = By.xpath("/html/body[@class='BodyBackground']//input[contains(@id,'HomePhone')]");
-        provinceField = By.xpath("/html/body[@class='BodyBackground']//input[contains(@id,'Province')]");
-        postalCodeField = By.xpath("/html/body[@class='BodyBackground']//input[contains(@id,'PostalCode')]");
-        emailField = By.xpath("/html/body[@class='BodyBackground']//input[contains(@id,'Email')]");
-        coverLetterField = By.xpath("/html/body[@class='BodyBackground']//textarea[contains(@id, 'txtCoverLetter')]");
-        submitApplication = By.xpath("/html/body[@class='BodyBackground']//a[contains(@id, '_ctrl0_ctl45_lnkApply')]");
-        applicationsHeader = By.xpath("/html/body[@class='BodyBackground']//span[contains(@id, 'ModuleTitle')]");
+        firstNameField = By.xpath(propUIPublicSite.getProperty("field_firstName"));
+        lastNameField = By.xpath(propUIPublicSite.getProperty("field_lastName"));
+        addressField = By.xpath(propUIPublicSite.getProperty("field_address"));
+        cityField = By.xpath(propUIPublicSite.getProperty("field_city"));
+        provinceField = By.xpath(propUIPublicSite.getProperty("field_province"));
+        countryField = By.xpath(propUIPublicSite.getProperty("field_country"));
+        postalCodeField = By.xpath(propUIPublicSite.getProperty("field_postalCode"));
+        homePhoneField = By.xpath(propUIPublicSite.getProperty("field_homePhone"));
+        businessPhoneField = By.xpath(propUIPublicSite.getProperty("field_businessPhone"));
+        faxField = By.xpath(propUIPublicSite.getProperty("field_fax"));
+        emailField = By.xpath(propUIPublicSite.getProperty("field_email"));
+        coverLetterTextField = By.xpath(propUIPublicSite.getProperty("field_coverLetterText"));
+        resumeTextField = By.xpath(propUIPublicSite.getProperty("field_resumeText"));
+        submitApplication = By.xpath(propUIPublicSite.getProperty("btn_submit"));
+        applicationsHeader = By.xpath(propUIPublicSite.getProperty("applicationHeader"));
 
     }
 
-    public void enterFirstName(String name)
-    {
-        findElement(firstNameField).sendKeys(name);
+    public String submitJobApplication(JSONObject data) {
+        String sMessage;
+
+        cleanTextFields(findElements(By.xpath("//input[@type='text']")));
+        cleanTextFields(findElements(By.xpath("//textarea")));
+        enterFields(data);
+        submitApplication();
+
+        sMessage = getSysMessage(data).getText();
+
+        return sMessage;
     }
 
-    public void enterLastName(String lastname)
-    {
-        findElement(lastNameField).sendKeys(lastname);
+    public void enterFields(JSONObject data){
+        findElement(firstNameField).sendKeys(data.get("first_name").toString());
+        findElement(lastNameField).sendKeys(data.get("last_name").toString());
+        findElement(addressField).sendKeys(data.get("address").toString());
+        findElement(cityField).sendKeys(data.get("city").toString());
+        findElement(provinceField).sendKeys(data.get("province").toString());
+        findElement(countryField).sendKeys(data.get("country").toString());
+        findElement(postalCodeField).sendKeys(data.get("postal_code").toString());
+        findElement(homePhoneField).sendKeys(data.get("home_phone").toString());
+        findElement(businessPhoneField).sendKeys(data.get("business_phone").toString());
+        findElement(faxField).sendKeys(data.get("fax").toString());
+        findElement(emailField).sendKeys(data.get("email").toString());
+        findElement(coverLetterTextField).sendKeys(data.get("coverletter_text").toString());
+        findElement(resumeTextField).sendKeys(data.get("resume_text").toString());
     }
 
-    public void enterAddress(String address)
-    {
-        findElement(addressField).sendKeys(address);
-    }
-
-    public void enterCity(String City)
-    {
-        findElement(cityField).sendKeys(City);
-    }
-
-    public void enterCountry(String Country)
-    {
-        findElement(countryField).sendKeys(Country);
-    }
-
-    public void enterHomePhone(String HomePhone)
-    {
-        findElement(homePhoneField).sendKeys(HomePhone);
-    }
-
-    public void enterProvince(String Province)
-    {
-        findElement(provinceField).sendKeys(Province);
-    }
-
-    public void enterPostalCodeField(String PostalCode)
-    {
-        findElement(postalCodeField).sendKeys(PostalCode);
-    }
-
-    public void enterEmailField(String email)
-    {
-        findElement(emailField).sendKeys(email);
-    }
-
-    public void enterCoverLetterField(String coverLetter)
-    {
-        findElement(coverLetterField).sendKeys(coverLetter);
-    }
 
     public void submitApplication()
     {
@@ -111,5 +77,20 @@ public class JobApplicationsPage extends AbstractPageObject {
     {
         return findElement(applicationsHeader).isDisplayed();
     }
+
+    public WebElement getSysMessage(JSONObject data) {
+        WebElement element = null;
+
+        try {
+            By sysMessage = By.xpath(data.get("expected_path").toString());
+            element = findElement(sysMessage);
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
+        }
+
+        return element;
+    }
+
 
 }
