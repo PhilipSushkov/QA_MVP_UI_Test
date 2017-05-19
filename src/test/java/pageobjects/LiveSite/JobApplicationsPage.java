@@ -1,22 +1,11 @@
 package pageobjects.LiveSite;
 
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.openqa.selenium.*;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.Select;
 import pageobjects.AbstractPageObject;
-
-import javax.mail.MessagingException;
-import java.io.IOException;
-import java.text.NumberFormat;
-import java.text.ParseException;
-import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 
 import static specs.AbstractSpec.propUIPublicSite;
-import static util.Functions.getRecentMail;
 
 /**
  * Created by easong on 1/26/17.
@@ -26,8 +15,6 @@ public class JobApplicationsPage extends AbstractPageObject {
     private final By firstNameField, addressField, lastNameField, cityField, countryField, homePhoneField;
     private final By businessPhoneField, faxField, provinceField, postalCodeField, emailField;
     private final By coverLetterTextField, resumeTextField, submitApplication, applicationsHeader;
-
-    private static String testAccount = "test@q4websystems.com", testPassword = "testing!";
 
     public JobApplicationsPage(WebDriver driver) {
         super(driver);
@@ -49,80 +36,8 @@ public class JobApplicationsPage extends AbstractPageObject {
 
     }
 
-    /*
-    public Boolean checkFirstNameRequiredField(JSONObject data){
-        clearFields();
-        enterFields(
-                "",
-                data.get("last_name").toString(),
-                data.get("address").toString(),
-                data.get("city").toString(),
-                data.get("province").toString(),
-                data.get("country").toString(),
-                data.get("postal_code").toString(),
-                data.get("home_phone").toString(),
-                data.get("business_phone").toString(),
-                data.get("fax").toString(),
-                data.get("email").toString(),
-                data.get("coverletter_text").toString(),
-                data.get("resume_text").toString());
-        submitApplication();
-
-        return(findElement(errorMessages).getText().contains(data.get("firstNameMissing").toString()));
-    }
-
-    public Boolean checkEmailFormat(JSONObject data){
-        clearFields();
-        enterEmail(data.get("email_fail").toString());
-        submitApplication();
-        return(findElement(errorMessages).getText().contains(data.get("invalidEmail").toString()));
-    }
-
-    public Boolean checkSuccessSubmission(JSONObject data){
-        clearFields();
-        enterFields(
-                data.get("first_name").toString(),
-                data.get("last_name").toString(),
-                data.get("address").toString(),
-                data.get("city").toString(),
-                data.get("province").toString(),
-                data.get("country").toString(),
-                data.get("postal_code").toString(),
-                data.get("home_phone").toString(),
-                data.get("business_phone").toString(),
-                data.get("fax").toString(),
-                data.get("email").toString(),
-                data.get("coverletter_text").toString(),
-                data.get("resume_text").toString());
-        submitApplication();
-        return(findElement(successMessage).getText().contains(data.get("successMessage").toString()));
-    }
-
-    public Boolean getEmailContents(JSONObject data) throws IOException, MessagingException {
-        String content = getRecentMail(testAccount, testPassword, "Job Application for position" ).getContent().toString();
-        System.out.print(getRecentMail(testAccount, testPassword, "Job Application for position" ).getSentDate());
-        System.out.print(content);
-        if (
-                content.contains(data.get("first_name").toString()) &&
-                content.contains(data.get("last_name").toString()) &&
-                content.contains(data.get("address").toString()) &&
-                content.contains(data.get("city").toString()) &&
-                content.contains(data.get("province").toString()) &&
-                content.contains(data.get("country").toString()) &&
-                content.contains(data.get("postal_code").toString()) &&
-                content.contains(data.get("home_phone").toString()) &&
-                content.contains(data.get("business_phone").toString()) &&
-                content.contains(data.get("fax").toString()) &&
-                content.contains(data.get("email").toString()) &&
-                content.contains(data.get("coverletter_text").toString()) &&
-                content.contains(data.get("resume_text").toString()))
-            return true;
-        return false;
-    }
-    */
-
     public String submitJobApplication(JSONObject data) {
-        String sMessage = null;
+        String sMessage;
         List<WebElement> elements = findElements(By.xpath("//input[@type='text']"));
         elements.add(findElement(By.xpath("//textarea")));
 
@@ -158,30 +73,6 @@ public class JobApplicationsPage extends AbstractPageObject {
         }
     }
 
-    /*
-    public void clearFields(){
-        waitForElementToAppear(applicationsHeader);
-        findElement(firstNameField).clear();
-        findElement(lastNameField).clear();
-        findElement(addressField).clear();
-        findElement(cityField).clear();
-        findElement(provinceField).clear();
-        findElement(countryField).clear();
-        findElement(postalCodeField).clear();
-        findElement(homePhoneField).clear();
-        findElement(businessPhoneField).clear();
-        findElement(faxField).clear();
-        findElement(emailField).clear();
-        findElement(coverLetterTextField).clear();
-        findElement(resumeTextField).clear();
-    }
-    */
-
-    public void enterEmail(String email){
-        waitForElementToAppear(applicationsHeader);
-        findElement(emailField).clear();
-        findElement(emailField).sendKeys(email);
-    }
 
     public void submitApplication()
     {
