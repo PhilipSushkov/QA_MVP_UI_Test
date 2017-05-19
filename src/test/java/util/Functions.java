@@ -24,7 +24,6 @@ import javax.mail.NoSuchProviderException;
 import javax.mail.Session;
 import javax.mail.Store;
 
-
 /**
  * Created by philipsushkov on 2016-12-08.
  */
