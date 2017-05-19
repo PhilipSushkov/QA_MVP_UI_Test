@@ -152,8 +152,10 @@ public class JobApplicationsPage extends AbstractPageObject {
     }
 
 
-    public void clearFields(List<WebElement> elements) {
-        elements.clear();
+    public static void clearFields(List<WebElement> elements) {
+        for (WebElement e : elements) {
+            e.clear();
+        }
     }
 
     /*
