@@ -2,6 +2,7 @@ package pageobjects.SystemAdmin.SiteMaintenance;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.ElementNotVisibleException;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
@@ -13,7 +14,7 @@ import static specs.AbstractSpec.propUISystemAdmin;
  */
 
 public class FunctionalBtn extends AbstractPageObject {
-    private static By btnGoLive, btnOneTouch, spanOneTouch, btnTwoFactorAuthentication, spanTwoFactorAuthentication, btnIFrames, spanIFrames, btnUpdateRememberDays;
+    private static By btnGoLive, btnOneTouch, spanOneTouch, btnTwoFactorAuthentication, spanTwoFactorAuthentication, btnIFrames, spanIFrames, btnUpdateRememberDays, btnSendGrid, spanSendGrid;
     private static final String sEnabledLbl = "ENABLED", sDisabledLbl = "DISABLED", sClassNameRed = "ng-binding red", sClassNameGreen = "ng-binding green";
     private static final String sEnableBtn = "ENABLE", sDisableBtn = "DISABLE";
     private static final long DEFAULT_PAUSE = 2500;
@@ -28,6 +29,8 @@ public class FunctionalBtn extends AbstractPageObject {
         spanTwoFactorAuthentication = By.xpath(propUISystemAdmin.getProperty("span_TwoFactorAuthentication"));
         btnIFrames = By.xpath(propUISystemAdmin.getProperty("btn_IFrames"));
         spanIFrames = By.xpath(propUISystemAdmin.getProperty("span_IFrames"));
+        btnSendGrid = By.xpath(propUISystemAdmin.getProperty("btn_SendGrid"));
+        spanSendGrid = By.xpath(propUISystemAdmin.getProperty("span_SendGrid"));
     }
 
 
@@ -294,4 +297,35 @@ public class FunctionalBtn extends AbstractPageObject {
         return bState;
     }
 
+    public Boolean enableSendGrid() {
+
+        String sInnerTextBtn;
+
+        try {
+
+            wait.until(ExpectedConditions.visibilityOf(findElement(btnSendGrid)));
+
+            sInnerTextBtn = findElement(btnSendGrid).getAttribute("innerText");
+
+            if (sInnerTextBtn.equals(sEnableBtn)) {
+                findElement(btnSendGrid).click();
+            }
+
+            Thread.sleep(DEFAULT_PAUSE);
+
+            if (findElement(spanSendGrid).getAttribute("innerText").equals(sEnabledLbl)) {
+                return true;
+            } else {
+                return false;
+            }
+
+        } catch (NullPointerException e) {
+        } catch (ElementNotFoundException e) {
+        } catch (ElementNotVisibleException e) {
+        } catch (InterruptedException e) {
+        } catch (TimeoutException e) {
+        }
+
+        return null;
+    }
 }

@@ -29,6 +29,7 @@ public class HomePage extends AbstractPageObject {
     private final By investmentCalculator;
     private final By faq;
     private final By jobApplications;
+    private final By formBuilder;
     private final By sitemap;
 
     public HomePage(WebDriver driver) {
@@ -52,6 +53,7 @@ public class HomePage extends AbstractPageObject {
         investmentCalculator = By.linkText(propUIPublicSite.getProperty("investmentCalculator"));
         faq = By.linkText(propUIPublicSite.getProperty("faq"));
         jobApplications = By.xpath("/html/body[@class='BodyBackground']//ul[@class='level2']/li[6]/a");
+        formBuilder = By.linkText(propUIPublicSite.getProperty("formBuilder"));
         sitemap = By.xpath("//a[contains(string(),'Site Map')]");
     }
 
@@ -178,6 +180,15 @@ public class HomePage extends AbstractPageObject {
             driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
         }
         return new JobApplicationsPage(getDriver());
+    }
+
+    public FormBuilderPage selectFormBuilderFromMenu(){
+        try {
+            findVisibleElement(formBuilder).click();
+        }catch (TimeoutException e){
+            driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
+        }
+        return new FormBuilderPage(getDriver());
     }
 
     public SiteMapPage selectSiteMapFromFooter(){
