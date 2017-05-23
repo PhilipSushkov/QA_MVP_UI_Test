@@ -45,6 +45,8 @@ public class CheckFormBuilderPage extends AbstractSpec {
 
     private final String testAccount = "test@q4websystems.com", testPassword = "testing!";
 
+    private final String randLastName = "Last Name: " + RandomStringUtils.randomAlphanumeric(6);
+
     private final Long LONG_WAIT = 15000L;
 
     private final Long SHORT_WAIT = 3000L;
@@ -93,17 +95,18 @@ public class CheckFormBuilderPage extends AbstractSpec {
     @Test(dataProvider = DATA, priority = 2)
     public void canSubmitForm(JSONObject data) throws InterruptedException {
 
-        String randLastName = "Last Name: " + RandomStringUtils.randomAlphanumeric(6);
-
         homePage.selectFormBuilderFromMenu();
 
-        formBuilderPage.enterFields(data, randLastName);
-        formBuilderPage.submitForm();
+        formBuilderPage.completeForm(data, randLastName);
 
         Thread.sleep(SHORT_WAIT);
 
-        Assert.assertTrue(formBuilderPage.correctMessageDisplayed(data.get("expected_message").toString()));
 
+        Assert.assertTrue(formBuilderPage.correctMessageDisplayed(data.get("expected_message").toString()));
+    }
+
+    @Test(dataProvider = DATA, priority = 3)
+    public void emailSent(JSONObject data) throws InterruptedException {
         if (Boolean.valueOf(data.get("expect_success").toString())) {
 
             // Wait for email in inbox
@@ -123,14 +126,6 @@ public class CheckFormBuilderPage extends AbstractSpec {
         }
     }
 
-    @Test(priority = 3)
-    public void submitIncompleteForm() {
-
-        homePage.selectFormBuilderFromMenu();
-        formBuilderPage.submitForm();
-
-        Assert.assertTrue(formBuilderPage.formBuilderPageDisplayed());
-    }
 
     @DataProvider
     public Object[][] getData() {

@@ -15,7 +15,7 @@ public class AlertFilterEdit extends AbstractPageObject {
     private static By moduleTitle, filterNameInput, saveButton, entityTypeSelect, filterTypeSelect;
     private static By includedTitleItems, includedBodyItems, excludedTitleItems, excludedBodyItems;
     private static By tagsInclInput, tagsExclInput, templateSelect, mailingListSelect, sendByCountryChk;
-    private static By sendByCountrySelect, contriesSelect, activeChk;
+    private static By sendByCountrySelect, contriesSelect, sendEmailChk, activeChk;
     private static final String INCLUDE = "Include", EXCLUDE = "Exclude";
     private static final long DEFAULT_PAUSE = 1000;
 
@@ -36,6 +36,7 @@ public class AlertFilterEdit extends AbstractPageObject {
         sendByCountryChk = By.xpath(propUISystemAdmin.getProperty("chk_SendByCountry"));
         sendByCountrySelect = By.xpath(propUISystemAdmin.getProperty("select_SendByCountry"));
         contriesSelect = By.xpath(propUISystemAdmin.getProperty("select_Countries"));
+        sendEmailChk = By.xpath(propUISystemAdmin.getProperty("chk_SendEmail"));
         activeChk = By.xpath(propUISystemAdmin.getProperty("chk_IsActive"));
         saveButton = By.xpath(propUISystemAdmin.getProperty("btn_Save"));
     }
@@ -245,6 +246,20 @@ public class AlertFilterEdit extends AbstractPageObject {
         try {
             waitForElement(contriesSelect);
             element = findElement(contriesSelect);
+        } catch (ElementNotFoundException e) {
+        } catch (ElementNotVisibleException e) {
+        } catch (TimeoutException e) {
+        }
+
+        return element;
+    }
+
+    public WebElement getSendEmailChk() throws InterruptedException {
+        WebElement element = null;
+
+        try {
+            waitForElement(sendEmailChk);
+            element = findElement(sendEmailChk);
         } catch (ElementNotFoundException e) {
         } catch (ElementNotVisibleException e) {
         } catch (TimeoutException e) {
