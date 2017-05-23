@@ -19,7 +19,7 @@ public class HavaRunnerTest extends AbstractSpec {
 
     @Before
     public void setUp() throws Exception {
-        //new LoginPage(driver).loginUser();
+        //new GmailPage(driver).loginUser();
     }
 
 
