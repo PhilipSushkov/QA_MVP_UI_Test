@@ -13,16 +13,13 @@ import org.openqa.selenium.*;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import java.util.Properties;
 
-import javax.mail.Folder;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.NoSuchProviderException;
-import javax.mail.Session;
-import javax.mail.Store;
+import javax.mail.*;
 
 /**
  * Created by philipsushkov on 2016-12-08.
@@ -282,6 +279,47 @@ public class Functions {
 
         return null;
     }
+
+    public static Message getSpecificMail(String user, String password, String subjectID, String applicationDate) {
+
+        try {
+
+            Properties properties = new Properties();
+
+            properties.put("mail.pop3.host", "pop.gmail.com");
+            properties.put("mail.pop3.port", "995");
+            properties.put("mail.pop3.starttls.enable", "true");
+            Session emailSession = Session.getDefaultInstance(properties);
+
+            Store store = emailSession.getStore("pop3s");
+
+            store.connect("pop.gmail.com", user, password);
+
+            Folder emailFolder = store.getFolder("INBOX");
+            emailFolder.open(Folder.READ_ONLY);
+
+            DateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
+
+
+            Message[] messages = emailFolder.getMessages();
+
+            for (int i = 0; i < messages.length; i++) {
+                if (messages[i].getSubject().contains(subjectID) && (applicationDate.equals(dateFormat.format(messages[i].getSentDate())))) {
+                    return messages[i];
+                }
+            }
+
+            return null;
+
+        } catch (NoSuchProviderException e) {
+            e.printStackTrace();
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
 
     public static void cleanTextFields(List<WebElement> fields) {
         for (WebElement e : fields) {

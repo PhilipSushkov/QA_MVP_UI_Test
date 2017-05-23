@@ -12,6 +12,7 @@ import pageobjects.LiveSite.HomePage;
 import pageobjects.LiveSite.JobApplicationsPage;
 import specs.AbstractSpec;
 
+import javax.mail.MessagingException;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -44,11 +45,22 @@ public class CheckJobApplicationsPage extends AbstractSpec {
     }
 
     @Test(dataProvider = DATA, priority = 1)
-    public void submitJobApplication(JSONObject data) {
+    public void submitJobApplication(JSONObject data){
         String sMessage = data.get("expected").toString();
 
         Assert.assertTrue(homePage.selectJobApplicationFromMenu().applicationPageDisplayed(), "Job Applications Page couldn't be opened");
         Assert.assertTrue(jobApplicationsPage.submitJobApplication(data).contains(sMessage),"Job Application Submission doesn't work properly");
+    }
+
+    //CheckEmail
+
+    //CheckFile
+    @Test(dataProvider = DATA, priority = 2)
+    public void checkEmail(JSONObject data) throws IOException, MessagingException {
+        jobApplicationsPage.submitJobApplication(data);
+
+        Assert.assertTrue(jobApplicationsPage.checkEmail(data), "Job Application does not match email");
+
     }
 
     @DataProvider

@@ -3,10 +3,15 @@ package pageobjects.LiveSite;
 import org.json.simple.JSONObject;
 import org.openqa.selenium.*;
 import pageobjects.AbstractPageObject;
-import java.util.List;
+
+import javax.mail.MessagingException;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static specs.AbstractSpec.propUIPublicSite;
-import static util.Functions.cleanTextFields;
+import static util.Functions.*;
 
 
 /**
@@ -17,6 +22,7 @@ public class JobApplicationsPage extends AbstractPageObject {
     private final By firstNameField, addressField, lastNameField, cityField, countryField, homePhoneField;
     private final By businessPhoneField, faxField, provinceField, postalCodeField, emailField;
     private final By coverLetterTextField, resumeTextField, submitApplication, applicationsHeader;
+    private final By uploadResume, uploadCoverLetter;
 
     public JobApplicationsPage(WebDriver driver) {
         super(driver);
@@ -34,6 +40,8 @@ public class JobApplicationsPage extends AbstractPageObject {
         coverLetterTextField = By.xpath(propUIPublicSite.getProperty("field_coverLetterText"));
         resumeTextField = By.xpath(propUIPublicSite.getProperty("field_resumeText"));
         submitApplication = By.xpath(propUIPublicSite.getProperty("btn_submit"));
+        uploadResume = By.xpath(propUIPublicSite.getProperty("btn_resume"));
+        uploadCoverLetter = By.xpath(propUIPublicSite.getProperty("btn_coverletter"));
         applicationsHeader = By.xpath(propUIPublicSite.getProperty("applicationHeader"));
 
     }
@@ -49,6 +57,45 @@ public class JobApplicationsPage extends AbstractPageObject {
         sMessage = getSysMessage(data).getText();
 
         return sMessage;
+    }
+
+    public String uploadResumeFile(JSONObject data){
+        cleanTextFields(findElements(By.xpath("//input[@type='text']")));
+        cleanTextFields(findElements(By.xpath("//textarea")));
+
+        //Uploading
+        findElement(uploadResume).sendKeys(data.get("file_path").toString());
+
+        //Cant test it out locally
+        System.out.print("1");
+        System.out.print(findElement(uploadResume).getText());
+        System.out.print("2");
+
+        return findElement(uploadResume).getText();
+    }
+    public boolean checkEmail(JSONObject data) throws IOException, MessagingException {
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
+        Date todayDate = new Date();
+        String today = dateFormat.format(todayDate);
+
+        String content = (getSpecificMail("test@q4websystems.com", "testing!", "Job Application", today).getContent()).toString();
+
+        //Return true if content contains all of the items below
+        return (
+                content.contains(data.get("first_name").toString()) &&
+                content.contains(data.get("last_name").toString()) &&
+                content.contains(data.get("address").toString()) &&
+                content.contains(data.get("city").toString()) &&
+                content.contains(data.get("province").toString()) &&
+                content.contains(data.get("country").toString()) &&
+                content.contains(data.get("postal_code").toString())&&
+                content.contains(data.get("home_phone").toString()) &&
+                content.contains(data.get("business_phone").toString()) &&
+                content.contains(data.get("fax").toString()) &&
+                content.contains(data.get("email").toString()) &&
+                content.contains(data.get("coverletter_text").toString()) &&
+                content.contains(data.get("resume_text").toString())
+                );
     }
 
     public void enterFields(JSONObject data){
@@ -91,6 +138,4 @@ public class JobApplicationsPage extends AbstractPageObject {
 
         return element;
     }
-
-
 }

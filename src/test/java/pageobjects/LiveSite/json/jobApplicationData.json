@@ -1,7 +1,7 @@
 {
   "job_application": [{
     "do_assertions": true,
-    "test_name": "Person 01",
+    "test_name": "Checking to see application submits",
     "first_name": "First name 01",
     "last_name": "Hello",
     "address": "Street",
@@ -16,12 +16,14 @@
     "email": "email@email.com",
     "coverletter_text": "Hire me",
     "resume_text": "Hello",
+    "file": "Resume.txt",
+    "file_path":"/Users/andyp/Resume.txt",
     "expected": "Your application has been submitted",
     "expected_path": "//div[@class= 'ModuleInnerContainer']"
   },
     {
       "do_assertions": true,
-      "test_name": "Person 02",
+      "test_name": "Checking invalid email formatting",
       "first_name": "First name 02",
       "last_name": "Lastname",
       "address": "Street",
@@ -36,7 +38,30 @@
       "email": "email_email.com",
       "coverletter_text": "Hire me",
       "resume_text": "Hello",
+      "file": "",
+      "file_path":"",
       "expected": "Email is invalid",
+      "expected_path": "//div[contains(@id,'validationsummary')]"
+    },
+    {
+      "do_assertions": true,
+      "test_name": "Checking not filling out required fields",
+      "first_name": "",
+      "last_name": "Lastname",
+      "address": "Street",
+      "city": "City",
+      "province": "Province",
+      "country": "Country",
+      "postal_code": "Postal Code",
+      "home_phone": "111-111-1111",
+      "business_phone": "222-222-222",
+      "fax": "333-333-3333",
+      "email": "email@email.com",
+      "coverletter_text": "Hire me",
+      "resume_text": "Hello",
+      "file": "Dog.txt",
+      "file_path":"/Users/andyp/Resume.txt",
+      "expected": "First Name is required",
       "expected_path": "//div[contains(@id,'validationsummary')]"
     }
   ]
