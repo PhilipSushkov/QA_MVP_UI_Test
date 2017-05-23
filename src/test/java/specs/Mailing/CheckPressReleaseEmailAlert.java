@@ -6,10 +6,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.openqa.selenium.WebElement;
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 import org.testng.Assert;
 
 import org.openqa.selenium.By;
@@ -30,6 +27,7 @@ import javax.mail.MessagingException;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Created by zacharyk on 2017-05-19.
@@ -76,8 +74,6 @@ public class CheckPressReleaseEmailAlert extends AbstractSpec {
 
     private final String DATA="getData";
     private final String testAccount = "test@q4websystems.com", testPassword = "testing!";
-
-    private final Long LONG_WAIT = 10000L;
 
     @BeforeTest
     public void setUp() throws Exception {
@@ -155,9 +151,13 @@ public class CheckPressReleaseEmailAlert extends AbstractSpec {
         pressReleases = new PressReleases(driver);
         pressReleases.publishPressRelease(taggedHeadline);
 
-        // Wait for email in inbox
+        // Delete press release
 
-        Thread.sleep(LONG_WAIT);
+        pressReleaseEdit = pressReleases.editPressRelease(taggedHeadline);
+        pressReleaseEdit.deletePressRelease();
+        pressReleases.publishPressRelease(taggedHeadline);
+
+        // Check for email in inbox
 
         Message email = getRecentMail(testAccount, testPassword, taggedHeadline);
 
@@ -170,6 +170,7 @@ public class CheckPressReleaseEmailAlert extends AbstractSpec {
 
     @AfterTest
     public void tearDown() {
+        dashboard.logoutFromAdmin();
     }
 
     @DataProvider
@@ -178,10 +179,18 @@ public class CheckPressReleaseEmailAlert extends AbstractSpec {
         try {
             JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFileJson));
             JSONArray jsonArray = (JSONArray) jsonObject.get("press_release_email_alert");
+            ArrayList<Object> zoom = new ArrayList<>();
+
+            for (int i = 0; i < jsonArray.size(); i++) {
+                JSONObject pageObj = (JSONObject) jsonArray.get(i);
+                if (Boolean.parseBoolean(pageObj.get("do_assertions").toString())) {
+                    zoom.add(jsonArray.get(i));
+                }
+            }
 
             Object[][] data = new Object[jsonArray.size()][1];
-            for (int i = 0; i < jsonArray.size(); i++) {
-                data[i][0] = jsonArray.get(i);
+            for (int i = 0; i < zoom.size(); i++) {
+                data[i][0] = zoom.get(i);
             }
 
             return data;
