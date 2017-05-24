@@ -16,10 +16,11 @@
     "email": "email@email.com",
     "coverletter_text": "Hire me",
     "resume_text": "Hello",
-    "file": "Resume.txt",
-    "file_path":"/Users/andyp/Resume.txt",
+    "resume_file": "Resume.txt",
+    "resume_path": "/Users/andyp/Resume.txt",
     "expected": "Your application has been submitted",
-    "expected_path": "//div[@class= 'ModuleInnerContainer']"
+    "expected_path": "//div[@class= 'ModuleInnerContainer']",
+    "check_email": true
   },
     {
       "do_assertions": true,
@@ -41,7 +42,8 @@
       "file": "",
       "file_path":"",
       "expected": "Email is invalid",
-      "expected_path": "//div[contains(@id,'validationsummary')]"
+      "expected_path": "//div[contains(@id,'validationsummary')]",
+      "check_email": false
     },
     {
       "do_assertions": true,
@@ -59,10 +61,11 @@
       "email": "email@email.com",
       "coverletter_text": "Hire me",
       "resume_text": "Hello",
-      "file": "Dog.txt",
-      "file_path":"/Users/andyp/Resume.txt",
+      "file": "",
+      "file_path":"",
       "expected": "First Name is required",
-      "expected_path": "//div[contains(@id,'validationsummary')]"
+      "expected_path": "//div[contains(@id,'validationsummary')]",
+      "check_email": false
     }
   ]
 }

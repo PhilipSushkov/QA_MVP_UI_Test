@@ -52,15 +52,30 @@ public class CheckJobApplicationsPage extends AbstractSpec {
         Assert.assertTrue(jobApplicationsPage.submitJobApplication(data).contains(sMessage),"Job Application Submission doesn't work properly");
     }
 
-    //CheckEmail
-
-    //CheckFile
     @Test(dataProvider = DATA, priority = 2)
     public void checkEmail(JSONObject data) throws IOException, MessagingException {
+        homePage.selectJobApplicationFromMenu();
         jobApplicationsPage.submitJobApplication(data);
 
-        Assert.assertTrue(jobApplicationsPage.checkEmail(data), "Job Application does not match email");
+        if (data.get("check_email").toString() == "true") {
+            Assert.assertTrue(jobApplicationsPage.checkEmail(data), "Job Application does not match email");
+        } else if (data.get("check_email").toString() == "false") {
+            //Checking if email didnt get sent
+            Assert.assertFalse(jobApplicationsPage.checkEmail(data), "Job Application should not have been submitted");
+        }
+    }
 
+    @Test(dataProvider = DATA, priority = 3)
+    public void checkFile(JSONObject data) throws IOException, MessagingException {
+        homePage.selectJobApplicationFromMenu();
+        jobApplicationsPage.submitJobApplication(data);
+
+        if (data.get("check_email").toString() == "true") {
+            Assert.assertTrue(jobApplicationsPage.hasAttachments(data), "Email has no attachments");
+            Assert.assertTrue(jobApplicationsPage.checkAttachments(data), "Attachments are not the same");
+        } else if (data.get("check_email").toString() == "false") {
+            Assert.assertFalse(jobApplicationsPage.checkEmail(data), "Job Application should not have been submitted");
+        }
     }
 
     @DataProvider

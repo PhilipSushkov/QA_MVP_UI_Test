@@ -280,7 +280,7 @@ public class Functions {
         return null;
     }
 
-    public static Message getSpecificMail(String user, String password, String subjectID, String applicationDate) {
+    public static Message getSpecificMail(String user, String password, String subjectID, String date) {
 
         try {
 
@@ -298,13 +298,13 @@ public class Functions {
             Folder emailFolder = store.getFolder("INBOX");
             emailFolder.open(Folder.READ_ONLY);
 
-            DateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
-
+            DateFormat dateFormat = new SimpleDateFormat("MM/dd/yy hh:mm");
 
             Message[] messages = emailFolder.getMessages();
 
+
             for (int i = 0; i < messages.length; i++) {
-                if (messages[i].getSubject().contains(subjectID) && (applicationDate.equals(dateFormat.format(messages[i].getSentDate())))) {
+                if (messages[i].getSubject().contains(subjectID) && (date.equals(dateFormat.format(messages[i].getSentDate())))) {
                     return messages[i];
                 }
             }

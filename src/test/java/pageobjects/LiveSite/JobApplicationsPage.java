@@ -4,7 +4,12 @@ import org.json.simple.JSONObject;
 import org.openqa.selenium.*;
 import pageobjects.AbstractPageObject;
 
+import javax.activation.DataHandler;
+import javax.mail.BodyPart;
+import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.internet.MimeBodyPart;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -80,7 +85,7 @@ public class JobApplicationsPage extends AbstractPageObject {
 
         String content = (getSpecificMail("test@q4websystems.com", "testing!", "Job Application", today).getContent()).toString();
 
-        //Return true if content contains all of the items below
+        //Return true if content contains all of the items below - ASSERTION FOR EACH ONE
         return (
                 content.contains(data.get("first_name").toString()) &&
                 content.contains(data.get("last_name").toString()) &&
@@ -98,6 +103,44 @@ public class JobApplicationsPage extends AbstractPageObject {
                 );
     }
 
+    public boolean checkAttachments(JSONObject data) throws IOException, MessagingException {
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yy hh:mm");
+        Date todayDate = new Date();
+        String today = dateFormat.format(todayDate);
+
+        Message msg = getSpecificMail("test@q4websystems.com", "testing!", "Job Application", today);
+
+        Multipart mp = (Multipart) msg.getContent();
+        for (int i = 0; i < mp.getCount(); i++){
+            BodyPart bp = mp.getBodyPart(i);
+            String disp = bp.getDisposition();
+
+            if (disp != null && (disp.equalsIgnoreCase("ATTACHMENT"))){
+                DataHandler handler = bp.getDataHandler();
+
+                if (handler.getName().equals(data.get("resume_file"))){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean hasAttachments(JSONObject data) throws MessagingException, IOException {
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yy hh:mm");
+        Date todayDate = new Date();
+        String today = dateFormat.format(todayDate);
+
+        Message msg = getSpecificMail("test@q4websystems.com", "testing!", "Job Application", today);
+
+        if (msg.isMimeType("multipart/mixed")) {
+            Multipart mp = (Multipart)msg.getContent();
+            if (mp.getCount() > 1)
+                return true;
+        }
+        return false;
+    }
+
     public void enterFields(JSONObject data){
         findElement(firstNameField).sendKeys(data.get("first_name").toString());
         findElement(lastNameField).sendKeys(data.get("last_name").toString());
@@ -112,6 +155,7 @@ public class JobApplicationsPage extends AbstractPageObject {
         findElement(emailField).sendKeys(data.get("email").toString());
         findElement(coverLetterTextField).sendKeys(data.get("coverletter_text").toString());
         findElement(resumeTextField).sendKeys(data.get("resume_text").toString());
+        findElement(uploadResume).sendKeys(data.get("resume_path").toString());
     }
 
 
