@@ -196,9 +196,9 @@ public class MailingListUsers extends AbstractPageObject {
     }
 
     public Boolean userSubscribed(String email, String list) {
-        this.getAllListSelect().sendKeys(list);
-        this.getKeywordField().sendKeys(email);
-        this.getSearchButton().click();
+        getAllListSelect().sendKeys(list);
+        getKeywordField().sendKeys(email);
+        getSearchButton().click();
 
         try {
             wait.until(ExpectedConditions.visibilityOf(findElement(firstUserConfirmed)));

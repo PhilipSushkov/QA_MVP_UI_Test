@@ -15,7 +15,6 @@ import pageobjects.ContentAdmin.PressReleases.PressReleases;
 import pageobjects.EmailAdmin.ManageList.MailingLists;
 import pageobjects.EmailAdmin.Subscribers.MailingListUsers;
 import pageobjects.SystemAdmin.AlertFilterList.AlertFilterAdd;
-import pageobjects.SystemAdmin.AlertFilterList.AlertFilterEdit;
 import pageobjects.SystemAdmin.AlertFilterList.AlertFilterList;
 import pageobjects.SystemAdmin.SiteMaintenance.FunctionalBtn;
 import specs.AbstractSpec;
@@ -23,11 +22,12 @@ import pageobjects.LoginPage.LoginPage;
 import pageobjects.Dashboard.Dashboard;
 
 import javax.mail.Message;
-import javax.mail.MessagingException;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by zacharyk on 2017-05-19.
@@ -73,7 +73,17 @@ public class CheckPressReleaseEmailAlert extends AbstractSpec {
     // Misc
 
     private final String DATA="getData";
-    private final String testAccount = "test@q4websystems.com", testPassword = "testing!";
+
+    private final Long MED_WAIT = 5000L;
+
+    SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
+    SimpleDateFormat hourFormat = new SimpleDateFormat("HH");
+    SimpleDateFormat minuteFormat = new SimpleDateFormat("mm");
+
+    String date = dateFormat.format(new Date());
+    String hour = hourFormat.format(new Date());
+    String minute = minuteFormat.format(new Date());
+
 
     @BeforeTest
     public void setUp() throws Exception {
@@ -97,25 +107,6 @@ public class CheckPressReleaseEmailAlert extends AbstractSpec {
 
         functionalBtn.enableSendGrid();
 
-        // Check that testing list exists
-
-        emailAdminMenuButton = By.xpath(propUIEmailAdmin.getProperty("btnMenu_EmailAdmin"));
-        manageListMenuItem = By.xpath(propUIEmailAdmin.getProperty("btnMenu_ManageList"));
-        mailingLists = new MailingLists(driver);
-
-        dashboard.openPageFromMenu(emailAdminMenuButton, manageListMenuItem);
-
-        Assert.assertTrue(mailingLists.listActive(mailingList));
-
-        // Check that test email is subscribed
-
-        subscribersMenuItem = By.xpath(propUIEmailAdmin.getProperty("btnMenu_Subscribers"));
-        mailingListUsers = new MailingListUsers(driver);
-
-        dashboard.openPageFromMenu(emailAdminMenuButton, subscribersMenuItem);
-
-        Assert.assertTrue(mailingListUsers.userSubscribed(testAccount, mailingList));
-
         // Misc setup
 
         alertFilterListMenuItem = By.xpath(propUISystemAdmin.getProperty("itemMenu_AlertFilterList"));
@@ -124,8 +115,29 @@ public class CheckPressReleaseEmailAlert extends AbstractSpec {
         addPressReleaseButton = By.xpath(propUICommon.getProperty("btn_AddPressRelease"));
     }
 
+
+
     @Test(dataProvider = DATA)
     public void checkPressReleaseEmailAlert(JSONObject data) throws Exception {
+
+        // Check that testing list exists
+
+        emailAdminMenuButton = By.xpath(propUIEmailAdmin.getProperty("btnMenu_EmailAdmin"));
+        manageListMenuItem = By.xpath(propUIEmailAdmin.getProperty("btnMenu_ManageList"));
+        mailingLists = new MailingLists(driver);
+
+        dashboard.openPageFromMenu(emailAdminMenuButton, manageListMenuItem);
+
+        Assert.assertTrue(mailingLists.listActive(data.get("mailing_list").toString()));
+
+        // Check that test email is subscribed
+
+        subscribersMenuItem = By.xpath(propUIEmailAdmin.getProperty("btnMenu_Subscribers"));
+        mailingListUsers = new MailingListUsers(driver);
+
+        dashboard.openPageFromMenu(emailAdminMenuButton, subscribersMenuItem);
+
+        Assert.assertTrue(mailingListUsers.userSubscribed(data.get("email_account").toString(), data.get("email_password").toString()));
 
         // Alert filter setup
         
@@ -136,30 +148,40 @@ public class CheckPressReleaseEmailAlert extends AbstractSpec {
         String filterType = data.get("filter_type").toString();
 
         alertFilterAdd.setContentFilters(filterType, data.get("filter_title").toString(), data.get("filter_body").toString());
-        alertFilterAdd.enableSendToList(mailingList + " - English");
+        alertFilterAdd.enableSendToList(data.get("mailing_list").toString() + data.get("mailing_list_language").toString());
 
         // Publish the press release
 
         dashboard.openPageFromCommonTasks(addPressReleaseButton);
 
-        String taggedHeadline = data.get("headline").toString() + RandomStringUtils.randomAlphanumeric(6);
+        String taggedHeadline = data.get("pr_headline").toString() + RandomStringUtils.randomAlphanumeric(6);
 
         pressReleaseEdit = new PressReleaseEdit(driver);
-        pressReleaseEdit.addNewPressRelease(taggedHeadline, data.get("date").toString(), data.get("hour").toString(),
-                                            data.get("minute").toString(), data.get("AMPM").toString(), new String[2]);
+        String pressReleaseURL = pressReleaseEdit.getUrl();
+        pressReleaseEdit.addNewPressRelease(taggedHeadline, date, hour, minute, "PM", new String[2]);
 
         pressReleases = new PressReleases(driver);
         pressReleases.publishPressRelease(taggedHeadline);
 
         // Delete press release
 
-        pressReleaseEdit = pressReleases.editPressRelease(taggedHeadline);
+        //pressReleaseEdit = pressReleases.editPressRelease(taggedHeadline);
+        driver.get(pressReleaseURL);
+        Thread.sleep(MED_WAIT);
+        Assert.assertEquals(pressReleaseEdit.getWorkflowState().getText(), "Live");
+
+        for (int i=0; i<3; i++) {
+            if (pressReleaseEdit.getWorkflowState().getText().equals("Live")) {
+                break;
+            } else driver.navigate().refresh();
+        }
+
         pressReleaseEdit.deletePressRelease();
         pressReleases.publishPressRelease(taggedHeadline);
 
         // Check for email in inbox
 
-        Message email = getRecentMail(testAccount, testPassword, taggedHeadline);
+        Message email = getRecentMail(data.get("email_account").toString(), data.get("email_password").toString(), taggedHeadline);
 
         if (Boolean.valueOf(data.get("expect_mail").toString())) {
             Assert.assertNotNull(email);

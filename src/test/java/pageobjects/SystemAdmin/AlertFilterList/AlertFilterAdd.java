@@ -421,7 +421,8 @@ public class AlertFilterAdd extends AbstractPageObject {
 
         try {
 
-            findElement(mailingListSelect).sendKeys(mailingList);
+            Select selectList = new Select(driver.findElement(mailingListSelect));
+            selectList.selectByVisibleText(mailingList);
 
             WebElement activeChk = findElement(activeIsChk);
             WebElement sendEmailChk = findElement(sendEmailIsChk);
