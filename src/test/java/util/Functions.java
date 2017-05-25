@@ -320,6 +320,46 @@ public class Functions {
         return null;
     }
 
+    public static void deleteMail(String user, String password, String subjectID, String date) {
+
+        try {
+
+            Properties properties = new Properties();
+
+            properties.put("mail.imap.host", "imap.gmail.com");
+            properties.put("mail.imap.port", "993");
+            properties.put("mail.imap.ssl.enable", "true");
+            Session emailSession = Session.getDefaultInstance(properties);
+
+            Store store = emailSession.getStore("imap");
+
+            store.connect("imap.gmail.com", user, password);
+
+            Folder emailFolder = store.getFolder("INBOX");
+            emailFolder.open(Folder.READ_WRITE);
+
+
+            Message[] messages = emailFolder.getMessages();
+
+
+            for (int i = 0; i < messages.length; i++) {
+                if (messages[i].getSubject().contains(subjectID)) {
+                    //TODO make a delete function: https://www.tutorialspoint.com/javamail_api/javamail_api_deleting_emails.htm
+                    messages[i];
+                }
+            }
+
+            return null;
+
+        } catch (NoSuchProviderException e) {
+            e.printStackTrace();
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
 
     public static void cleanTextFields(List<WebElement> fields) {
         for (WebElement e : fields) {

@@ -79,7 +79,7 @@ public class JobApplicationsPage extends AbstractPageObject {
         return findElement(uploadResume).getText();
     }
     public boolean checkEmail(JSONObject data) throws IOException, MessagingException {
-        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yy hh:mm");
         Date todayDate = new Date();
         String today = dateFormat.format(todayDate);
 
