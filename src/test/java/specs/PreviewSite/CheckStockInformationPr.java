@@ -9,8 +9,6 @@ import org.testng.annotations.Test;
 import pageobjects.LiveSite.HomePage;
 import pageobjects.LiveSite.StockInformationPage;
 import pageobjects.LoginPage.LoginPage;
-import pageobjects.api.QuandlConnectToApi;
-import pageobjects.api.QuandlDataset;
 import specs.AbstractSpec;
 import specs.PublicSite.CheckPublicSite;
 import yahoofinance.YahooFinance;
@@ -19,10 +17,7 @@ import yahoofinance.histquotes.Interval;
 import yahoofinance.quotes.stock.StockQuote;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 import static org.testng.Assert.fail;
 
@@ -230,64 +225,53 @@ public class CheckStockInformationPr extends AbstractSpec {
 
             // checking historical values from last trading day
             Calendar lastTradingDay = stockInformationPage.getCurrentDate(); //getting date from date dropdowns in module
-            Date today = lastTradingDay.getTime();
-            // Format the date so QuandlAPI can read it
-            DateFormat todaysDate = new SimpleDateFormat("yyyy-MM-dd");
-            String inputDate = todaysDate.format(today);
-            QuandlDataset lastTradingDayQuotes;
-            System.out.println(lastTradingDay.getTime());
-            // fetching data from Quandl
+            HistoricalQuote lastTradingDayQuotes;
+            // fetching data from Yahoo
             try {
-                // Check if Quandl works well
-                lastTradingDayQuotes = QuandlConnectToApi.getDatasetBetweenDates("TXRH", inputDate, inputDate);
-
-            } catch (Exception e) {
+                lastTradingDayQuotes = YahooFinance.get("TXRH").getHistory(lastTradingDay, lastTradingDay
+                        , Interval.DAILY).get(0);
+            } catch (IOException e) {
                 fail("Problem retrieving last trading day stock data from Yahoo Finance.");
                 return;
             }
-            // comparing Quandl data with displayed values
-            Assert.assertEquals(stockInformationPage.getHistoricalHigh(), Double.parseDouble(lastTradingDayQuotes.getHighPrices().get(0))
+            // comparing Yahoo data with displayed values
+            Assert.assertEquals(stockInformationPage.getHistoricalHigh(), lastTradingDayQuotes.getHigh().doubleValue()
                     , 0.01, "Last trading day high isn't accurate");
-            Assert.assertEquals(stockInformationPage.getHistoricalLow(), Double.parseDouble(lastTradingDayQuotes.getLowPrices().get(0))
+            Assert.assertEquals(stockInformationPage.getHistoricalLow(), lastTradingDayQuotes.getLow().doubleValue()
                     , 0.01, "Last trading day low isn't accurate");
             Assert.assertEquals(stockInformationPage.getHistoricalVolume()
-                    , Double.parseDouble(lastTradingDayQuotes.getVolume().get(0))
+                    , lastTradingDayQuotes.getVolume().doubleValue()
                     , 10000, "Last trading day volume isn't accurate");
-            Assert.assertEquals(stockInformationPage.getHistoricalOpen(), Double.parseDouble(lastTradingDayQuotes.getOpenPrices().get(0))
+            Assert.assertEquals(stockInformationPage.getHistoricalOpen(), lastTradingDayQuotes.getOpen().doubleValue()
                     , 0.01, "Last trading day opening price isn't accurate");
-            Assert.assertEquals(stockInformationPage.getHistoricalLast(), Double.parseDouble(lastTradingDayQuotes.getClosingPrices().get(0))
+            Assert.assertEquals(stockInformationPage.getHistoricalLast(), lastTradingDayQuotes.getClose().doubleValue()
                     , 0.01, "Last trading day last price isn't accurate" );
-
 
             // checking historical values from older day
             stockInformationPage.changeQuoteDate();
             Calendar olderDay = stockInformationPage.getCurrentDate(); //getting date from date dropdowns in module
-            Date olderTradingDay = olderDay.getTime();
-            // Format the date so QuandlAPI can read it
-            DateFormat olderDate = new SimpleDateFormat("yyyy-MM-dd");
-            String olderInputDate = olderDate.format(olderTradingDay);
-            QuandlDataset olderDayQuotes;
+            HistoricalQuote olderDayQuotes;
             // fetching data from Yahoo
             try {
-                olderDayQuotes = QuandlConnectToApi.getDatasetBetweenDates("TXRH", olderInputDate, olderInputDate);
-            } catch (Exception e) {
+                olderDayQuotes = YahooFinance.get("TXRH").getHistory(olderDay, olderDay, Interval.DAILY).get(0);
+            } catch (IOException e) {
                 fail("Problem retrieving older day stock data from Yahoo Finance.");
                 return;
             }
             // comparing Yahoo data with displayed values
-            Assert.assertEquals(stockInformationPage.getHistoricalHigh(), Double.parseDouble(olderDayQuotes.getHighPrices().get(0))
+            Assert.assertEquals(stockInformationPage.getHistoricalHigh(), olderDayQuotes.getHigh().doubleValue()
                     ,0.01, "Older day high isn't accurate");
 
-            Assert.assertEquals(stockInformationPage.getHistoricalLow(),Double.parseDouble(olderDayQuotes.getLowPrices().get(0))
+            Assert.assertEquals(stockInformationPage.getHistoricalLow(),olderDayQuotes.getLow().doubleValue()
                     , 0.01, "Older day low isn't accurate");
 
-            Assert.assertEquals(stockInformationPage.getHistoricalVolume(), Double.parseDouble(olderDayQuotes.getVolume().get(0))
+            Assert.assertEquals(stockInformationPage.getHistoricalVolume(), olderDayQuotes.getVolume().doubleValue()
                     , 5000, "Older day volume isn't accurate");
 
-            Assert.assertEquals(stockInformationPage.getHistoricalOpen(),Double.parseDouble(olderDayQuotes.getOpenPrices().get(0))
+            Assert.assertEquals(stockInformationPage.getHistoricalOpen(),olderDayQuotes.getOpen().doubleValue()
                     , 0.01, "Older day opening price isn't accurate" );
 
-            Assert.assertEquals(stockInformationPage.getHistoricalLast(), Double.parseDouble(olderDayQuotes.getClosingPrices().get(0))
+            Assert.assertEquals(stockInformationPage.getHistoricalLast(), olderDayQuotes.getClose().doubleValue()
                     , 0.01, "Older day last price isn't accurate");
 
         }catch (TimeoutException e)
