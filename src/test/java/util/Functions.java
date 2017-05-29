@@ -320,7 +320,9 @@ public class Functions {
         return null;
     }
 
-    public static void deleteMail(String user, String password, String subjectID, String date) {
+    public static void deleteMail(String user, String password, String subjectID) {
+        Properties props = System.getProperties();
+        props.setProperty("mail.store.protocol", "gimap");
 
         try {
 
@@ -343,13 +345,12 @@ public class Functions {
 
 
             for (int i = 0; i < messages.length; i++) {
-                if (messages[i].getSubject().contains(subjectID)) {
-                    //TODO make a delete function: https://www.tutorialspoint.com/javamail_api/javamail_api_deleting_emails.htm
-                    messages[i];
+                if (messages[i].getSubject().equals(subjectID)) {
+                    messages[i].setFlag(Flags.Flag.DELETED, true);
                 }
             }
-
-            return null;
+            emailFolder.close(true);
+            store.close();
 
         } catch (NoSuchProviderException e) {
             e.printStackTrace();
@@ -357,7 +358,6 @@ public class Functions {
             e.printStackTrace();
         }
 
-        return null;
     }
 
 

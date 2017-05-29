@@ -78,6 +78,11 @@ public class CheckJobApplicationsPage extends AbstractSpec {
         }
     }
 
+    @Test
+    public void deleteEmailPlease(){
+        deleteMail("test@q4websystems.com", "testing!", "Test Delete");
+    }
+
     @DataProvider
     public Object[][] getData() {
 
