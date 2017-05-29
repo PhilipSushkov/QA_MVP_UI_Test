@@ -1,5 +1,8 @@
 package util;
 
+import com.sun.mail.gimap.GmailFolder;
+import com.sun.mail.gimap.GmailRawSearchTerm;
+import com.sun.mail.gimap.GmailStore;
 import org.apache.commons.io.FileUtils;
 import org.im4java.core.CompareCmd;
 import org.im4java.core.IMOperation;
@@ -325,31 +328,18 @@ public class Functions {
         props.setProperty("mail.store.protocol", "gimap");
 
         try {
-
-            Properties properties = new Properties();
-
-            properties.put("mail.imap.host", "imap.gmail.com");
-            properties.put("mail.imap.port", "993");
-            properties.put("mail.imap.ssl.enable", "true");
-            Session emailSession = Session.getDefaultInstance(properties);
-
-            Store store = emailSession.getStore("imap");
-
+            Session session = Session.getDefaultInstance(props, null);
+            GmailStore store = (GmailStore) session.getStore("gimap");
             store.connect("imap.gmail.com", user, password);
-
-            Folder emailFolder = store.getFolder("INBOX");
-            emailFolder.open(Folder.READ_WRITE);
-
-
-            Message[] messages = emailFolder.getMessages();
-
-
-            for (int i = 0; i < messages.length; i++) {
-                if (messages[i].getSubject().equals(subjectID)) {
-                    messages[i].setFlag(Flags.Flag.DELETED, true);
+            GmailFolder inbox = (GmailFolder) store.getFolder("INBOX");
+            inbox.open(Folder.READ_WRITE);
+            Message[] foundMessages = inbox.search(new GmailRawSearchTerm("subject:"+subjectID));
+            if (foundMessages != null){
+                for (int i = 0; i < foundMessages.length; i++){
+                    foundMessages[i].setFlag(Flags.Flag.DELETED, true);
                 }
             }
-            emailFolder.close(true);
+            inbox.close(true);
             store.close();
 
         } catch (NoSuchProviderException e) {
