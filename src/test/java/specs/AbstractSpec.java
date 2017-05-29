@@ -77,7 +77,7 @@ public abstract class AbstractSpec extends util.Functions {
             setupEnvironment();
 
             desktopUrl = new URL(activeEnvironment.getProtocol() + activeEnvironment.getHost());
-            desktopUrlPublic = new URL("http://chicagotest.q4web.release/");
+            desktopUrlPublic = new URL("http://chicagotest.q4web.com/");
 
             LOG.info("ENV URL: " + desktopUrl);
 
