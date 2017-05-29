@@ -1,5 +1,8 @@
 package util;
 
+import com.sun.mail.gimap.GmailFolder;
+import com.sun.mail.gimap.GmailRawSearchTerm;
+import com.sun.mail.gimap.GmailStore;
 import org.apache.commons.io.FileUtils;
 import org.im4java.core.CompareCmd;
 import org.im4java.core.IMOperation;
@@ -13,16 +16,13 @@ import org.openqa.selenium.*;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import java.util.Properties;
 
-import javax.mail.Folder;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.NoSuchProviderException;
-import javax.mail.Session;
-import javax.mail.Store;
+import javax.mail.*;
 
 /**
  * Created by philipsushkov on 2016-12-08.
@@ -282,6 +282,74 @@ public class Functions {
 
         return null;
     }
+
+    public static Message getSpecificMail(String user, String password, String subjectID, String date) {
+
+        try {
+
+            Properties properties = new Properties();
+
+            properties.put("mail.pop3.host", "pop.gmail.com");
+            properties.put("mail.pop3.port", "995");
+            properties.put("mail.pop3.starttls.enable", "true");
+            Session emailSession = Session.getDefaultInstance(properties);
+
+            Store store = emailSession.getStore("pop3s");
+
+            store.connect("pop.gmail.com", user, password);
+
+            Folder emailFolder = store.getFolder("INBOX");
+            emailFolder.open(Folder.READ_ONLY);
+
+            DateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
+
+            Message[] messages = emailFolder.getMessages();
+
+
+            for (int i = 0; i < messages.length; i++) {
+                if (messages[i].getSubject().contains(subjectID) && (date.equals(dateFormat.format(messages[i].getSentDate())))) {
+                    return messages[i];
+                }
+            }
+
+            return null;
+
+        } catch (NoSuchProviderException e) {
+            e.printStackTrace();
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public static void deleteMail(String user, String password, String subjectID) {
+        Properties props = System.getProperties();
+        props.setProperty("mail.store.protocol", "gimap");
+
+        try {
+            Session session = Session.getDefaultInstance(props, null);
+            GmailStore store = (GmailStore) session.getStore("gimap");
+            store.connect("imap.gmail.com", user, password);
+            GmailFolder inbox = (GmailFolder) store.getFolder("INBOX");
+            inbox.open(Folder.READ_WRITE);
+            Message[] foundMessages = inbox.search(new GmailRawSearchTerm("subject:"+subjectID));
+            if (foundMessages != null){
+                for (int i = 0; i < foundMessages.length; i++){
+                    foundMessages[i].setFlag(Flags.Flag.DELETED, true);
+                }
+            }
+            inbox.close(true);
+            store.close();
+
+        } catch (NoSuchProviderException e) {
+            e.printStackTrace();
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
     public static void cleanTextFields(List<WebElement> fields) {
         for (WebElement e : fields) {

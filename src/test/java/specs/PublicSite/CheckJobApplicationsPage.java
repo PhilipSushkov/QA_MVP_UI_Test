@@ -12,6 +12,7 @@ import pageobjects.LiveSite.HomePage;
 import pageobjects.LiveSite.JobApplicationsPage;
 import specs.AbstractSpec;
 
+import javax.mail.MessagingException;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -29,6 +30,9 @@ public class CheckJobApplicationsPage extends AbstractSpec {
     private static JSONParser parser;
 
     private final String DATA="getData";
+    private final String user = "test@q4websystems.com";
+    private final String password = "testing!";
+    private final String subject = "Job Application for position";
 
     @BeforeTest
     public void setUp(){
@@ -44,12 +48,42 @@ public class CheckJobApplicationsPage extends AbstractSpec {
     }
 
     @Test(dataProvider = DATA, priority = 1)
-    public void submitJobApplication(JSONObject data) {
+    public void submitJobApplication(JSONObject data){
         String sMessage = data.get("expected").toString();
 
         Assert.assertTrue(homePage.selectJobApplicationFromMenu().applicationPageDisplayed(), "Job Applications Page couldn't be opened");
         Assert.assertTrue(jobApplicationsPage.submitJobApplication(data).contains(sMessage),"Job Application Submission doesn't work properly");
     }
+
+    @Test(dataProvider = DATA, priority = 2)
+    public void checkEmail(JSONObject data) throws IOException, MessagingException {
+        homePage.selectJobApplicationFromMenu();
+        jobApplicationsPage.submitJobApplication(data);
+
+        if (data.get("check_email").toString() == "true" && data.get("check_file").toString() == "false") {
+            Assert.assertTrue(jobApplicationsPage.checkEmail(data), "Job Application does not match email");
+            deleteMail(user, password, subject);
+        } else if (data.get("check_email").toString() == "false") {
+            //Checking if email didnt get sent
+            Assert.assertFalse(jobApplicationsPage.checkEmail(data), "Job Application should not have been submitted");
+        }
+        deleteMail(user, password, subject);
+    }
+
+    @Test(dataProvider = DATA, priority = 3)
+    public void checkFile(JSONObject data) throws IOException, MessagingException {
+        homePage.selectJobApplicationFromMenu();
+        jobApplicationsPage.submitJobApplication(data);
+
+        if (data.get("check_email").toString() == "true" && data.get("check_file").toString() == "true") {
+            Assert.assertTrue(jobApplicationsPage.hasAttachments(data), "Email has no attachments");
+            Assert.assertTrue(jobApplicationsPage.checkAttachments(data), "Attachments are not the same");
+        } else if (data.get("check_email").toString() == "false" ) {
+            Assert.assertFalse(jobApplicationsPage.checkEmail(data), "Job Application should not have been submitted");
+        }
+        deleteMail(user, password, subject);
+    }
+
 
     @DataProvider
     public Object[][] getData() {

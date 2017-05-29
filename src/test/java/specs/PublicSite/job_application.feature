@@ -13,20 +13,11 @@ Feature: Test filling out job application on the website
     Then Application should not be submitted
     And Warning for incorrect formatting should show up
 
-  Scenario: Check if incorrect formatting for error is gone after fixing it
-    Given I complete the test for correct email formatting
-    And I input an email with correct formatting
-    When Submit application button is pressed
-    Then Application should not be submitted
-    And Warning for incorrect formatting should show NOT up
-
-  Scenario Outline: Check if a required field is missing
+  Scenario: Check if First Name field is missing
     Given I fill out the form
-    And I leave out one of the required fields called <field name>
+    And I leave out the First Name field
     Then Application should not be submitted
-    And I should see a warning to correct the error for <field name>
-    Examples:
-      | field name |
+    And I should see a warning to correct the error for First Name
 
   Scenario: Check if I can submit a job application form
     Given I am logged into test@q4websystems.com account
