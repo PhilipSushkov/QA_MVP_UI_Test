@@ -9,7 +9,6 @@ import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
-import javax.mail.internet.MimeBodyPart;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -64,28 +63,14 @@ public class JobApplicationsPage extends AbstractPageObject {
         return sMessage;
     }
 
-    public String uploadResumeFile(JSONObject data){
-        cleanTextFields(findElements(By.xpath("//input[@type='text']")));
-        cleanTextFields(findElements(By.xpath("//textarea")));
-
-        //Uploading
-        findElement(uploadResume).sendKeys(data.get("file_path").toString());
-
-        //Cant test it out locally
-        System.out.print("1");
-        System.out.print(findElement(uploadResume).getText());
-        System.out.print("2");
-
-        return findElement(uploadResume).getText();
-    }
     public boolean checkEmail(JSONObject data) throws IOException, MessagingException {
-        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yy hh:mm");
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
         Date todayDate = new Date();
         String today = dateFormat.format(todayDate);
 
-        String content = (getSpecificMail("test@q4websystems.com", "testing!", "Job Application", today).getContent()).toString();
+        String content = (getSpecificMail("test@q4websystems.com", "testing!", "Job Application for position", today).getContent()).toString();
+        //Return true if content contains all of the items below - ASSERTION FOR EACH ONE?
 
-        //Return true if content contains all of the items below - ASSERTION FOR EACH ONE
         return (
                 content.contains(data.get("first_name").toString()) &&
                 content.contains(data.get("last_name").toString()) &&
@@ -103,8 +88,9 @@ public class JobApplicationsPage extends AbstractPageObject {
                 );
     }
 
+
     public boolean checkAttachments(JSONObject data) throws IOException, MessagingException {
-        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yy hh:mm");
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
         Date todayDate = new Date();
         String today = dateFormat.format(todayDate);
 
@@ -127,7 +113,7 @@ public class JobApplicationsPage extends AbstractPageObject {
     }
 
     public boolean hasAttachments(JSONObject data) throws MessagingException, IOException {
-        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yy hh:mm");
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
         Date todayDate = new Date();
         String today = dateFormat.format(todayDate);
 

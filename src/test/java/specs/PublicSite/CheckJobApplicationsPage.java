@@ -30,6 +30,9 @@ public class CheckJobApplicationsPage extends AbstractSpec {
     private static JSONParser parser;
 
     private final String DATA="getData";
+    private final String user = "test@q4websystems.com";
+    private final String password = "testing!";
+    private final String subject = "Job Application for position";
 
     @BeforeTest
     public void setUp(){
@@ -57,12 +60,14 @@ public class CheckJobApplicationsPage extends AbstractSpec {
         homePage.selectJobApplicationFromMenu();
         jobApplicationsPage.submitJobApplication(data);
 
-        if (data.get("check_email").toString() == "true") {
+        if (data.get("check_email").toString() == "true" && data.get("check_file").toString() == "false") {
             Assert.assertTrue(jobApplicationsPage.checkEmail(data), "Job Application does not match email");
+            deleteMail(user, password, subject);
         } else if (data.get("check_email").toString() == "false") {
             //Checking if email didnt get sent
             Assert.assertFalse(jobApplicationsPage.checkEmail(data), "Job Application should not have been submitted");
         }
+        deleteMail(user, password, subject);
     }
 
     @Test(dataProvider = DATA, priority = 3)
@@ -70,18 +75,15 @@ public class CheckJobApplicationsPage extends AbstractSpec {
         homePage.selectJobApplicationFromMenu();
         jobApplicationsPage.submitJobApplication(data);
 
-        if (data.get("check_email").toString() == "true") {
+        if (data.get("check_email").toString() == "true" && data.get("check_file").toString() == "true") {
             Assert.assertTrue(jobApplicationsPage.hasAttachments(data), "Email has no attachments");
             Assert.assertTrue(jobApplicationsPage.checkAttachments(data), "Attachments are not the same");
-        } else if (data.get("check_email").toString() == "false") {
+        } else if (data.get("check_email").toString() == "false" ) {
             Assert.assertFalse(jobApplicationsPage.checkEmail(data), "Job Application should not have been submitted");
         }
+        deleteMail(user, password, subject);
     }
 
-    @Test
-    public void deleteEmailPlease(){
-        deleteMail("test@q4websystems.com", "testing!", "Job Application for position");
-    }
 
     @DataProvider
     public Object[][] getData() {

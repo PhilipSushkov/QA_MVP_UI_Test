@@ -301,7 +301,7 @@ public class Functions {
             Folder emailFolder = store.getFolder("INBOX");
             emailFolder.open(Folder.READ_ONLY);
 
-            DateFormat dateFormat = new SimpleDateFormat("MM/dd/yy hh:mm");
+            DateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
 
             Message[] messages = emailFolder.getMessages();
 
