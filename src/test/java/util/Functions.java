@@ -16,8 +16,6 @@ import org.openqa.selenium.*;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 import java.util.Properties;
@@ -283,43 +281,32 @@ public class Functions {
         return null;
     }
 
-    public static Message getSpecificMail(String user, String password, String subjectID, String date) {
+    public static Message getSpecificMail(String user, String password, String subjectID) throws InterruptedException {
+        Properties props = System.getProperties();
+        props.setProperty("mail.store.protocol", "gimap");
+        Thread.sleep(3000);
 
         try {
+            Session session = Session.getDefaultInstance(props, null);
+            GmailStore store = (GmailStore) session.getStore("gimap");
+            store.connect("imap.gmail.com", user, password);
+            GmailFolder inbox = (GmailFolder) store.getFolder("INBOX");
+            inbox.open(Folder.READ_ONLY);
+            Message[] Messages = inbox.search(new GmailRawSearchTerm("subject:"+subjectID));
 
-            Properties properties = new Properties();
-
-            properties.put("mail.pop3.host", "pop.gmail.com");
-            properties.put("mail.pop3.port", "995");
-            properties.put("mail.pop3.starttls.enable", "true");
-            Session emailSession = Session.getDefaultInstance(properties);
-
-            Store store = emailSession.getStore("pop3s");
-
-            store.connect("pop.gmail.com", user, password);
-
-            Folder emailFolder = store.getFolder("INBOX");
-            emailFolder.open(Folder.READ_ONLY);
-
-            DateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
-
-            Message[] messages = emailFolder.getMessages();
-
-
-            for (int i = 0; i < messages.length; i++) {
-                if (messages[i].getSubject().contains(subjectID) && (date.equals(dateFormat.format(messages[i].getSentDate())))) {
-                    return messages[i];
+            if (Messages != null){
+                for (int i = 0; i < Messages.length; i++){
+                    return Messages[i];
                 }
             }
-
-            return null;
+            inbox.close(true);
+            store.close();
 
         } catch (NoSuchProviderException e) {
             e.printStackTrace();
         } catch (MessagingException e) {
             e.printStackTrace();
         }
-
         return null;
     }
 

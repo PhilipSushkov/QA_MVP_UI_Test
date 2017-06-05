@@ -9,10 +9,8 @@ import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
+import java.io.File;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import static specs.AbstractSpec.propUIPublicSite;
 import static util.Functions.*;
@@ -63,14 +61,10 @@ public class JobApplicationsPage extends AbstractPageObject {
         return sMessage;
     }
 
-    public boolean checkEmail(JSONObject data) throws IOException, MessagingException {
-        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
-        Date todayDate = new Date();
-        String today = dateFormat.format(todayDate);
+    public boolean checkEmail(JSONObject data) throws IOException, MessagingException, InterruptedException {
+        String content = (getSpecificMail("test@q4websystems.com", "testing!", "Job Application for position").getContent()).toString();
 
-        String content = (getSpecificMail("test@q4websystems.com", "testing!", "Job Application for position", today).getContent()).toString();
         //Return true if content contains all of the items below - ASSERTION FOR EACH ONE?
-
         return (
                 content.contains(data.get("first_name").toString()) &&
                 content.contains(data.get("last_name").toString()) &&
@@ -89,12 +83,8 @@ public class JobApplicationsPage extends AbstractPageObject {
     }
 
 
-    public boolean checkAttachments(JSONObject data) throws IOException, MessagingException {
-        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
-        Date todayDate = new Date();
-        String today = dateFormat.format(todayDate);
-
-        Message msg = getSpecificMail("test@q4websystems.com", "testing!", "Job Application", today);
+    public boolean checkAttachments(JSONObject data) throws IOException, MessagingException, InterruptedException {
+        Message msg = getSpecificMail("test@q4websystems.com", "testing!", "Job Application for position");
 
         Multipart mp = (Multipart) msg.getContent();
         for (int i = 0; i < mp.getCount(); i++){
@@ -112,19 +102,16 @@ public class JobApplicationsPage extends AbstractPageObject {
         return false;
     }
 
-    public boolean hasAttachments(JSONObject data) throws MessagingException, IOException {
-        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
-        Date todayDate = new Date();
-        String today = dateFormat.format(todayDate);
+    public boolean hasAttachments(JSONObject data) throws MessagingException, IOException, InterruptedException {
+        Message msg = getSpecificMail("test@q4websystems.com", "testing!", "Job Application for position");
 
-        Message msg = getSpecificMail("test@q4websystems.com", "testing!", "Job Application", today);
-
-        if (msg.isMimeType("multipart/mixed")) {
-            Multipart mp = (Multipart)msg.getContent();
-            if (mp.getCount() > 1)
+        if (msg != null) {
+            if (msg.isMimeType("multipart/mixed")) {
+                Multipart mp = (Multipart) msg.getContent();
+                if (mp.getCount() > 1)
                 return true;
-        }
-        return false;
+            }
+        } return false;
     }
 
     public void enterFields(JSONObject data){
@@ -141,7 +128,7 @@ public class JobApplicationsPage extends AbstractPageObject {
         findElement(emailField).sendKeys(data.get("email").toString());
         findElement(coverLetterTextField).sendKeys(data.get("coverletter_text").toString());
         findElement(resumeTextField).sendKeys(data.get("resume_text").toString());
-        findElement(uploadResume).sendKeys(data.get("resume_path").toString());
+        findElement(uploadResume).sendKeys(getFilePath(data));
     }
 
 
@@ -167,5 +154,17 @@ public class JobApplicationsPage extends AbstractPageObject {
         }
 
         return element;
+    }
+
+    public String getFilePath(JSONObject data){
+        //Checks file if check_file is set to true
+        if (data.get("check_file").toString() == "true"){
+            //Finds path to the file
+            String path = new File(data.get("resume_file").toString()).getAbsolutePath();
+
+            return path;
+        }
+        return "";
+
     }
 }

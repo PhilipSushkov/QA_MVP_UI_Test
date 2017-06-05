@@ -5,9 +5,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.testng.Assert;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 import pageobjects.LiveSite.HomePage;
 import pageobjects.LiveSite.JobApplicationsPage;
 import specs.AbstractSpec;
@@ -41,10 +39,15 @@ public class CheckJobApplicationsPage extends AbstractSpec {
 
         parser = new JSONParser();
 
-        driver.get("http://chicagotest.q4web.com/English/Investors/default.aspx");
+        driver.get("http://chicagotest.q4web.com/English/Investors/");
         homePage = new HomePage(driver);
         jobApplicationsPage = new JobApplicationsPage(driver);
         homePage.selectJobApplicationFromMenu();
+    }
+
+    @AfterTest
+    public void deleteEmail(){
+        deleteMail(user, password, subject);
     }
 
     @Test(dataProvider = DATA, priority = 1)
@@ -56,32 +59,40 @@ public class CheckJobApplicationsPage extends AbstractSpec {
     }
 
     @Test(dataProvider = DATA, priority = 2)
-    public void checkEmail(JSONObject data) throws IOException, MessagingException {
-        homePage.selectJobApplicationFromMenu();
-        jobApplicationsPage.submitJobApplication(data);
+    public void checkEmail(JSONObject data) throws IOException, MessagingException, InterruptedException {
+        // Strictly checking for if email gets sent - no file attached
+        if (data.get("check_file").toString() == "false") {
+            homePage.selectJobApplicationFromMenu();
+            jobApplicationsPage.submitJobApplication(data);
 
-        if (data.get("check_email").toString() == "true" && data.get("check_file").toString() == "false") {
-            Assert.assertTrue(jobApplicationsPage.checkEmail(data), "Job Application does not match email");
-            deleteMail(user, password, subject);
-        } else if (data.get("check_email").toString() == "false") {
-            //Checking if email didnt get sent
-            Assert.assertFalse(jobApplicationsPage.checkEmail(data), "Job Application should not have been submitted");
+            //Strictly checking if an email was sent
+            if (data.get("check_email").toString() == "true") {
+                Assert.assertTrue(jobApplicationsPage.checkEmail(data), "Job Application does not match email");
+
+            } else if (data.get("check_email").toString() == "false") {
+                //Checking if email didnt get sent
+                Assert.assertFalse(jobApplicationsPage.checkEmail(data), "Job Application should not have been submitted");
+            }
         }
-        deleteMail(user, password, subject);
     }
 
     @Test(dataProvider = DATA, priority = 3)
-    public void checkFile(JSONObject data) throws IOException, MessagingException {
+    public void checkFile(JSONObject data) throws IOException, MessagingException, InterruptedException {
         homePage.selectJobApplicationFromMenu();
         jobApplicationsPage.submitJobApplication(data);
 
-        if (data.get("check_email").toString() == "true" && data.get("check_file").toString() == "true") {
-            Assert.assertTrue(jobApplicationsPage.hasAttachments(data), "Email has no attachments");
-            Assert.assertTrue(jobApplicationsPage.checkAttachments(data), "Attachments are not the same");
+        if (data.get("check_email").toString() == "true") {
+            //Checking if email with file got sent
+            if  (data.get("check_file").toString() == "true") {
+                //Waiting for email with attachment to arrive
+                deleteMail(user, password, subject);
+                Assert.assertTrue(jobApplicationsPage.hasAttachments(data), "Email has no attachments");
+                Assert.assertTrue(jobApplicationsPage.checkAttachments(data), "Attachments are not the same");
+            }
         } else if (data.get("check_email").toString() == "false" ) {
+            //Making sure no email got sent -> checking data against existing email
             Assert.assertFalse(jobApplicationsPage.checkEmail(data), "Job Application should not have been submitted");
         }
-        deleteMail(user, password, subject);
     }
 
 
