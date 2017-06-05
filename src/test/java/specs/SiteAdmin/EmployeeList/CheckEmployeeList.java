@@ -32,7 +32,7 @@ public class CheckEmployeeList extends AbstractSpec{
     }
 
     @Test
-    public void checkExternalFeedList() throws Exception {
+    public void checkEmployeeList() throws Exception {
 
         final String expectedTitle = "Employee List";
         final Integer expectedQuantity = 3;
@@ -40,7 +40,7 @@ public class CheckEmployeeList extends AbstractSpec{
         dashboard.openPageFromMenu(siteAdminMenuButton, employeeListMenuItem);
 
         Assert.assertNotNull(employeeList.getUrl());
-        Assert.assertEquals(expectedTitle, employeeList.getTitle(), "Actual External Feed List page Title doesn't match to expected");
+        Assert.assertEquals(expectedTitle, employeeList.getTitle(), "Actual Employee List page Title doesn't match to expected");
 
         //System.out.println(externalFeedList.getExternalFeedListQuantity().toString());
         Assert.assertTrue(expectedQuantity <= employeeList.getEmployeeListQuantity(), "Actual Description Quantity is less than expected: "+expectedQuantity);

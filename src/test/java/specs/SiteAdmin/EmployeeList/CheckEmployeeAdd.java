@@ -10,6 +10,7 @@ import org.testng.annotations.Test;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.LoginPage.LoginPage;
 import pageobjects.SiteAdmin.EmployeeList.EmployeeAdd;
+import pageobjects.SiteAdmin.EmployeeList.EmployeeList;
 import pageobjects.SiteAdmin.ExternalFeedList.ExternalFeedAdd;
 import specs.AbstractSpec;
 
@@ -26,7 +27,7 @@ public class CheckEmployeeAdd extends AbstractSpec{
     private static String sPathToFile, sDataFileJson;
     private static JSONParser parser;
 
-    private final String DATA="getData", PAGE_NAME="Employee List";
+    private final String DATA="getData", EMPLOYEE_NAME = "Bob", PAGE_NAME="Employee List";
 
     @BeforeTest
     public void setUp() throws Exception {
@@ -46,17 +47,19 @@ public class CheckEmployeeAdd extends AbstractSpec{
     }
     @BeforeMethod
     public void beforeMethod() throws Exception {
-        dashboard.openPageFromMenu(siteAdminMenuButton, externalFeedListMenuItem);
+        dashboard.openPageFromMenu(siteAdminMenuButton, employeeListMenuItem);
     }
 
     @Test(dataProvider=DATA, priority=1)
-    public void saveExternalFeed(JSONObject data) {
+    public void saveEmployeeList(JSONObject data) {
         //Checking Employee List vs. Employee Edit
-        String sExternalFeedName = data.get(FEED_NAME).toString();
-        String expectedTitleList = "External Feed List";
-        String expectedTitleEdit = "External Feed Edit";
+        String sEmployeeName = data.get(EMPLOYEE_NAME).toString();
+        String expectedTitleList = "Employee List";
+        String expectedTitleEdit = "Employee Edit";
 
-        Assert.assertEquals(externalFeedAdd.getTitle(), expectedTitleEdit, "Actual "+PAGE_NAME+" Edit page Title doesn't match to expected");
-        Assert.assertEquals(externalFeedAdd.saveExternalFeed(data, sExternalFeedName), expectedTitleList, "New "+PAGE_NAME+" didn't save properly");
+        Assert.assertEquals(employeeAdd.getTitle(), expectedTitleEdit, "Actual "+PAGE_NAME+" Edit page Title doesn't match to expected");
+        Assert.assertEquals(employeeAdd.saveEmployeeList(data, sEmployeeName), expectedTitleList, "New "+PAGE_NAME+" didn't save properly");
     }
+
+    //Save Employee
 }
