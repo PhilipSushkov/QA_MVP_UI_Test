@@ -13,8 +13,6 @@ import org.testng.annotations.Test;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.LoginPage.LoginPage;
 import pageobjects.SiteAdmin.EmployeeList.EmployeeAdd;
-import pageobjects.SiteAdmin.EmployeeList.EmployeeList;
-import pageobjects.SiteAdmin.ExternalFeedList.ExternalFeedAdd;
 import specs.AbstractSpec;
 
 import java.io.FileNotFoundException;
@@ -76,10 +74,22 @@ public class CheckEmployeeAdd extends AbstractSpec{
     }
 
     @Test(dataProvider=DATA, priority=3)
-    public void editExternalFeed(JSONObject data) throws Exception {
+    public void editEmployeeList(JSONObject data) throws Exception {
         String sEmployeeEmail = data.get(EMPLOYEE_EMAIL).toString();
 
-        Assert.assertTrue(employeeAdd.editExternalFeed(data, sEmployeeEmail), PAGE_NAME+" didn't change properly (after Save)");
+        Assert.assertTrue(employeeAdd.editEmployeeList(data, sEmployeeEmail), PAGE_NAME+" didn't change properly (after Save)");
+    }
+
+    @Test(dataProvider=DATA, priority=4)
+    public void checkEmployeeListCh(JSONObject data) {
+        String sEmployeeEmail = data.get(EMPLOYEE_EMAIL).toString();
+        Assert.assertTrue(employeeAdd.checkEmployeeListCh(data, sEmployeeEmail), "New "+PAGE_NAME+" doesn't fit to change data (after Edit)");
+    }
+
+    @Test(dataProvider=DATA, priority=5)
+    public void removeEmployeeList(JSONObject data) {
+        String sEmployeeEmail = data.get(EMPLOYEE_EMAIL).toString();
+        Assert.assertTrue(employeeAdd.removeEmployee(data, sEmployeeEmail), "New "+PAGE_NAME+" shouldn't be shown in "+PAGE_NAME+" List (after Delete)");
     }
 
     @DataProvider

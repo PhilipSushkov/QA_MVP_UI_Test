@@ -2,7 +2,21 @@
   "employee_list": [
     {
       "do_assertions": true,
-      "email":"ema@email.com",
+      "email":"email1@email.com",
+      "password": "q4pass1234!",
+      "first_name": "Dog",
+      "first_name_ch":"Mr. Doggo",
+      "last_name": "Dogson",
+      "job_title": "Good Boy",
+      "phone": "111-111-1111",
+      "extension": "2234",
+      "cell_phone": "412-234-1234",
+      "location":"Doggo",
+      "active":true
+    },
+    {
+      "do_assertions": true,
+      "email":"email2@email.com",
       "password": "q4pass1234!",
       "first_name": "Dog",
       "last_name": "Dogson",
@@ -11,7 +25,8 @@
       "extension": "2234",
       "cell_phone": "412-234-1234",
       "location":"Doggo",
-      "active":true
+      "active":true,
+      "active_ch": false
     }
   ]
 }

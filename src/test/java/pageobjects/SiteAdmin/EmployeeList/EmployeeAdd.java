@@ -1,10 +1,12 @@
 package pageobjects.SiteAdmin.EmployeeList;
 
+import com.jayway.jsonpath.JsonPath;
 import netscape.javascript.JSObject;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.Select;
 import pageobjects.AbstractPageObject;
@@ -15,6 +17,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 
+import static specs.AbstractSpec.desktopUrl;
 import static specs.AbstractSpec.propUISiteAdmin;
 
 /**
@@ -298,10 +301,10 @@ public class EmployeeAdd extends AbstractPageObject {
         return false;
     }
 
-    public Boolean editExternalFeed(JSONObject data, String name) throws InterruptedException {
+    public Boolean editEmployeeList(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
         JSONObject jsonObj = new JSONObject();
-        String feed, details_name = null;
+        String email = null;
 
         try {
             FileReader readFile = new FileReader(sPathToFile + sFileJson);
@@ -311,40 +314,27 @@ public class EmployeeAdd extends AbstractPageObject {
         } catch (IOException e) {
         }
 
-        feed = data.get("feed").toString();
+        email = data.get("email").toString();
 
-        switch (feed) {
-            case PRESS_RELEASE:
-                details_name = "ClientId: " + jsonObj.get("comp_id").toString();
-                break;
-
-            case EOD_MAIL:
-                details_name = jsonObj.get("stock_exchange").toString() + " : " + jsonObj.get("stock_symbol").toString();
-                break;
-
-            default:
-                break;
-        }
-
-        By editBtn = By.xpath("//td[(text()='" + details_name + "')]/parent::tr/td/input[contains(@id, 'btnEdit')]");
+        By editBtn = By.xpath("//td[(text()='" + email + "')]/parent::tr/td/input[contains(@id, 'btnEdit')]");
 
         try {
 
             waitForElement(moduleTitle);
-            String pageUrl = getPageUrl(jsonMain, name);
-            //driver.get(pageUrl);
             findElement(editBtn).click();
             waitForElement(deleteBtn);
 
+            //Changing user first name
             try {
-                if (!data.get("tag_list_ch").toString().isEmpty()) {
-                    String tag_list_ch = data.get("tag_list_ch").toString();
-                    findElement(tagListInput).clear();
-                    findElement(tagListInput).sendKeys(tag_list_ch);
-                    jsonObj.put("tag_list", tag_list_ch);
+                if (!data.get("first_name_ch").toString().isEmpty()) {
+                    String first_name_ch = data.get("first_name_ch").toString();
+                    findElement(firstNameInput).clear();
+                    findElement(firstNameInput).sendKeys(first_name_ch);
+                    jsonObj.put("first_name", first_name_ch);
                 }
             } catch (NullPointerException e) {}
 
+            //Making user inactive
             try {
                 if (!data.get("active_ch").toString().isEmpty()) {
                     if (Boolean.parseBoolean(data.get("active_ch").toString())) {
@@ -383,6 +373,129 @@ public class EmployeeAdd extends AbstractPageObject {
             System.out.println(name + ": " + PAGE_NAME + " has been changed");
             return true;
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public Boolean checkEmployeeListCh(JSONObject data, String name) {
+        JSONObject jsonMain = new JSONObject();
+        JSONObject jsonObj = new JSONObject();
+        String email = null;
+
+        try {
+            FileReader readFile = new FileReader(sPathToFile + sFileJson);
+            jsonMain = (JSONObject) parser.parse(readFile);
+            jsonObj = (JSONObject) jsonMain.get(name);
+        } catch (ParseException e) {
+        } catch (IOException e) {
+        }
+
+        email = data.get("email").toString();
+
+        By editBtn = By.xpath("//td[(text()='" + email + "')]/parent::tr/td/input[contains(@id, 'btnEdit')]");
+
+        try {
+            waitForElement(moduleTitle);
+            findElement(editBtn).click();
+            waitForElement(saveBtn);
+
+            try {
+                if (findElement(firstNameInput).toString().equals(data.get("first_name_ch").toString())) {
+                    return false;
+                }
+            } catch (NullPointerException e) {
+            }
+
+            try {
+                if (!findElement(activeChk).getAttribute("checked").equals(data.get("active_ch").toString())) {
+                    return false;
+                }
+            } catch (NullPointerException e) {
+            }
+
+            // Save Url
+            URL url = new URL(getUrl());
+            String[] params = url.getQuery().split("&");
+            JSONObject jsonURLQuery = new JSONObject();
+            for (String param:params) {
+                jsonURLQuery.put(param.split("=")[0], param.split("=")[1]);
+            }
+            jsonObj.put("url_query", jsonURLQuery);
+
+            int ExternalFeedID = Integer.parseInt(jsonURLQuery.get("UserID").toString());
+
+            try {
+                FileWriter writeFile = new FileWriter(sPathToFile + sFileJson);
+                writeFile.write(jsonMain.toJSONString().replace("\\", ""));
+                writeFile.flush();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            System.out.println(name + ": "+PAGE_NAME+" has been checked");
+            return ExternalFeedID > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public Boolean removeEmployee(JSONObject data, String name) {
+        JSONObject jsonMain = new JSONObject();
+        JSONObject jsonObj = new JSONObject();
+        String email= null;
+
+        try {
+            FileReader readFile = new FileReader(sPathToFile + sFileJson);
+            jsonMain = (JSONObject) parser.parse(readFile);
+            jsonObj = (JSONObject) jsonMain.get(name);
+        } catch (ParseException e) {
+        } catch (IOException e) {
+        }
+
+        email = data.get("email").toString();
+
+        By editBtn = By.xpath("//td[(text()='" + email + "')]/parent::tr/td/input[contains(@id, 'btnEdit')]");
+
+        try {
+
+            waitForElement(moduleTitle);
+            findElement(editBtn).click();
+            waitForElement(deleteBtn);
+
+            findElement(deleteBtn).click();
+
+            Thread.sleep(DEFAULT_PAUSE);
+            waitForElement(moduleTitle);
+
+            try {
+                waitForElement(editBtn);
+            } catch (TimeoutException e) {
+
+                jsonMain.remove(name);
+
+                try {
+                    FileWriter writeFile = new FileWriter(sPathToFile + sFileJson);
+                    writeFile.write(jsonMain.toJSONString().replace("\\", ""));
+                    writeFile.flush();
+                } catch (FileNotFoundException e1) {
+                    e.printStackTrace();
+                } catch (IOException e1) {
+                    e.printStackTrace();
+                }
+
+                System.out.println(name + ": " + PAGE_NAME + " has been removed");
+                return true;
+            }
+
+            return false;
         } catch (Exception e) {
             e.printStackTrace();
         }
