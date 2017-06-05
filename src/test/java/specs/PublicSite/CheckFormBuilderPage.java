@@ -19,6 +19,7 @@ import pageobjects.LoginPage.LoginPage;
 import pageobjects.SystemAdmin.SiteMaintenance.FunctionalBtn;
 import specs.AbstractSpec;
 
+import javax.mail.Message;
 import javax.mail.MessagingException;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -114,7 +115,9 @@ public class CheckFormBuilderPage extends AbstractSpec {
             Thread.sleep(LONG_WAIT);
 
             try {
-                String content = getRecentMail(testAccount, testPassword, randLastName).getContent().toString();
+                Message[] mail = getMail(testAccount, testPassword, randLastName);
+                Assert.assertNotEquals(mail.length, 0);
+                String content = mail[0].getContent().toString();
                 Assert.assertTrue(content.contains(data.get("first_name").toString()));
                 Assert.assertTrue(content.contains(data.get("email").toString()));
                 Assert.assertTrue(content.contains(data.get("comments").toString()));

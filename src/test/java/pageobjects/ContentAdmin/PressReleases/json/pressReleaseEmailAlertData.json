@@ -1,17 +1,19 @@
 {
   "press_release_email_alert": [
-    {"do_assertions": true,
+    {"title": "no_filter",
+      "do_assertions": true,
       "filter_type": "exclude",
       "filter_title": "",
       "filter_body": "",
       "pr_headline": "TESTPR ID: ",
       "mailing_list": "Test List",
       "mailing_list_language": " - English",
-      "email_account": "test@q4websystems.com",
+      "email_account": "BROKENtest@q4websystems.com",
       "email_password": "testing!",
       "expect_mail": true},
 
     {"do_assertions": true,
+      "title": "exclude_title_fail",
       "filter_type": "exclude",
       "filter_title": "TESTPR",
       "filter_body": "",
@@ -23,6 +25,7 @@
       "expect_mail": false},
 
     {"do_assertions": true,
+      "title": "exclude_body_fail",
       "filter_type": "exclude",
       "filter_title": "",
       "filter_body": "This is a test of a press release.",
@@ -34,6 +37,7 @@
       "expect_mail": false},
 
     {"do_assertions": true,
+      "title": "include_title_success",
       "filter_type": "include",
       "filter_title": "TESTPR",
       "filter_body": "",
@@ -45,6 +49,7 @@
       "expect_mail": true},
 
     {"do_assertions": true,
+      "title": "include_title_fail",
       "filter_type": "include",
       "filter_title": "Include this",
       "filter_body": "",
@@ -56,6 +61,7 @@
       "expect_mail": false},
 
     {"do_assertions": true,
+      "title": "include_body_success",
       "filter_type": "include",
       "filter_title": "",
       "filter_body": "This is a test of a press release.",
@@ -67,6 +73,7 @@
       "expect_mail": true},
 
     {"do_assertions": true,
+      "title": "include_body_fail",
       "filter_type": "include",
       "filter_title": "",
       "filter_body": "Include this",

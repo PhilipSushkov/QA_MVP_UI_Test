@@ -285,8 +285,8 @@ public class PressReleaseEdit extends AbstractPageObject {
         //newsPageURL = newsPageURL.substring(0, newsPageURL.lastIndexOf("/")); // substring repetition needed to remove the -details section of URL
 
         // filling in mandatory date, time, and headline fields
-        findElement(dateInput).sendKeys(date);
         findElement(timeHHSelect).sendKeys(hour);
+        findElement(dateInput).sendKeys(date);
         findElement(timeMMSelect).sendKeys(minute);
         findElement(timeAMSelect).sendKeys(AMPM);
         findElement(headlineInput).sendKeys(headline);

@@ -202,13 +202,14 @@ public class MailingListUsers extends AbstractPageObject {
 
         try {
             wait.until(ExpectedConditions.visibilityOf(findElement(firstUserConfirmed)));
-            String userConfirmed = findElement(firstUserConfirmed).getText();
-            return userConfirmed.equals("True");
+            return findElement(firstUserConfirmed).getText().equals("True");
 
         } catch (ElementNotVisibleException e) {
             e.printStackTrace();
+        } catch (ElementNotFoundException e) {
+            e.printStackTrace();
         }
 
-        return null;
+        return false;
     }
 }
