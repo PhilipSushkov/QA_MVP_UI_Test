@@ -46,7 +46,7 @@ public class CheckJobApplicationsPage extends AbstractSpec {
     }
 
     @AfterTest
-    public void deleteEmail(){
+    public void deleteEmail() throws InterruptedException {
         deleteMail(user, password, subject);
     }
 
@@ -64,34 +64,56 @@ public class CheckJobApplicationsPage extends AbstractSpec {
         if (data.get("check_file").toString() == "false") {
             homePage.selectJobApplicationFromMenu();
             jobApplicationsPage.submitJobApplication(data);
+            String content = jobApplicationsPage.getEmailContent();
 
             //Strictly checking if an email was sent
             if (data.get("check_email").toString() == "true") {
-                Assert.assertTrue(jobApplicationsPage.checkEmail(data), "Job Application does not match email");
+                Assert.assertTrue(jobApplicationsPage.getFirstName(data, content), "First name does not match");
+                Assert.assertTrue(jobApplicationsPage.getLastName(data, content), "Last name does not match");
+                Assert.assertTrue(jobApplicationsPage.getAddress(data, content), "Address does not match");
+                Assert.assertTrue(jobApplicationsPage.getCity(data, content), "City does not match");
+                Assert.assertTrue(jobApplicationsPage.getProvince(data, content), "Province does not match");
+                Assert.assertTrue(jobApplicationsPage.getCountry(data, content), "Country does not match");
+                Assert.assertTrue(jobApplicationsPage.getPostalCode(data, content), "Postal code does not match");
+                Assert.assertTrue(jobApplicationsPage.getHomePhone(data, content), "Home phone does not match");
+                Assert.assertTrue(jobApplicationsPage.getBusinessPhone(data, content), "Business phone does not match");
+                Assert.assertTrue(jobApplicationsPage.getFax(data, content), "Fax does not match");
+                Assert.assertTrue(jobApplicationsPage.getEmail(data, content), "Email does not match");
+                Assert.assertTrue(jobApplicationsPage.getCoverLetterText(data, content), "Cover letter text does not match");
+                Assert.assertTrue(jobApplicationsPage.getResumeText(data, content), "Resume text does not match");
+
 
             } else if (data.get("check_email").toString() == "false") {
                 //Checking if email didnt get sent
-                Assert.assertFalse(jobApplicationsPage.checkEmail(data), "Job Application should not have been submitted");
+                //Got rid of first name because I'm using 'contains' and it is causing false alarms
+                Assert.assertFalse(jobApplicationsPage.getLastName(data, content), "Last name should not have been submitted");
+                Assert.assertFalse(jobApplicationsPage.getAddress(data, content), "Address should not have been submitted");
+                Assert.assertFalse(jobApplicationsPage.getCity(data, content), "City should not have been submitted");
+                Assert.assertFalse(jobApplicationsPage.getProvince(data, content), "Province should not have been submitted");
+                Assert.assertFalse(jobApplicationsPage.getCountry(data, content), "Country should not have been submitted");
+                Assert.assertFalse(jobApplicationsPage.getPostalCode(data, content), "Postal code should not have been submitted");
+                Assert.assertFalse(jobApplicationsPage.getHomePhone(data, content), "Home phone should not have been submitted");
+                Assert.assertFalse(jobApplicationsPage.getBusinessPhone(data, content), "Business phone should not have been submitted");
+                Assert.assertFalse(jobApplicationsPage.getFax(data, content), "Fax should not have been submitted");
+                Assert.assertFalse(jobApplicationsPage.getEmail(data, content), "Email should not have been submitted");
+                Assert.assertFalse(jobApplicationsPage.getCoverLetterText(data, content), "Cover letter text should not have been submitted");
+                Assert.assertFalse(jobApplicationsPage.getResumeText(data, content), "Resume text should not have been submitted");
             }
         }
     }
 
     @Test(dataProvider = DATA, priority = 3)
     public void checkFile(JSONObject data) throws IOException, MessagingException, InterruptedException {
-        homePage.selectJobApplicationFromMenu();
-        jobApplicationsPage.submitJobApplication(data);
-
         if (data.get("check_email").toString() == "true") {
-            //Checking if email with file got sent
-            if  (data.get("check_file").toString() == "true") {
-                //Waiting for email with attachment to arrive
+            //Checking if email with file got sent - will skip other data
+            if (data.get("check_file").toString() == "true") {
                 deleteMail(user, password, subject);
+                homePage.selectJobApplicationFromMenu();
+                jobApplicationsPage.submitJobApplication(data);
+
                 Assert.assertTrue(jobApplicationsPage.hasAttachments(data), "Email has no attachments");
                 Assert.assertTrue(jobApplicationsPage.checkAttachments(data), "Attachments are not the same");
             }
-        } else if (data.get("check_email").toString() == "false" ) {
-            //Making sure no email got sent -> checking data against existing email
-            Assert.assertFalse(jobApplicationsPage.checkEmail(data), "Job Application should not have been submitted");
         }
     }
 

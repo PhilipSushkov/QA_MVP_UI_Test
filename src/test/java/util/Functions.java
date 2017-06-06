@@ -284,7 +284,8 @@ public class Functions {
     public static Message getSpecificMail(String user, String password, String subjectID) throws InterruptedException {
         Properties props = System.getProperties();
         props.setProperty("mail.store.protocol", "gimap");
-        Thread.sleep(3000);
+        //Long wait time is needed for emails with files
+        Thread.sleep(10000);
 
         try {
             Session session = Session.getDefaultInstance(props, null);
@@ -310,7 +311,7 @@ public class Functions {
         return null;
     }
 
-    public static void deleteMail(String user, String password, String subjectID) {
+    public static void deleteMail(String user, String password, String subjectID) throws InterruptedException {
         Properties props = System.getProperties();
         props.setProperty("mail.store.protocol", "gimap");
 
@@ -336,7 +337,6 @@ public class Functions {
         }
 
     }
-
 
     public static void cleanTextFields(List<WebElement> fields) {
         for (WebElement e : fields) {

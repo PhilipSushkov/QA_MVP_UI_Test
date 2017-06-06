@@ -60,29 +60,93 @@ public class JobApplicationsPage extends AbstractPageObject {
 
         return sMessage;
     }
+/*
+Getting content from non- MimeType email
+*/
 
-    public boolean checkEmail(JSONObject data) throws IOException, MessagingException, InterruptedException {
-        String content = (getSpecificMail("test@q4websystems.com", "testing!", "Job Application for position").getContent()).toString();
-
-        //Return true if content contains all of the items below - ASSERTION FOR EACH ONE?
-        return (
-                content.contains(data.get("first_name").toString()) &&
-                content.contains(data.get("last_name").toString()) &&
-                content.contains(data.get("address").toString()) &&
-                content.contains(data.get("city").toString()) &&
-                content.contains(data.get("province").toString()) &&
-                content.contains(data.get("country").toString()) &&
-                content.contains(data.get("postal_code").toString())&&
-                content.contains(data.get("home_phone").toString()) &&
-                content.contains(data.get("business_phone").toString()) &&
-                content.contains(data.get("fax").toString()) &&
-                content.contains(data.get("email").toString()) &&
-                content.contains(data.get("coverletter_text").toString()) &&
-                content.contains(data.get("resume_text").toString())
-                );
+    public String getEmailContent() throws InterruptedException, IOException, MessagingException {
+        return (getSpecificMail("test@q4websystems.com", "testing!", "Job Application for position").getContent()).toString();
     }
 
+    public boolean getFirstName(JSONObject data, String content){
+        if(content.contains(data.get("first_name").toString()))
+            return true;
+        return false;
+    }
 
+    public boolean getLastName(JSONObject data, String content){
+        if(content.contains(data.get("last_name").toString()))
+            return true;
+        return false;
+    }
+
+    public boolean getAddress(JSONObject data, String content){
+        if(content.contains(data.get("address").toString()))
+            return true;
+        return false;
+    }
+
+    public boolean getCity(JSONObject data, String content){
+        if(content.contains(data.get("city").toString()))
+            return true;
+        return false;
+    }
+
+    public boolean getProvince(JSONObject data, String content){
+        if(content.contains(data.get("province").toString()))
+            return true;
+        return false;
+    }
+
+    public boolean getCountry(JSONObject data, String content){
+        if(content.contains(data.get("province").toString()))
+            return true;
+        return false;
+    }
+
+    public boolean getPostalCode(JSONObject data, String content){
+        if(content.contains(data.get("postal_code").toString()))
+            return true;
+        return false;
+    }
+
+    public boolean getHomePhone(JSONObject data, String content){
+        if(content.contains(data.get("home_phone").toString()))
+            return true;
+        return false;
+    }
+
+    public boolean getBusinessPhone(JSONObject data, String content){
+        if(content.contains(data.get("business_phone").toString()))
+            return true;
+        return false;
+    }
+
+    public boolean getFax(JSONObject data, String content){
+        if(content.contains(data.get("fax").toString()))
+            return true;
+        return false;
+    }
+
+    public boolean getEmail(JSONObject data, String content){
+        if(content.contains(data.get("email").toString()))
+            return true;
+        return false;
+    }
+
+    public boolean getCoverLetterText(JSONObject data, String content){
+        if(content.contains(data.get("coverletter_text").toString()))
+            return true;
+        return false;
+    }
+
+    public boolean getResumeText(JSONObject data, String content){
+        if(content.contains(data.get("resume_text").toString()))
+            return true;
+        return false;
+    }
+
+    //Email with attachment is a MimeType - one email is composed of many parts so iterating through message to find the attachment
     public boolean checkAttachments(JSONObject data) throws IOException, MessagingException, InterruptedException {
         Message msg = getSpecificMail("test@q4websystems.com", "testing!", "Job Application for position");
 
@@ -142,18 +206,26 @@ public class JobApplicationsPage extends AbstractPageObject {
         return findElement(applicationsHeader).isDisplayed();
     }
 
+    //Getting system message based on if the email is submitted of not
     public WebElement getSysMessage(JSONObject data) {
         WebElement element = null;
 
         try {
-            By sysMessage = By.xpath(data.get("expected_path").toString());
-            element = findElement(sysMessage);
+            if (data.get("check_email").toString() == "true"){
+                By sysMessage = By.xpath("//div[@class= 'ModuleInnerContainer']");
+                element = findElement(sysMessage);
+                return element;
+            } else if (data.get("check_email").toString() == "false"){
+                By sysMessage = By.xpath("//div[contains(@id,'validationsummary')]");
+                element = findElement(sysMessage);
+                return element;
+            }
         } catch (ElementNotFoundException e1) {
         } catch (ElementNotVisibleException e2) {
         } catch (TimeoutException e3) {
         }
 
-        return element;
+        return null;
     }
 
     public String getFilePath(JSONObject data){
