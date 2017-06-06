@@ -26,13 +26,13 @@ import util.LocalDriverManager;
 
 public class CheckCrawlingSite {
     private static CrawlingSite crawlingSite;
-    private static String sPathToFile, sDataSiteJson, sDataModuleJson, sSiteVersion;
+    private static String sPathToFile, sDataSiteJson, sDataSiteJson2, sDataModuleJson, sSiteVersion;
     private static JSONParser parser;
 
     private static final int NUM_THREADS = 3;
     private static final String PATHTO_PUBLICSITE_PROP = "PublicSite/PublicSiteMap.properties";
     public static Properties propUIPublicSite;
-    private static final String SITE_DATA="siteData", MODULE_DATA="moduleData";
+    private static final String SITE_DATA="siteData", SITE_DATA_2="siteData2", MODULE_DATA="moduleData";
 
 
     @BeforeTest
@@ -41,30 +41,31 @@ public class CheckCrawlingSite {
         sSiteVersion = propUIPublicSite.getProperty("siteVersion");
         sPathToFile = System.getProperty("user.dir") + propUIPublicSite.getProperty("dataPath_LiveSite");
         sDataSiteJson = propUIPublicSite.getProperty("json_SiteData");
+        sDataSiteJson2 = propUIPublicSite.getProperty("json_SiteData2");
         sDataModuleJson = propUIPublicSite.getProperty("json_ModuleData");
 
         parser = new JSONParser();
     }
 
-    @Test(dataProvider=SITE_DATA, threadPoolSize=NUM_THREADS, priority=1, enabled=false)
+    @Test(dataProvider=SITE_DATA, threadPoolSize=NUM_THREADS, priority=1, enabled=true)
     public void checkSiteVersion(String site) throws Exception {
         crawlingSite = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile);
         Assert.assertEquals(crawlingSite.getSiteVersion(), sSiteVersion, "Site Version number is not correct for " + site);
     }
 
-    @Test(dataProvider=SITE_DATA, threadPoolSize=NUM_THREADS, priority=2, enabled=true)
+    @Test(dataProvider=SITE_DATA, threadPoolSize=NUM_THREADS, priority=2, enabled=false)
     public void crawlSiteMap(String site) throws Exception {
         crawlingSite = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile);
         Assert.assertTrue(crawlingSite.getSiteMap(), "sitemap.ashx file doesn't exist for " + site);
     }
 
-    @Test(dataProvider=SITE_DATA, threadPoolSize=NUM_THREADS, priority=3, enabled=true)
+    @Test(dataProvider=SITE_DATA, threadPoolSize=NUM_THREADS, priority=3, enabled=false)
     public void crawlSiteModule(String site) throws Exception {
         crawlingSite = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile);
         Assert.assertTrue(crawlingSite.mapSiteModule(sDataModuleJson), "Mapping Site-Modules isn't done properly " + site);
     }
 
-    @Test(dataProvider=SITE_DATA, threadPoolSize=NUM_THREADS, priority=4, enabled=true)
+    @Test(dataProvider=SITE_DATA, threadPoolSize=NUM_THREADS, priority=4, enabled=false)
     public void checkSiteModule(String site) throws Exception {
         crawlingSite = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile);
         Assert.assertTrue(crawlingSite.getSiteModule(), "Some Modules on the site didn't find " + site);
@@ -110,6 +111,37 @@ public class CheckCrawlingSite {
 
             for (Iterator<String> iterator = siteData.iterator(); iterator.hasNext();) {
                 zoom.add(iterator.next());
+            }
+
+            Object[][] newSites = new Object[zoom.size()][1];
+            for (int i = 0; i < zoom.size(); i++) {
+                newSites[i][0] = zoom.get(i);
+            }
+
+            return newSites;
+
+        }  catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    @DataProvider(name=SITE_DATA_2, parallel=true)
+    public Object[][] siteData2() {
+
+        try {
+            //JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataSiteJson2));
+            JSONArray jsonArray = (JSONArray) parser.parse(new FileReader(sPathToFile + sDataSiteJson2));
+            ArrayList<String> zoom = new ArrayList();
+
+            for (Iterator<JSONObject> iterator = jsonArray.iterator(); iterator.hasNext();) {
+                JSONObject jsonObject = iterator.next();
+                zoom.add(jsonObject.get("Site").toString());
             }
 
             Object[][] newSites = new Object[zoom.size()][1];

@@ -5,6 +5,8 @@ package util;
  */
 
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriverService;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -28,9 +30,26 @@ public class LocalDriverFactory {
         caps.setCapability(PhantomJSDriverService.PHANTOMJS_CLI_ARGS, phantomArgs);
         phDriver = new PhantomJSDriver(caps);
         phDriver.manage().timeouts().implicitlyWait(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
-        phDriver.manage().timeouts().pageLoadTimeout(20, TimeUnit.SECONDS); //Increased to 20 to perhaps reduce timeouts?
+        phDriver.manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS); //Increased to 20 to perhaps reduce timeouts?
 
         return phDriver;
+
+        /*
+        WebDriver phDriver;
+
+        DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("incognito");
+        options.addArguments("no-sandbox");
+        capabilities.setCapability(ChromeOptions.CAPABILITY, options);
+        phDriver = new ChromeDriver(capabilities);
+
+        phDriver.manage().timeouts().implicitlyWait(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
+        phDriver.manage().timeouts().pageLoadTimeout(40, TimeUnit.SECONDS); //Increased to 20 to perhaps reduce timeouts?
+
+        return phDriver;
+        */
+
     }
 
 }
