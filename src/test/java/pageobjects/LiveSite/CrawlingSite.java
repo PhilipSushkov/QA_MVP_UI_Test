@@ -5,10 +5,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.openqa.selenium.By;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import util.Functions;
 
 import java.io.FileNotFoundException;
@@ -40,7 +37,22 @@ public class CrawlingSite {
 
     public String getSiteVersion() throws Exception {
         String sSiteFull = Functions.UrlAddSlash(sSite, sSlash, sHttp);
+        String sQ4VersionCookie = "OWIqUfIhZwzPsQJHk0b1p9hkEVKdGTHjsBTbkErfFtwnl6b9OYvCSc/IzocOqfxDnNG7r/3D6SZiSThscAsa00PE0U5B9F97h+3tjuoZ2iI=";
+
+        //phDriver.get(sSiteFull);
+
+        //Cookie cookie = new Cookie.Builder("Q4VersionCookie", "OWIqUfIhZwzPsQJHk0b1p9hkEVKdGTHjsBTbkErfFtwnl6b9OYvCSc/IzocOqfxDnNG7r/3D6SZiSThscAsa00PE0U5B9F97h+3tjuoZ2iI=").domain(sSite).build();
+        //phDriver.manage().addCookie(cookie);
+
         phDriver.get(sSiteFull);
+
+        JavascriptExecutor js = (JavascriptExecutor) phDriver;
+        //js.executeScript("document.cookie = \"Q4VersionCookie=OWIqUfIhZwzPsQJHk0b1p9hkEVKdGTHjsBTbkErfFtwnl6b9OYvCSc/IzocOqfxDnNG7r/3D6SZiSThscAsa00PE0U5B9F97h+3tjuoZ2iI=;domain="+sSite+"\"");
+        js.executeScript("javascript:function createCookie(name,value,days) { var expires = \"\"; if (days) { var date = new Date(); date.setTime(date.getTime() + (days*24*60*60*1000)); expires = \"; expires=\" + date.toUTCString(); } document.cookie = name + \"=\" + value + expires + \"; path=/\"; } var q4VersionCookie = \""+sQ4VersionCookie+"\"; if (q4VersionCookie != null) createCookie(\"Q4VersionCookie\", encodeURIComponent(q4VersionCookie), 1); location.reload();");
+
+        phDriver.navigate().refresh();
+
+        //System.out.println(phDriver.manage().getCookies().toString());
 
         String sVersion = Functions.GetVersion(phDriver);
         saveSiteVersion(sVersion);
