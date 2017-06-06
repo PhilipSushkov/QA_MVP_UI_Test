@@ -1,15 +1,13 @@
 package pageobjects.SiteAdmin.EmployeeList;
 
-import com.jayway.jsonpath.JsonPath;
-import netscape.javascript.JSObject;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.Select;
 import pageobjects.AbstractPageObject;
+import util.Functions;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -17,7 +15,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 
-import static specs.AbstractSpec.desktopUrl;
 import static specs.AbstractSpec.propUISiteAdmin;
 
 /**
@@ -28,11 +25,10 @@ public class EmployeeAdd extends AbstractPageObject {
     private static By lastNameInput, jobTitleInput, phoneInput, extensionInput;
     private static By cellPhoneInput, locationInput;
     private static By saveBtn, cancelBtn, deleteBtn, addNewLink, activeChk;
-    private static By workflowStateSpan, commentsTxt, successMsg, currentContentSpan;
-    private static String sPathToFile, sFileJson;
+    private static String sPathToFile, sFileJson, sFileJsonData;
     private static JSONParser parser;
     private static final long DEFAULT_PAUSE = 2500;
-    private final String PAGE_NAME="Employee List", EMPLOYEE_NAME = "Bob";
+    private final String PAGE_NAME="Employee List";
 
     public EmployeeAdd(WebDriver driver) {
         super(driver);
@@ -53,15 +49,12 @@ public class EmployeeAdd extends AbstractPageObject {
         cancelBtn = By.xpath(propUISiteAdmin.getProperty("btn_Cancel"));
         deleteBtn = By.xpath(propUISiteAdmin.getProperty("btn_Delete"));
         addNewLink = By.xpath(propUISiteAdmin.getProperty("input_AddNew"));
-        workflowStateSpan = By.xpath(propUISiteAdmin.getProperty("select_WorkflowState"));
-        commentsTxt = By.xpath(propUISiteAdmin.getProperty("txtarea_Comments"));
-        successMsg = By.xpath(propUISiteAdmin.getProperty("msg_Success"));
-        currentContentSpan = By.xpath(propUISiteAdmin.getProperty("span_CurrentContent"));
 
         parser = new JSONParser();
 
         sPathToFile = System.getProperty("user.dir") + propUISiteAdmin.getProperty("dataPath_EmployeeList");
         sFileJson = propUISiteAdmin.getProperty("json_EmployeeList");
+        sFileJsonData = propUISiteAdmin.getProperty("json_EmployeeListData");
     }
 
     public String getTitle(){
@@ -78,6 +71,7 @@ public class EmployeeAdd extends AbstractPageObject {
         Boolean active;
         JSONObject jsonObj = new JSONObject();
         JSONObject jsonMain = new JSONObject();
+        int randNum = Functions.randInt(0, 99999);
 
         waitForElement(addNewLink);
         findElement(addNewLink).click();
@@ -90,7 +84,7 @@ public class EmployeeAdd extends AbstractPageObject {
             } catch (ParseException e) {
             }
 
-            email = data.get("email").toString();
+            email = randNum + data.get("email").toString();
             findElement(emailInput).sendKeys(email);
             jsonObj.put("email", email);
 
@@ -181,7 +175,7 @@ public class EmployeeAdd extends AbstractPageObject {
         } catch (IOException e) {
         }
 
-        email = data.get("email").toString();
+        email = jsonObj.get("email").toString();
 
         By editBtn = By.xpath("//td[(text()='" + email + "')]/parent::tr/td/input[contains(@id, 'btnEdit')]");
 
@@ -279,7 +273,7 @@ public class EmployeeAdd extends AbstractPageObject {
             }
             jsonObj.put("url_query", jsonURLQuery);
 
-            int ExternalFeedID = Integer.parseInt(jsonURLQuery.get("UserID").toString());
+            int EmployeeID = Integer.parseInt(jsonURLQuery.get("UserID").toString());
 
             try {
                 FileWriter writeFile = new FileWriter(sPathToFile + sFileJson);
@@ -292,7 +286,7 @@ public class EmployeeAdd extends AbstractPageObject {
             }
 
             System.out.println(name + ": "+PAGE_NAME+" has been checked");
-            return ExternalFeedID > 0;
+            return EmployeeID > 0;
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -314,7 +308,7 @@ public class EmployeeAdd extends AbstractPageObject {
         } catch (IOException e) {
         }
 
-        email = data.get("email").toString();
+        email = jsonObj.get("email").toString();
 
         By editBtn = By.xpath("//td[(text()='" + email + "')]/parent::tr/td/input[contains(@id, 'btnEdit')]");
 
@@ -393,7 +387,7 @@ public class EmployeeAdd extends AbstractPageObject {
         } catch (IOException e) {
         }
 
-        email = data.get("email").toString();
+        email = jsonObj.get("email").toString();
 
         By editBtn = By.xpath("//td[(text()='" + email + "')]/parent::tr/td/input[contains(@id, 'btnEdit')]");
 
@@ -425,7 +419,7 @@ public class EmployeeAdd extends AbstractPageObject {
             }
             jsonObj.put("url_query", jsonURLQuery);
 
-            int ExternalFeedID = Integer.parseInt(jsonURLQuery.get("UserID").toString());
+            int EmployeeID = Integer.parseInt(jsonURLQuery.get("UserID").toString());
 
             try {
                 FileWriter writeFile = new FileWriter(sPathToFile + sFileJson);
@@ -438,7 +432,7 @@ public class EmployeeAdd extends AbstractPageObject {
             }
 
             System.out.println(name + ": "+PAGE_NAME+" has been checked");
-            return ExternalFeedID > 0;
+            return EmployeeID > 0;
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -460,7 +454,7 @@ public class EmployeeAdd extends AbstractPageObject {
         } catch (IOException e) {
         }
 
-        email = data.get("email").toString();
+        email = jsonObj.get("email").toString();
 
         By editBtn = By.xpath("//td[(text()='" + email + "')]/parent::tr/td/input[contains(@id, 'btnEdit')]");
 

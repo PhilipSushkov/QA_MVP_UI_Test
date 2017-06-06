@@ -57,7 +57,7 @@ public class CheckEmployeeAdd extends AbstractSpec{
     }
 
     @Test(dataProvider=DATA, priority=1)
-    public void saveEmployeeList(JSONObject data) {
+    public void saveEmployeeList(JSONObject data) throws IOException {
         //Checking Employee List vs. Employee Edit
         String sEmployeeEmail = data.get(EMPLOYEE_EMAIL).toString();
         String expectedTitleList = "Employee List";

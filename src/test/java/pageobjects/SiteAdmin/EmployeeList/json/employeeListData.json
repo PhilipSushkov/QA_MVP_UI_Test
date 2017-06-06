@@ -2,7 +2,7 @@
   "employee_list": [
     {
       "do_assertions": true,
-      "email":"email1@email.com",
+      "email":"email1@yoohoo.com",
       "password": "q4pass1234!",
       "first_name": "Dog",
       "first_name_ch":"Mr. Doggo",
@@ -11,20 +11,20 @@
       "phone": "111-111-1111",
       "extension": "2234",
       "cell_phone": "412-234-1234",
-      "location":"Doggo",
+      "location":"Doggoland",
       "active":true
     },
     {
       "do_assertions": true,
-      "email":"email2@email.com",
+      "email":"email@hello.com",
       "password": "q4pass1234!",
-      "first_name": "Dog",
-      "last_name": "Dogson",
-      "job_title": "Good Boy",
+      "first_name": "Cat",
+      "last_name": "Catson",
+      "job_title": "Good Girl",
       "phone": "111-111-1111",
       "extension": "2234",
       "cell_phone": "412-234-1234",
-      "location":"Doggo",
+      "location":"Catland",
       "active":true,
       "active_ch": false
     }
