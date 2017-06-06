@@ -36,25 +36,42 @@ public class CrawlingSite {
     }
 
     public String getSiteVersion() throws Exception {
+        String sVersion = "Not Defined";
         String sSiteFull = Functions.UrlAddSlash(sSite, sSlash, sHttp);
-        String sQ4VersionCookie = "OWIqUfIhZwzPsQJHk0b1p9hkEVKdGTHjsBTbkErfFtwnl6b9OYvCSc/IzocOqfxDnNG7r/3D6SZiSThscAsa00PE0U5B9F97h+3tjuoZ2iI=";
 
-        //phDriver.get(sSiteFull);
+        try {
+            phDriver.get(sSiteFull);
+            sVersion = Functions.GetVersion(phDriver);
+        } catch (TimeoutException e) {
+            return sVersion;
+        } catch (WebDriverException e) {
+            return sVersion;
+        }
 
-        //Cookie cookie = new Cookie.Builder("Q4VersionCookie", "OWIqUfIhZwzPsQJHk0b1p9hkEVKdGTHjsBTbkErfFtwnl6b9OYvCSc/IzocOqfxDnNG7r/3D6SZiSThscAsa00PE0U5B9F97h+3tjuoZ2iI=").domain(sSite).build();
-        //phDriver.manage().addCookie(cookie);
+        System.out.println(sSite + ": " + sVersion);
+        saveSiteVersion(sVersion);
+        return sVersion;
+    }
 
-        phDriver.get(sSiteFull);
+    public String getSiteVersionCookie(String sCookie) throws Exception {
+        String sVersion = "Not Defined";
+        String sSiteFull = Functions.UrlAddSlash(sSite, sSlash, sHttp);
 
-        JavascriptExecutor js = (JavascriptExecutor) phDriver;
-        //js.executeScript("document.cookie = \"Q4VersionCookie=OWIqUfIhZwzPsQJHk0b1p9hkEVKdGTHjsBTbkErfFtwnl6b9OYvCSc/IzocOqfxDnNG7r/3D6SZiSThscAsa00PE0U5B9F97h+3tjuoZ2iI=;domain="+sSite+"\"");
-        js.executeScript("javascript:function createCookie(name,value,days) { var expires = \"\"; if (days) { var date = new Date(); date.setTime(date.getTime() + (days*24*60*60*1000)); expires = \"; expires=\" + date.toUTCString(); } document.cookie = name + \"=\" + value + expires + \"; path=/\"; } var q4VersionCookie = \""+sQ4VersionCookie+"\"; if (q4VersionCookie != null) createCookie(\"Q4VersionCookie\", encodeURIComponent(q4VersionCookie), 1); location.reload();");
+        try {
+            phDriver.get(sSiteFull);
+            JavascriptExecutor js = (JavascriptExecutor) phDriver;
+            js.executeScript("javascript:function createCookie(name,value,days) { var expires = \"\"; if (days) { var date = new Date(); date.setTime(date.getTime() + (days*24*60*60*1000)); expires = \"; expires=\" + date.toUTCString(); } document.cookie = name + \"=\" + value + expires + \"; path=/\"; } var q4VersionCookie = \""+sCookie+"\"; if (q4VersionCookie != null) createCookie(\"Q4VersionCookie\", encodeURIComponent(q4VersionCookie), 1); location.reload();");
+            Thread.sleep(DEFAULT_PAUSE);
+            phDriver.navigate().refresh();
+            sVersion = Functions.GetVersion(phDriver);
+        } catch (TimeoutException e) {
+            return sVersion;
+        } catch (WebDriverException e) {
+            return sVersion;
+        }
 
-        phDriver.navigate().refresh();
+        System.out.println(sSite + ": " + sVersion);
 
-        //System.out.println(phDriver.manage().getCookies().toString());
-
-        String sVersion = Functions.GetVersion(phDriver);
         saveSiteVersion(sVersion);
         return sVersion;
     }

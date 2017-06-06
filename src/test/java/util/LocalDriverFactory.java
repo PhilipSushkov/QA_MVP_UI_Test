@@ -18,37 +18,42 @@ import java.util.logging.Logger;
 public class LocalDriverFactory {
     public static final long DEFAULT_TIMEOUT = 5L;
 
-    public static WebDriver createInstance() {
+    public static WebDriver createInstance(String browserName) {
+        WebDriver phDriver = null;
 
-        Logger.getLogger(PhantomJSDriverService.class.getName()).setLevel(Level.OFF);
+        switch (browserName) {
+            case "chrome":
 
-        WebDriver phDriver;
+                DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+                ChromeOptions options = new ChromeOptions();
+                options.addArguments("incognito");
+                options.addArguments("no-sandbox");
+                capabilities.setCapability(ChromeOptions.CAPABILITY, options);
+                phDriver = new ChromeDriver(capabilities);
 
-        DesiredCapabilities caps = new DesiredCapabilities();
-        String[] phantomArgs = new  String[] {"--web-security=no", "--ignore-ssl-errors=yes", "--webdriver-loglevel=NONE"};
-        caps.setJavascriptEnabled(true);
-        caps.setCapability(PhantomJSDriverService.PHANTOMJS_CLI_ARGS, phantomArgs);
-        phDriver = new PhantomJSDriver(caps);
-        phDriver.manage().timeouts().implicitlyWait(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
-        phDriver.manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS); //Increased to 20 to perhaps reduce timeouts?
+                phDriver.manage().timeouts().implicitlyWait(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
+                phDriver.manage().timeouts().pageLoadTimeout(45, TimeUnit.SECONDS); //Increased to 20 to perhaps reduce timeouts?
 
-        return phDriver;
+                return phDriver;
 
-        /*
-        WebDriver phDriver;
+            case "phantom":
 
-        DesiredCapabilities capabilities = DesiredCapabilities.chrome();
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("incognito");
-        options.addArguments("no-sandbox");
-        capabilities.setCapability(ChromeOptions.CAPABILITY, options);
-        phDriver = new ChromeDriver(capabilities);
+                Logger.getLogger(PhantomJSDriverService.class.getName()).setLevel(Level.OFF);
 
-        phDriver.manage().timeouts().implicitlyWait(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
-        phDriver.manage().timeouts().pageLoadTimeout(40, TimeUnit.SECONDS); //Increased to 20 to perhaps reduce timeouts?
+                DesiredCapabilities caps = new DesiredCapabilities();
+                String[] phantomArgs = new  String[] {"--web-security=no", "--ignore-ssl-errors=yes", "--webdriver-loglevel=NONE"};
+                caps.setJavascriptEnabled(true);
+                caps.setCapability(PhantomJSDriverService.PHANTOMJS_CLI_ARGS, phantomArgs);
+                phDriver = new PhantomJSDriver(caps);
 
-        return phDriver;
-        */
+                phDriver.manage().timeouts().implicitlyWait(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
+                phDriver.manage().timeouts().pageLoadTimeout(45, TimeUnit.SECONDS); //Increased to 20 to perhaps reduce timeouts?
+
+                return phDriver;
+
+            default:
+                return phDriver;
+        }
 
     }
 
