@@ -32,7 +32,7 @@ public class LocalDriverFactory {
                 phDriver = new ChromeDriver(capabilities);
 
                 phDriver.manage().timeouts().implicitlyWait(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
-                phDriver.manage().timeouts().pageLoadTimeout(90, TimeUnit.SECONDS); //Increased to 20 to perhaps reduce timeouts?
+                phDriver.manage().timeouts().pageLoadTimeout(45, TimeUnit.SECONDS); //Increased to 20 to perhaps reduce timeouts?
 
                 return phDriver;
 
@@ -47,7 +47,7 @@ public class LocalDriverFactory {
                 phDriver = new PhantomJSDriver(caps);
 
                 phDriver.manage().timeouts().implicitlyWait(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
-                phDriver.manage().timeouts().pageLoadTimeout(90, TimeUnit.SECONDS); //Increased to 20 to perhaps reduce timeouts?
+                phDriver.manage().timeouts().pageLoadTimeout(45, TimeUnit.SECONDS); //Increased to 20 to perhaps reduce timeouts?
 
                 return phDriver;
 
