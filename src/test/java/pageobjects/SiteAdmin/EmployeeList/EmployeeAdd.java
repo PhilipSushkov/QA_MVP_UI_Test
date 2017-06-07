@@ -28,7 +28,7 @@ public class EmployeeAdd extends AbstractPageObject {
     private static String sPathToFile, sFileJson, sFileJsonData;
     private static JSONParser parser;
     private static final long DEFAULT_PAUSE = 2500;
-    private final String PAGE_NAME="Employee List";
+    private final String PAGE_NAME="Employee";
 
     public EmployeeAdd(WebDriver driver) {
         super(driver);
