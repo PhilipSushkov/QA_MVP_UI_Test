@@ -1,5 +1,5 @@
 {
-  "employee_list": [
+  "employee": [
     {
       "do_assertions": true,
       "email":"email1@yoohoo.com",
