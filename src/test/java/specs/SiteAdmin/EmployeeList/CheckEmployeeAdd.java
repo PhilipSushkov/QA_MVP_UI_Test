@@ -23,6 +23,7 @@ import java.util.ArrayList;
 /**
  * Created by andyp on 2017-05-29.
  */
+
 public class CheckEmployeeAdd extends AbstractSpec{
 
     private static By siteAdminMenuButton, employeeListMenuItem;

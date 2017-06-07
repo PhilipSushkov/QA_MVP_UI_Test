@@ -15,8 +15,6 @@ import specs.AbstractSpec;
  */
 public class CheckEventsPage extends AbstractSpec {
 
-    private final String Q4WebVersionNumber = "4.3.0.63";
-
     //// WHEN ADDING A TEST TO THIS CLASS, ADD A ENTRY TO IT IN CheckSitePr.java \\\\
 
 
