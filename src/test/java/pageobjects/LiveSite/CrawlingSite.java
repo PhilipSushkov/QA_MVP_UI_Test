@@ -41,11 +41,12 @@ public class CrawlingSite {
 
         try {
             phDriver.get(sSiteFull);
+            Thread.sleep(DEFAULT_PAUSE);
             sVersion = Functions.GetVersion(phDriver);
         } catch (TimeoutException e) {
-            return sVersion;
+            return "TimeoutException";
         } catch (WebDriverException e) {
-            return sVersion;
+            return "Not Defined";
         }
 
         System.out.println(sSite + ": " + sVersion);
@@ -65,9 +66,9 @@ public class CrawlingSite {
             phDriver.navigate().refresh();
             sVersion = Functions.GetVersion(phDriver);
         } catch (TimeoutException e) {
-            return sVersion;
+            return "TimeoutException";
         } catch (WebDriverException e) {
-            return sVersion;
+            return "Not Defined";
         }
 
         System.out.println(sSite + ": " + sVersion);

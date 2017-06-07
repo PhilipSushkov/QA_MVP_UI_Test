@@ -31,8 +31,7 @@ public class CheckCrawlingSite {
     private static CrawlingSite crawlingSite;
     private static String sPathToFile, sDataSiteJson, sDataModuleJson;
     private static String sSiteVersion, sSiteVersionCookie, sCookie;
-    private static String sDataSiteJson_notLive, sDataSiteJson_0, sDataSiteJson_1, sDataSiteJson_2, sDataSiteJson_3;
-    private static String sDataSiteJson_4, sDataSiteJson_5, sDataSiteJson_6, sDataSiteJson_7;
+    private static String sDataSiteJson_notLive, sDataSiteJson_n;
     private static JSONParser parser;
 
     private static final int NUM_THREADS = 3;
@@ -51,52 +50,44 @@ public class CheckCrawlingSite {
         sCookie = propUIPublicSite.getProperty("versionCookie");
         sDataSiteJson = propUIPublicSite.getProperty("json_SiteData");
         sDataSiteJson_notLive = propUIPublicSite.getProperty("json_SiteData_notLive");
-
-        sDataSiteJson_0 = propUIPublicSite.getProperty("json_SiteData_0");
-        sDataSiteJson_1 = propUIPublicSite.getProperty("json_SiteData_1");
-        sDataSiteJson_2 = propUIPublicSite.getProperty("json_SiteData_2");
-        sDataSiteJson_3 = propUIPublicSite.getProperty("json_SiteData_3");
-        sDataSiteJson_4 = propUIPublicSite.getProperty("json_SiteData_4");
-        sDataSiteJson_5 = propUIPublicSite.getProperty("json_SiteData_5");
-        sDataSiteJson_6 = propUIPublicSite.getProperty("json_SiteData_6");
-        sDataSiteJson_7 = propUIPublicSite.getProperty("json_SiteData_7");
-
         sDataModuleJson = propUIPublicSite.getProperty("json_ModuleData");
 
         parser = new JSONParser();
         extent = ExtentManager.GetExtent();
         cookieExtent = CookieExtentManager.GetExtent();
+
+        sDataSiteJson_n = propUIPublicSite.getProperty("json_SiteData_7");
     }
 
-    @Test(dataProvider=SITE_DATA_2, threadPoolSize=NUM_THREADS, priority=1, enabled=false)
+    @Test(dataProvider=SITE_DATA_2, threadPoolSize=NUM_THREADS, priority=1, enabled=true)
     public void checkSiteVersion(String site) throws Exception {
         //crawlingSite = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile);
-        //Assert.assertEquals(crawlingSite.getSiteVersion(), sSiteVersion, "Site Version number is not correct for " + site);
-
+        String sVersionActual = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getSiteVersion();
         ExtentTest test = extent.createTest("Check version result for " + site);
 
-        String sVersionActual = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getSiteVersion();
         if (sVersionActual.equals(sSiteVersion)) {
             test.log(Status.PASS, "Site Version number is valid: " + sSiteVersion);
         } else {
             test.log(Status.FAIL, "Actual Version number is wrong: " + sVersionActual + ". Supposed to be: " + sSiteVersion);
         }
 
+        Assert.assertEquals(sVersionActual, sSiteVersion, "Site Version number is not correct for " + site);
+
     }
 
-    @Test(dataProvider=SITE_DATA_2, threadPoolSize=NUM_THREADS, priority=2, enabled=true)
+    @Test(dataProvider=SITE_DATA_2, threadPoolSize=NUM_THREADS, priority=2, enabled=false)
     public void checkSiteVersionCookie(String site) throws Exception {
         //crawlingSite = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile);
-        //Assert.assertEquals(crawlingSite.getSiteVersionCookie(sQ4VersionCookie), sSiteVersionCookie, "Site Cookie Version number is not correct for " + site);
-
+        String sVersionActual = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getSiteVersionCookie(sCookie);
         ExtentTest test = cookieExtent.createTest("Check Cookie version result for " + site);
 
-        String sVersionActual = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getSiteVersionCookie(sCookie);
         if (sVersionActual.equals(sSiteVersionCookie)) {
             test.log(Status.PASS, "Site Cookie Version number is valid: " + sSiteVersionCookie);
         } else {
             test.log(Status.FAIL, "Actual Version number is wrong: " + sVersionActual + ". Supposed to be: " + sSiteVersionCookie);
         }
+
+        Assert.assertEquals(sVersionActual, sSiteVersionCookie, "Site Cookie Version number is not correct for " + site);
 
     }
 
@@ -182,7 +173,7 @@ public class CheckCrawlingSite {
     public Object[][] siteData2() {
 
         try {
-            JSONArray jsonArray = (JSONArray) parser.parse(new FileReader(sPathToFile + sDataSiteJson_5));
+            JSONArray jsonArray = (JSONArray) parser.parse(new FileReader(sPathToFile + sDataSiteJson_n));
             ArrayList<String> zoom = new ArrayList();
 
             for (Iterator<JSONObject> iterator = jsonArray.iterator(); iterator.hasNext();) {
