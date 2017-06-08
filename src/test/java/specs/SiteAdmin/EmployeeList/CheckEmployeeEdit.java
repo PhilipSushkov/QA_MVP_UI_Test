@@ -34,7 +34,7 @@ public class CheckEmployeeEdit extends AbstractSpec {
     }
 
     @Test
-    public void checkExternalFeedEdit() throws Exception {
+    public void checkEmployeeListEdit() throws Exception {
         final String expectedTitle = "Employee Edit";
 
         Assert.assertNotNull(employeeListEdit.getUrl());
@@ -49,6 +49,7 @@ public class CheckEmployeeEdit extends AbstractSpec {
         Assert.assertNotNull(employeeListEdit.getExtensionInput(), "Extension field doesn't exist");
         Assert.assertNotNull(employeeListEdit.getCellPhoneInput(), "Cellphone field doesn't exist");
         Assert.assertNotNull(employeeListEdit.getLocationInput(), "Location field doesn't exist");
+        Assert.assertNotNull(employeeListEdit.getPhotoInput(), "Photo field doesn't exist");
         Assert.assertNotNull(employeeListEdit.getactiveChk(), "Active checkbox doesn't exist");
         Assert.assertNotNull(employeeListEdit.getSaveButton(), "Save Button doesn't exist");
     }

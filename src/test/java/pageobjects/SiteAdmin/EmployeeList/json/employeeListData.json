@@ -12,6 +12,7 @@
       "extension": "2234",
       "cell_phone": "412-234-1234",
       "location":"Doggoland",
+      "photo":"emmet.png",
       "active":true
     },
     {
@@ -25,6 +26,7 @@
       "extension": "2234",
       "cell_phone": "412-234-1234",
       "location":"Catland",
+      "photo":"book.jpg",
       "active":true,
       "active_ch": false
     }

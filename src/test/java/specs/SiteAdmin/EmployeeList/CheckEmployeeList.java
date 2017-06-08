@@ -42,7 +42,6 @@ public class CheckEmployeeList extends AbstractSpec{
         Assert.assertNotNull(employeeList.getUrl());
         Assert.assertEquals(expectedTitle, employeeList.getTitle(), "Actual Employee List page Title doesn't match to expected");
 
-        //System.out.println(externalFeedList.getExternalFeedListQuantity().toString());
         Assert.assertTrue(expectedQuantity <= employeeList.getEmployeeListQuantity(), "Actual Employee Quantity is less than expected: "+expectedQuantity);
 
     }
