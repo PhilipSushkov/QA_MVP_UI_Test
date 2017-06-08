@@ -18,7 +18,7 @@ import static specs.AbstractSpec.propUIEmailAdmin;
 
 public class MailingListUsers extends AbstractPageObject {
     private static By moduleTitle, grid, gridEmailAddress, dataGridPager, inputKeyword, selectAllLists, selectAllCategories;
-    private static By buttonSearch, linkExportList, linkSendToList, linkImportList, linkBulkDelete, linkLetterList;
+    private static By buttonSearch, linkExportList, linkSendToList, linkImportList, linkBulkDelete, linkLetterList, firstUserConfirmed;
     private final Integer columnsNumber = 5;
 
     public MailingListUsers(WebDriver driver) {
@@ -36,6 +36,7 @@ public class MailingListUsers extends AbstractPageObject {
         linkImportList = By.xpath(propUIEmailAdmin.getProperty("link_ImportList"));
         linkBulkDelete = By.xpath(propUIEmailAdmin.getProperty("link_BulkDelete"));
         linkLetterList = By.xpath(propUIEmailAdmin.getProperty("link_LetterList"));
+        firstUserConfirmed = By.xpath(propUIEmailAdmin.getProperty("first_UserConfirmed"));
     }
 
 
@@ -192,5 +193,23 @@ public class MailingListUsers extends AbstractPageObject {
         }
 
         return elements;
+    }
+
+    public Boolean userSubscribed(String email, String list) {
+        getAllListSelect().sendKeys(list);
+        getKeywordField().sendKeys(email);
+        getSearchButton().click();
+
+        try {
+            wait.until(ExpectedConditions.visibilityOf(findElement(firstUserConfirmed)));
+            return findElement(firstUserConfirmed).getText().equals("True");
+
+        } catch (ElementNotVisibleException e) {
+            e.printStackTrace();
+        } catch (ElementNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return false;
     }
 }

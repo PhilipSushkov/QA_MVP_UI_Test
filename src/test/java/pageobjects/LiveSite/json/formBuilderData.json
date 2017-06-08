@@ -21,5 +21,16 @@
       "comments": "This is a test comment",
       "expected_message": "First Name contains invalid texts.",
       "expect_success": false}
+
+    {"first_name": "",
+      "email": "",
+      "company": "",
+      "address": "",
+      "city": "",
+      "country": "",
+      "phone": "",
+      "comments": "",
+      "expected_message": "none",
+      "expect_success": false}
   ]
 }

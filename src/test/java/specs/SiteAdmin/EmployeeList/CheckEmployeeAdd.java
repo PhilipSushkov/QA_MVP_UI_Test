@@ -23,6 +23,7 @@ import java.util.ArrayList;
 /**
  * Created by andyp on 2017-05-29.
  */
+
 public class CheckEmployeeAdd extends AbstractSpec{
 
     private static By siteAdminMenuButton, employeeListMenuItem;
@@ -33,7 +34,7 @@ public class CheckEmployeeAdd extends AbstractSpec{
     private static String sPathToFile, sDataFileJson;
     private static JSONParser parser;
 
-    private final String DATA="getData", EMPLOYEE_EMAIL = "email", PAGE_NAME="Employee List";
+    private final String DATA="getData", EMPLOYEE_EMAIL = "email", PAGE_NAME="Employee";
 
     @BeforeTest
     public void setUp() throws Exception {
@@ -57,7 +58,7 @@ public class CheckEmployeeAdd extends AbstractSpec{
     }
 
     @Test(dataProvider=DATA, priority=1)
-    public void saveEmployeeList(JSONObject data) throws IOException {
+    public void saveEmployee(JSONObject data) throws IOException {
         //Checking Employee List vs. Employee Edit
         String sEmployeeEmail = data.get(EMPLOYEE_EMAIL).toString();
         String expectedTitleList = "Employee List";
@@ -68,26 +69,26 @@ public class CheckEmployeeAdd extends AbstractSpec{
     }
 
     @Test(dataProvider=DATA, priority=2)
-    public void checkEmployeeList(JSONObject data) {
+    public void checkEmployee(JSONObject data) {
         String sEmployeeEmail = data.get(EMPLOYEE_EMAIL).toString();
         Assert.assertTrue(employeeAdd.checkEmployeeList(data, sEmployeeEmail), "New "+PAGE_NAME+" doesn't fit to entry data (after Save)");
     }
 
     @Test(dataProvider=DATA, priority=3)
-    public void editEmployeeList(JSONObject data) throws Exception {
+    public void editEmployee(JSONObject data) throws Exception {
         String sEmployeeEmail = data.get(EMPLOYEE_EMAIL).toString();
 
         Assert.assertTrue(employeeAdd.editEmployeeList(data, sEmployeeEmail), PAGE_NAME+" didn't change properly (after Save)");
     }
 
     @Test(dataProvider=DATA, priority=4)
-    public void checkEmployeeListCh(JSONObject data) {
+    public void checkEmployeeCh(JSONObject data) {
         String sEmployeeEmail = data.get(EMPLOYEE_EMAIL).toString();
         Assert.assertTrue(employeeAdd.checkEmployeeListCh(data, sEmployeeEmail), "New "+PAGE_NAME+" doesn't fit to change data (after Edit)");
     }
 
     @Test(dataProvider=DATA, priority=5)
-    public void removeEmployeeList(JSONObject data) {
+    public void removeEmployee(JSONObject data) {
         String sEmployeeEmail = data.get(EMPLOYEE_EMAIL).toString();
         Assert.assertTrue(employeeAdd.removeEmployee(data, sEmployeeEmail), "New "+PAGE_NAME+" shouldn't be shown in "+PAGE_NAME+" List (after Delete)");
     }
@@ -97,7 +98,7 @@ public class CheckEmployeeAdd extends AbstractSpec{
 
         try {
             JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFileJson));
-            JSONArray jsonArray = (JSONArray) jsonObject.get("employee_list");
+            JSONArray jsonArray = (JSONArray) jsonObject.get("employee");
             ArrayList<Object> zoom = new ArrayList();
 
             for (int i = 0; i < jsonArray.size(); i++) {
@@ -125,5 +126,4 @@ public class CheckEmployeeAdd extends AbstractSpec{
         return null;
     }
 
-    //Save Employee
 }

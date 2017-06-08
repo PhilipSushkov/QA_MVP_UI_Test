@@ -16,7 +16,7 @@
     "coverletter_text": "Hire me",
     "resume_text": "Hello",
     "resume_file": "Resume.txt",
-    "resume_path": "/Users/andyp/Resume.txt",
+    "resume_path": "/Users/andyp/QA-WebCMS-Test/src/test/java/pageobjects/LiveSite/Resume.txt",
     "expected": "Your application has been submitted",
     "expected_path": "//div[@class= 'ModuleInnerContainer']",
     "check_email": true,
