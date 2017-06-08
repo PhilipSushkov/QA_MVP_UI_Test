@@ -1,7 +1,9 @@
 package pageobjects.ContentAdmin.FinancialReports;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import pageobjects.AbstractPageObject;
 
 import com.jayway.jsonpath.JsonPath;
@@ -24,7 +26,8 @@ import static specs.AbstractSpec.propUIContentAdmin;
  */
 
 public class FinancialReportAdd extends AbstractPageObject {
-    private static By moduleTitle;
+    private static By moduleTitle, reportYearSelect, reportTypeSelect, coverImageInput;
+    private static By filingDateInput, tagsInput, activeCheckbox, addNewRelatedDocLink, documentsTable;
     private static By activeChk, saveBtn, revertBtn, cancelBtn, deleteBtn, addNewLink, publishBtn;
     private static By workflowStateSpan, commentsTxt, successMsg, saveAndSubmitBtn, currentContentSpan;
     private static String sPathToFile, sFileJson;
@@ -35,6 +38,13 @@ public class FinancialReportAdd extends AbstractPageObject {
     public FinancialReportAdd(WebDriver driver) {
         super(driver);
         moduleTitle = By.xpath(propUIContentAdmin.getProperty("spanModule_Title"));
+        reportYearSelect = By.xpath(propUIContentAdmin.getProperty("select_ReportYear"));
+        reportTypeSelect = By.xpath(propUIContentAdmin.getProperty("select_ReportType"));
+        coverImageInput = By.xpath(propUIContentAdmin.getProperty("input_CoverImage"));
+        filingDateInput = By.xpath(propUIContentAdmin.getProperty("input_FilingDate"));
+        tagsInput = By.xpath(propUIContentAdmin.getProperty("input_Tags"));
+        addNewRelatedDocLink = By.xpath(propUIContentAdmin.getProperty("href_AddNewRelatedDoc"));
+        documentsTable = By.xpath(propUIContentAdmin.getProperty("table_Documents"));
         activeChk = By.xpath(propUIContentAdmin.getProperty("chk_Active"));
         saveBtn = By.xpath(propUIContentAdmin.getProperty("btn_Save"));
         cancelBtn = By.xpath(propUIContentAdmin.getProperty("btn_Cancel"));
@@ -50,8 +60,8 @@ public class FinancialReportAdd extends AbstractPageObject {
 
         parser = new JSONParser();
 
-        sPathToFile = System.getProperty("user.dir") + propUIContentAdmin.getProperty("dataPath_LookupList");
-        sFileJson = propUIContentAdmin.getProperty("json_Lookup");
+        sPathToFile = System.getProperty("user.dir") + propUIContentAdmin.getProperty("dataPath_FinancialReportList");
+        sFileJson = propUIContentAdmin.getProperty("json_FinancialReport");
     }
 
     public String getTitle() {
@@ -63,7 +73,7 @@ public class FinancialReportAdd extends AbstractPageObject {
     }
 
     public String saveFinancialReport(JSONObject data, String name) {
-        String lookup_type, lookup_text, lookup_value, additional_info;
+        String report_year, report_type, cover_image, filing_date, tags;
         Boolean active;
         JSONObject jsonObj = new JSONObject();
         JSONObject jsonMain = new JSONObject();
@@ -79,25 +89,29 @@ public class FinancialReportAdd extends AbstractPageObject {
             } catch (ParseException e) {
             }
 
-            lookup_type = data.get("lookup_type").toString();
-            findElement(lookupTypeField).clear();
-            findElement(lookupTypeField).sendKeys(lookup_type);
-            jsonObj.put("lookup_type", lookup_type);
+            report_year = data.get("report_year").toString();
+            findElement(reportYearSelect).sendKeys(report_year);
+            jsonObj.put("report_year", report_year);
 
-            lookup_text = data.get("lookup_text").toString();
-            findElement(lookupTextField).clear();
-            findElement(lookupTextField).sendKeys(lookup_text);
-            jsonObj.put("lookup_text", lookup_text);
+            report_type = data.get("report_type").toString();
+            findElement(reportTypeSelect).sendKeys(report_type);
+            jsonObj.put("report_type", report_type);
 
-            lookup_value = data.get("lookup_value").toString();
-            findElement(lookupValueField).clear();
-            findElement(lookupValueField).sendKeys(lookup_value);
-            jsonObj.put("lookup_value", lookup_value);
+            cover_image = data.get("cover_image").toString();
+            JavascriptExecutor js = (JavascriptExecutor) driver;
+            WebElement elemSrc =  driver.findElement(coverImageInput);
+            js.executeScript("arguments[0].setAttribute(arguments[1], arguments[2]);", elemSrc, "value", cover_image);
+            jsonObj.put("cover_image", cover_image);
 
-            additional_info = data.get("additional_info").toString();
-            findElement(additionalInfoField).clear();
-            findElement(additionalInfoField).sendKeys(additional_info);
-            jsonObj.put("additional_info", additional_info);
+            filing_date = data.get("filing_date").toString();
+            findElement(filingDateInput).clear();
+            findElement(filingDateInput).sendKeys(filing_date);
+            jsonObj.put("filing_date", filing_date);
+
+            tags = data.get("tags").toString();
+            findElement(tagsInput).clear();
+            findElement(tagsInput).sendKeys(tags);
+            jsonObj.put("tags", tags);
 
             // Save Active checkbox
             active = Boolean.parseBoolean(data.get("active").toString());
@@ -113,6 +127,14 @@ public class FinancialReportAdd extends AbstractPageObject {
                     findElement(activeChk).click();
                 }
             }
+
+            URL url = new URL(getUrl());
+            String[] params = url.getQuery().split("&");
+            JSONObject jsonURLQuery = new JSONObject();
+            for (String param:params) {
+                jsonURLQuery.put(param.split("=")[0], param.split("=")[1]);
+            }
+            jsonObj.put("url_query", jsonURLQuery);
 
             findElement(saveBtn).click();
             Thread.sleep(DEFAULT_PAUSE);

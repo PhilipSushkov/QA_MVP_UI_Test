@@ -43,8 +43,8 @@ public class CheckFinancialReportAdd extends AbstractSpec {
         dashboard = new Dashboard(driver);
         financialReportAdd = new FinancialReportAdd(driver);
 
-        sPathToFile = System.getProperty("user.dir") + propUISiteAdmin.getProperty("dataPath_FinancialReportList");
-        sDataFileJson = propUISiteAdmin.getProperty("json_FinancialReportData");
+        sPathToFile = System.getProperty("user.dir") + propUIContentAdmin.getProperty("dataPath_FinancialReportList");
+        sDataFileJson = propUIContentAdmin.getProperty("json_FinancialReportData");
 
         parser = new JSONParser();
 
@@ -57,7 +57,7 @@ public class CheckFinancialReportAdd extends AbstractSpec {
     }
 
     @Test(dataProvider=DATA, priority=1)
-    public void saveLookup(JSONObject data) {
+    public void saveFinancialReport(JSONObject data) {
         String sFinancialReportTitle;
         String sFinancialReportYear = data.get(FINANCIAL_REPORT_YEAR).toString();
         String sFinancialReportType = data.get(FINANCIAL_REPORT_TYPE).toString();
@@ -78,6 +78,7 @@ public class CheckFinancialReportAdd extends AbstractSpec {
     public Object[][] getData() {
 
         try {
+            System.out.println(sPathToFile + sDataFileJson);
             JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFileJson));
             JSONArray jsonArray = (JSONArray) jsonObject.get("financial_report");
             ArrayList<Object> zoom = new ArrayList();
