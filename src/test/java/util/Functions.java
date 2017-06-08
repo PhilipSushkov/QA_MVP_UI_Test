@@ -245,6 +245,12 @@ public class Functions {
 
         return path;
     }
+    
+    public static void cleanTextFields(List<WebElement> fields) {
+        for (WebElement e : fields) {
+            e.clear();
+        }
+    }
 
     public static Message getRecentMail(String user, String password, String subjectID) {
 
@@ -325,8 +331,12 @@ public class Functions {
 
         return null;
     }
-
+    
     public static void deleteMail(String user, String password, String subjectID) {
+
+        // Deletes email messages with a provided subject
+        // Email account must have POP/IMAP enabled
+
         Properties props = System.getProperties();
         props.setProperty("mail.store.protocol", "gimap");
 
@@ -349,14 +359,6 @@ public class Functions {
             e.printStackTrace();
         } catch (MessagingException e) {
             e.printStackTrace();
-        }
-
-    }
-
-
-    public static void cleanTextFields(List<WebElement> fields) {
-        for (WebElement e : fields) {
-            e.clear();
         }
     }
 }
