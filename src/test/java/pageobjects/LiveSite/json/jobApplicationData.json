@@ -3,7 +3,7 @@
     {
       "do_assertions": true,
       "test_name": "Checking if email gets sent - for sentEmail",
-      "first_name": "No attachment",
+      "first_name": "Helloya",
       "last_name": "Lastname 01",
       "address": "Street",
       "city": "City",

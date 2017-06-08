@@ -1,8 +1,5 @@
 package util;
 
-import com.sun.mail.gimap.GmailFolder;
-import com.sun.mail.gimap.GmailRawSearchTerm;
-import com.sun.mail.gimap.GmailStore;
 import org.apache.commons.io.FileUtils;
 import org.im4java.core.CompareCmd;
 import org.im4java.core.IMOperation;
@@ -21,6 +18,11 @@ import java.util.*;
 import java.util.Properties;
 
 import javax.mail.*;
+import javax.mail.search.SearchTerm;
+import javax.mail.search.SubjectTerm;
+import com.sun.mail.gimap.GmailFolder;
+import com.sun.mail.gimap.GmailRawSearchTerm;
+import com.sun.mail.gimap.GmailStore;
 
 /**
  * Created by philipsushkov on 2016-12-08.
@@ -241,6 +243,12 @@ public class Functions {
         return path;
     }
 
+    public static void cleanTextFields(List<WebElement> fields) {
+        for (WebElement e : fields) {
+            e.clear();
+        }
+    }
+
     public static Message getRecentMail(String user, String password, String subjectID) {
 
         // Gets the first email message whose subject contains subjectID
@@ -311,7 +319,40 @@ public class Functions {
         return null;
     }
 
+<<<<<<< HEAD
     public static void deleteMail(String user, String password, String subjectID) throws InterruptedException {
+=======
+    public static Message[] getMail(String user, String password, String subjectID) {
+
+        // Deletes email messages with a provided subject
+        // Email account must have POP/IMAP enabled
+
+        Properties props = System.getProperties();
+        props.setProperty("mail.store.protocol", "gimap");
+
+        try {
+            Session session = Session.getDefaultInstance(props, null);
+            GmailStore store = (GmailStore) session.getStore("gimap");
+            store.connect("imap.gmail.com", user, password);
+            GmailFolder inbox = (GmailFolder) store.getFolder("INBOX");
+            inbox.open(Folder.READ_ONLY);
+            return inbox.search(new SubjectTerm(subjectID));
+
+        } catch (NoSuchProviderException e) {
+            e.printStackTrace();
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public static void deleteMail(String user, String password, String subjectID) {
+
+        // Deletes email messages with a provided subject
+        // Email account must have POP/IMAP enabled
+
+>>>>>>> master
         Properties props = System.getProperties();
         props.setProperty("mail.store.protocol", "gimap");
 
@@ -335,6 +376,7 @@ public class Functions {
         } catch (MessagingException e) {
             e.printStackTrace();
         }
+<<<<<<< HEAD
 
     }
 
@@ -342,5 +384,7 @@ public class Functions {
         for (WebElement e : fields) {
             e.clear();
         }
+=======
+>>>>>>> master
     }
 }

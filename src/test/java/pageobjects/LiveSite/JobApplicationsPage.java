@@ -60,6 +60,7 @@ public class JobApplicationsPage extends AbstractPageObject {
 
         return sMessage;
     }
+
 /*
 Getting content from non- MimeType email
 */
