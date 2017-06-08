@@ -1,5 +1,6 @@
 package util;
 
+import com.applitools.shaded.eyessdk.javax.ws.rs.HEAD;
 import org.apache.commons.io.FileUtils;
 import org.im4java.core.CompareCmd;
 import org.im4java.core.IMOperation;
@@ -249,47 +250,9 @@ public class Functions {
         }
     }
 
-    public static Message getRecentMail(String user, String password, String subjectID) {
-
-        // Gets the first email message whose subject contains subjectID
-        // Use with javax.mail api
-
-        try {
-
-            Properties properties = new Properties();
-
-            properties.put("mail.pop3.host", "pop.gmail.com");
-            properties.put("mail.pop3.port", "995");
-            properties.put("mail.pop3.starttls.enable", "true");
-            Session emailSession = Session.getDefaultInstance(properties);
-
-            Store store = emailSession.getStore("pop3s");
-
-            store.connect("pop.gmail.com", user, password);
-
-            Folder emailFolder = store.getFolder("INBOX");
-            emailFolder.open(Folder.READ_ONLY);
-
-            Message[] messages = emailFolder.getMessages();
-
-            for (int i = 0; i < messages.length; i++) {
-                if (messages[i].getSubject().contains(subjectID)) {
-                    return messages[i];
-                }
-            }
-
-            return null;
-
-        } catch (NoSuchProviderException e) {
-            e.printStackTrace();
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
     public static Message getSpecificMail(String user, String password, String subjectID) throws InterruptedException {
+        //Use this one if the email in question has files
+
         Properties props = System.getProperties();
         props.setProperty("mail.store.protocol", "gimap");
         //Long wait time is needed for emails with files
@@ -319,12 +282,8 @@ public class Functions {
         return null;
     }
 
-<<<<<<< HEAD
-    public static void deleteMail(String user, String password, String subjectID) throws InterruptedException {
-=======
     public static Message[] getMail(String user, String password, String subjectID) {
 
-        // Deletes email messages with a provided subject
         // Email account must have POP/IMAP enabled
 
         Properties props = System.getProperties();
@@ -352,7 +311,6 @@ public class Functions {
         // Deletes email messages with a provided subject
         // Email account must have POP/IMAP enabled
 
->>>>>>> master
         Properties props = System.getProperties();
         props.setProperty("mail.store.protocol", "gimap");
 
@@ -376,15 +334,6 @@ public class Functions {
         } catch (MessagingException e) {
             e.printStackTrace();
         }
-<<<<<<< HEAD
 
-    }
-
-    public static void cleanTextFields(List<WebElement> fields) {
-        for (WebElement e : fields) {
-            e.clear();
-        }
-=======
->>>>>>> master
     }
 }

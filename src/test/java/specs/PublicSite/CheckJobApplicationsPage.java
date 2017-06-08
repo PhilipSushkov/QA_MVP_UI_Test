@@ -51,7 +51,7 @@ public class CheckJobApplicationsPage extends AbstractSpec {
     }
 
     @Test(dataProvider = DATA, priority = 1)
-    public void submitJobApplication(JSONObject data){
+    public void submitJobApplicationPr(JSONObject data){
         String sMessage = data.get("expected").toString();
 
         Assert.assertTrue(homePage.selectJobApplicationFromMenu().applicationPageDisplayed(), "Job Applications Page couldn't be opened");
@@ -59,7 +59,7 @@ public class CheckJobApplicationsPage extends AbstractSpec {
     }
 
     @Test(dataProvider = DATA, priority = 2)
-    public void checkEmail(JSONObject data) throws IOException, MessagingException, InterruptedException {
+    public void checkEmailPr(JSONObject data) throws IOException, MessagingException, InterruptedException {
         // Strictly checking for if email gets sent - no file attached
         if (data.get("check_file").toString() == "false") {
             homePage.selectJobApplicationFromMenu();
@@ -103,7 +103,7 @@ public class CheckJobApplicationsPage extends AbstractSpec {
     }
 
     @Test(dataProvider = DATA, priority = 3)
-    public void checkFile(JSONObject data) throws IOException, MessagingException, InterruptedException {
+    public void checkFilePr(JSONObject data) throws IOException, MessagingException, InterruptedException {
         if (data.get("check_email").toString() == "true") {
             //Checking if email with file got sent - will skip other data
             if (data.get("check_file").toString() == "true") {
