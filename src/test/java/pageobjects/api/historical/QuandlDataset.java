@@ -1,4 +1,4 @@
-package pageobjects.api;
+package pageobjects.api.historical;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;

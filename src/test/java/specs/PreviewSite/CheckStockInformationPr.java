@@ -9,13 +9,13 @@ import org.testng.annotations.Test;
 import pageobjects.LiveSite.HomePage;
 import pageobjects.LiveSite.StockInformationPage;
 import pageobjects.LoginPage.LoginPage;
-import pageobjects.api.QuandlConnectToApi;
-import pageobjects.api.QuandlDataset;
+import pageobjects.api.historical.HistoricalStockQuote;
+import pageobjects.api.historical.Q4Dataset;
+import pageobjects.api.historical.QuandlConnectToApi;
+import pageobjects.api.historical.QuandlDataset;
 import specs.AbstractSpec;
 import specs.PublicSite.CheckPublicSite;
 import yahoofinance.YahooFinance;
-import yahoofinance.histquotes.HistoricalQuote;
-import yahoofinance.histquotes.Interval;
 import yahoofinance.quotes.stock.StockQuote;
 
 import java.io.IOException;
@@ -36,6 +36,7 @@ public class CheckStockInformationPr extends AbstractSpec {
     private CheckPublicSite publicTests = new CheckPublicSite();
     private static StockInformationPage stockInformationPage;
     private static HomePage homePage;
+    private static final String STAGING_ENV = "Staging_Env";
 
     @BeforeTest
     public void goToPreviewSite() throws Exception {
@@ -78,39 +79,38 @@ public class CheckStockInformationPr extends AbstractSpec {
     }
 
     @Test
-    public void stockQuoteValuesAreAccurate() throws TimeoutException {
+    public void stockQuoteValuesAreAccurate() throws TimeoutException{
         // going to Stock Information page and checking that the stock quote module is displayed
         Assert.assertTrue(homePage.selectStockInformationFromMenu().stockQuoteIsDisplayed()
                 , "Stock quote is not displayed.");
 
         driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
-
-        // fetching stock quotes from Yahoo
-        StockQuote stockQuote;
+        Q4Dataset stockQuote;
         try {
-            stockQuote = YahooFinance.get("TXRH").getQuote(false);
+            HistoricalStockQuote historicalStockQuote = new HistoricalStockQuote(STAGING_ENV);
+            stockQuote = historicalStockQuote.getHistoricalQuote();
         }catch (IOException e){
-            fail("Problem retrieving stock data from Yahoo Finance.");
+            fail("Problem retrieving stock data from Q4 api.");
             return;
         }
         // checking that displayed stock quote values are close to values from Yahoo
-        Assert.assertEquals(stockInformationPage.getStockPrice(),stockQuote.getPrice().doubleValue()
-                , 0.5, "Stock price isn't accurate");
-        Assert.assertEquals(stockInformationPage.getStockChange(), stockQuote.getChange().doubleValue()
+        Assert.assertEquals(stockInformationPage.getStockPrice(),stockQuote.getPrice()
+                , 0.25, "Stock price isn't accurate");
+        Assert.assertEquals(stockInformationPage.getStockChange(), stockQuote.getChange()
                 , 0.25,"Stock change isn't accurate");
-        Assert.assertEquals(stockInformationPage.getStockPChange(), stockQuote.getChangeInPercent().doubleValue()
+        Assert.assertEquals(stockInformationPage.getStockPChange(), stockQuote.getChangeInPercent()
                 , 1, "Stock % change isn't accurate");
-        Assert.assertEquals(stockInformationPage.getStockDayHigh(), stockQuote.getDayHigh().doubleValue()
-                , 0.5, "Stock intraday high isn't accurate");
-        Assert.assertEquals(stockInformationPage.getStock52WeekHigh(), stockQuote.getYearHigh().doubleValue()
+        Assert.assertEquals(stockInformationPage.getStockDayHigh(), stockQuote.getDayHigh()
+                , 0.25, "Stock intraday high isn't accurate");
+        Assert.assertEquals(stockInformationPage.getStock52WeekHigh(), stockQuote.getYearHigh()
                 , 0.1, "Stock 52 week high isn't accurate");
-        Assert.assertEquals(stockInformationPage.getStockDayLow(), stockQuote.getDayLow().doubleValue()
+        Assert.assertEquals(stockInformationPage.getStockDayLow(), stockQuote.getDayLow()
                 , 0.25, "Stock intraday low isn't accurate");
-        Assert.assertEquals(stockInformationPage.getStock52WeekLow(), stockQuote.getYearLow().doubleValue()
+        Assert.assertEquals(stockInformationPage.getStock52WeekLow(), stockQuote.getYearLow()
                 , 0.25, "Stock 52 week low isn't accurate");
-        Assert.assertEquals(stockInformationPage.getStockTodayOpen(), stockQuote.getOpen().doubleValue()
+        Assert.assertEquals(stockInformationPage.getStockTodayOpen(), stockQuote.getOpen()
                 , 0.01, "Stock today's open isn't accurate");
-        Assert.assertEquals(stockInformationPage.getStockPreviousClose(), stockQuote.getPreviousClose().doubleValue()
+        Assert.assertEquals(stockInformationPage.getStockPreviousClose(), stockQuote.getPreviousClose()
                 , 0.01, "Stock previous close isn't accurate");
         // Accuracy of volume is not checked due to the wide tolerance (in the hundreds of thousands) that would be needed to account for delayed values.
     }

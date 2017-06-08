@@ -7,14 +7,13 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import pageobjects.LiveSite.*;
-import pageobjects.api.QuandlConnectToApi;
-import pageobjects.api.QuandlDataset;
+import pageobjects.api.historical.HistoricalStockQuote;
+import pageobjects.api.historical.Q4Dataset;
+import pageobjects.api.historical.QuandlConnectToApi;
+import pageobjects.api.historical.QuandlDataset;
+import pageobjects.api.login.Auth;
 import specs.AbstractSpec;
-import yahoofinance.Stock;
-import yahoofinance.YahooFinance;
-import yahoofinance.histquotes.HistoricalQuote;
-import yahoofinance.histquotes.Interval;
-import yahoofinance.quotes.stock.StockQuote;
+import specs.ApiAbstractSpec;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -27,7 +26,7 @@ import static org.testng.Assert.fail;
  * Created by easong on 1/23/17.
  */
 
-public class CheckStockInformationPage extends AbstractSpec{
+public class CheckStockInformationPage extends AbstractSpec {
 
     //// WHEN ADDING A TEST TO THIS CLASS, ADD A ENTRY TO IT IN CheckSitePr.java \\\\
 
@@ -38,12 +37,15 @@ public class CheckStockInformationPage extends AbstractSpec{
 
     private static StockInformationPage stockInformationPage;
     private static HomePage homePage;
+    private static final String STAGING_ENV = "Staging_Env";
+
 
     @BeforeTest
-    public void goToPublicSite() {
-
+    public void goToPublicSite() throws IOException{
         driver.get("http://chicagotest.q4web.com/English/Investors/default.aspx");
         //driver.get("http://fiesta.q4web.newtest/stock-information/default.aspx");
+
+        //Assert.assertTrue(new Auth().getAccessToken(STAGING_ENV), "Access Token didn't receive");
 
         stockInformationPage = new StockInformationPage(driver);
         homePage = new HomePage(driver);
@@ -92,33 +94,32 @@ public class CheckStockInformationPage extends AbstractSpec{
                 , "Stock quote is not displayed.");
 
         driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
-
-        // fetching stock quotes from Yahoo
-        StockQuote stockQuote;
+        Q4Dataset stockQuote;
         try {
-            stockQuote = YahooFinance.get("TXRH").getQuote(false);
+            HistoricalStockQuote historicalStockQuote = new HistoricalStockQuote(STAGING_ENV);
+            stockQuote = historicalStockQuote.getHistoricalQuote();
         }catch (IOException e){
-            fail("Problem retrieving stock data from Yahoo Finance.");
+            fail("Problem retrieving stock data from Q4 api.");
             return;
         }
         // checking that displayed stock quote values are close to values from Yahoo
-        Assert.assertEquals(stockInformationPage.getStockPrice(),stockQuote.getPrice().doubleValue()
+        Assert.assertEquals(stockInformationPage.getStockPrice(),stockQuote.getPrice()
                 , 0.25, "Stock price isn't accurate");
-        Assert.assertEquals(stockInformationPage.getStockChange(), stockQuote.getChange().doubleValue()
+        Assert.assertEquals(stockInformationPage.getStockChange(), stockQuote.getChange()
                 , 0.25,"Stock change isn't accurate");
-        Assert.assertEquals(stockInformationPage.getStockPChange(), stockQuote.getChangeInPercent().doubleValue()
+        Assert.assertEquals(stockInformationPage.getStockPChange(), stockQuote.getChangeInPercent()
                 , 1, "Stock % change isn't accurate");
-        Assert.assertEquals(stockInformationPage.getStockDayHigh(), stockQuote.getDayHigh().doubleValue()
+        Assert.assertEquals(stockInformationPage.getStockDayHigh(), stockQuote.getDayHigh()
                 , 0.25, "Stock intraday high isn't accurate");
-        Assert.assertEquals(stockInformationPage.getStock52WeekHigh(), stockQuote.getYearHigh().doubleValue()
+        Assert.assertEquals(stockInformationPage.getStock52WeekHigh(), stockQuote.getYearHigh()
                 , 0.1, "Stock 52 week high isn't accurate");
-        Assert.assertEquals(stockInformationPage.getStockDayLow(), stockQuote.getDayLow().doubleValue()
+        Assert.assertEquals(stockInformationPage.getStockDayLow(), stockQuote.getDayLow()
                 , 0.25, "Stock intraday low isn't accurate");
-        Assert.assertEquals(stockInformationPage.getStock52WeekLow(), stockQuote.getYearLow().doubleValue()
+        Assert.assertEquals(stockInformationPage.getStock52WeekLow(), stockQuote.getYearLow()
                 , 0.25, "Stock 52 week low isn't accurate");
-        Assert.assertEquals(stockInformationPage.getStockTodayOpen(), stockQuote.getOpen().doubleValue()
+        Assert.assertEquals(stockInformationPage.getStockTodayOpen(), stockQuote.getOpen()
                 , 0.01, "Stock today's open isn't accurate");
-        Assert.assertEquals(stockInformationPage.getStockPreviousClose(), stockQuote.getPreviousClose().doubleValue()
+        Assert.assertEquals(stockInformationPage.getStockPreviousClose(), stockQuote.getPreviousClose()
                 , 0.01, "Stock previous close isn't accurate");
         // Accuracy of volume is not checked due to the wide tolerance (in the hundreds of thousands) that would be needed to account for delayed values.
     }
@@ -275,11 +276,11 @@ public class CheckStockInformationPage extends AbstractSpec{
             DateFormat olderDate = new SimpleDateFormat("yyyy-MM-dd");
             String olderInputDate = olderDate.format(olderTradingDay);
             QuandlDataset olderDayQuotes;
-            // fetching data from Yahoo
+            // fetching data from Quandl
             try {
                 olderDayQuotes = QuandlConnectToApi.getDatasetBetweenDates("TXRH", olderInputDate, olderInputDate);
             } catch (Exception e) {
-                fail("Problem retrieving older day stock data from Yahoo Finance.");
+                fail("Problem retrieving older day stock data from Quandl.");
                 return;
             }
             // comparing Yahoo data with displayed values

@@ -1,4 +1,4 @@
-package pageobjects.api;
+package pageobjects.api.historical;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
@@ -30,6 +30,10 @@ public class QuandlConnectToApi {
 
     public static QuandlDataset getDatasetBetweenDates(String ticker, String start, String end) {
             return new QuandlDataset(createUrl(baseUrl + "EOD/" + ticker + "/data.json?api_key=" + key + "&start_date=" + start + "&end_date=" + end), "json");
+    }
+
+    public static QuandlDataset getDatasetFromDate(String ticker, String exchange, String from){
+        return new QuandlDataset(createUrl(baseUrl + exchange +"/"+ ticker + "/data.json?api_key=" + key + "&start_date=" + from), "json");
     }
 
     public static QuandlDataset getDatasetBetweenDatesAndTicker(String ticker, String exchange, String start, String end) {
