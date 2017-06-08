@@ -1,7 +1,10 @@
 package pageobjects.SystemAdmin.AlertFilterList;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
 
@@ -32,4 +35,18 @@ public class AlertFilterList extends AbstractPageObject {
         return getGridRowQuantity(findElement(grid).findElements(gridFilterName).size(), columnsNumber);
     }
 
+    public Boolean filterActive(String name) {
+        String path = "//span[.='" + name + "']/../following-sibling::td[2]/span";
+
+        try {
+            wait.until(ExpectedConditions.visibilityOf(findElement(By.xpath(path))));
+            WebElement active = findElement(By.xpath(path));
+            return active.getText() == "Y";
+
+        } catch (ElementNotVisibleException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
 }
