@@ -16,13 +16,16 @@ import org.openqa.selenium.*;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 import java.util.Properties;
 
 import javax.mail.*;
+import javax.mail.search.SearchTerm;
+import javax.mail.search.SubjectTerm;
+import com.sun.mail.gimap.GmailFolder;
+import com.sun.mail.gimap.GmailRawSearchTerm;
+import com.sun.mail.gimap.GmailStore;
 
 /**
  * Created by philipsushkov on 2016-12-08.
