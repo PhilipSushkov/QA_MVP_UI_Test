@@ -74,6 +74,22 @@ public class CheckFinancialReportAdd extends AbstractSpec {
         Assert.assertEquals(financialReportAdd.saveFinancialReport(data, sFinancialReportTitle), WorkflowState.IN_PROGRESS.state(), "New "+PAGE_NAME+" didn't save properly");
     }
 
+    @Test(dataProvider=DATA, priority=2)
+    public void saveRelatedDocument(JSONObject data) throws InterruptedException {
+        String sFinancialReportTitle;
+        String sFinancialReportYear = data.get(FINANCIAL_REPORT_YEAR).toString();
+        String sFinancialReportType = data.get(FINANCIAL_REPORT_TYPE).toString();
+
+        if (sFinancialReportType.equals(ANNUAL_REPORT)) {
+            sFinancialReportTitle = sFinancialReportYear + " " + sFinancialReportType;
+        } else {
+            sFinancialReportTitle = sFinancialReportType + " " + sFinancialReportYear;
+        }
+
+        Assert.assertEquals(financialReportAdd.saveRelatedDocument(data, sFinancialReportTitle), WorkflowState.FOR_APPROVAL.state(), "New " + PAGE_NAME + " Related Documentdoesn't save properly");
+        //Assert.assertTrue(financialReportAdd.checkLookup(data, sLookupName), "Submitted New "+ PAGE_NAME +" data doesn't fit well to entry data (after Save and Submit)");
+    }
+
     @DataProvider
     public Object[][] getData() {
 

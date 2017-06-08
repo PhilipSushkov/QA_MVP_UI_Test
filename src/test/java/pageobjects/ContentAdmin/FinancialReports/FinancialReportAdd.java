@@ -164,4 +164,10 @@ public class FinancialReportAdd extends AbstractPageObject {
         return null;
     }
 
+    public String saveRelatedDocument(JSONObject data, String name) {
+
+
+        return null;
+    }
+
 }
