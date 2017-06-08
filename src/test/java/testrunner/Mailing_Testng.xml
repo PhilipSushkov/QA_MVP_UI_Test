@@ -13,6 +13,10 @@
             <class name="specs.Mailing.CheckEventEmailAlert" />
         </classes>
     </test>
-
+    <test name="CheckPresentationEmailAlert">
+        <classes>
+            <class name="specs.Mailing.CheckPresentationEmailAlert" />
+        </classes>
+    </test>
 
 </suite>
