@@ -1,78 +1,120 @@
 package specs.PublicSite;
 
-import org.junit.Before;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.TimeoutException;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONArray;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import pageobjects.LiveSite.*;
+import pageobjects.LiveSite.HomePage;
+import pageobjects.LiveSite.JobApplicationsPage;
 import specs.AbstractSpec;
 
+import javax.mail.MessagingException;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
-import java.util.Calendar;
-
-import static org.testng.Assert.fail;
+import java.util.ArrayList;
 
 /**
- * Created by easong on 1/26/17.
+ * Created by andyp on 2017-05-17.
  */
 public class CheckJobApplicationsPage extends AbstractSpec {
-
-    private final String firstName = "Luke";
-    private final String lastName = "Skywalker";
-    private final String address = "55 Darth Street";
-    private final String country = "tattooine";
-    private final String city = "JabbaVille";
-    private final String province = "the farming part";
-    private final String postalCode = "C3POBB8";
-    private final String homePhone = "r2d2";
-    private final String email = "jedimaster227@rebels.com";
-    private final String coverLetter = "I am his father - Darth Vader";
 
     private static HomePage homePage;
     private static JobApplicationsPage jobApplicationsPage;
 
+    private static String sPathToFile, sDataFileJson;
+    private static JSONParser parser;
+
+    private final String DATA="getData";
+    private final String user = "test@q4websystems.com";
+    private final String password = "testing!";
+    private final String subject = "Job Application for position";
+
     @BeforeTest
-    public void goToPublicSite() {
+    public void setUp(){
+        sPathToFile = System.getProperty("user.dir") + propUIPublicSite.getProperty("dataPath_LiveSite");
+        sDataFileJson = propUIPublicSite.getProperty("json_JobApplicationData");
+
+        parser = new JSONParser();
 
         driver.get("http://chicagotest.q4web.com/English/Investors/default.aspx");
-        //driver.get("http://fiesta.q4web.newtest/stock-information/default.aspx");
-
         homePage = new HomePage(driver);
         jobApplicationsPage = new JobApplicationsPage(driver);
-
-        Assert.assertTrue(homePage.logoIsPresent(), "Home page of public site has not been loaded.");
-
+        homePage.selectJobApplicationFromMenu();
     }
 
-    @Test
-    public void canNavigateToJobApplicationsPage() {
+    @Test(dataProvider = DATA, priority = 1)
+    public void submitJobApplication(JSONObject data){
+        String sMessage = data.get("expected").toString();
+
+        Assert.assertTrue(homePage.selectJobApplicationFromMenu().applicationPageDisplayed(), "Job Applications Page couldn't be opened");
+        Assert.assertTrue(jobApplicationsPage.submitJobApplication(data).contains(sMessage),"Job Application Submission doesn't work properly");
+    }
+
+    @Test(dataProvider = DATA, priority = 2)
+    public void checkEmail(JSONObject data) throws IOException, MessagingException {
+        homePage.selectJobApplicationFromMenu();
+        jobApplicationsPage.submitJobApplication(data);
+
+        if (data.get("check_email").toString() == "true" && data.get("check_file").toString() == "false") {
+            Assert.assertTrue(jobApplicationsPage.checkEmail(data), "Job Application does not match email");
+            deleteMail(user, password, subject);
+        } else if (data.get("check_email").toString() == "false") {
+            //Checking if email didnt get sent
+            Assert.assertFalse(jobApplicationsPage.checkEmail(data), "Job Application should not have been submitted");
+        }
+        deleteMail(user, password, subject);
+    }
+
+    @Test(dataProvider = DATA, priority = 3)
+    public void checkFile(JSONObject data) throws IOException, MessagingException {
+        homePage.selectJobApplicationFromMenu();
+        jobApplicationsPage.submitJobApplication(data);
+
+        if (data.get("check_email").toString() == "true" && data.get("check_file").toString() == "true") {
+            Assert.assertTrue(jobApplicationsPage.hasAttachments(data), "Email has no attachments");
+            Assert.assertTrue(jobApplicationsPage.checkAttachments(data), "Attachments are not the same");
+        } else if (data.get("check_email").toString() == "false" ) {
+            Assert.assertFalse(jobApplicationsPage.checkEmail(data), "Job Application should not have been submitted");
+        }
+        deleteMail(user, password, subject);
+    }
+
+
+    @DataProvider
+    public Object[][] getData() {
+
         try {
-            Assert.assertTrue(homePage.selectJobApplicationFromMenu().applicationPageDisplayed(), "Job Applications Page couldn't be opened");
-        } catch (TimeoutException e) {
-            driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
+            JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFileJson));
+            JSONArray jsonArray = (JSONArray) jsonObject.get("job_application");
+            ArrayList<Object> zoom = new ArrayList();
+
+            for (int i = 0; i < jsonArray.size(); i++) {
+                JSONObject pageObj = (JSONObject) jsonArray.get(i);
+                if (Boolean.parseBoolean(pageObj.get("do_assertions").toString())) {
+                    zoom.add(jsonArray.get(i));
+                }
+            }
+
+            Object[][] data = new Object[zoom.size()][1];
+            for (int i = 0; i < zoom.size(); i++) {
+                data[i][0] = zoom.get(i);
+            }
+
+            return data;
+
+        }  catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
+
+        return null;
     }
-
-
-        @Test
-        public void canSubmitJobApplication ()
-        {
-            homePage.selectJobApplicationFromMenu();
-            jobApplicationsPage.enterFirstName(firstName);
-            jobApplicationsPage.enterAddress(address);
-            jobApplicationsPage.enterLastName(lastName);
-            jobApplicationsPage.enterCity(city);
-            jobApplicationsPage.enterCountry(country);
-            jobApplicationsPage.enterHomePhone(homePhone);
-            jobApplicationsPage.enterProvince(province);
-            jobApplicationsPage.enterPostalCodeField(postalCode);
-            jobApplicationsPage.enterEmailField(email);
-            jobApplicationsPage.enterCoverLetterField(coverLetter);
-            jobApplicationsPage.submitApplication();
-
-        }
-    }
-
+}

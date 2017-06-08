@@ -13,6 +13,8 @@ import org.openqa.selenium.*;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import java.util.Properties;
@@ -249,10 +251,7 @@ public class Functions {
         }
     }
 
-    /*public static Message getMail(String user, String password, String subjectID) {
-
-        // Gets the first email message whose subject contains subjectID
-        // Use with javax.mail api
+    public static Message getSpecificMail(String user, String password, String subjectID, String date) {
 
         try {
 
@@ -270,10 +269,13 @@ public class Functions {
             Folder emailFolder = store.getFolder("INBOX");
             emailFolder.open(Folder.READ_ONLY);
 
+            DateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
+
             Message[] messages = emailFolder.getMessages();
 
+
             for (int i = 0; i < messages.length; i++) {
-                if (messages[i].getSubject().contains(subjectID)) {
+                if (messages[i].getSubject().contains(subjectID) && (date.equals(dateFormat.format(messages[i].getSentDate())))) {
                     return messages[i];
                 }
             }
@@ -288,40 +290,6 @@ public class Functions {
 
         return null;
     }
-
-    public static Message getMail(String user, String password, String subjectID) {
-
-        // Gets the first email message whose subject contains subjectID
-        // Use with javax.mail api
-        // Email account must have POP/IMAP enabled
-
-        Properties props = System.getProperties();
-        props.setProperty("mail.store.protocol", "gimap");
-
-        try {
-            Session session = Session.getDefaultInstance(props, null);
-            Store store = session.getStore("gimap");
-            store.connect("imap.gmail.com", user, password);
-            Folder inbox = store.getFolder("INBOX");
-            inbox.open(Folder.READ_WRITE);
-            Message[] messages = inbox.getMessages();
-
-            for (int i = 0; i < messages.length; i++) {
-                if (messages[i].getSubject().contains(subjectID)) {
-                    return messages[i];
-                }
-            }
-
-            return null;
-
-        } catch (NoSuchProviderException e) {
-            e.printStackTrace();
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }*/
 
     public static Message[] getMail(String user, String password, String subjectID) {
 
