@@ -1,26 +1,25 @@
 package specs.Mailing;
 
 import org.apache.commons.lang.RandomStringUtils;
-import org.json.JSONException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.testng.annotations.*;
-import org.testng.Assert;
-
 import org.openqa.selenium.By;
-import pageobjects.ContentAdmin.PressReleases.PressReleaseEdit;
-import pageobjects.ContentAdmin.PressReleases.PressReleases;
+import org.testng.Assert;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
+import pageobjects.ContentAdmin.Events.EventWebcastEdit;
+import pageobjects.ContentAdmin.Events.Events;
+import pageobjects.Dashboard.Dashboard;
 import pageobjects.EmailAdmin.ManageList.MailingLists;
 import pageobjects.EmailAdmin.Subscribers.MailingListUsers;
-import pageobjects.PageObject;
+import pageobjects.LoginPage.LoginPage;
 import pageobjects.SystemAdmin.AlertFilterList.AlertFilterAdd;
 import pageobjects.SystemAdmin.AlertFilterList.AlertFilterList;
 import pageobjects.SystemAdmin.SiteMaintenance.FunctionalBtn;
 import specs.AbstractSpec;
-import pageobjects.LoginPage.LoginPage;
-import pageobjects.Dashboard.Dashboard;
 
 import javax.mail.Message;
 import java.io.FileNotFoundException;
@@ -32,11 +31,9 @@ import java.util.ArrayList;
 import java.util.Date;
 
 /**
- * Created by zacharyk on 2017-05-19.
+ * Created by zacharyk on 2017-06-05.
  */
-
-public class CheckPressReleaseEmailAlert extends AbstractSpec {
-
+public class CheckEventEmailAlert extends AbstractSpec {
     private static String sPathToFile, sDataFileJson, sFileJson;
     private static JSONParser parser;
 
@@ -64,18 +61,18 @@ public class CheckPressReleaseEmailAlert extends AbstractSpec {
     private static AlertFilterList alertFilterList;
     private static AlertFilterAdd alertFilterAdd;
 
-    // Press Release data
+    // Event data
 
-    private static By addPressReleaseButton;
-    private static PressReleaseEdit pressReleaseEdit;
-    private static PressReleases pressReleases;
+    private static By addEventButton;
+    private static Events events;
+    private static EventWebcastEdit eventWebcastEdit;
 
     // Cleanup
 
     JSONObject savedData;
     JSONObject testData;
-    String pressReleaseURL;
-    String headline;
+    String eventURL;
+    String title;
 
     // Misc
 
@@ -96,14 +93,13 @@ public class CheckPressReleaseEmailAlert extends AbstractSpec {
     JSONObject jsonMain = new JSONObject();
     JSONObject jsonObj = new JSONObject();
 
-
     @BeforeTest
     public void setUp() throws Exception {
         parser = new JSONParser();
 
-        sPathToFile = System.getProperty("user.dir") + propUIContentAdmin.getProperty("dataPath_pressReleaseEmailAlertData");
-        sDataFileJson = propUIContentAdmin.getProperty("json_pressReleaseEmailAlertData");
-        sFileJson = propUIContentAdmin.getProperty("json_pressReleaseEmailAlert");
+        sPathToFile = System.getProperty("user.dir") + propUIContentAdmin.getProperty("dataPath_eventEmailAlertData");
+        sDataFileJson = propUIContentAdmin.getProperty("json_eventEmailAlertData");
+        sFileJson = propUIContentAdmin.getProperty("json_eventEmailAlert");
 
         loginPage = new LoginPage(driver);
         loginPage.loginUser();
@@ -133,10 +129,10 @@ public class CheckPressReleaseEmailAlert extends AbstractSpec {
         alertFilterListMenuItem = By.xpath(propUISystemAdmin.getProperty("itemMenu_AlertFilterList"));
         alertFilterList = new AlertFilterList(driver);
 
-        pressReleaseEdit = new PressReleaseEdit(driver);
-        pressReleases = new PressReleases(driver);
+        events = new Events(driver);
+        eventWebcastEdit = new EventWebcastEdit(driver);
 
-        addPressReleaseButton = By.xpath(propUICommon.getProperty("btn_AddPressRelease"));
+        addEventButton = By.xpath(propUICommon.getProperty("btn_AddEvent"));
 
     }
 
@@ -174,7 +170,7 @@ public class CheckPressReleaseEmailAlert extends AbstractSpec {
     }
 
     @Test(dataProvider = DATA, priority = 1)
-    public void publishPressRelease(JSONObject data) throws Exception {
+    public void publishEvent(JSONObject data) throws Exception {
 
         try {
 
@@ -190,7 +186,7 @@ public class CheckPressReleaseEmailAlert extends AbstractSpec {
             // Alert filter setup
 
             dashboard.openPageFromMenu(systemAdminMenuButton, alertFilterListMenuItem);
-            alertFilterList.findElement(By.xpath(propUISystemAdmin.getProperty("edit_PressReleaseFilter"))).click();
+            alertFilterList.findElement(By.xpath(propUISystemAdmin.getProperty("edit_EventFilter"))).click();
 
             String filterType = data.get("filter_type").toString();
 
@@ -199,25 +195,25 @@ public class CheckPressReleaseEmailAlert extends AbstractSpec {
 
             // Publish press release
 
-            String taggedHeadline = data.get("pr_headline").toString() + RandomStringUtils.randomAlphanumeric(6);
+            String eventTitle = data.get("event_title").toString() + RandomStringUtils.randomAlphanumeric(6);
 
-            dashboard.openPageFromCommonTasks(addPressReleaseButton);
-            pressReleaseURL = pressReleaseEdit.getUrl();
+            dashboard.openPageFromCommonTasks(addEventButton);
+            eventURL = eventWebcastEdit.getUrl();
 
-            testData.put("press_release_url", pressReleaseURL);
-            testData.put("headline", taggedHeadline);
+            testData.put("event_url", eventURL);
+            testData.put("title", eventTitle);
             jsonMain.put(data.get("title").toString(), testData);
 
             FileWriter writeFile = new FileWriter(sPathToFile+sFileJson);
             writeFile.write(jsonMain.toJSONString());
             writeFile.flush();
 
-            pressReleaseEdit.addNewPressRelease(taggedHeadline, date, hour, minute, "PM", new String[2]);
-            pressReleases.publishPressRelease(taggedHeadline);
+            eventWebcastEdit.addNewEvent(eventTitle, date, date, hour, minute, "PM", "EST", "none", "Toronto", new String[2]);
+            events.publishEvent(eventTitle);
 
-            driver.get(pressReleaseURL);
+            driver.get(eventURL);
             for (int i=1; i<5; i++) {
-                if (pressReleaseEdit.getWorkflowState().getText().equals("Live")) {
+                if (eventWebcastEdit.getWorkflowState().getText().equals("Live")) {
                     break;
                 } else {
                     System.out.println("attempt #" + i);
@@ -226,7 +222,7 @@ public class CheckPressReleaseEmailAlert extends AbstractSpec {
                 }
             }
 
-            Assert.assertEquals(pressReleaseEdit.getWorkflowState().getText(), "Live");
+            Assert.assertEquals(eventWebcastEdit.getWorkflowState().getText(), "Live");
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -234,7 +230,7 @@ public class CheckPressReleaseEmailAlert extends AbstractSpec {
     }
 
     @Test(dataProvider = DATA, priority = 2)
-    public void checkPressReleaseEmailAlert(JSONObject data) throws Exception {
+    public void checkEventEmailAlert(JSONObject data) throws Exception {
 
         try {
 
@@ -247,9 +243,7 @@ public class CheckPressReleaseEmailAlert extends AbstractSpec {
 
             Assert.assertTrue(Boolean.valueOf(testData.get("preconditions_met").toString()));
 
-            Message[] email = getMail(data.get("email_account").toString(),
-                                      data.get("email_password").toString(),
-                                      testData.get("headline").toString());
+            Message[] email = getMail(data.get("email_account").toString(), data.get("email_password").toString(), testData.get("title").toString());
 
             if (Boolean.valueOf(data.get("expect_mail").toString())) {
                 for (int i = 0; i < 5; i++) {
@@ -257,9 +251,7 @@ public class CheckPressReleaseEmailAlert extends AbstractSpec {
                         break;
                     } else {
                         System.out.println("attempt #" + i);
-                        email = getMail(data.get("email_account").toString(),
-                                        data.get("email_password").toString(),
-                                        testData.get("headline").toString());
+                        email = getMail(data.get("email_account").toString(), data.get("email_password").toString(), testData.get("title").toString());
                         Thread.sleep(MED_WAIT);
                     }
                 }
@@ -282,17 +274,17 @@ public class CheckPressReleaseEmailAlert extends AbstractSpec {
 
             Assert.assertTrue(Boolean.valueOf(testData.get("preconditions_met").toString()));
 
-            pressReleaseURL = testData.get("press_release_url").toString();
-            headline = testData.get("headline").toString();
+            eventURL = testData.get("event_url").toString();
+            title = testData.get("title").toString();
 
-            driver.get(pressReleaseURL);
+            driver.get(eventURL);
 
-            pressReleaseEdit.deletePressRelease();
-            pressReleases.publishPressRelease(headline);
+            eventWebcastEdit.deleteEvent();
+            events.publishEvent(title);
 
             if (Boolean.valueOf(data.get("expect_mail").toString())) {
                 deleteMail(data.get("email_account").toString(), data.get("email_password").toString(),
-                        companySubjectTag + headline);
+                        companySubjectTag + title);
             }
 
         } catch (FileNotFoundException e) {
@@ -301,13 +293,9 @@ public class CheckPressReleaseEmailAlert extends AbstractSpec {
             e.printStackTrace();
         } catch (ParseException e) {
             e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-
-    }
-
-    @AfterTest
-    public void tearDown() {
-        dashboard.logoutFromAdmin();
     }
 
     @DataProvider
@@ -315,7 +303,7 @@ public class CheckPressReleaseEmailAlert extends AbstractSpec {
 
         try {
             JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFileJson));
-            JSONArray jsonArray = (JSONArray) jsonObject.get("press_release_email_alert");
+            JSONArray jsonArray = (JSONArray) jsonObject.get("event_email_alert");
             ArrayList<Object> zoom = new ArrayList<>();
 
             for (int i = 0; i < jsonArray.size(); i++) {
