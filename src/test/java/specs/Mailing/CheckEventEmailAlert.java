@@ -7,6 +7,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.openqa.selenium.By;
 import org.testng.Assert;
+import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -287,6 +288,11 @@ public class CheckEventEmailAlert extends AbstractSpec {
                         companySubjectTag + title);
             }
 
+            savedData.remove(data.get("title").toString());
+            FileWriter file = new FileWriter(sPathToFile + sFileJson);
+            file.write(savedData.toJSONString());
+            file.flush();
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -297,6 +303,9 @@ public class CheckEventEmailAlert extends AbstractSpec {
             e.printStackTrace();
         }
     }
+
+    @AfterTest
+    public void tearDown() { dashboard.logoutFromAdmin(); }
 
     @DataProvider
     public Object[][] getData() {
