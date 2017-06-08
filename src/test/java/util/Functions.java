@@ -1,8 +1,5 @@
 package util;
 
-import com.sun.mail.gimap.GmailFolder;
-import com.sun.mail.gimap.GmailRawSearchTerm;
-import com.sun.mail.gimap.GmailStore;
 import org.apache.commons.io.FileUtils;
 import org.im4java.core.CompareCmd;
 import org.im4java.core.IMOperation;
@@ -245,7 +242,7 @@ public class Functions {
 
         return path;
     }
-    
+
     public static void cleanTextFields(List<WebElement> fields) {
         for (WebElement e : fields) {
             e.clear();
