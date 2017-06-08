@@ -1,17 +1,17 @@
-package specs.PublicSite;
+package specs.PreviewSite;
 
 import org.apache.commons.lang.RandomStringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
+import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.TimeoutException;
-import org.testng.annotations.*;
 import org.testng.Assert;
-
-import org.openqa.selenium.By;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.LiveSite.FormBuilderPage;
 import pageobjects.LiveSite.HomePage;
@@ -26,12 +26,11 @@ import java.io.FileReader;
 import java.io.IOException;
 
 /**
- * Created by zacharyk on 2017-05-16.
+ * Created by zacharyk on 2017-06-08.
  */
+public class CheckFormBuilderPr extends AbstractSpec {
 
-public class CheckFormBuilderPage extends AbstractSpec {
-
-    //// WHEN ADDING A TEST TO THIS CLASS, ADD A ENTRY TO IT IN CheckFormBuilderPr.java \\\\
+    //// THERE SHOULD BE ONE TEST HERE FOR EVERY TEST ON CheckFormBuilderPage.java \\\\
 
     private static HomePage homePage;
     private static FormBuilderPage formBuilderPage;
@@ -75,15 +74,12 @@ public class CheckFormBuilderPage extends AbstractSpec {
         dashboard.openPageFromMenu(systemAdminMenuButton, siteMaintenanceMenuItem);
 
         functionalBtn.enableSendGrid();
+    }
 
-        // Navigate to public homepage
-
-        driver.get("http://chicagotest.q4web.com/English/Investors/default.aspx");
-
+    @Test
+    public void goToPreviewSite() throws Exception {
+        dashboard.previewSite().goToInvestorsPage();
         homePage = new HomePage(driver);
-        formBuilderPage = new FormBuilderPage(driver);
-
-        Assert.assertTrue(homePage.logoIsPresent(), "Home page of public site has not been loaded.");
     }
 
     @Test(priority = 1)
@@ -100,6 +96,7 @@ public class CheckFormBuilderPage extends AbstractSpec {
 
         homePage.selectFormBuilderFromMenu();
 
+        formBuilderPage = new FormBuilderPage(driver);
         formBuilderPage.completeForm(data, randLastName);
 
         Thread.sleep(SHORT_WAIT);
@@ -130,7 +127,6 @@ public class CheckFormBuilderPage extends AbstractSpec {
             }
         }
     }
-
 
     @DataProvider
     public Object[][] getData() {
