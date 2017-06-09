@@ -28,7 +28,7 @@ public class CheckFinancialReportAdd extends AbstractSpec {
     private static Dashboard dashboard;
     private static FinancialReportAdd financialReportAdd;
 
-    private static String sPathToFile, sDataFileJson;
+    private static String sPathToFile, sDataFileJson, sFinancialReportTitle, sFinancialReportYear, sFinancialReportType;
     private static JSONParser parser;
 
     private final String DATA="getData", PAGE_NAME="Financial Report", ANNUAL_REPORT="Annual Report";
@@ -58,36 +58,37 @@ public class CheckFinancialReportAdd extends AbstractSpec {
 
     @Test(dataProvider=DATA, priority=1)
     public void saveFinancialReport(JSONObject data) {
-        String sFinancialReportTitle;
-        String sFinancialReportYear = data.get(FINANCIAL_REPORT_YEAR).toString();
-        String sFinancialReportType = data.get(FINANCIAL_REPORT_TYPE).toString();
-
-        if (sFinancialReportType.equals(ANNUAL_REPORT)) {
-            sFinancialReportTitle = sFinancialReportYear + " " + sFinancialReportType;
-        } else {
-            sFinancialReportTitle = sFinancialReportType + " " + sFinancialReportYear;
-        }
-
         String expectedTitleEdit = "Financial Report Edit";
 
+        getFinancialReportTitle(data);
         Assert.assertEquals(financialReportAdd.getTitle(), expectedTitleEdit, "Actual "+PAGE_NAME+" Edit page Title doesn't match to expected");
         Assert.assertEquals(financialReportAdd.saveFinancialReport(data, sFinancialReportTitle), WorkflowState.IN_PROGRESS.state(), "New "+PAGE_NAME+" didn't save properly");
     }
 
     @Test(dataProvider=DATA, priority=2)
     public void saveRelatedDocument(JSONObject data) throws InterruptedException {
-        String sFinancialReportTitle;
-        String sFinancialReportYear = data.get(FINANCIAL_REPORT_YEAR).toString();
-        String sFinancialReportType = data.get(FINANCIAL_REPORT_TYPE).toString();
+        getFinancialReportTitle(data);
+        Assert.assertEquals(financialReportAdd.saveRelatedDocument(data, sFinancialReportTitle), WorkflowState.IN_PROGRESS.state(), "New " + PAGE_NAME + " Related Document doesn't save properly");
+    }
+
+    @Test(dataProvider=DATA, priority=3)
+    public void saveAndSubmitFinancialReport(JSONObject data) throws InterruptedException {
+        getFinancialReportTitle(data);
+        //Assert.assertEquals(financialReportAdd.saveAndSubmitFinancialReport(data, sFinancialReportTitle), WorkflowState.FOR_APPROVAL.state(), "New " + PAGE_NAME + " doesn't submit properly (after Save And Submit)");
+        //Assert.assertEquals(financialReportAdd.saveAndSubmitRelatedDocument(data, sFinancialReportTitle), WorkflowState.FOR_APPROVAL.state(), "New " + PAGE_NAME + " Related Document doesn't submit properly (after Save And Submit)");
+        Assert.assertTrue(financialReportAdd.checkFinancialReport(data, sFinancialReportTitle), "Submitted New "+ PAGE_NAME +" data doesn't fit well to entry data (after Save and Submit)");
+        //Assert.assertTrue(financialReportAdd.checkRelatedDocument(data, sFinancialReportTitle), "Submitted New "+ PAGE_NAME +" Related Document data doesn't fit well to entry data (after Save and Submit)");
+    }
+
+    public void getFinancialReportTitle(JSONObject data) {
+        sFinancialReportYear = data.get(FINANCIAL_REPORT_YEAR).toString();
+        sFinancialReportType = data.get(FINANCIAL_REPORT_TYPE).toString();
 
         if (sFinancialReportType.equals(ANNUAL_REPORT)) {
             sFinancialReportTitle = sFinancialReportYear + " " + sFinancialReportType;
         } else {
             sFinancialReportTitle = sFinancialReportType + " " + sFinancialReportYear;
         }
-
-        Assert.assertEquals(financialReportAdd.saveRelatedDocument(data, sFinancialReportTitle), WorkflowState.FOR_APPROVAL.state(), "New " + PAGE_NAME + " Related Documentdoesn't save properly");
-        //Assert.assertTrue(financialReportAdd.checkLookup(data, sLookupName), "Submitted New "+ PAGE_NAME +" data doesn't fit well to entry data (after Save and Submit)");
     }
 
     @DataProvider
