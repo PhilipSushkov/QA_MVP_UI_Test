@@ -185,7 +185,7 @@ public class EmployeeAdd extends AbstractPageObject {
             waitForElement(saveBtn);
 
             try{
-                if(findElement(emailInput).toString().equals(data.get("email").toString())){
+                if(!findElement(emailInput).getAttribute("value").equals(data.get("email").toString())){
                     return false;
                 }
             } catch (NullPointerException e) {
@@ -193,7 +193,7 @@ public class EmployeeAdd extends AbstractPageObject {
             }
 
             try{
-                if(findElement(passwordInput).toString().equals(data.get("password").toString())){
+                if(!findElement(passwordInput).getAttribute("value").equals(data.get("password").toString())){
                     return false;
                 }
             } catch (NullPointerException e) {
@@ -201,7 +201,7 @@ public class EmployeeAdd extends AbstractPageObject {
             }
 
             try{
-                if(findElement(firstNameInput).toString().equals(data.get("first_name").toString())){
+                if(!findElement(firstNameInput).getAttribute("value").equals(data.get("first_name").toString())){
                     return false;
                 }
             } catch (NullPointerException e) {
@@ -209,7 +209,7 @@ public class EmployeeAdd extends AbstractPageObject {
             }
 
             try{
-                if(findElement(lastNameInput).toString().equals(data.get("last_name").toString())){
+                if(!findElement(lastNameInput).getAttribute("value").equals(data.get("last_name").toString())){
                     return false;
                 }
             } catch (NullPointerException e) {
@@ -217,7 +217,7 @@ public class EmployeeAdd extends AbstractPageObject {
             }
 
             try{
-                if(findElement(jobTitleInput).toString().equals(data.get("job_title").toString())){
+                if(!findElement(jobTitleInput).getAttribute("value").equals(data.get("job_title").toString())){
                     return false;
                 }
             } catch (NullPointerException e) {
@@ -225,7 +225,7 @@ public class EmployeeAdd extends AbstractPageObject {
             }
 
             try{
-                if(findElement(phoneInput).toString().equals(data.get("phone").toString())){
+                if(!findElement(phoneInput).getAttribute("value").equals(data.get("phone").toString())){
                     return false;
                 }
             } catch (NullPointerException e) {
@@ -233,7 +233,7 @@ public class EmployeeAdd extends AbstractPageObject {
             }
 
             try{
-                if(findElement(extensionInput).toString().equals(data.get("extension").toString())){
+                if(!findElement(extensionInput).getAttribute("value").equals(data.get("extension").toString())){
                     return false;
                 }
             } catch (NullPointerException e) {
@@ -241,7 +241,7 @@ public class EmployeeAdd extends AbstractPageObject {
             }
 
             try{
-                if(findElement(cellPhoneInput).toString().equals(data.get("cell_phone").toString())){
+                if(!findElement(cellPhoneInput).getAttribute("value").equals(data.get("cell_phone").toString())){
                     return false;
                 }
             } catch (NullPointerException e) {
@@ -249,7 +249,7 @@ public class EmployeeAdd extends AbstractPageObject {
             }
 
             try{
-                if(findElement(locationInput).toString().equals(data.get("location").toString())){
+                if(!findElement(locationInput).getAttribute("value").equals(data.get("location").toString())){
                     return false;
                 }
             } catch (NullPointerException e) {
@@ -397,7 +397,7 @@ public class EmployeeAdd extends AbstractPageObject {
             waitForElement(saveBtn);
 
             try {
-                if (findElement(firstNameInput).toString().equals(data.get("first_name_ch").toString())) {
+                if (!findElement(firstNameInput).getAttribute("value").equals(data.get("first_name_ch").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {

@@ -1,6 +1,7 @@
 package pageobjects.ContentAdmin.FinancialReports;
 
 import org.openqa.selenium.*;
+import org.openqa.selenium.support.ui.Select;
 import pageobjects.AbstractPageObject;
 
 import com.jayway.jsonpath.JsonPath;
@@ -17,6 +18,8 @@ import java.net.URL;
 
 import static specs.AbstractSpec.desktopUrl;
 import static specs.AbstractSpec.propUIContentAdmin;
+import static util.Functions.GetResponseCode;
+import static util.Functions.GetResponseCodeSsl;
 
 /**
  * Created by philipsushkov on 2017-06-07.
@@ -26,7 +29,7 @@ public class FinancialReportAdd extends AbstractPageObject {
     private static By moduleTitle, reportYearSelect, reportTypeSelect, coverImageInput;
     private static By filingDateInput, tagsInput, addNewRelatedDocLink, documentsTable;
     private static By documentTitleInput, documentCategorySelect, documentPathRbl, documentUrlRbl, relatedDocPathInput;
-    private static By documentTitleSpan, documentPathSpan;
+    private static By documentTitleSpan, documentPathSpan, thumbnailPathImg;
     private static By activeChk, saveBtn, revertBtn, cancelBtn, deleteBtn, addNewLink, publishBtn, generateThumbnailBtn;
     private static By workflowStateSpan, commentsTxt, successMsg, successMsgDoc, saveAndSubmitBtn, currentContentSpan;
     private static String sPathToFile, sFileJson;
@@ -65,6 +68,7 @@ public class FinancialReportAdd extends AbstractPageObject {
         currentContentSpan = By.xpath(propUIContentAdmin.getProperty("span_CurrentContent"));
         documentTitleSpan = By.xpath(propUIContentAdmin.getProperty("span_DocumentTitle"));
         documentPathSpan = By.xpath(propUIContentAdmin.getProperty("span_DocumentPath"));
+        thumbnailPathImg = By.xpath(propUIContentAdmin.getProperty("img_ThumbnailPath"));
 
         parser = new JSONParser();
 
@@ -386,49 +390,49 @@ public class FinancialReportAdd extends AbstractPageObject {
 
             // Compare field values with entry data
             try {
-                if (findElement(reportYearSelect).toString().equals(data.get("report_year").toString())) {
+                if (!new Select(findElement(reportYearSelect)).getFirstSelectedOption().getText().trim().equals(data.get("report_year").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
             }
 
             try {
-                if (findElement(reportTypeSelect).toString().equals(data.get("report_type").toString())) {
+                if (!new Select(findElement(reportTypeSelect)).getFirstSelectedOption().getText().trim().equals(data.get("report_type").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
             }
 
             try {
-                if (findElement(coverImageInput).toString().equals(data.get("cover_image").toString())) {
+                if (!findElement(coverImageInput).getAttribute("value").equals(data.get("cover_image").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
             }
 
             try {
-                if (findElement(filingDateInput).toString().equals(data.get("filing_date").toString())) {
+                if (!findElement(filingDateInput).getAttribute("value").equals(data.get("filing_date").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
             }
 
             try {
-                if (findElement(tagsInput).toString().equals(data.get("tags").toString())) {
+                if (!findElement(tagsInput).getAttribute("value").trim().equals(data.get("tags").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
             }
 
             try {
-                if (findElement(documentTitleSpan).toString().equals(jsonRelatedDoc.get("document_title").toString())) {
+                if (!findElement(documentTitleSpan).getAttribute("value").equals(jsonRelatedDoc.get("document_title").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
             }
 
             try {
-                if (findElement(documentPathSpan).toString().equals(jsonRelatedDoc.get("document_path").toString())) {
+                if (!findElement(documentPathSpan).getAttribute("value").equals(jsonRelatedDoc.get("document_path").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
@@ -436,6 +440,92 @@ public class FinancialReportAdd extends AbstractPageObject {
 
             try {
                 if (!findElement(activeChk).getAttribute("checked").equals(data.get("active").toString())) {
+                    return false;
+                }
+            } catch (NullPointerException e) {
+            }
+
+            System.out.println(name+ ": New "+PAGE_NAME+" has been checked");
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public Boolean checkRelatedDocument(JSONObject data, String name) throws InterruptedException {
+        JSONObject jsonMain = new JSONObject();
+        JSONObject jsonMainDoc = new JSONObject();
+        JSONObject jsonRelatedDoc = (JSONObject) data.get(RELATED_DOC);
+
+        try {
+            waitForElement(moduleTitle);
+
+            try {
+                FileReader readFile = new FileReader(sPathToFile + sFileJson);
+                jsonMain = (JSONObject) parser.parse(readFile);
+                jsonMainDoc = (JSONObject) jsonMain.get(name);
+            } catch (ParseException e) {
+            }
+
+            String pageUrl = getPageDocUrl(jsonMainDoc, RELATED_DOC);
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+            waitForElement(commentsTxt);
+
+            // Compare field values with entry data
+            //System.out.println(findElement(documentTitleInput).getAttribute("value"));
+            try {
+                if (!findElement(documentTitleInput).getAttribute("value").equals(jsonRelatedDoc.get("document_title").toString())) {
+                    return false;
+                }
+            } catch (NullPointerException e) {
+            }
+
+            try {
+                if (!findElement(documentCategorySelect).getAttribute("value").equals(jsonRelatedDoc.get("document_category").toString())) {
+                    return false;
+                }
+            } catch (NullPointerException e) {
+            }
+
+            switch (jsonRelatedDoc.get("document_type").toString()) {
+                case FILE:
+                    try {
+                        if (!findElement(documentPathRbl).getAttribute("checked").equals("true")) {
+                            return false;
+                        }
+                    } catch (NullPointerException e) {
+                    }
+                    break;
+                case ONLINE_VERSION:
+                    try {
+                        if (!findElement(documentUrlRbl).getAttribute("checked").equals("true")) {
+                            return false;
+                        }
+                    } catch (NullPointerException e) {
+                    }
+                    break;
+                default:
+                    try {
+                        if (!findElement(documentPathRbl).getAttribute("checked").equals("true")) {
+                            return false;
+                        }
+                    } catch (NullPointerException e) {
+                    }
+            }
+
+            try {
+                if (!findElement(relatedDocPathInput).getAttribute("value").equals(jsonRelatedDoc.get("document_path").toString())) {
+                    return false;
+                }
+            } catch (NullPointerException e) {
+            }
+
+            String srcUrl = findElement(thumbnailPathImg).getAttribute("src");
+            try {
+                if (!srcUrl.contains(jsonRelatedDoc.get("thumbnail_path").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {

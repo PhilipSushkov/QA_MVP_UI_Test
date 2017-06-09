@@ -15,6 +15,7 @@ import org.openqa.selenium.*;
 
 import java.io.*;
 import java.net.HttpURLConnection;
+import javax.net.ssl.HttpsURLConnection;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -191,7 +192,31 @@ public class Functions {
         }
     }
 
-    public static boolean compareImages (String exp, String cur, String diff) {
+    public static int GetResponseCodeSsl(String urlString) throws IOException {
+        try {
+            URL url = new URL(urlString);
+            System.setProperty("https.proxyHost", "69.172.200.167");
+            System.setProperty("https.proxyPort", "443");
+            HttpsURLConnection huc = (HttpsURLConnection)url.openConnection();
+            huc.setRequestMethod("GET");
+            //System.out.println(huc.getContentLength());
+            //huc.connect();
+
+            //System.out.println(Integer.toString(huc.getContentLength()));
+            //System.out.println(Integer.toString(huc.getInputStream().available()));
+
+            int iResponseCode = huc.getResponseCode();
+            huc.disconnect();
+
+            return iResponseCode;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return 404;
+        }
+    }
+
+    public static boolean compareImages(String exp, String cur, String diff) {
         // This instance wraps the compare command
         CompareCmd compare = new CompareCmd();
 
@@ -220,7 +245,7 @@ public class Functions {
         }
     }
 
-    public static String takeScreenshot (WebDriver driver, String sShotName, String sPageName) {
+    public static String takeScreenshot(WebDriver driver, String sShotName, String sPageName) {
         String path = null;
 
         try {

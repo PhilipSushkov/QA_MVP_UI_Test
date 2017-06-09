@@ -76,8 +76,8 @@ public class CheckFinancialReportAdd extends AbstractSpec {
         getFinancialReportTitle(data);
         //Assert.assertEquals(financialReportAdd.saveAndSubmitFinancialReport(data, sFinancialReportTitle), WorkflowState.FOR_APPROVAL.state(), "New " + PAGE_NAME + " doesn't submit properly (after Save And Submit)");
         //Assert.assertEquals(financialReportAdd.saveAndSubmitRelatedDocument(data, sFinancialReportTitle), WorkflowState.FOR_APPROVAL.state(), "New " + PAGE_NAME + " Related Document doesn't submit properly (after Save And Submit)");
-        Assert.assertTrue(financialReportAdd.checkFinancialReport(data, sFinancialReportTitle), "Submitted New "+ PAGE_NAME +" data doesn't fit well to entry data (after Save and Submit)");
-        //Assert.assertTrue(financialReportAdd.checkRelatedDocument(data, sFinancialReportTitle), "Submitted New "+ PAGE_NAME +" Related Document data doesn't fit well to entry data (after Save and Submit)");
+        //Assert.assertTrue(financialReportAdd.checkFinancialReport(data, sFinancialReportTitle), "Submitted New "+ PAGE_NAME +" data doesn't fit well to entry data (after Save and Submit)");
+        Assert.assertTrue(financialReportAdd.checkRelatedDocument(data, sFinancialReportTitle), "Submitted New "+ PAGE_NAME +" Related Document data doesn't fit well to entry data (after Save and Submit)");
     }
 
     public void getFinancialReportTitle(JSONObject data) {
