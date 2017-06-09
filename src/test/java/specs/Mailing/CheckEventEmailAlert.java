@@ -79,7 +79,7 @@ public class CheckEventEmailAlert extends AbstractSpec {
 
     private final String DATA="getData";
 
-    private final Long MED_WAIT = 5000L;
+    private final Long MED_WAIT = 10000L;
 
     SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
     SimpleDateFormat hourFormat = new SimpleDateFormat("h");
