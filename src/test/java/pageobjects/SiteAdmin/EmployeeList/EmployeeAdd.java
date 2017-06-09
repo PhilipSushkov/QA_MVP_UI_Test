@@ -185,19 +185,11 @@ public class EmployeeAdd extends AbstractPageObject {
             waitForElement(saveBtn);
 
             try{
-                if(!findElement(emailInput).getAttribute("value").equals(data.get("email").toString())){
+                if(!findElement(emailInput).getAttribute("value").contains(data.get("email").toString())){
                     return false;
                 }
             } catch (NullPointerException e) {
             return false;
-            }
-
-            try{
-                if(!findElement(passwordInput).getAttribute("value").equals(data.get("password").toString())){
-                    return false;
-                }
-            } catch (NullPointerException e) {
-                return false;
             }
 
             try{
