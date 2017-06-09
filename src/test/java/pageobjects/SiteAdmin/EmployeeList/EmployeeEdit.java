@@ -14,7 +14,7 @@ import static specs.AbstractSpec.propUISiteAdmin;
 public class EmployeeEdit extends AbstractPageObject {
     private static By moduleTitle, emailInput, passwordInput, firstNameInput;
     private static By lastNameInput, jobTitleInput, phoneInput, extensionInput;
-    private static By cellPhoneInput, locationInput;
+    private static By cellPhoneInput, locationInput, photoInput;
     private static By saveBtn, activeChk;
 
     public EmployeeEdit(WebDriver driver) {
@@ -31,6 +31,7 @@ public class EmployeeEdit extends AbstractPageObject {
         extensionInput = By.xpath(propUISiteAdmin.getProperty("input_Extension"));
         cellPhoneInput = By.xpath(propUISiteAdmin.getProperty("input_CellPhone"));
         locationInput = By.xpath(propUISiteAdmin.getProperty("input_Location"));
+        photoInput = By.xpath(propUISiteAdmin.getProperty("input_Photo"));
         activeChk = By.xpath(propUISiteAdmin.getProperty("chk_Active"));
 
         saveBtn = By.xpath(propUISiteAdmin.getProperty("btn_Save"));
@@ -151,6 +152,19 @@ public class EmployeeEdit extends AbstractPageObject {
         try {
             waitForElement(locationInput);
             element = findElement(locationInput);
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        }
+
+        return element;
+    }
+
+    public WebElement getPhotoInput() {
+        WebElement element = null;
+
+        try {
+            waitForElement(photoInput);
+            element = findElement(photoInput);
         } catch (ElementNotFoundException e1) {
         } catch (ElementNotVisibleException e2) {
         }

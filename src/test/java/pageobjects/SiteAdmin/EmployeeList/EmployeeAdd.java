@@ -3,9 +3,7 @@ package pageobjects.SiteAdmin.EmployeeList;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.openqa.selenium.By;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.*;
 import pageobjects.AbstractPageObject;
 import util.Functions;
 
@@ -23,9 +21,9 @@ import static specs.AbstractSpec.propUISiteAdmin;
 public class EmployeeAdd extends AbstractPageObject {
     private static By moduleTitle, emailInput, passwordInput, firstNameInput;
     private static By lastNameInput, jobTitleInput, phoneInput, extensionInput;
-    private static By cellPhoneInput, locationInput;
+    private static By cellPhoneInput, locationInput, photoInput;
     private static By saveBtn, cancelBtn, deleteBtn, addNewLink, activeChk;
-    private static String sPathToFile, sFileJson, sFileJsonData;
+    private static String sPathToFile, sFileJson, sFileJsonData ;
     private static JSONParser parser;
     private static final long DEFAULT_PAUSE = 2500;
     private final String PAGE_NAME="Employee";
@@ -43,6 +41,7 @@ public class EmployeeAdd extends AbstractPageObject {
         extensionInput = By.xpath(propUISiteAdmin.getProperty("input_Extension"));
         cellPhoneInput = By.xpath(propUISiteAdmin.getProperty("input_CellPhone"));
         locationInput = By.xpath(propUISiteAdmin.getProperty("input_Location"));
+        photoInput = By.xpath(propUISiteAdmin.getProperty("input_Photo"));
         activeChk = By.xpath(propUISiteAdmin.getProperty("chk_Active"));
 
         saveBtn = By.xpath(propUISiteAdmin.getProperty("btn_Save"));
@@ -67,7 +66,7 @@ public class EmployeeAdd extends AbstractPageObject {
 
     public String saveEmployeeList(JSONObject data, String name){
         String email, password, first_name, last_name, job_title;
-        String phone, extension, cell_phone, location;
+        String phone, extension, cell_phone, location, photo;
         Boolean active;
         JSONObject jsonObj = new JSONObject();
         JSONObject jsonMain = new JSONObject();
@@ -119,6 +118,13 @@ public class EmployeeAdd extends AbstractPageObject {
             location = data.get("location").toString();
             findElement(locationInput).sendKeys(location);
             jsonObj.put("location", location);
+
+
+            photo = data.get("photo").toString();
+            JavascriptExecutor js = (JavascriptExecutor) driver;
+            WebElement elemSrc =  driver.findElement(photoInput);
+            js.executeScript("arguments[0].setAttribute(arguments[1], arguments[2]);", elemSrc, "value", "files/"+photo);
+            jsonObj.put("photo",photo);
 
             // Save Active checkbox
             active = Boolean.parseBoolean(data.get("active").toString());
@@ -242,6 +248,14 @@ public class EmployeeAdd extends AbstractPageObject {
 
             try{
                 if(!findElement(locationInput).getAttribute("value").equals(data.get("location").toString())){
+                    return false;
+                }
+            } catch (NullPointerException e) {
+                return false;
+            }
+
+            try{
+                if(findElement(photoInput).toString().equals("files/" + data.get("photo").toString())){
                     return false;
                 }
             } catch (NullPointerException e) {
