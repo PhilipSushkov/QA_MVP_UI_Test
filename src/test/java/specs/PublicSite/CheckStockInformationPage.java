@@ -104,7 +104,7 @@ public class CheckStockInformationPage extends AbstractSpec {
         }
         // checking that displayed stock quote values are close to values from Yahoo
         Assert.assertEquals(stockInformationPage.getStockPrice(),stockQuote.getPrice()
-                , 0.25, "Stock price isn't accurate");
+               , 0.25, "Stock price isn't accurate");
         Assert.assertEquals(stockInformationPage.getStockChange(), stockQuote.getChange()
                 , 0.25,"Stock change isn't accurate");
         Assert.assertEquals(stockInformationPage.getStockPChange(), stockQuote.getChangeInPercent()
