@@ -8,10 +8,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.TimeoutException;
 import org.testng.Assert;
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 import pageobjects.LiveSite.HomePage;
 import pageobjects.LiveSite.JobApplicationsPage;
 import pageobjects.LoginPage.LoginPage;
@@ -115,11 +112,10 @@ public class CheckJobApplicationPr extends AbstractSpec {
         if (data.get("check_email").toString() == "true") {
             //Checking if email with file got sent - will skip other data
             if (data.get("check_file").toString() == "true") {
-                deleteMail(user, password, subject);
                 homePage.selectJobApplicationFromMenu();
                 jobApplicationsPage.submitJobApplication(data);
 
-                Assert.assertTrue(jobApplicationsPage.hasAttachments(data), "Email has no attachments");
+                Assert.assertTrue(jobApplicationsPage.hasAttachments(), "Email has no attachments");
                 Assert.assertTrue(jobApplicationsPage.checkAttachments(data), "Attachments are not the same");
             }
         }

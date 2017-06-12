@@ -1,6 +1,5 @@
 package util;
 
-import com.applitools.shaded.eyessdk.javax.ws.rs.HEAD;
 import org.apache.commons.io.FileUtils;
 import org.im4java.core.CompareCmd;
 import org.im4java.core.IMOperation;
@@ -14,12 +13,13 @@ import org.openqa.selenium.*;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import java.util.Properties;
 
 import javax.mail.*;
-import javax.mail.search.SearchTerm;
 import javax.mail.search.SubjectTerm;
 import com.sun.mail.gimap.GmailFolder;
 import com.sun.mail.gimap.GmailRawSearchTerm;
@@ -250,13 +250,16 @@ public class Functions {
         }
     }
 
-    public static Message getSpecificMail(String user, String password, String subjectID) throws InterruptedException {
+    public static Message getSpecificMail(String user, String password, String subjectID) throws InterruptedException, IOException {
         //Use this one if the email in question has files
 
         Properties props = System.getProperties();
         props.setProperty("mail.store.protocol", "gimap");
-        //Long wait time is needed for emails with files
         Thread.sleep(10000);
+
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date = new Date();
+        System.out.println("Email checked at: " + dateFormat.format(date));
 
         try {
             Session session = Session.getDefaultInstance(props, null);
@@ -264,13 +267,14 @@ public class Functions {
             store.connect("imap.gmail.com", user, password);
             GmailFolder inbox = (GmailFolder) store.getFolder("INBOX");
             inbox.open(Folder.READ_ONLY);
-            Message[] Messages = inbox.search(new GmailRawSearchTerm("subject:"+subjectID));
+            Message[] Messages = inbox.search(new GmailRawSearchTerm("subject:" + subjectID));
 
             if (Messages != null){
                 for (int i = 0; i < Messages.length; i++){
                     return Messages[i];
                 }
             }
+
             inbox.close(true);
             store.close();
 
@@ -324,6 +328,7 @@ public class Functions {
             if (foundMessages != null){
                 for (int i = 0; i < foundMessages.length; i++){
                     foundMessages[i].setFlag(Flags.Flag.DELETED, true);
+                    System.out.println(foundMessages[i].getSubject() + ", sent at " + foundMessages[i].getSentDate() + " has been deleted");
                 }
             }
             inbox.close(true);

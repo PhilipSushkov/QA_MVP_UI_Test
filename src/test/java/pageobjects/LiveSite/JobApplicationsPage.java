@@ -11,6 +11,9 @@ import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static specs.AbstractSpec.propUIPublicSite;
 import static util.Functions.*;
@@ -56,6 +59,11 @@ public class JobApplicationsPage extends AbstractPageObject {
         enterFields(data);
         submitApplication();
 
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date = new Date();
+        System.out.println("Form was submitted at: " + dateFormat.format(date));
+
+
         sMessage = getSysMessage(data).getText();
 
         return sMessage;
@@ -66,7 +74,20 @@ Getting content from non- MimeType email
 */
 
     public String getEmailContent() throws InterruptedException, IOException, MessagingException {
-        return (getSpecificMail("test@q4websystems.com", "testing!", "Job Application for position").getContent()).toString();
+        //Repeat if email is not found
+        for(int i =0;i <=5; i++){
+            if (getSpecificMail("test@q4websystems.com", "testing!", "Job Application for position") == null){
+                System.out.println("Email was not found, attempt # "+ i);
+            } else{
+                System.out.println("Email found");
+                break;
+            }
+        }
+        Message msg = getSpecificMail("test@q4websystems.com", "testing!", "Job Application for position");
+        String content = String.valueOf(msg.getContent());
+        System.out.println("Email was sent at: "+ msg.getSentDate());
+
+        return content;
     }
 
     public boolean getFirstName(JSONObject data, String content){
@@ -150,7 +171,6 @@ Getting content from non- MimeType email
     //Email with attachment is a MimeType - one email is composed of many parts so iterating through message to find the attachment
     public boolean checkAttachments(JSONObject data) throws IOException, MessagingException, InterruptedException {
         Message msg = getSpecificMail("test@q4websystems.com", "testing!", "Job Application for position");
-
         Multipart mp = (Multipart) msg.getContent();
         for (int i = 0; i < mp.getCount(); i++){
             BodyPart bp = mp.getBodyPart(i);
@@ -167,8 +187,18 @@ Getting content from non- MimeType email
         return false;
     }
 
-    public boolean hasAttachments(JSONObject data) throws MessagingException, IOException, InterruptedException {
+    public boolean hasAttachments() throws MessagingException, IOException, InterruptedException {
+        Thread.sleep(10000);
+        for(int i =0;i <=5; i++){
+            if (getSpecificMail("test@q4websystems.com", "testing!", "Job Application for position") == null){
+                System.out.println("Email was not found, attempt # "+ i);
+            } else{
+                System.out.println("Email found");
+                break;
+            }
+        }
         Message msg = getSpecificMail("test@q4websystems.com", "testing!", "Job Application for position");
+        System.out.println("Email was sent at: "+ msg.getSentDate());
 
         if (msg != null) {
             if (msg.isMimeType("multipart/mixed")) {
@@ -176,7 +206,8 @@ Getting content from non- MimeType email
                 if (mp.getCount() > 1)
                 return true;
             }
-        } return false;
+        }
+        return false;
     }
 
     public void enterFields(JSONObject data){
