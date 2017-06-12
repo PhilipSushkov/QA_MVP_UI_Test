@@ -47,8 +47,11 @@ public class CheckTwitter extends AbstractSpec {
 
     @Test(dataProvider = DATA, priority = 0)
     public void twitterNotSetup(JSONObject data) throws Exception {
-        // This test assumes that Twitter account is not currently setup and that you are not logged in to Twitter
         socialMediaSummary = new Dashboard(driver).openSocialMedia();
+
+        if (socialMediaSummary.getTwitterStatusIndicator().contains("/checked")) {
+            socialMediaSummary.deAuthorizeTwitterAccount();
+        }
 
         Assert.assertEquals(socialMediaSummary.getTitle(), expectedTitle,"Actual Social Media Summary page title doesn't match to expected");
         Assert.assertTrue(socialMediaSummary.getTwitterStatusIndicator().contains("/unchecked.png"),
