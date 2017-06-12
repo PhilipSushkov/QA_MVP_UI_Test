@@ -12,17 +12,20 @@ import org.openqa.selenium.*;
 
 import java.io.*;
 import java.net.HttpURLConnection;
+import javax.net.ssl.HttpsURLConnection;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import java.util.Properties;
 
-import javax.mail.Folder;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.NoSuchProviderException;
-import javax.mail.Session;
-import javax.mail.Store;
+import javax.mail.*;
+import javax.mail.search.SearchTerm;
+import javax.mail.search.SubjectTerm;
+import com.sun.mail.gimap.GmailFolder;
+import com.sun.mail.gimap.GmailRawSearchTerm;
+import com.sun.mail.gimap.GmailStore;
 
 /**
  * Created by philipsushkov on 2016-12-08.
@@ -191,7 +194,31 @@ public class Functions {
         }
     }
 
-    public static boolean compareImages (String exp, String cur, String diff) {
+    public static int GetResponseCodeSsl(String urlString) throws IOException {
+        try {
+            URL url = new URL(urlString);
+            System.setProperty("https.proxyHost", "69.172.200.167");
+            System.setProperty("https.proxyPort", "443");
+            HttpsURLConnection huc = (HttpsURLConnection)url.openConnection();
+            huc.setRequestMethod("GET");
+            //System.out.println(huc.getContentLength());
+            //huc.connect();
+
+            //System.out.println(Integer.toString(huc.getContentLength()));
+            //System.out.println(Integer.toString(huc.getInputStream().available()));
+
+            int iResponseCode = huc.getResponseCode();
+            huc.disconnect();
+
+            return iResponseCode;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return 404;
+        }
+    }
+
+    public static boolean compareImages(String exp, String cur, String diff) {
         // This instance wraps the compare command
         CompareCmd compare = new CompareCmd();
 
@@ -220,7 +247,7 @@ public class Functions {
         }
     }
 
-    public static String takeScreenshot (WebDriver driver, String sShotName, String sPageName) {
+    public static String takeScreenshot(WebDriver driver, String sShotName, String sPageName) {
         String path = null;
 
         try {
@@ -243,10 +270,13 @@ public class Functions {
         return path;
     }
 
-    public static Message getRecentMail(String user, String password, String subjectID) {
+    public static void cleanTextFields(List<WebElement> fields) {
+        for (WebElement e : fields) {
+            e.clear();
+        }
+    }
 
-        // Gets the first email message whose subject contains subjectID
-        // Use with javax.mail api
+    public static Message getSpecificMail(String user, String password, String subjectID, String date) {
 
         try {
 
@@ -264,10 +294,13 @@ public class Functions {
             Folder emailFolder = store.getFolder("INBOX");
             emailFolder.open(Folder.READ_ONLY);
 
+            DateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
+
             Message[] messages = emailFolder.getMessages();
 
+
             for (int i = 0; i < messages.length; i++) {
-                if (messages[i].getSubject().contains(subjectID)) {
+                if (messages[i].getSubject().contains(subjectID) && (date.equals(dateFormat.format(messages[i].getSentDate())))) {
                     return messages[i];
                 }
             }
@@ -283,9 +316,58 @@ public class Functions {
         return null;
     }
 
-    public static void cleanTextFields(List<WebElement> fields) {
-        for (WebElement e : fields) {
-            e.clear();
+    public static Message[] getMail(String user, String password, String subjectID) {
+
+        // Deletes email messages with a provided subject
+        // Email account must have POP/IMAP enabled
+
+        Properties props = System.getProperties();
+        props.setProperty("mail.store.protocol", "gimap");
+
+        try {
+            Session session = Session.getDefaultInstance(props, null);
+            GmailStore store = (GmailStore) session.getStore("gimap");
+            store.connect("imap.gmail.com", user, password);
+            GmailFolder inbox = (GmailFolder) store.getFolder("INBOX");
+            inbox.open(Folder.READ_ONLY);
+            return inbox.search(new SubjectTerm(subjectID));
+
+        } catch (NoSuchProviderException e) {
+            e.printStackTrace();
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public static void deleteMail(String user, String password, String subjectID) {
+
+        // Deletes email messages with a provided subject
+        // Email account must have POP/IMAP enabled
+
+        Properties props = System.getProperties();
+        props.setProperty("mail.store.protocol", "gimap");
+
+        try {
+            Session session = Session.getDefaultInstance(props, null);
+            GmailStore store = (GmailStore) session.getStore("gimap");
+            store.connect("imap.gmail.com", user, password);
+            GmailFolder inbox = (GmailFolder) store.getFolder("INBOX");
+            inbox.open(Folder.READ_WRITE);
+            Message[] foundMessages = inbox.search(new GmailRawSearchTerm("subject:"+subjectID));
+            if (foundMessages != null){
+                for (int i = 0; i < foundMessages.length; i++){
+                    foundMessages[i].setFlag(Flags.Flag.DELETED, true);
+                }
+            }
+            inbox.close(true);
+            store.close();
+
+        } catch (NoSuchProviderException e) {
+            e.printStackTrace();
+        } catch (MessagingException e) {
+            e.printStackTrace();
         }
     }
 }

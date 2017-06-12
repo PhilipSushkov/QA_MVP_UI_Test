@@ -71,6 +71,11 @@
             <class name="specs.SiteAdmin.LookupList.CheckLookupAdd" />
         </classes>
     </test>
+    <test name="CheckEmployeeAdd">
+        <classes>
+            <class name="specs.SiteAdmin.EmployeeList.CheckEmployeeAdd" />
+        </classes>
+    </test>
   
 
     <test name="CreateNewUser">
