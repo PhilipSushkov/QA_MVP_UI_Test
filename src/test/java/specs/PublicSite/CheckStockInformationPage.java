@@ -103,24 +103,15 @@ public class CheckStockInformationPage extends AbstractSpec {
             return;
         }
         // checking that displayed stock quote values are close to values from Yahoo
-        Assert.assertEquals(stockInformationPage.getStockPrice(),stockQuote.getPrice()
-                , 0.25, "Stock price isn't accurate");
-        Assert.assertEquals(stockInformationPage.getStockChange(), stockQuote.getChange()
-                , 0.25,"Stock change isn't accurate");
-        Assert.assertEquals(stockInformationPage.getStockPChange(), stockQuote.getChangeInPercent()
-                , 1, "Stock % change isn't accurate");
-        Assert.assertEquals(stockInformationPage.getStockDayHigh(), stockQuote.getDayHigh()
-                , 0.25, "Stock intraday high isn't accurate");
-        Assert.assertEquals(stockInformationPage.getStock52WeekHigh(), stockQuote.getYearHigh()
-                , 0.1, "Stock 52 week high isn't accurate");
-        Assert.assertEquals(stockInformationPage.getStockDayLow(), stockQuote.getDayLow()
-                , 0.25, "Stock intraday low isn't accurate");
-        Assert.assertEquals(stockInformationPage.getStock52WeekLow(), stockQuote.getYearLow()
-                , 0.25, "Stock 52 week low isn't accurate");
-        Assert.assertEquals(stockInformationPage.getStockTodayOpen(), stockQuote.getOpen()
-                , 0.01, "Stock today's open isn't accurate");
-        Assert.assertEquals(stockInformationPage.getStockPreviousClose(), stockQuote.getPreviousClose()
-                , 0.01, "Stock previous close isn't accurate");
+        Assert.assertEquals(stockInformationPage.getStockPrice(),stockQuote.getPrice(), 0.25,"Stock price isn't accurate");
+        Assert.assertEquals(stockInformationPage.getStockChange(), stockQuote.getChange(), 0.25,"Stock change isn't accurate");
+        Assert.assertEquals(stockInformationPage.getStockPChange(), stockQuote.getChangeInPercent(),1, "Stock % change isn't accurate");
+        Assert.assertEquals(stockInformationPage.getStockDayHigh(), stockQuote.getDayHigh(), 0.25,"Stock intraday high isn't accurate");
+        Assert.assertEquals(stockInformationPage.getStock52WeekHigh(), stockQuote.getYearHigh(), 0.1,"Stock 52 week high isn't accurate");
+        Assert.assertEquals(stockInformationPage.getStockDayLow(), stockQuote.getDayLow(), 0.25,"Stock intraday low isn't accurate");
+        Assert.assertEquals(stockInformationPage.getStock52WeekLow(), stockQuote.getYearLow(), 0.25,"Stock 52 week low isn't accurate");
+        Assert.assertEquals(stockInformationPage.getStockTodayOpen(), stockQuote.getOpen(), 0.01,"Stock today's open isn't accurate");
+        Assert.assertEquals(stockInformationPage.getStockPreviousClose(), stockQuote.getPreviousClose(),0.01, "Stock previous close isn't accurate");
         // Accuracy of volume is not checked due to the wide tolerance (in the hundreds of thousands) that would be needed to account for delayed values.
     }
 
