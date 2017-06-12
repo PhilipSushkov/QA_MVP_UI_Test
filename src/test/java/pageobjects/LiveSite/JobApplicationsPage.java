@@ -9,6 +9,7 @@ import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
+import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -58,44 +59,118 @@ public class JobApplicationsPage extends AbstractPageObject {
         enterFields(data);
         submitApplication();
 
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date = new Date();
+        System.out.println("Form was submitted at: " + dateFormat.format(date));
+
+
         sMessage = getSysMessage(data).getText();
 
         return sMessage;
     }
 
-    public boolean checkEmail(JSONObject data) throws IOException, MessagingException {
-        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
-        Date todayDate = new Date();
-        String today = dateFormat.format(todayDate);
+/*
+Getting content from non- MimeType email
+*/
 
-        String content = (getSpecificMail("test@q4websystems.com", "testing!", "Job Application for position", today).getContent()).toString();
-        //Return true if content contains all of the items below - ASSERTION FOR EACH ONE?
+    public String getEmailContent() throws InterruptedException, IOException, MessagingException {
+        //Repeat if email is not found
+        for(int i =0;i <=5; i++){
+            if (getSpecificMail("test@q4websystems.com", "testing!", "Job Application for position") == null){
+                System.out.println("Email was not found, attempt # "+ i);
+            } else{
+                System.out.println("Email found");
+                break;
+            }
+        }
+        Message msg = getSpecificMail("test@q4websystems.com", "testing!", "Job Application for position");
+        String content = String.valueOf(msg.getContent());
+        System.out.println("Email was sent at: "+ msg.getSentDate());
 
-        return (
-                content.contains(data.get("first_name").toString()) &&
-                content.contains(data.get("last_name").toString()) &&
-                content.contains(data.get("address").toString()) &&
-                content.contains(data.get("city").toString()) &&
-                content.contains(data.get("province").toString()) &&
-                content.contains(data.get("country").toString()) &&
-                content.contains(data.get("postal_code").toString())&&
-                content.contains(data.get("home_phone").toString()) &&
-                content.contains(data.get("business_phone").toString()) &&
-                content.contains(data.get("fax").toString()) &&
-                content.contains(data.get("email").toString()) &&
-                content.contains(data.get("coverletter_text").toString()) &&
-                content.contains(data.get("resume_text").toString())
-                );
+        return content;
     }
 
+    public boolean getFirstName(JSONObject data, String content){
+        if(content.contains(data.get("first_name").toString()))
+            return true;
+        return false;
+    }
 
-    public boolean checkAttachments(JSONObject data) throws IOException, MessagingException {
-        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
-        Date todayDate = new Date();
-        String today = dateFormat.format(todayDate);
+    public boolean getLastName(JSONObject data, String content){
+        if(content.contains(data.get("last_name").toString()))
+            return true;
+        return false;
+    }
 
-        Message msg = getSpecificMail("test@q4websystems.com", "testing!", "Job Application", today);
+    public boolean getAddress(JSONObject data, String content){
+        if(content.contains(data.get("address").toString()))
+            return true;
+        return false;
+    }
 
+    public boolean getCity(JSONObject data, String content){
+        if(content.contains(data.get("city").toString()))
+            return true;
+        return false;
+    }
+
+    public boolean getProvince(JSONObject data, String content){
+        if(content.contains(data.get("province").toString()))
+            return true;
+        return false;
+    }
+
+    public boolean getCountry(JSONObject data, String content){
+        if(content.contains(data.get("province").toString()))
+            return true;
+        return false;
+    }
+
+    public boolean getPostalCode(JSONObject data, String content){
+        if(content.contains(data.get("postal_code").toString()))
+            return true;
+        return false;
+    }
+
+    public boolean getHomePhone(JSONObject data, String content){
+        if(content.contains(data.get("home_phone").toString()))
+            return true;
+        return false;
+    }
+
+    public boolean getBusinessPhone(JSONObject data, String content){
+        if(content.contains(data.get("business_phone").toString()))
+            return true;
+        return false;
+    }
+
+    public boolean getFax(JSONObject data, String content){
+        if(content.contains(data.get("fax").toString()))
+            return true;
+        return false;
+    }
+
+    public boolean getEmail(JSONObject data, String content){
+        if(content.contains(data.get("email").toString()))
+            return true;
+        return false;
+    }
+
+    public boolean getCoverLetterText(JSONObject data, String content){
+        if(content.contains(data.get("coverletter_text").toString()))
+            return true;
+        return false;
+    }
+
+    public boolean getResumeText(JSONObject data, String content){
+        if(content.contains(data.get("resume_text").toString()))
+            return true;
+        return false;
+    }
+
+    //Email with attachment is a MimeType - one email is composed of many parts so iterating through message to find the attachment
+    public boolean checkAttachments(JSONObject data) throws IOException, MessagingException, InterruptedException {
+        Message msg = getSpecificMail("test@q4websystems.com", "testing!", "Job Application for position");
         Multipart mp = (Multipart) msg.getContent();
         for (int i = 0; i < mp.getCount(); i++){
             BodyPart bp = mp.getBodyPart(i);
@@ -112,17 +187,25 @@ public class JobApplicationsPage extends AbstractPageObject {
         return false;
     }
 
-    public boolean hasAttachments(JSONObject data) throws MessagingException, IOException {
-        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
-        Date todayDate = new Date();
-        String today = dateFormat.format(todayDate);
+    public boolean hasAttachments() throws MessagingException, IOException, InterruptedException {
+        Thread.sleep(10000);
+        for(int i =0;i <=5; i++){
+            if (getSpecificMail("test@q4websystems.com", "testing!", "Job Application for position") == null){
+                System.out.println("Email was not found, attempt # "+ i);
+            } else{
+                System.out.println("Email found");
+                break;
+            }
+        }
+        Message msg = getSpecificMail("test@q4websystems.com", "testing!", "Job Application for position");
+        System.out.println("Email was sent at: "+ msg.getSentDate());
 
-        Message msg = getSpecificMail("test@q4websystems.com", "testing!", "Job Application", today);
-
-        if (msg.isMimeType("multipart/mixed")) {
-            Multipart mp = (Multipart)msg.getContent();
-            if (mp.getCount() > 1)
+        if (msg != null) {
+            if (msg.isMimeType("multipart/mixed")) {
+                Multipart mp = (Multipart) msg.getContent();
+                if (mp.getCount() > 1)
                 return true;
+            }
         }
         return false;
     }
@@ -141,7 +224,7 @@ public class JobApplicationsPage extends AbstractPageObject {
         findElement(emailField).sendKeys(data.get("email").toString());
         findElement(coverLetterTextField).sendKeys(data.get("coverletter_text").toString());
         findElement(resumeTextField).sendKeys(data.get("resume_text").toString());
-        findElement(uploadResume).sendKeys(data.get("resume_path").toString());
+        findElement(uploadResume).sendKeys(getFilePath(data));
     }
 
 
@@ -155,17 +238,37 @@ public class JobApplicationsPage extends AbstractPageObject {
         return findElement(applicationsHeader).isDisplayed();
     }
 
+    //Getting system message based on if the email is submitted of not
     public WebElement getSysMessage(JSONObject data) {
         WebElement element = null;
 
         try {
-            By sysMessage = By.xpath(data.get("expected_path").toString());
-            element = findElement(sysMessage);
+            if (data.get("check_email").toString() == "true"){
+                By sysMessage = By.xpath("//div[@class= 'ModuleInnerContainer']");
+                element = findElement(sysMessage);
+                return element;
+            } else if (data.get("check_email").toString() == "false"){
+                By sysMessage = By.xpath("//div[contains(@id,'validationsummary')]");
+                element = findElement(sysMessage);
+                return element;
+            }
         } catch (ElementNotFoundException e1) {
         } catch (ElementNotVisibleException e2) {
         } catch (TimeoutException e3) {
         }
 
-        return element;
+        return null;
+    }
+
+    public String getFilePath(JSONObject data){
+        //Checks file if check_file is set to true
+        if (data.get("check_file").toString() == "true"){
+            //Finds path to the file
+            String path = new File(data.get("resume_file").toString()).getAbsolutePath();
+
+            return path;
+        }
+        return "";
+
     }
 }
