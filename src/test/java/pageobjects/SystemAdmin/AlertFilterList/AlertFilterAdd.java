@@ -4,7 +4,9 @@ import com.jayway.jsonpath.JsonPath;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.Select;
 import pageobjects.AbstractPageObject;
 
@@ -22,8 +24,7 @@ import static specs.AbstractSpec.propUISystemAdmin;
  */
 public class AlertFilterAdd extends AbstractPageObject {
     private static By moduleTitle, filterNameInput, entityTypeSelect, mailingListSelect;
-    private static By addNewLink, saveBtn, cancelBtn, deleteBtn, sendEmailIsChk, activeIsChk;
-    private static By filterTypeSelect, includedTitleItems, includedBodyItems, excludedTitleItems, excludedBodyItems;
+    private static By addNewLink, saveBtn, cancelBtn, deleteBtn, activeIsChk;
     private static String sPathToFile, sFileJson;
     private static JSONParser parser;
     private static final long DEFAULT_PAUSE = 2500;
@@ -38,14 +39,7 @@ public class AlertFilterAdd extends AbstractPageObject {
         cancelBtn = By.xpath(propUISystemAdmin.getProperty("btn_Cancel"));
         deleteBtn = By.xpath(propUISystemAdmin.getProperty("btn_Delete"));
         addNewLink = By.xpath(propUISystemAdmin.getProperty("input_AddNew"));
-        sendEmailIsChk = By.xpath(propUISystemAdmin.getProperty("chk_SendEmail"));
         activeIsChk = By.xpath(propUISystemAdmin.getProperty("chk_IsActive"));
-
-        filterTypeSelect = By.xpath(propUISystemAdmin.getProperty("select_FilterType"));
-        includedTitleItems = By.xpath(propUISystemAdmin.getProperty("txtarea_IncludedTitleItems"));
-        includedBodyItems = By.xpath(propUISystemAdmin.getProperty("txtarea_IncludedBodyItems"));
-        excludedTitleItems = By.xpath(propUISystemAdmin.getProperty("txtarea_ExcludedTitleItems"));
-        excludedBodyItems = By.xpath(propUISystemAdmin.getProperty("txtarea_ExcludedBodyItems"));
 
         parser = new JSONParser();
 
@@ -388,62 +382,6 @@ public class AlertFilterAdd extends AbstractPageObject {
         return false;
     }
 
-    public Boolean setContentFilters(String filterType, String filterTitle, String filterBody) {
-
-        try {
-
-            findElement(filterTypeSelect).sendKeys(filterType);
-
-            WebElement titleField;
-            WebElement bodyField;
-
-            if (filterType.equals("exclude")) {
-                titleField = findElement(excludedTitleItems);
-                bodyField = findElement(excludedBodyItems);
-            } else if (filterType.equals("include")) {
-                titleField = findElement(includedTitleItems);
-                bodyField = findElement(includedBodyItems);
-            } else return false;
-
-            titleField.clear();
-            titleField.sendKeys(filterTitle);
-            bodyField.clear();
-            bodyField.sendKeys(filterBody);
-
-        } catch (ElementNotVisibleException e) {
-            e.printStackTrace();
-        }
-
-        return true;
-    }
-
-    public Boolean enableSendToList(String mailingList) {
-
-        try {
-
-            Select selectList = new Select(driver.findElement(mailingListSelect));
-            selectList.selectByVisibleText(mailingList);
-
-            WebElement activeChk = findElement(activeIsChk);
-            WebElement sendEmailChk = findElement(sendEmailIsChk);
-
-            if (activeChk.getAttribute("checked") == null) {
-                activeChk.click();
-            }
-            if (sendEmailChk.getAttribute("checked") == null) {
-                sendEmailChk.click();
-            }
-
-            findElement(saveBtn).click();
-            return  true;
-
-        } catch (ElementNotVisibleException e) {
-            e.printStackTrace();
-        }
-
-        return false;
-
-    }
 
     public String getPageUrl (JSONObject obj, String name) {
         String  sFilterId = JsonPath.read(obj, "$.['"+name+"'].url_query.FilterId");

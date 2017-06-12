@@ -15,28 +15,26 @@ import static util.Functions.cleanTextFields;
 
 public class FormBuilderPage extends AbstractPageObject {
 
-    private final By firstNameField, lastNameField, emailField, companyField, addressField, cityField;
-    private final By countryField, phoneField, commentsField, submitButton, formBuilderHeader, headerMessage;
+    private final By firstNameField = By.xpath(propUIPublicSite.getProperty("firstNameField"));
+    private final By lastNameField = By.xpath(propUIPublicSite.getProperty("lastNameField"));
+    private final By emailField = By.xpath(propUIPublicSite.getProperty("emailField"));
+    private final By companyField = By.xpath(propUIPublicSite.getProperty("companyField"));
+    private final By addressField = By.xpath(propUIPublicSite.getProperty("addressField"));
+    private final By cityField = By.xpath(propUIPublicSite.getProperty("cityField"));
+    private final By countryField = By.xpath(propUIPublicSite.getProperty("countryField"));
+    private final By phoneField = By.xpath(propUIPublicSite.getProperty("phoneField"));
+    private final By commentsField = By.xpath(propUIPublicSite.getProperty("commentsField"));
 
-    public FormBuilderPage(WebDriver driver) {
-        super(driver);
-        firstNameField = By.xpath(propUIPublicSite.getProperty("firstNameField"));
-        lastNameField = By.xpath(propUIPublicSite.getProperty("lastNameField"));
-        emailField = By.xpath(propUIPublicSite.getProperty("emailField"));
-        companyField = By.xpath(propUIPublicSite.getProperty("companyField"));
-        addressField = By.xpath(propUIPublicSite.getProperty("addressField"));
-        cityField = By.xpath(propUIPublicSite.getProperty("cityField"));
-        countryField = By.xpath(propUIPublicSite.getProperty("countryField"));
-        phoneField = By.xpath(propUIPublicSite.getProperty("phoneField"));
-        commentsField = By.xpath(propUIPublicSite.getProperty("commentsField"));
+    private final By submitButton = By.xpath(propUIPublicSite.getProperty("submitButton"));
 
-        submitButton = By.xpath(propUIPublicSite.getProperty("submitButton"));
+    private final By formBuilderHeader = By.xpath(propUIPublicSite.getProperty("formBuilderHeader"));
+    private final By headerMessage = By.xpath(propUIPublicSite.getProperty("headerMessage"));
 
-        formBuilderHeader = By.xpath(propUIPublicSite.getProperty("formBuilderHeader"));
-        headerMessage = By.xpath(propUIPublicSite.getProperty("headerMessage"));
-    }
 
-    public void completeForm(JSONObject data, String randLastName) {
+
+    public FormBuilderPage(WebDriver driver) { super(driver); }
+
+    public void enterFields(JSONObject data, String randLastName) {
 
         java.util.List<WebElement> textFields =  findElements(By.xpath("//input[@type='text']"));
 
@@ -51,17 +49,15 @@ public class FormBuilderPage extends AbstractPageObject {
         findElement(countryField).sendKeys(data.get("country").toString());
         findElement(phoneField).sendKeys(data.get("phone").toString());
         findElement(commentsField).sendKeys(data.get("comments").toString());
-
-        findElement(submitButton).click();
     }
+
+    public void submitForm() { findElement(submitButton).click(); }
 
     public boolean formBuilderPageDisplayed() { return findElement(formBuilderHeader).isDisplayed(); }
 
     public boolean correctMessageDisplayed(String expected) {
-        if (!expected.equals("none")) {
             String text = findElement(headerMessage).getText();
             return text.contains(expected);
-        } else return true;
     }
 
 }

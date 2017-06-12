@@ -1,5 +1,7 @@
 package specs.SocialMedia;
 
+//import org.hamcrest.CoreMatchers;
+
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -136,7 +138,7 @@ public class CheckLinkedIn extends AbstractSpec{
         Assert.assertEquals(socialTemplates.getEditableTemplateText(), firstTemplateBefore, "Editable template textbox is different from original value");
         socialTemplates.editTemplateTo(firstTemplateAfter).saveTemplate();
 
-        // checking that the template has been changed (including after closing and reopening the settings screen)
+        //checking that the template has been changed (including after closing and reopening the settings screen)
         Assert.assertEquals(socialTemplates.getFirstTemplateText(), firstTemplateAfter, "Template is not set to new value");
         socialTemplates.closeSocialTemplates().openLinkedInSettings();
         Assert.assertEquals(socialTemplates.getFirstTemplateText(), firstTemplateAfter, "Template is not set to new value after closing and re-opening Social Templates");

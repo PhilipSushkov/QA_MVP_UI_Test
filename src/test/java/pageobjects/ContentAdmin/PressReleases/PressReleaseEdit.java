@@ -10,7 +10,7 @@ public class PressReleaseEdit extends AbstractPageObject {
     private static By headlineInput, yourPageUrlLabel, changeUrlLink, categorySelect, tagsInput, radEditorFrame;
     private static By relatedDocInput, relatedProjSelect, urlOverrideInput, thumbnailPathImage, thumbnailPathInput;
     private static By openLinkCheckbox, exlLatestPagesCheckbox, activeCheckbox;
-    private static By switchToHtml, textArea, seoNameLiteral, workflowState, updateComments, deleteButton;
+    private static By switchToHtml, textArea, seoNameLiteral, updateComments, deleteButton;
 
     private final String imageFile = "Q4Touch_LtBlue.png";
     private final String relatedFile = "bitcoin.pdf";
@@ -48,8 +48,6 @@ public class PressReleaseEdit extends AbstractPageObject {
         updateComments = By.xpath(propUIContentAdmin.getProperty("txtarea_UpdateComments"));
         deleteButton = By.xpath(propUIContentAdmin.getProperty("btn_Delete"));
 
-
-        workflowState = By.xpath(propUIContentAdmin.getProperty("span_WorkflowState"));
         saveAndSubmitButton = By.xpath(propUIContentAdmin.getProperty("btn_SaveAndSubmit"));
     }
 
@@ -250,18 +248,6 @@ public class PressReleaseEdit extends AbstractPageObject {
         return timeSet;
     }
 
-    public WebElement getWorkflowState() {
-        try {
-            waitForElement(workflowState);
-            return findElement(workflowState);
-        } catch (ElementNotFoundException e) {
-        } catch (ElementNotVisibleException e) {
-        } catch (TimeoutException e) {
-        }
-
-        return null;
-    }
-
     public WebElement getSaveAndSubmitButton() {
         WebElement element = null;
 
@@ -285,8 +271,8 @@ public class PressReleaseEdit extends AbstractPageObject {
         //newsPageURL = newsPageURL.substring(0, newsPageURL.lastIndexOf("/")); // substring repetition needed to remove the -details section of URL
 
         // filling in mandatory date, time, and headline fields
-        findElement(timeHHSelect).sendKeys(hour);
         findElement(dateInput).sendKeys(date);
+        findElement(timeHHSelect).sendKeys(hour);
         findElement(timeMMSelect).sendKeys(minute);
         findElement(timeAMSelect).sendKeys(AMPM);
         findElement(headlineInput).sendKeys(headline);

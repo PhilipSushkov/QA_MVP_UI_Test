@@ -3,19 +3,10 @@ package pageobjects.LiveSite;
 import org.json.simple.JSONObject;
 import org.openqa.selenium.*;
 import pageobjects.AbstractPageObject;
-
-import javax.activation.DataHandler;
-import javax.mail.BodyPart;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.List;
 
 import static specs.AbstractSpec.propUIPublicSite;
-import static util.Functions.*;
+import static util.Functions.cleanTextFields;
 
 
 /**
@@ -26,7 +17,6 @@ public class JobApplicationsPage extends AbstractPageObject {
     private final By firstNameField, addressField, lastNameField, cityField, countryField, homePhoneField;
     private final By businessPhoneField, faxField, provinceField, postalCodeField, emailField;
     private final By coverLetterTextField, resumeTextField, submitApplication, applicationsHeader;
-    private final By uploadResume, uploadCoverLetter;
 
     public JobApplicationsPage(WebDriver driver) {
         super(driver);
@@ -44,8 +34,6 @@ public class JobApplicationsPage extends AbstractPageObject {
         coverLetterTextField = By.xpath(propUIPublicSite.getProperty("field_coverLetterText"));
         resumeTextField = By.xpath(propUIPublicSite.getProperty("field_resumeText"));
         submitApplication = By.xpath(propUIPublicSite.getProperty("btn_submit"));
-        uploadResume = By.xpath(propUIPublicSite.getProperty("btn_resume"));
-        uploadCoverLetter = By.xpath(propUIPublicSite.getProperty("btn_coverletter"));
         applicationsHeader = By.xpath(propUIPublicSite.getProperty("applicationHeader"));
 
     }
@@ -63,70 +51,6 @@ public class JobApplicationsPage extends AbstractPageObject {
         return sMessage;
     }
 
-    public boolean checkEmail(JSONObject data) throws IOException, MessagingException {
-        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
-        Date todayDate = new Date();
-        String today = dateFormat.format(todayDate);
-
-        String content = (getSpecificMail("test@q4websystems.com", "testing!", "Job Application for position", today).getContent()).toString();
-        //Return true if content contains all of the items below - ASSERTION FOR EACH ONE?
-
-        return (
-                content.contains(data.get("first_name").toString()) &&
-                content.contains(data.get("last_name").toString()) &&
-                content.contains(data.get("address").toString()) &&
-                content.contains(data.get("city").toString()) &&
-                content.contains(data.get("province").toString()) &&
-                content.contains(data.get("country").toString()) &&
-                content.contains(data.get("postal_code").toString())&&
-                content.contains(data.get("home_phone").toString()) &&
-                content.contains(data.get("business_phone").toString()) &&
-                content.contains(data.get("fax").toString()) &&
-                content.contains(data.get("email").toString()) &&
-                content.contains(data.get("coverletter_text").toString()) &&
-                content.contains(data.get("resume_text").toString())
-                );
-    }
-
-
-    public boolean checkAttachments(JSONObject data) throws IOException, MessagingException {
-        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
-        Date todayDate = new Date();
-        String today = dateFormat.format(todayDate);
-
-        Message msg = getSpecificMail("test@q4websystems.com", "testing!", "Job Application", today);
-
-        Multipart mp = (Multipart) msg.getContent();
-        for (int i = 0; i < mp.getCount(); i++){
-            BodyPart bp = mp.getBodyPart(i);
-            String disp = bp.getDisposition();
-
-            if (disp != null && (disp.equalsIgnoreCase("ATTACHMENT"))){
-                DataHandler handler = bp.getDataHandler();
-
-                if (handler.getName().equals(data.get("resume_file"))){
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    public boolean hasAttachments(JSONObject data) throws MessagingException, IOException {
-        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
-        Date todayDate = new Date();
-        String today = dateFormat.format(todayDate);
-
-        Message msg = getSpecificMail("test@q4websystems.com", "testing!", "Job Application", today);
-
-        if (msg.isMimeType("multipart/mixed")) {
-            Multipart mp = (Multipart)msg.getContent();
-            if (mp.getCount() > 1)
-                return true;
-        }
-        return false;
-    }
-
     public void enterFields(JSONObject data){
         findElement(firstNameField).sendKeys(data.get("first_name").toString());
         findElement(lastNameField).sendKeys(data.get("last_name").toString());
@@ -141,7 +65,6 @@ public class JobApplicationsPage extends AbstractPageObject {
         findElement(emailField).sendKeys(data.get("email").toString());
         findElement(coverLetterTextField).sendKeys(data.get("coverletter_text").toString());
         findElement(resumeTextField).sendKeys(data.get("resume_text").toString());
-        findElement(uploadResume).sendKeys(data.get("resume_path").toString());
     }
 
 
@@ -168,4 +91,6 @@ public class JobApplicationsPage extends AbstractPageObject {
 
         return element;
     }
+
+
 }

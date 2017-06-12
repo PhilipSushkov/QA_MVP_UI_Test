@@ -8,6 +8,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
+import org.openqa.selenium.firefox.internal.ProfilesIni;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriverService;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -33,7 +34,6 @@ public abstract class AbstractSpec extends util.Functions {
 // IMPORTANT:
 // Determines which environment the test suite will run on but can be overridden by command line
 //------------------------------------------------------------------------------
-    //private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.DEVELOP;
     //private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.BETA;
     private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.PRODUCTION;
 //------------------------------------------------------------------------------
@@ -79,7 +79,7 @@ public abstract class AbstractSpec extends util.Functions {
             setupEnvironment();
 
             desktopUrl = new URL(activeEnvironment.getProtocol() + activeEnvironment.getHost());
-            desktopUrlPublic = new URL("http://chicagotest.q4web.com/");
+            desktopUrlPublic = new URL("http://chicagotest.q4web.release/");
 
             LOG.info("ENV URL: " + desktopUrl);
 

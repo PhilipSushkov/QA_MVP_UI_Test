@@ -1,8 +1,5 @@
 package specs.PublicSite;
 
-import com.aventstack.extentreports.ExtentReports;
-import com.aventstack.extentreports.ExtentTest;
-import com.aventstack.extentreports.Status;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -29,81 +26,45 @@ import util.LocalDriverManager;
 
 public class CheckCrawlingSite {
     private static CrawlingSite crawlingSite;
-    private static String sPathToFile, sDataSiteJson, sDataModuleJson;
-    private static String sSiteVersion, sSiteVersionCookie, sCookie;
-    private static String sDataSiteJson_notLive, sDataSiteJson_n;
+    private static String sPathToFile, sDataSiteJson, sDataModuleJson, sSiteVersion;
     private static JSONParser parser;
 
     private static final int NUM_THREADS = 3;
     private static final String PATHTO_PUBLICSITE_PROP = "PublicSite/PublicSiteMap.properties";
     public static Properties propUIPublicSite;
-    private static final String SITE_DATA="siteData", SITE_DATA_2="siteData2", MODULE_DATA="moduleData";
-    private static ExtentReports extent, cookieExtent;
+    private static final String SITE_DATA="siteData", MODULE_DATA="moduleData";
 
 
     @BeforeTest
     public void setUp() throws Exception {
         propUIPublicSite = Functions.ConnectToPropUI(PATHTO_PUBLICSITE_PROP);
         sSiteVersion = propUIPublicSite.getProperty("siteVersion");
-        sSiteVersionCookie = propUIPublicSite.getProperty("siteVersionCookie");
         sPathToFile = System.getProperty("user.dir") + propUIPublicSite.getProperty("dataPath_LiveSite");
-        sCookie = propUIPublicSite.getProperty("versionCookie");
         sDataSiteJson = propUIPublicSite.getProperty("json_SiteData");
-        sDataSiteJson_notLive = propUIPublicSite.getProperty("json_SiteData_notLive");
         sDataModuleJson = propUIPublicSite.getProperty("json_ModuleData");
 
         parser = new JSONParser();
-        extent = ExtentManager.GetExtent();
-        cookieExtent = CookieExtentManager.GetExtent();
-
-        sDataSiteJson_n = propUIPublicSite.getProperty("json_SiteData_7");
     }
 
-    @Test(dataProvider=SITE_DATA_2, threadPoolSize=NUM_THREADS, priority=1, enabled=true)
+    @Test(dataProvider=SITE_DATA, threadPoolSize=NUM_THREADS, priority=1, enabled=false)
     public void checkSiteVersion(String site) throws Exception {
-        //crawlingSite = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile);
-        String sVersionActual = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getSiteVersion();
-        ExtentTest test = extent.createTest("Check version result for " + site);
-
-        if (sVersionActual.equals(sSiteVersion)) {
-            test.log(Status.PASS, "Site Version number is valid: " + sSiteVersion);
-        } else {
-            test.log(Status.FAIL, "Actual Version number is wrong: " + sVersionActual + ". Supposed to be: " + sSiteVersion);
-        }
-
-        Assert.assertEquals(sVersionActual, sSiteVersion, "Site Version number is not correct for " + site);
-
+        crawlingSite = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile);
+        Assert.assertEquals(crawlingSite.getSiteVersion(), sSiteVersion, "Site Version number is not correct for " + site);
     }
 
-    @Test(dataProvider=SITE_DATA_2, threadPoolSize=NUM_THREADS, priority=2, enabled=false)
-    public void checkSiteVersionCookie(String site) throws Exception {
-        //crawlingSite = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile);
-        String sVersionActual = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getSiteVersionCookie(sCookie);
-        ExtentTest test = cookieExtent.createTest("Check Cookie version result for " + site);
-
-        if (sVersionActual.equals(sSiteVersionCookie)) {
-            test.log(Status.PASS, "Site Cookie Version number is valid: " + sSiteVersionCookie);
-        } else {
-            test.log(Status.FAIL, "Actual Version number is wrong: " + sVersionActual + ". Supposed to be: " + sSiteVersionCookie);
-        }
-
-        Assert.assertEquals(sVersionActual, sSiteVersionCookie, "Site Cookie Version number is not correct for " + site);
-
-    }
-
-    @Test(dataProvider=SITE_DATA, threadPoolSize=NUM_THREADS, priority=3, enabled=false)
+    @Test(dataProvider=SITE_DATA, threadPoolSize=NUM_THREADS, priority=2, enabled=true)
     public void crawlSiteMap(String site) throws Exception {
         crawlingSite = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile);
         Assert.assertTrue(crawlingSite.getSiteMap(), "sitemap.ashx file doesn't exist for " + site);
     }
 
-    @Test(dataProvider=SITE_DATA, threadPoolSize=NUM_THREADS, priority=4, enabled=false)
+    @Test(dataProvider=SITE_DATA, threadPoolSize=NUM_THREADS, priority=3, enabled=true)
     public void crawlSiteModule(String site) throws Exception {
         crawlingSite = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile);
         Assert.assertTrue(crawlingSite.mapSiteModule(sDataModuleJson), "Mapping Site-Modules isn't done properly " + site);
     }
 
-    @Test(dataProvider=SITE_DATA, threadPoolSize=NUM_THREADS, priority=5, enabled=false)
+    @Test(dataProvider=SITE_DATA, threadPoolSize=NUM_THREADS, priority=4, enabled=true)
     public void checkSiteModule(String site) throws Exception {
         crawlingSite = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile);
         Assert.assertTrue(crawlingSite.getSiteModule(), "Some Modules on the site didn't find " + site);
@@ -169,36 +130,6 @@ public class CheckCrawlingSite {
         return null;
     }
 
-    @DataProvider(name=SITE_DATA_2, parallel=true)
-    public Object[][] siteData2() {
-
-        try {
-            JSONArray jsonArray = (JSONArray) parser.parse(new FileReader(sPathToFile + sDataSiteJson_n));
-            ArrayList<String> zoom = new ArrayList();
-
-            for (Iterator<JSONObject> iterator = jsonArray.iterator(); iterator.hasNext();) {
-                JSONObject jsonObject = iterator.next();
-                zoom.add(jsonObject.get("Site").toString());
-            }
-
-            Object[][] newSites = new Object[zoom.size()][1];
-            for (int i = 0; i < zoom.size(); i++) {
-                newSites[i][0] = zoom.get(i);
-            }
-
-            return newSites;
-
-        }  catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
     @DataProvider(name=MODULE_DATA)
     public Object[][] moduleData() {
 
@@ -232,11 +163,9 @@ public class CheckCrawlingSite {
         return null;
     }
 
-    @AfterTest(alwaysRun=true)
+    @AfterTest
     public void tearDown() {
-        //phDriver.quit();
-        extent.flush();
-        cookieExtent.flush();
+        //driver.quit();
     }
 }
 
