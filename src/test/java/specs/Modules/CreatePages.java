@@ -1,4 +1,4 @@
-package specs.Modules.Feed;
+package specs.Modules;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -13,8 +13,7 @@ import org.testng.Assert;
 import org.openqa.selenium.By;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.LoginPage.LoginPage;
-import pageobjects.Modules.Feed.FeedPage;
-import pageobjects.PageAdmin.PageAdd;
+import pageobjects.Modules.Page;
 import pageobjects.PageAdmin.WorkflowState;
 import specs.AbstractSpec;
 
@@ -27,11 +26,11 @@ import java.util.ArrayList;
  * Created by philipsushkov on 2017-06-12.
  */
 
-public class CreateFeedPage extends AbstractSpec {
+public class CreatePages extends AbstractSpec {
     private static By pageAdminMenuButton;
     private static LoginPage loginPage;
     private static Dashboard dashboard;
-    private static FeedPage feedPage;
+    private static Page page;
 
     private static String sPathToFile, sDataFileJson;
     private static JSONParser parser;
@@ -44,10 +43,10 @@ public class CreateFeedPage extends AbstractSpec {
 
         loginPage = new LoginPage(driver);
         dashboard = new Dashboard(driver);
-        feedPage = new FeedPage(driver);
+        page = new Page(driver);
 
-        sPathToFile = System.getProperty("user.dir") + propUIModulesFeed.getProperty("dataPath_ModulesFeed");
-        sDataFileJson = propUIModulesFeed.getProperty("json_CreatePageData");
+        sPathToFile = System.getProperty("user.dir") + propUIModules.getProperty("dataPath_Modules");
+        sDataFileJson = propUIModules.getProperty("json_PagesData");
 
         parser = new JSONParser();
 
@@ -58,7 +57,8 @@ public class CreateFeedPage extends AbstractSpec {
     public void createFeedPage(JSONObject page) throws Exception {
         String pageName = page.get(SECTION_TITLE).toString();
         dashboard.openPageFromCommonTasks(pageAdminMenuButton);
-        Assert.assertEquals(feedPage.createFeedPage(page, pageName), WorkflowState.IN_PROGRESS.state(), "New Feed Page didn't create properly");
+        Assert.assertEquals(CreatePages.page.createFeedPage(page, pageName), WorkflowState.IN_PROGRESS.state(), "New "+pageName+" Page didn't create properly");
+        Assert.assertEquals(CreatePages.page.saveAndSubmitPage(page, pageName), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New "+pageName+" Page");
     }
 
 

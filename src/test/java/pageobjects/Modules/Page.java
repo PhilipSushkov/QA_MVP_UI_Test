@@ -1,4 +1,4 @@
-package pageobjects.Modules.Feed;
+package pageobjects.Modules;
 
 import com.jayway.jsonpath.JsonPath;
 import org.json.simple.JSONArray;
@@ -12,6 +12,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.openqa.selenium.*;
 import pageobjects.AbstractPageObject;
@@ -19,25 +20,23 @@ import pageobjects.PageAdmin.PageAdminList;
 import pageobjects.PageAdmin.WorkflowState;
 import util.Functions;
 
-import static specs.AbstractSpec.desktopUrl;
-import static specs.AbstractSpec.propUIPageAdmin;
-import static specs.AbstractSpec.propUIModulesFeed;
+import static specs.AbstractSpec.*;
 
 /**
  * Created by philipsushkov on 2017-06-12.
  */
 
-public class FeedPage extends AbstractPageObject {
+public class Page extends AbstractPageObject {
     private static By addNewBtn, backBtn, sectionTitleInput, pageTypeInternalRd, publishBtn, hasContentChk;
     private static By pageTemplateSelect, parentPageSelect, showNavChk, openNewWindChk, saveBtn, workflowStateSpan, currentContentSpan;
     private static By parentUrlSpan, seoNameInput, previewLnk, breadcrumbDiv, commentsTxt, deleteBtn, addNewInput;
-    private static By saveAndSubmitBtn;
+    private static By saveAndSubmitBtn, pageLayoutSelect, globalModulesChk;
     private static String sPathToFile, sFilePageJson;
     private static JSONParser parser;
     private static final long DEFAULT_PAUSE = 2500;
     private static PageAdminList pageAdminList;
 
-    public FeedPage(WebDriver driver) {
+    public Page(WebDriver driver) {
         super(driver);
 
         addNewBtn = By.xpath(propUIPageAdmin.getProperty("btn_AddNew"));
@@ -56,6 +55,8 @@ public class FeedPage extends AbstractPageObject {
         commentsTxt = By.xpath(propUIPageAdmin.getProperty("txtarea_Comments"));
         addNewInput = By.xpath(propUIPageAdmin.getProperty("input_AddNew"));
         currentContentSpan = By.xpath(propUIPageAdmin.getProperty("span_CurrentContent"));
+        pageLayoutSelect = By.xpath(propUIPageAdmin.getProperty("select_PageLayout"));
+        globalModulesChk = By.xpath(propUIPageAdmin.getProperty("chk_GlobalModuleSet"));
 
         saveBtn = By.xpath(propUIPageAdmin.getProperty("btn_Save"));
         deleteBtn = By.xpath(propUIPageAdmin.getProperty("btn_Delete"));
@@ -63,8 +64,8 @@ public class FeedPage extends AbstractPageObject {
         backBtn = By.xpath(propUIPageAdmin.getProperty("btn_Back"));
         saveAndSubmitBtn = By.xpath(propUIPageAdmin.getProperty("btn_SaveAndSubmit"));
 
-        sPathToFile = System.getProperty("user.dir") + propUIModulesFeed.getProperty("dataPath_ModulesFeed");
-        sFilePageJson = propUIModulesFeed.getProperty("json_FeedPageProp");
+        sPathToFile = System.getProperty("user.dir") + propUIModules.getProperty("dataPath_Modules");
+        sFilePageJson = propUIModules.getProperty("json_PagesProp");
 
         parser = new JSONParser();
         pageAdminList = new PageAdminList(driver);;
@@ -124,12 +125,12 @@ public class FeedPage extends AbstractPageObject {
             Thread.sleep(DEFAULT_PAUSE);
 
             // Write page parameters to json
-            JSONObject jsonObjectNew = new JSONObject();
+            JSONObject jsonObj = new JSONObject();
 
             try {
-                jsonObjectNew = (JSONObject) parser.parse(new FileReader(sPathToFile + sFilePageJson));
+                jsonObj = (JSONObject) parser.parse(new FileReader(sPathToFile + sFilePageJson));
             } catch (ParseException e) {
-                jsonObjectNew = (JSONObject) parser.parse("{}");
+                jsonObj = (JSONObject) parser.parse("{}");
             }
 
             JSONObject page = new JSONObject();
@@ -139,6 +140,8 @@ public class FeedPage extends AbstractPageObject {
             page.put("page_type", page_type);
 
             page.put("workflow_state", WorkflowState.IN_PROGRESS.state());
+            page.put("active", "true");
+            page.put("show_in_navigation", "true");
 
             URL pageURL = new URL(getUrl());
             String[] params = pageURL.getQuery().split("&");
@@ -147,11 +150,11 @@ public class FeedPage extends AbstractPageObject {
                 jsonURLQuery.put(param.split("=")[0], param.split("=")[1]);
             }
             page.put("url_query", jsonURLQuery);
-            jsonObjectNew.put(pageName, page);
+            jsonObj.put(pageName, page);
 
             try {
                 FileWriter file = new FileWriter(sPathToFile + sFilePageJson);
-                file.write(jsonObjectNew.toJSONString().replace("\\", ""));
+                file.write(jsonObj.toJSONString().replace("\\", ""));
                 file.flush();
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -159,7 +162,7 @@ public class FeedPage extends AbstractPageObject {
                 e.printStackTrace();
             }
 
-            System.out.println(pageName+ ": New Feed Page has been created");
+            System.out.println(pageName+ ": New "+pageName+" Page has been created");
             return findElement(workflowStateSpan).getText();
 
         } catch (Exception e) {
@@ -169,11 +172,82 @@ public class FeedPage extends AbstractPageObject {
         return null;
     }
 
+    public String saveAndSubmitPage(JSONObject pagesDataObj, String pageName) throws InterruptedException {
+        String page_layout;
 
-    public String getPageUrl (JSONObject obj, String pageName) {
+        try {
+            JSONObject jsonObj = (JSONObject) parser.parse(new FileReader(sPathToFile + sFilePageJson));
+
+            String pageUrl = getPageUrl(jsonObj, pageName);
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+
+            waitForElement(commentsTxt);
+
+            if (Boolean.parseBoolean(pagesDataObj.get("has_content").toString())) {
+                if (!Boolean.parseBoolean(findElement(hasContentChk).getAttribute("checked"))) {
+                    findElement(hasContentChk).click();
+                } else {
+                }
+            } else {
+                if (!Boolean.parseBoolean(findElement(hasContentChk).getAttribute("checked"))) {
+                } else {
+                    findElement(hasContentChk).click();
+                }
+            }
+
+            page_layout = pagesDataObj.get("page_layout").toString();
+            findElement(pageLayoutSelect).sendKeys(page_layout);
+
+            uncheckGlobalModuleSettings();
+
+            findElement(commentsTxt).sendKeys(pagesDataObj.get("comment").toString());
+            findElement(saveAndSubmitBtn).click();
+            Thread.sleep(DEFAULT_PAUSE);
+
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+
+            JSONObject page = (JSONObject) jsonObj.get(pageName);
+
+            page.put("workflow_state", WorkflowState.FOR_APPROVAL.state());
+            page.put("deleted", "false");
+            page.put("has_content", "true");
+
+            jsonObj.put(pageName, page);
+
+            FileWriter file = new FileWriter(sPathToFile + sFilePageJson);
+            file.write(jsonObj.toJSONString().replace("\\", ""));
+            file.flush();
+
+            System.out.println(pageName+ ": New "+pageName+" Page has been submitted");
+            return findElement(workflowStateSpan).getText();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+
+    private String getPageUrl(JSONObject obj, String pageName) {
         String  sItemID = JsonPath.read(obj, "$.['"+pageName+"'].url_query.ItemID");
         String  sLanguageId = JsonPath.read(obj, "$.['"+pageName+"'].url_query.LanguageId");
         String  sSectionId = JsonPath.read(obj, "$.['"+pageName+"'].url_query.SectionId");
         return desktopUrl.toString()+"default.aspx?ItemID="+sItemID+"&LanguageId="+sLanguageId+"&SectionId="+sSectionId;
     }
+
+    private void uncheckGlobalModuleSettings() throws InterruptedException {
+        List<WebElement> elementsChk = findElements(globalModulesChk);
+        for (WebElement elementChk:elementsChk) {
+            if (Boolean.parseBoolean(elementChk.getAttribute("checked"))) {
+                elementChk.click();
+                Thread.sleep(DEFAULT_PAUSE/2);
+            }
+        }
+
+    }
+
 }
