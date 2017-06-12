@@ -24,6 +24,7 @@ import java.util.ArrayList;
 /**
  * Created by andyp on 2017-06-07.
  */
+
 public class CheckJobApplicationPr extends AbstractSpec {
 
     private static HomePage homePage;

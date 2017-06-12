@@ -71,4 +71,9 @@
             <class name="specs.PublicSite.CheckFormBuilderPage" />
         </classes>
     </test>
+    <test name="CheckJobApplicationsPage">
+        <classes>
+            <class name="specs.PublicSite.CheckJobApplicationsPage" />
+        </classes>
+    </test>
 </suite>
