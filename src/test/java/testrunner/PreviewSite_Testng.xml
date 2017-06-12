@@ -69,10 +69,5 @@
             <class name="specs.PreviewSite.CheckPrintPr" />
         </classes>
     </test>
-    <test name="CheckFormBuilderPr">
-        <classes>
-            <class name="specs.PreviewSite.CheckFormBuilderPr" />
-        </classes>
-    </test>
 
 </suite>

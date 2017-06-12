@@ -1,5 +1,6 @@
 package specs.PreviewSite;
 
+import org.junit.rules.Timeout;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.TimeoutException;

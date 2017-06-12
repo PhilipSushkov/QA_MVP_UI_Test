@@ -16,7 +16,7 @@ public class PresentationEdit extends AbstractPageObject {
     private static By urlOverrideInput, thumbnailPathImage, thumbnailPathInput;
     private static By sendSlideShareCheckbox, openLinkCheckbox, exlLatestPagesCheckbox, activeCheckbox;
     private static By addNewSpeakersLink, speakerNameInput, speakerPositionInput, cancelSpeakerButton;
-    private static By switchToHtml, textArea, seoNameLiteral, workflowState, updateComments, deleteButton;
+    private static By switchToHtml, textArea, seoNameLiteral, updateComments, deleteButton;
 
     private final String imageFile = "Q4Touch_LtBlue.png";
     private final String presentationFile = "bitcoin.pdf";
@@ -54,7 +54,6 @@ public class PresentationEdit extends AbstractPageObject {
         switchToHtml = By.className(propUIContentAdmin.getProperty("html_SwitchTo"));
         textArea = By.tagName(propUIContentAdmin.getProperty("frame_Textarea"));
         seoNameLiteral = By.id(propUIContentAdmin.getProperty("span_seoNameLiteral"));
-        workflowState = By.xpath(propUIContentAdmin.getProperty("span_WorkflowState"));
         updateComments = By.xpath(propUIContentAdmin.getProperty("txtarea_UpdateComments"));
         deleteButton = By.xpath(propUIContentAdmin.getProperty("btn_Delete"));
 
@@ -275,18 +274,6 @@ public class PresentationEdit extends AbstractPageObject {
         }
 
         return speakersSet;
-    }
-
-    public WebElement getWorkflowState() {
-        try {
-            waitForElement(workflowState);
-            return findElement(workflowState);
-        } catch (ElementNotFoundException e) {
-        } catch (ElementNotVisibleException e) {
-        } catch (TimeoutException e) {
-        }
-
-        return null;
     }
 
     public WebElement getSaveAndSubmitButton() {

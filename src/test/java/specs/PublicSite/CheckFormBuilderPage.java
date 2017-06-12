@@ -19,7 +19,6 @@ import pageobjects.LoginPage.LoginPage;
 import pageobjects.SystemAdmin.SiteMaintenance.FunctionalBtn;
 import specs.AbstractSpec;
 
-import javax.mail.Message;
 import javax.mail.MessagingException;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -30,8 +29,6 @@ import java.io.IOException;
  */
 
 public class CheckFormBuilderPage extends AbstractSpec {
-
-    //// WHEN ADDING A TEST TO THIS CLASS, ADD A ENTRY TO IT IN CheckFormBuilderPr.java \\\\
 
     private static HomePage homePage;
     private static FormBuilderPage formBuilderPage;
@@ -47,8 +44,6 @@ public class CheckFormBuilderPage extends AbstractSpec {
     private final String DATA="getData";
 
     private final String testAccount = "test@q4websystems.com", testPassword = "testing!";
-
-    private final String randLastName = "Last Name: " + RandomStringUtils.randomAlphanumeric(6);
 
     private final Long LONG_WAIT = 15000L;
 
@@ -98,18 +93,17 @@ public class CheckFormBuilderPage extends AbstractSpec {
     @Test(dataProvider = DATA, priority = 2)
     public void canSubmitForm(JSONObject data) throws InterruptedException {
 
+        String randLastName = "Last Name: " + RandomStringUtils.randomAlphanumeric(6);
+
         homePage.selectFormBuilderFromMenu();
 
-        formBuilderPage.completeForm(data, randLastName);
+        formBuilderPage.enterFields(data, randLastName);
+        formBuilderPage.submitForm();
 
         Thread.sleep(SHORT_WAIT);
 
-
         Assert.assertTrue(formBuilderPage.correctMessageDisplayed(data.get("expected_message").toString()));
-    }
 
-    @Test(dataProvider = DATA, priority = 3)
-    public void emailSent(JSONObject data) throws InterruptedException {
         if (Boolean.valueOf(data.get("expect_success").toString())) {
 
             // Wait for email in inbox
@@ -117,9 +111,7 @@ public class CheckFormBuilderPage extends AbstractSpec {
             Thread.sleep(LONG_WAIT);
 
             try {
-                Message[] mail = getMail(testAccount, testPassword, randLastName);
-                Assert.assertNotEquals(mail.length, 0);
-                String content = mail[0].getContent().toString();
+                String content = getRecentMail(testAccount, testPassword, randLastName).getContent().toString();
                 Assert.assertTrue(content.contains(data.get("first_name").toString()));
                 Assert.assertTrue(content.contains(data.get("email").toString()));
                 Assert.assertTrue(content.contains(data.get("comments").toString()));
@@ -131,6 +123,14 @@ public class CheckFormBuilderPage extends AbstractSpec {
         }
     }
 
+    @Test(priority = 3)
+    public void submitIncompleteForm() {
+
+        homePage.selectFormBuilderFromMenu();
+        formBuilderPage.submitForm();
+
+        Assert.assertTrue(formBuilderPage.formBuilderPageDisplayed());
+    }
 
     @DataProvider
     public Object[][] getData() {

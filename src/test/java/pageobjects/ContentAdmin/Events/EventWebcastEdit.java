@@ -20,7 +20,7 @@ public class EventWebcastEdit extends AbstractPageObject {
     private static By urlOverrideInput, relatedPressReleaseSelect, relatedFinancialReportSelect, financialPeriodQSelect, financialPeriodYSelect, relatedPresentationsSelect, relatedWebcastInput;
     private static By addNewSpeakersLink, speakerNameInput, speakerPositionInput, cancelSpeakerButton;
     private static By addNewAttachmentsLink, attachmentTitleInput, attachmentTypeListSelect, attachmentPathInput, cancelAttachmentButton;
-    private static By textArea, seoNameLiteral, workflowState, updateComments, deleteButton;
+    private static By textArea, seoNameLiteral, updateComments, deleteButton;
 
     private final String imageFile = "Q4Touch_LtBlue.png";
 
@@ -78,7 +78,6 @@ public class EventWebcastEdit extends AbstractPageObject {
 
         textArea = By.tagName(propUIContentAdmin.getProperty("frame_Textarea"));
         seoNameLiteral = By.id(propUIContentAdmin.getProperty("span_seoNameLiteral"));
-        workflowState = By.xpath(propUIContentAdmin.getProperty("span_WorkflowState"));
         updateComments = By.xpath(propUIContentAdmin.getProperty("txtarea_UpdateComments"));
         deleteButton = By.xpath(propUIContentAdmin.getProperty("btn_Delete"));
     }
@@ -396,18 +395,6 @@ public class EventWebcastEdit extends AbstractPageObject {
         return attachmentsSet;
     }
 
-    public WebElement getWorkflowState() {
-        try {
-            waitForElement(workflowState);
-            return findElement(workflowState);
-        } catch (ElementNotFoundException e) {
-        } catch (ElementNotVisibleException e) {
-        } catch (TimeoutException e) {
-        }
-
-        return null;
-    }
-
     public WebElement getSaveAndSubmitButton() {
         WebElement element = null;
 
@@ -422,14 +409,14 @@ public class EventWebcastEdit extends AbstractPageObject {
         return element;
     }
 
-    public String addNewEvent(String headline, String date, String tomorrow, String hour, String minute, String AMPM, String timeZone, String tags, String location, String[] filenames) {
+    public String addNewEvent(String headline, String date, String tommorrow, String hour, String minute, String AMPM, String timeZone, String tags, String location, String[] filenames) {
 
         //wait.until(ExpectedConditions.visibilityOf(findElement(yourPageUrlLabel)));
         waitForElement(yourPageUrlLabel);
 
 
         findElement(startDateInput).sendKeys(date);
-        findElement(endDateInput).sendKeys(tomorrow);
+        findElement(endDateInput).sendKeys(tommorrow);
         findElements(startTimeHHSelect).get(0).sendKeys(hour);
         findElements(endTimeHHSelect).get(1).sendKeys(hour);
         findElements(startTimeMMSelect).get(0).sendKeys(minute);
