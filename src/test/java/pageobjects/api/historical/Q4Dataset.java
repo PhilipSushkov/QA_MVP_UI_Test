@@ -30,7 +30,7 @@ public class Q4Dataset {
             JSONObject dataSet = (JSONObject) parser.parse(input);
             // Create a JSONObject containing all the stock information
 
-            currentPrices.add(dataSet.get("Last").toString());
+            currentPrices.add(dataSet.get("Ask").toString());
             openPrices.add(dataSet.get("Open").toString());
             yearHighPrices.add(dataSet.get("High52Weeks").toString());
             yearLowPrices.add(dataSet.get("Low52Weeks").toString());

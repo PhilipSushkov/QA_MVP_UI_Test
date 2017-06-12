@@ -15,7 +15,7 @@ import static specs.AbstractSpec.propUIEmailAdmin;
  */
 
 public class MailingLists extends AbstractPageObject {
-    private static By moduleTitle, grid, gridMailingLists, inputSearch, buttonSearch;
+    private static By moduleTitle, grid, gridMailingLists, inputSearch, buttonSearch, firstListActive;
     private final Integer columnsNumber = 5;
 
     public MailingLists(WebDriver driver) {
@@ -25,6 +25,7 @@ public class MailingLists extends AbstractPageObject {
         gridMailingLists = By.xpath(propUIEmailAdmin.getProperty("table_GridItem"));
         inputSearch = By.xpath(propUIEmailAdmin.getProperty("input_Search"));
         buttonSearch = By.xpath(propUIEmailAdmin.getProperty("button_Search"));
+        firstListActive = By.xpath(propUIEmailAdmin.getProperty("first_ListActive"));
     }
 
 
@@ -72,4 +73,19 @@ public class MailingLists extends AbstractPageObject {
         return element;
     }
 
+    public Boolean listActive(String name) {
+        this.getSearchField().sendKeys(name);
+        this.getSearchButton().click();
+
+        try {
+            wait.until(ExpectedConditions.visibilityOf(findElement(firstListActive)));
+            String listActive = findElement(firstListActive).getText();
+            return listActive.equals("True");
+
+        } catch (ElementNotVisibleException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
 }
