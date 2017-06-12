@@ -46,12 +46,19 @@ public class CreateFeedPage extends AbstractSpec {
         dashboard = new Dashboard(driver);
         feedPage = new FeedPage(driver);
 
-        sPathToFile = System.getProperty("user.dir") + propUIPageAdmin.getProperty("dataPath_ModulesFeed");
-        sDataFileJson = propUIPageAdmin.getProperty("json_CreatePageData");
+        sPathToFile = System.getProperty("user.dir") + propUIModulesFeed.getProperty("dataPath_ModulesFeed");
+        sDataFileJson = propUIModulesFeed.getProperty("json_CreatePageData");
 
         parser = new JSONParser();
 
         loginPage.loginUser();
+    }
+
+    @Test(dataProvider=PAGE_DATA, priority=1)
+    public void createFeedPage(JSONObject page) throws Exception {
+        String pageName = page.get(SECTION_TITLE).toString();
+        dashboard.openPageFromCommonTasks(pageAdminMenuButton);
+        Assert.assertEquals(feedPage.createFeedPage(page, pageName), WorkflowState.IN_PROGRESS.state(), "New Feed Page didn't create properly");
     }
 
 

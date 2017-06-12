@@ -69,6 +69,10 @@ public abstract class AbstractSpec extends util.Functions {
     public static Properties propUISocialMedia;
     private static final String PATHTO_PAGEADMIN_PROP = "PageAdmin/PageAdminMap.properties";
     public static Properties propUIPageAdmin;
+    private static final String PATHTO_MODULESFEED_PROP = "Modules/Feed/Feed.properties";
+    public static Properties propUIModulesFeed;
+    private static final String PATHTO_MODULESPRESSRELEASE_PROP = "Modules/PressRelease/PressRelease.properties";
+    public static Properties propUIModulesPressRelease;
     private static final String PATHTO_API_PROP = "api/ApiMap.properties";
     public static Properties propAPI;
 
@@ -250,6 +254,8 @@ public abstract class AbstractSpec extends util.Functions {
         propUIPublicSite = ConnectToPropUI(PATHTO_PUBLICSITE_PROP);
         propUISocialMedia = ConnectToPropUI(PATHTO_SOCIALMEDIA_PROP);
         propUIPageAdmin = ConnectToPropUI(PATHTO_PAGEADMIN_PROP);
+        propUIModulesFeed = ConnectToPropUI(PATHTO_MODULESFEED_PROP);
+        propUIModulesPressRelease = ConnectToPropUI(PATHTO_MODULESPRESSRELEASE_PROP);
         propAPI = ConnectToPropUI(PATHTO_API_PROP);
     }
 
