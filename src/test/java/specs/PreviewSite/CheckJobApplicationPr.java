@@ -51,29 +51,29 @@ public class CheckJobApplicationPr extends AbstractSpec {
 
     }
 
-    @AfterTest
-    public void deleteEmail() throws InterruptedException {
-        deleteMail(user, password, subject);
-    }
-
     @Test(dataProvider = DATA, priority = 1)
-    public void submitJobApplication(JSONObject data){
+    public void submitJobApplication(JSONObject data) throws InterruptedException {
         String sMessage = data.get("expected").toString();
 
         Assert.assertTrue(homePage.selectJobApplicationFromMenu().applicationPageDisplayed(), "Job Applications Page couldn't be opened");
         Assert.assertTrue(jobApplicationsPage.submitJobApplication(data).contains(sMessage),"Job Application Submission doesn't work properly");
+
+        Thread.sleep(3000);
+        deleteMail(user, password, subject);
     }
 
     @Test(dataProvider = DATA, priority = 2)
     public void checkEmail(JSONObject data) throws IOException, MessagingException, InterruptedException {
         // Strictly checking for if email gets sent - no file attached
         if (data.get("check_file").toString() == "false") {
-            homePage.selectJobApplicationFromMenu();
-            jobApplicationsPage.submitJobApplication(data);
-            String content = jobApplicationsPage.getEmailContent();
-
             //Strictly checking if an email was sent
             if (data.get("check_email").toString() == "true") {
+                Thread.sleep(5000);
+                deleteMail(user, password, subject);
+                homePage.selectJobApplicationFromMenu();
+                jobApplicationsPage.submitJobApplication(data);
+                String content = jobApplicationsPage.getEmailContent();
+
                 Assert.assertTrue(jobApplicationsPage.getFirstName(data, content), "First name does not match");
                 Assert.assertTrue(jobApplicationsPage.getLastName(data, content), "Last name does not match");
                 Assert.assertTrue(jobApplicationsPage.getAddress(data, content), "Address does not match");
@@ -92,6 +92,11 @@ public class CheckJobApplicationPr extends AbstractSpec {
             } else if (data.get("check_email").toString() == "false") {
                 //Checking if email didnt get sent
                 //Got rid of first name because I'm using 'contains' and it is causing false alarms
+                //It is normal for these ones to have different submit time than email check time since they don't actually submit
+                homePage.selectJobApplicationFromMenu();
+                jobApplicationsPage.submitJobApplication(data);
+                String content = jobApplicationsPage.getEmailContent();
+
                 Assert.assertFalse(jobApplicationsPage.getLastName(data, content), "Last name should not have been submitted");
                 Assert.assertFalse(jobApplicationsPage.getAddress(data, content), "Address should not have been submitted");
                 Assert.assertFalse(jobApplicationsPage.getCity(data, content), "City should not have been submitted");
@@ -113,6 +118,7 @@ public class CheckJobApplicationPr extends AbstractSpec {
         if (data.get("check_email").toString() == "true") {
             //Checking if email with file got sent - will skip other data
             if (data.get("check_file").toString() == "true") {
+                deleteMail(user, password, subject);
                 homePage.selectJobApplicationFromMenu();
                 jobApplicationsPage.submitJobApplication(data);
 
