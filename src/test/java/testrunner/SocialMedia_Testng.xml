@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="Web CMS Suite Social Media" parallel="tests" thread-count="2">
+<suite name="Web CMS Suite Social Media" parallel="tests" thread-count="3">
     <test name="CheckFacebook">
         <classes>
             <class name="specs.SocialMedia.CheckFacebook" />
@@ -9,6 +9,11 @@
     <test name="CheckLinkedIn">
         <classes>
             <class name="specs.SocialMedia.CheckLinkedIn" />
+        </classes>
+    </test>
+    <test name="CheckTwitter">
+        <classes>
+            <class name="specs.SocialMedia.CheckTwitter" />
         </classes>
     </test>
 </suite>
