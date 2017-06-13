@@ -1,0 +1,7 @@
+{
+  "check_twitter": [
+    {"do_assertions": true,
+    "username": "q4test",
+    "password": "sunset00"}
+  ]
+}

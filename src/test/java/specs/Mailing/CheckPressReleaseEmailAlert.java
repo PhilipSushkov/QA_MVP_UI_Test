@@ -81,7 +81,7 @@ public class CheckPressReleaseEmailAlert extends AbstractSpec {
 
     private final String DATA="getData";
 
-    private final Long MED_WAIT = 5000L;
+    private final Long MED_WAIT = 10000L;
 
     SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
     SimpleDateFormat hourFormat = new SimpleDateFormat("h");
@@ -95,7 +95,6 @@ public class CheckPressReleaseEmailAlert extends AbstractSpec {
 
     JSONObject jsonMain = new JSONObject();
     JSONObject jsonObj = new JSONObject();
-
 
     @BeforeTest
     public void setUp() throws Exception {
@@ -272,7 +271,7 @@ public class CheckPressReleaseEmailAlert extends AbstractSpec {
         }
     }
 
-    @Test(dataProvider = DATA, priority = 2)
+    @Test(dataProvider = DATA, priority = 3, alwaysRun=true)
     public void cleanUp(JSONObject data) {
 
         try {
@@ -295,6 +294,11 @@ public class CheckPressReleaseEmailAlert extends AbstractSpec {
                         companySubjectTag + headline);
             }
 
+            savedData.remove(data.get("title").toString());
+            FileWriter file = new FileWriter(sPathToFile + sFileJson);
+            file.write(savedData.toJSONString());
+            file.flush();
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -306,9 +310,7 @@ public class CheckPressReleaseEmailAlert extends AbstractSpec {
     }
 
     @AfterTest
-    public void tearDown() {
-        dashboard.logoutFromAdmin();
-    }
+    public void tearDown() { dashboard.logoutFromAdmin(); }
 
     @DataProvider
     public Object[][] getData() {

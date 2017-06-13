@@ -5,10 +5,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.openqa.selenium.By;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import util.Functions;
 
 import java.io.FileNotFoundException;
@@ -39,10 +36,43 @@ public class CrawlingSite {
     }
 
     public String getSiteVersion() throws Exception {
+        String sVersion = "Not Defined";
         String sSiteFull = Functions.UrlAddSlash(sSite, sSlash, sHttp);
-        phDriver.get(sSiteFull);
 
-        String sVersion = Functions.GetVersion(phDriver);
+        try {
+            phDriver.get(sSiteFull);
+            Thread.sleep(DEFAULT_PAUSE);
+            sVersion = Functions.GetVersion(phDriver);
+        } catch (TimeoutException e) {
+            return "TimeoutException";
+        } catch (WebDriverException e) {
+            return "Not Defined";
+        }
+
+        System.out.println(sSite + ": " + sVersion);
+        saveSiteVersion(sVersion);
+        return sVersion;
+    }
+
+    public String getSiteVersionCookie(String sCookie) throws Exception {
+        String sVersion = "Not Defined";
+        String sSiteFull = Functions.UrlAddSlash(sSite, sSlash, sHttp);
+
+        try {
+            phDriver.get(sSiteFull);
+            JavascriptExecutor js = (JavascriptExecutor) phDriver;
+            js.executeScript("javascript:function createCookie(name,value,days) { var expires = \"\"; if (days) { var date = new Date(); date.setTime(date.getTime() + (days*24*60*60*1000)); expires = \"; expires=\" + date.toUTCString(); } document.cookie = name + \"=\" + value + expires + \"; path=/\"; } var q4VersionCookie = \""+sCookie+"\"; if (q4VersionCookie != null) createCookie(\"Q4VersionCookie\", encodeURIComponent(q4VersionCookie), 1); location.reload();");
+            Thread.sleep(DEFAULT_PAUSE);
+            phDriver.navigate().refresh();
+            sVersion = Functions.GetVersion(phDriver);
+        } catch (TimeoutException e) {
+            return "TimeoutException";
+        } catch (WebDriverException e) {
+            return "Not Defined";
+        }
+
+        System.out.println(sSite + ": " + sVersion);
+
         saveSiteVersion(sVersion);
         return sVersion;
     }

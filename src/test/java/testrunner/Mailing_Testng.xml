@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="Web CMS Suite Mailing" parallel="tests" thread-count="3">
+<suite name="Web CMS Suite Mailing" parallel="tests" thread-count="1">
 
     <!-- E-mail Alerts -->
     <test name="CheckPressReleaseEmailAlert">
@@ -13,6 +13,10 @@
             <class name="specs.Mailing.CheckEventEmailAlert" />
         </classes>
     </test>
-
+    <test name="CheckPresentationEmailAlert">
+        <classes>
+            <class name="specs.Mailing.CheckPresentationEmailAlert" />
+        </classes>
+    </test>
 
 </suite>

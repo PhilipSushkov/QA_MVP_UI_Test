@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="Web CMS Suite Preview Site" parallel="tests" thread-count="3">
+<suite name="Web CMS Suite Preview Site" parallel="tests" thread-count="5">
 
     <test name="CheckMainPr">
         <classes>
@@ -67,6 +67,16 @@
     <test name="CheckPrintPr">
         <classes>
             <class name="specs.PreviewSite.CheckPrintPr" />
+        </classes>
+    </test>
+    <test name="CheckFormBuilderPr">
+        <classes>
+            <class name="specs.PreviewSite.CheckFormBuilderPr" />
+        </classes>
+    </test>
+    <test name="CheckJobApplicationPr">
+        <classes>
+            <class name="specs.PreviewSite.CheckJobApplicationPr" />
         </classes>
     </test>
 
