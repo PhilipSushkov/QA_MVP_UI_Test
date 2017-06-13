@@ -28,8 +28,8 @@ import static specs.AbstractSpec.*;
 
 public class PageForModules extends AbstractPageObject {
     private static By addNewBtn, backBtn, sectionTitleInput, pageTypeInternalRd, publishBtn, hasContentChk;
-    private static By pageTemplateSelect, parentPageSelect, showNavChk, openNewWindChk, saveBtn, workflowStateSpan, currentContentSpan;
-    private static By parentUrlSpan, seoNameInput, previewLnk, breadcrumbDiv, commentsTxt, deleteBtn, addNewInput;
+    private static By pageTemplateSelect, parentPageSelect, showNavChk, openNewWindChk, saveBtn, workflowStateSpan;
+    private static By parentUrlSpan, seoNameInput, commentsTxt, deleteBtn;
     private static By saveAndSubmitBtn, pageLayoutSelect, globalModulesChk;
     private static String sPathToFile, sFilePageJson;
     private static JSONParser parser;
@@ -50,11 +50,7 @@ public class PageForModules extends AbstractPageObject {
         workflowStateSpan = By.xpath(propUIPageAdmin.getProperty("select_WorkflowState"));
         parentUrlSpan = By.xpath(propUIPageAdmin.getProperty("span_YourPageUrl"));
         seoNameInput = By.xpath(propUIPageAdmin.getProperty("input_SeoName"));
-        previewLnk = By.xpath(propUIPageAdmin.getProperty("lnk_Preview"));
-        breadcrumbDiv = By.xpath(propUIPageAdmin.getProperty("div_Breadcrumb"));
         commentsTxt = By.xpath(propUIPageAdmin.getProperty("txtarea_Comments"));
-        addNewInput = By.xpath(propUIPageAdmin.getProperty("input_AddNew"));
-        currentContentSpan = By.xpath(propUIPageAdmin.getProperty("span_CurrentContent"));
         pageLayoutSelect = By.xpath(propUIPageAdmin.getProperty("select_PageLayout"));
         globalModulesChk = By.xpath(propUIPageAdmin.getProperty("chk_GlobalModuleSet"));
 
@@ -223,7 +219,7 @@ public class PageForModules extends AbstractPageObject {
 
             uncheckGlobalModuleSettings();
 
-            findElement(commentsTxt).sendKeys(pagesDataObj.get("comment_page").toString());
+            findElement(commentsTxt).sendKeys(pagesDataObj.get("comment").toString());
             findElement(saveAndSubmitBtn).click();
             Thread.sleep(DEFAULT_PAUSE);
 

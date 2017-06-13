@@ -59,17 +59,17 @@ public class CheckStockHistorical2_375 extends AbstractSpec {
     }
 
     @Test(dataProvider=MODULE_DATA, priority=1, enabled=false)
-    public void createStockHistorical2_375Page(JSONObject module) throws Exception {
+    public void createStockHistorical2_375Page(JSONObject module) throws InterruptedException {
         Assert.assertEquals(pageForModules.savePage(module, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+MODULE_NAME+" Page didn't create properly");
-        Assert.assertEquals(pageForModules.saveAndSubmitPage(module, MODULE_NAME), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New "+MODULE_NAME+" Page");
+        Assert.assertEquals(pageForModules.saveAndSubmitPage(module, MODULE_NAME), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New "+MODULE_NAME+" Page properly");
         Assert.assertEquals(pageForModules.publishPage(MODULE_NAME), WorkflowState.LIVE.state(), "Couldn't publish New "+MODULE_NAME+" Page properly");
     }
 
     @Test(dataProvider=MODULE_DATA, priority=2, enabled=true)
-    public void createStockHistorical2_375Module(JSONObject module) throws Exception {
-        Assert.assertEquals(pageForModules.saveModule(module, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+MODULE_NAME+" Module didn't create properly");
-        Assert.assertEquals(pageForModules.saveAndSubmitModule(module, MODULE_NAME), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New "+MODULE_NAME+" Module");
-        Assert.assertEquals(pageForModules.publishModule(MODULE_NAME), WorkflowState.LIVE.state(), "Couldn't publish New "+MODULE_NAME+" Module properly");
+    public void createStockHistorical2_375Module(JSONObject module) throws InterruptedException {
+        Assert.assertEquals(stockHistorical2_375.saveModule(module, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+MODULE_NAME+" Module didn't create properly");
+        //Assert.assertEquals(pageForModules.saveAndSubmitModule(module, MODULE_NAME), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New "+MODULE_NAME+" Module properly");
+        //Assert.assertEquals(pageForModules.publishModule(MODULE_NAME), WorkflowState.LIVE.state(), "Couldn't publish New "+MODULE_NAME+" Module properly");
     }
 
     @DataProvider
