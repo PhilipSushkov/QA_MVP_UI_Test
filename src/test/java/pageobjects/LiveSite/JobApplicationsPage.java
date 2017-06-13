@@ -75,7 +75,7 @@ Getting content from non- MimeType email
 
     public String getEmailContent() throws InterruptedException, IOException, MessagingException {
         //Repeat if email is not found
-        for(int i =0;i <=5; i++){
+        for(int i =1;i <=5; i++){
             if (getSpecificMail("test@q4websystems.com", "testing!", "Job Application for position") == null){
                 System.out.println("Email was not found, attempt # "+ i);
             } else{
@@ -189,7 +189,7 @@ Getting content from non- MimeType email
 
     public boolean hasAttachments() throws MessagingException, IOException, InterruptedException {
         Thread.sleep(10000);
-        for(int i =0;i <=5; i++){
+        for(int i =1;i <=5; i++){
             if (getSpecificMail("test@q4websystems.com", "testing!", "Job Application for position") == null){
                 System.out.println("Email was not found, attempt # "+ i);
             } else{
