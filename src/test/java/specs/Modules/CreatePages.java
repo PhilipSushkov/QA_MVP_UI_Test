@@ -13,7 +13,7 @@ import org.testng.Assert;
 import org.openqa.selenium.By;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.LoginPage.LoginPage;
-import pageobjects.Modules.Page;
+import pageobjects.Modules.PageForModules;
 import pageobjects.PageAdmin.WorkflowState;
 import specs.AbstractSpec;
 
@@ -30,7 +30,7 @@ public class CreatePages extends AbstractSpec {
     private static By pageAdminMenuButton;
     private static LoginPage loginPage;
     private static Dashboard dashboard;
-    private static Page page;
+    private static PageForModules pageForModules;
 
     private static String sPathToFile, sDataFileJson;
     private static JSONParser parser;
@@ -43,7 +43,7 @@ public class CreatePages extends AbstractSpec {
 
         loginPage = new LoginPage(driver);
         dashboard = new Dashboard(driver);
-        page = new Page(driver);
+        pageForModules = new PageForModules(driver);
 
         sPathToFile = System.getProperty("user.dir") + propUIModules.getProperty("dataPath_Modules");
         sDataFileJson = propUIModules.getProperty("json_PagesData");
@@ -54,13 +54,13 @@ public class CreatePages extends AbstractSpec {
     }
 
     @Test(dataProvider=PAGE_DATA, priority=1)
-    public void createFeedPage(JSONObject page) throws Exception {
+    public void createModulePage(JSONObject page) throws Exception {
         String pageName = page.get(SECTION_TITLE).toString();
         dashboard.openPageFromCommonTasks(pageAdminMenuButton);
-        Assert.assertEquals(CreatePages.page.createFeedPage(page, pageName), WorkflowState.IN_PROGRESS.state(), "New "+pageName+" Page didn't create properly");
-        Assert.assertEquals(CreatePages.page.saveAndSubmitPage(page, pageName), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New "+pageName+" Page");
+        Assert.assertEquals(pageForModules.savePage(page, pageName), WorkflowState.IN_PROGRESS.state(), "New "+pageName+" Page didn't create properly");
+        Assert.assertEquals(pageForModules.saveAndSubmitPage(page, pageName), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New "+pageName+" Page");
+        Assert.assertEquals(pageForModules.publishPage(pageName), WorkflowState.LIVE.state(), "Couldn't publish New "+pageName+" Page properly");
     }
-
 
     @DataProvider
     public Object[][] pageData() {
@@ -94,7 +94,6 @@ public class CreatePages extends AbstractSpec {
 
         return null;
     }
-
 
     @AfterTest
     public void tearDown() {

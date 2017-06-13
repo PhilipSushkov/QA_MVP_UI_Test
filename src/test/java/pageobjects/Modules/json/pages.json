@@ -1,8 +1,38 @@
 {
+  "stock_historical2_375": {
+    "show_in_navigation": "true",
+    "url_query": {
+      "ItemID": "3dcbd0a2-0c46-4cc3-8c80-c6f85c83ac37",
+      "SectionId": "f6d80133-c225-4a4e-aa62-d96e8cb2ac66",
+      "LanguageId": "1"
+    },
+    "deleted": "false",
+    "parent_page": "Feed Modules",
+    "page_type": "Internal",
+    "has_content": "true",
+    "your_page_url": "http://chicagotest.q4web.com/English/Feed-Modules/stock_historical2_375",
+    "active": "true",
+    "workflow_state": "Live"
+  },
+  "Press Release Modules": {
+    "show_in_navigation": "true",
+    "url_query": {
+      "ItemID": "64511b91-8657-4b33-a8ea-0cbee26b9958",
+      "SectionId": "f6d80133-c225-4a4e-aa62-d96e8cb2ac66",
+      "LanguageId": "1"
+    },
+    "deleted": "false",
+    "parent_page": "Home",
+    "page_type": "Internal",
+    "has_content": "true",
+    "your_page_url": "http://chicagotest.q4web.com/Press-Release-Modules",
+    "active": "true",
+    "workflow_state": "Live"
+  },
   "Feed Modules": {
     "show_in_navigation": "true",
     "url_query": {
-      "ItemID": "5c86c606-4fb5-4507-89fb-f9d777a9014a",
+      "ItemID": "f07de9f2-a51c-43f3-9930-da646c18f4be",
       "SectionId": "f6d80133-c225-4a4e-aa62-d96e8cb2ac66",
       "LanguageId": "1"
     },
@@ -12,6 +42,6 @@
     "has_content": "true",
     "your_page_url": "http://chicagotest.q4web.com/Feed-Modules",
     "active": "true",
-    "workflow_state": "For Approval"
+    "workflow_state": "Live"
   }
 }
