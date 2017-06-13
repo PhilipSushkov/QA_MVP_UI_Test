@@ -750,5 +750,4 @@ public class PageAdd extends AbstractPageObject {
         return desktopUrl.toString()+"default.aspx?ItemID="+sItemID+"&LanguageId="+sLanguageId+"&SectionId="+sSectionId;
     }
 
-
 }
