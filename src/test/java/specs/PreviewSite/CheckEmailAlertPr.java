@@ -1,16 +1,22 @@
 package specs.PreviewSite;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.TimeoutException;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import pageobjects.LiveSite.EmailAlertsPage;
 import pageobjects.LiveSite.HomePage;
 import pageobjects.LoginPage.LoginPage;
 import specs.AbstractSpec;
-import specs.PublicSite.CheckPublicSite;
+
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Created by easong on 1/24/17.
@@ -19,81 +25,105 @@ public class CheckEmailAlertPr extends AbstractSpec {
 
     //// THERE SHOULD BE ONE TEST HERE FOR EVERY TEST ON CheckPublicSite.java \\\\
 
-    private CheckPublicSite publicTests = new CheckPublicSite();
     private static HomePage homePage;
+    private static EmailAlertsPage emailAlertsPage;
+
+    private static String sPathToFile, sDataFileJson;
+    private static JSONParser parser;
+    private final String DATA="getData";
 
 
     @BeforeTest
-    public void goToPreviewSite() throws Exception {
-        homePage = new HomePage(driver);
+    public void setUp() throws Exception {
+        sPathToFile = System.getProperty("user.dir") + propUIPublicSite.getProperty("dataPath_LiveSite");
+        sDataFileJson = propUIPublicSite.getProperty("json_EmailAlertData");
+
+        parser = new JSONParser();
+
         new LoginPage(driver).loginUser().previewSite().goToInvestorsPage();
+        homePage = new HomePage(driver);
+        emailAlertsPage = new EmailAlertsPage(driver);
     }
 
-    @Test
-    public void emailAlertsWork() {
-        EmailAlertsPage emailAlertsPage = homePage.selectEmailAlertsFromMenu();
-        String wrongEmail = "QWEASDZXC1234567";
-        String rightEmail = "kelvint@q4inc.com";
-        boolean buttonsActivated = true; //State of the buttons
-        emailAlertsPage.clickAllButtons();
-        Assert.assertTrue(emailAlertsPage.clickAllButtonsWorks(buttonsActivated)
-                , "Buttons did not behave as expected" );
+    @Test(dataProvider = DATA, priority = 1)
+    public void signUpEmailAlert(JSONObject data) {
+        if(data.get("unsubscribe").toString() =="false") {
+            String sMessage = data.get("expected").toString();
+            String type = "subscribe";
 
-        buttonsActivated = false;
+            homePage.selectEmailAlertsFromMenu();
 
-        Assert.assertTrue(emailAlertsPage.clickAllButtonsWorks(buttonsActivated)
-                , "Buttons did not behave as expected");
+            //Checking the checkboxes - all should be checked
+            Assert.assertTrue(emailAlertsPage.getEODChkBox(type), "EOD checkbox should be checked");
+            Assert.assertTrue(emailAlertsPage.getTestListChkBox(type), "Test List checkbox should be checked");
+            Assert.assertTrue(emailAlertsPage.getPressReleaseChkBox(type), "Press Release checkbox should be checked");
 
-        Assert.assertFalse(emailAlertsPage.clickSubmitWorks()
-                , "Entering no credentials allowed submitting");
+            Assert.assertTrue(emailAlertsPage.eventAlertPageDisplayed(), "Email Alerts Page did not load properly");
+            Assert.assertEquals(emailAlertsPage.subscribe(data, type), sMessage, "Email Alert sign up does not work properly ");
+        }
+    }
+    @Test(dataProvider = DATA, priority = 2)
+    public void signUpEmailAlert_43(JSONObject data) {
+        if(data.get("unsubscribe").toString() =="false") {
+            String sMessage = data.get("expected").toString();
+            String type = "subscribe_43";
 
-        emailAlertsPage.enterSubEmailAddress(rightEmail);
-        Assert.assertFalse(emailAlertsPage.clickSubmitWorks()
-                , "Selecting no options for the mailing list still allowed submitting");
+            homePage.selectEmailAlertsFromMenu();
 
-        emailAlertsPage.clearAllTextFields();
-        emailAlertsPage.enterSubEmailAddress(wrongEmail);
-        Assert.assertFalse(emailAlertsPage.clickSubmitWorks()
-                , "Entering an incorrectly formatted email works");
+            //Checking the checkboxes - all should be unchecked
+            Assert.assertTrue(emailAlertsPage.getEODChkBox(type), "EOD checkbox should be unchecked");
+            Assert.assertTrue(emailAlertsPage.getTestListChkBox(type), "Test List checkbox should be unchecked");
+            Assert.assertTrue(emailAlertsPage.getPressReleaseChkBox(type), "Press Release checkbox should be unchecked");
 
-        emailAlertsPage.clearAllTextFields();
-        emailAlertsPage.enterSubEmailAddress(rightEmail);
-        emailAlertsPage.clickAllButtons();
-        try{
-            Assert.assertTrue(emailAlertsPage.clickSubmitWorks(), "Submitting doesn't work");
-        }catch (TimeoutException e){
-            driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
+            Assert.assertTrue(emailAlertsPage.eventAlertPageDisplayed(), "Email Alerts Page did not load properly");
+            Assert.assertEquals(emailAlertsPage.subscribe(data, type), sMessage, "Email Alert sign up does not work properly ");
+        }
+    }
+    @Test(dataProvider = DATA, priority = 2)
+    public void unsubscribeEmailAlert(JSONObject data){
+        if(data.get("unsubscribe").toString() =="true") {
+            String sMessage = data.get("expected").toString();
+            String type = "unsubscribe";
+
+            Assert.assertTrue(emailAlertsPage.eventAlertPageDisplayed(), "Email Alerts Page did not load properly");
+            Assert.assertEquals(emailAlertsPage.unsubscribe(data, type), sMessage, "Email Alert sign up does not work properly ");
         }
     }
 
-    @Test
-    public void unsubscribeEmailAlertsWorks() { //Timeouts still occur, despite all the escapes :/
-        EmailAlertsPage emailAlertsPage = homePage.selectEmailAlertsFromMenu();
-        String incorrectFormEmail = "QWEASDZXC1234567";
-        String wrongEmail = "telvink@q4inc.com"; //never used to subscribe
-        String rightEmail = "kelvint@q4inc.com";
-        emailAlertsPage.clickAllButtons();
-        Assert.assertFalse(emailAlertsPage.clickUnsubscribeWorks()
-                , "Entering no credentials allowed submitting");
+    //Edit subscription
+    //Unsubscribe
 
-        emailAlertsPage.enterUnsubEmailAddress(incorrectFormEmail);
-        Assert.assertFalse(emailAlertsPage.clickUnsubscribeWorks()
-                , "Unsubbing with an incorrectly formatted email works");
+    @DataProvider
+    public Object[][] getData() {
 
-        emailAlertsPage.clearAllTextFields();
-        emailAlertsPage.enterUnsubEmailAddress(wrongEmail);
+        try {
+            JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFileJson));
+            JSONArray jsonArray = (JSONArray) jsonObject.get("email_alert");
+            ArrayList<Object> zoom = new ArrayList();
 
-        Assert.assertFalse(emailAlertsPage.clickUnsubscribeWorks()
-                , "Unsubbing with a non-subscribed email works");
-        emailAlertsPage.clearAllTextFields();
+            for (int i = 0; i < jsonArray.size(); i++) {
+                JSONObject pageObj = (JSONObject) jsonArray.get(i);
+                if (Boolean.parseBoolean(pageObj.get("do_assertions").toString())) {
+                    zoom.add(jsonArray.get(i));
+                }
+            }
 
-        emailAlertsPage.enterUnsubEmailAddress(rightEmail);
+            Object[][] data = new Object[zoom.size()][1];
+            for (int i = 0; i < zoom.size(); i++) {
+                data[i][0] = zoom.get(i);
+            }
 
-        try{
-            Assert.assertTrue(emailAlertsPage.clickUnsubscribeWorks(), "Unsubscribing doesn't work");
-        }catch (TimeoutException e) {
-            driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
+            return data;
+
+        }  catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
+
+        return null;
     }
 
 }
