@@ -26,7 +26,7 @@ import java.util.ArrayList;
  */
 public class CheckGlossaryAdd extends AbstractSpec {
 
-    private static By contentAdminMenuButton, glossaryListMenuItem, addNewLink;
+    private static By contentAdminMenuButton, glossaryListMenuItem;
     private static LoginPage loginPage;
     private static Dashboard dashboard;
     private static GlossaryAdd glossaryAdd;
@@ -40,7 +40,7 @@ public class CheckGlossaryAdd extends AbstractSpec {
     public void setUp() throws Exception {
         contentAdminMenuButton = By.xpath(propUIContentAdmin.getProperty("btnMenu_ContentAdmin"));
         glossaryListMenuItem = By.xpath(propUIContentAdmin.getProperty("btnMenu_Glossary"));
-        addNewLink = By.xpath(propUIContentAdmin.getProperty("input_AddNew"));
+        //addNewLink = By.xpath(propUIContentAdmin.getProperty("input_AddNew"));
 
         loginPage = new LoginPage(driver);
         dashboard = new Dashboard(driver);

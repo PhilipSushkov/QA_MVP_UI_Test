@@ -76,7 +76,14 @@
             <class name="specs.SiteAdmin.EmployeeList.CheckEmployeeAdd" />
         </classes>
     </test>
-  
+
+    <!-- Content Admin -->
+    <test name="CheckGlossaryAdd">
+        <classes>
+            <class name="specs.ContentAdmin.Glossary.CheckGlossaryAdd" />
+        </classes>
+    </test>
+
 
     <test name="CreateNewUser">
         <classes>
