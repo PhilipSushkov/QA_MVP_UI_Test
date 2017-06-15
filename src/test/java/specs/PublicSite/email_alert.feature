@@ -40,3 +40,13 @@ Feature: Test email alert features on the public site
     Given I input a valid email address
     When Unsubscribe button is pressed
     Then Message for successful unsubscription should be displayed
+
+  Scenario: Check for email alert subscription email
+    Given I have successfully subscribed to email alerts
+    When I check the email
+    Then I should see an email for subscription
+
+  Scenario: Check for email alert unsubscription email
+    Given I have successfully unsubscribe
+    When I check the email
+    Then I should see an email for unsubscription

@@ -53,7 +53,7 @@ public class CheckEmailAlertPage extends AbstractSpec {
 
             homePage.selectEmailAlertsFromMenu();
 
-            //Checking the checkboxes - all should be checked
+            //Checking the checkboxes - all should not be checked
             Assert.assertTrue(emailAlertsPage.getEODChkBox(type), "EOD checkbox should be checked");
             Assert.assertTrue(emailAlertsPage.getTestListChkBox(type), "Test List checkbox should be checked");
             Assert.assertTrue(emailAlertsPage.getPressReleaseChkBox(type), "Press Release checkbox should be checked");
@@ -89,6 +89,9 @@ public class CheckEmailAlertPage extends AbstractSpec {
             Assert.assertEquals(emailAlertsPage.unsubscribe(data, type), sMessage, "Email Alert sign up does not work properly ");
         }
     }
+
+    //TODO Check Subscription Email
+    //TODO Check Unsubscription email
 
     @DataProvider
     public Object[][] getData() {
