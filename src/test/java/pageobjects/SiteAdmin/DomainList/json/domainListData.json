@@ -3,9 +3,30 @@
       {
         "do_assertions":true,
         "domain_name":"Stuff1.com",
-        "alt_domain_name": "stuff2.com",
+        "domain_name_ch": "notStuff1.com",
+        "alt_domain_name": "Stuff2.com",
         "landing_page":"Investors",
-        "comment": "Submitting"
-      }
+        "comment": "Submitting",
+        "comment_ch": "Domain name changed"
+      },
+    {
+      "do_assertions":true,
+      "domain_name":"Domain1.com",
+      "alt_domain_name": "Domain2.com",
+      "landing_page":"Investors",
+      "landing_page_ch":"Careers",
+      "comment": "Submitting",
+      "comment_ch": "Landing page changed"
+    },
+    {
+      "do_assertions":true,
+      "domain_name":"Domdom1.com",
+      "alt_domain_name": "Domdom2.com",
+      "alt_domain_name_ch": "somethingdifferent.ca",
+      "landing_page":"Investors",
+      "landing_page_ch":"Careers",
+      "comment": "Submitting",
+      "comment_ch": "Alt domain name changed"
+    }
   ]
 }

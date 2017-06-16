@@ -26,6 +26,7 @@ public class DomainAdd extends AbstractPageObject {
     private static By addAltDomainLink, altDomainNameInput, altDomainCancelBtn, altDomainOKBtn;
     private static By saveBtn, cancelBtn, deleteBtn,publishBtn, revertBtn, addNewLink;
     private static By workflowStateSpan, commentsTxt, successMsg, saveAndSubmitBtn, currentContentSpan;
+    private static By altDomainName, altDomainEditBtn;
     private static String sPathToFile, sFileJson;
     private static JSONParser parser;
     private static final long DEFAULT_PAUSE = 2500;
@@ -42,6 +43,8 @@ public class DomainAdd extends AbstractPageObject {
         altDomainNameInput = By.xpath(propUISiteAdmin.getProperty("input_DomainNameAlt"));
         altDomainCancelBtn = By.xpath(propUISiteAdmin.getProperty("btn_CancelAlt"));
         altDomainOKBtn = By.xpath(propUISiteAdmin.getProperty("btn_OKAlt"));
+        altDomainName = By.xpath(propUISiteAdmin.getProperty("td_DomainName"));
+        altDomainEditBtn = By.xpath(propUISiteAdmin.getProperty("a_EditAltDomain"));
 
         saveBtn = By.xpath(propUISiteAdmin.getProperty("btn_Save"));
         cancelBtn = By.xpath(propUISiteAdmin.getProperty("btn_Cancel"));
@@ -101,8 +104,6 @@ public class DomainAdd extends AbstractPageObject {
             findElement(altDomainNameInput).sendKeys(alt_domain);
             jsonObj.put("alt_domain_name", alt_domain);
             findElement(altDomainOKBtn).click();
-
-
 
             findElement(saveBtn).click();
             Thread.sleep(DEFAULT_PAUSE);
@@ -206,7 +207,6 @@ public class DomainAdd extends AbstractPageObject {
 
             // Compare field values with entry data
             try {
-                System.out.println(findElement(domainNameInput).getAttribute("value"));
                 if (!findElement(domainNameInput).getAttribute("value").equals(data.get("domain_name").toString())) {
                     return false;
                 }
@@ -214,18 +214,321 @@ public class DomainAdd extends AbstractPageObject {
             }
 
             try {
-                System.out.println(findElement(selectedlandingPage).getText());
-                System.out.println(data.get("landing_page").toString());
                 if (!findElement(landingPageSelect).getAttribute("innerhtml").equals(data.get("landing_page").toString())) {
+                    return false;
+                }
+            } catch (NullPointerException e) {
+            }
+            try {
+                if (!findElement(altDomainName).getAttribute("innerhtml").contains(data.get("alt_domain_name").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
             }
 
 
+            System.out.println(name+ ": New "+PAGE_NAME+" has been checked");
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public String publishDomain(JSONObject data, String name) throws InterruptedException {
+        JSONObject jsonMain = new JSONObject();
+        JSONObject jsonObj = new JSONObject();
+
+        try {
+            try {
+                FileReader readFile = new FileReader(sPathToFile + sFileJson);
+                jsonMain = (JSONObject) parser.parse(readFile);
+                jsonObj = (JSONObject) jsonMain.get(name);
+            } catch (ParseException e) {
+            }
+
+            String pageUrl = getPageUrl(jsonMain, name);
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+
+            waitForElement(publishBtn);
+            findElement(publishBtn).click();
+            Thread.sleep(DEFAULT_PAUSE*2);
+
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE*2);
+            driver.navigate().refresh();
+            Thread.sleep(DEFAULT_PAUSE);
+
+            jsonObj.put("workflow_state", WorkflowState.LIVE.state());
+            jsonObj.put("deleted", "false");
+
+            jsonMain.put(name, jsonObj);
+
+            FileWriter file = new FileWriter(sPathToFile + sFileJson);
+            file.write(jsonMain.toJSONString().replace("\\", ""));
+            file.flush();
+
+            Thread.sleep(DEFAULT_PAUSE*2);
+            driver.navigate().refresh();
+
+            System.out.println(name+ ": New "+PAGE_NAME+" has been published");
+            return findElement(workflowStateSpan).getText();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public String changeAndSubmitDomain(JSONObject data, String name) throws InterruptedException {
+        JSONObject jsonMain = new JSONObject();
+        JSONObject jsonObj = new JSONObject();
+
+        try {
+            try {
+                FileReader readFile = new FileReader(sPathToFile + sFileJson);
+                jsonMain = (JSONObject) parser.parse(readFile);
+                jsonObj = (JSONObject) jsonMain.get(name);
+            } catch (ParseException e) {
+            }
+
+            String pageUrl = getPageUrl(jsonMain, name);
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+            waitForElement(saveAndSubmitBtn);
+
+            try {
+                if (!data.get("domain_name_ch").toString().isEmpty()) {
+                    findElement(domainNameInput).clear();
+                    findElement(domainNameInput).sendKeys(data.get("domain_name_ch").toString());
+                    jsonObj.put("domain_name", data.get("domain_name_h").toString());
+                }
+            } catch (NullPointerException e) {
+            }
+
+            try {
+                if (!data.get("landing_page_ch").toString().isEmpty()) {
+                    findElement(landingPageSelect).sendKeys(data.get("landing_page_ch").toString());
+                    jsonObj.put("landing_page", data.get("landing_page_ch").toString());
+                }
+            } catch (NullPointerException e) {
+            }
+
+            try {
+                if (!data.get("alt_domain_name_ch").toString().isEmpty()) {
+                    findElement(altDomainEditBtn).click();
+                    findElement(altDomainNameInput).clear();
+                    findElement(altDomainNameInput).sendKeys(data.get("alt_domain_name_ch").toString());
+                    findElement(altDomainOKBtn).click();
+                    jsonObj.put("alt_domain_name", data.get("alt_domain_name_ch").toString());
+                }
+            } catch (NullPointerException e) {
+            }
+
+            try {
+                findElement(commentsTxt).clear();
+                findElement(commentsTxt).sendKeys(data.get("comment_ch").toString());
+            } catch (NullPointerException e) {
+            }
+
+            findElement(saveAndSubmitBtn).click();
+            Thread.sleep(DEFAULT_PAUSE);
+
+            jsonObj.put("workflow_state", WorkflowState.FOR_APPROVAL.state());
+            jsonObj.put("deleted", "false");
+
+            jsonMain.put(name, jsonObj);
+
+            FileWriter file = new FileWriter(sPathToFile + sFileJson);
+            file.write(jsonMain.toJSONString().replace("\\", ""));
+            file.flush();
+
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+            waitForElement(workflowStateSpan);
+
+            System.out.println(name+ ": New "+PAGE_NAME+" changes have been submitted");
+            return findElement(workflowStateSpan).getText();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public String revertToLiveDomain(String name) throws InterruptedException {
+        JSONObject jsonMain = new JSONObject();
+        JSONObject jsonObj = new JSONObject();
+
+        try {
+            try {
+                FileReader readFile = new FileReader(sPathToFile + sFileJson);
+                jsonMain = (JSONObject) parser.parse(readFile);
+                jsonObj = (JSONObject) jsonMain.get(name);
+            } catch (ParseException e) {
+            }
+
+            String pageUrl = getPageUrl(jsonMain, name);
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+            waitForElement(revertBtn);
+
+            if (jsonObj.get("workflow_state").toString().equals(WorkflowState.FOR_APPROVAL.state())) {
+                findElement(revertBtn).click();
+                Thread.sleep(DEFAULT_PAUSE);
+
+                jsonObj.put("workflow_state", WorkflowState.LIVE.state());
+                jsonObj.put("deleted", "false");
+
+                jsonMain.put(name, jsonObj);
+
+                FileWriter file = new FileWriter(sPathToFile + sFileJson);
+                file.write(jsonMain.toJSONString().replace("\\", ""));
+                file.flush();
+
+                driver.get(pageUrl);
+                Thread.sleep(DEFAULT_PAUSE);
+                waitForElement(workflowStateSpan);
+
+                System.out.println(name+ ": "+PAGE_NAME+" has been reverted to Live");
+                return findElement(workflowStateSpan).getText();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public Boolean checkDomainCh(JSONObject data, String name) throws InterruptedException {
+        JSONObject jsonMain = new JSONObject();
+
+        try {
+            try {
+                FileReader readFile = new FileReader(sPathToFile + sFileJson);
+                jsonMain = (JSONObject) parser.parse(readFile);
+            } catch (ParseException e) {
+            }
+
+            String pageUrl = getPageUrl(jsonMain, name);
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+            waitForElement(commentsTxt);
+
+            // Compare field values with entry data
+            try {
+                if (!findElement(domainNameInput).getAttribute("value").equals(data.get("domain_name").toString())) {
+                    return false;
+                }
+            } catch (NullPointerException e) {
+            }
+
+            try {
+                if (!findElement(landingPageSelect).getAttribute("innerhtml").equals(data.get("landing_page").toString())) {
+                    return false;
+                }
+            } catch (NullPointerException e) {
+            }
+            try {
+                System.out.println(findElement(altDomainName).getAttribute("innerhtml"));
+                if (!findElement(altDomainName).getAttribute("innerhtml").contains(data.get("alt_domain_name").toString())) {
+                    return false;
+                }
+            } catch (NullPointerException e) {
+            }
 
             System.out.println(name+ ": New "+PAGE_NAME+" has been checked");
             return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public String setupAsDeletedDomain(String name) throws InterruptedException {
+        JSONObject jsonMain = new JSONObject();
+        JSONObject jsonObj = new JSONObject();
+
+        try {
+            try {
+                FileReader readFile = new FileReader(sPathToFile + sFileJson);
+                jsonMain = (JSONObject) parser.parse(readFile);
+                jsonObj = (JSONObject) jsonMain.get(name);
+            } catch (ParseException e) {
+            }
+
+            String pageUrl = getPageUrl(jsonMain, name);
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+
+            waitForElement(commentsTxt);
+            findElement(commentsTxt).sendKeys("Removing "+PAGE_NAME);
+            findElement(deleteBtn).click();
+            Thread.sleep(DEFAULT_PAUSE);
+
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+            waitForElement(currentContentSpan);
+
+            jsonObj.put("workflow_state", WorkflowState.FOR_APPROVAL.state());
+            jsonObj.put("deleted", "true");
+
+            jsonMain.put(name, jsonObj);
+
+            FileWriter file = new FileWriter(sPathToFile + sFileJson);
+            file.write(jsonMain.toJSONString().replace("\\", ""));
+            file.flush();
+
+            System.out.println(name+ ": "+PAGE_NAME+" set up as deleted");
+            return findElement(currentContentSpan).getText();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public String removeDomain(JSONObject data, String name) throws InterruptedException {
+        JSONObject jsonMain = new JSONObject();
+
+        try {
+            try {
+                FileReader readFile = new FileReader(sPathToFile + sFileJson);
+                jsonMain = (JSONObject) parser.parse(readFile);
+            } catch (ParseException e) {
+            }
+
+            String pageUrl = getPageUrl(jsonMain, name);
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+
+            if (findElement(currentContentSpan).getText().equals(WorkflowState.DELETE_PENDING.state())) {
+
+                waitForElement(commentsTxt);
+                findElement(commentsTxt).sendKeys("Approving "+PAGE_NAME+" removal");
+                findElement(publishBtn).click();
+
+                Thread.sleep(DEFAULT_PAUSE*2);
+
+                driver.get(pageUrl);
+                Thread.sleep(DEFAULT_PAUSE);
+
+                jsonMain.remove(name);
+
+                FileWriter file = new FileWriter(sPathToFile + sFileJson);
+                file.write(jsonMain.toJSONString().replace("\\", ""));
+                file.flush();
+
+                Thread.sleep(DEFAULT_PAUSE*2);
+                driver.navigate().refresh();
+
+                System.out.println(name+ ": New "+PAGE_NAME+" has been removed");
+                return findElement(workflowStateSpan).getText();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
