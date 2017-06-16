@@ -1,5 +1,6 @@
 package pageobjects.LiveSite;
 
+import org.apache.commons.lang.StringUtils;
 import org.json.simple.JSONObject;
 import org.openqa.selenium.*;
 import pageobjects.AbstractPageObject;
@@ -23,7 +24,7 @@ public class EmailAlertsPage extends AbstractPageObject {
     private final By subscribeTitle;
     private final By emailSubTextField, pressReleaseBtn, testListBtn, eodBtn, submitBtn, submitMessage, errorMessage;
     private final By emailSubTextField_43, pressReleaseBtn_43, testListBtn_43, eodBtn_43, submitBtn_43, submitMessage_43, errorMessage_43;
-    private final By emailUnsubTextField, unsubscribeBtn, unsubscribeMessage;
+    private final By emailUnsubTextField, unsubscribeBtn, unsubscribeMessage, successMessage;
 
     public EmailAlertsPage(WebDriver driver) {
         super(driver);
@@ -49,6 +50,7 @@ public class EmailAlertsPage extends AbstractPageObject {
         emailUnsubTextField = By.xpath(propUIPublicSite.getProperty("emailUnsubTextField"));
         unsubscribeBtn = By.xpath(propUIPublicSite.getProperty("unsubscribeBtn"));
         unsubscribeMessage =By.xpath(propUIPublicSite.getProperty("unsubscribeMessage"));
+        successMessage = By.xpath(propUIPublicSite.getProperty("successMessage"));
 
     }
 
@@ -170,17 +172,49 @@ public class EmailAlertsPage extends AbstractPageObject {
         return null;
     }
 
-    public boolean getEmailContent(String user, String password, String title) throws InterruptedException, IOException, MessagingException {
+    public String checkAndGetEmail(String user, String password, String title) throws InterruptedException, IOException, MessagingException {
+        //Change name to check email
         //Repeat if email is not found
         for(int i =1;i <=5; i++){
             Message email = getSpecificMail(user, password, title);
-            if ( email == null){
+            if (email == null){
                 System.out.println("Email was not found, attempt # "+ i);
             } else{
                 System.out.println("Email found");
                 System.out.println("Email was sent at: " + email.getSentDate());
-                return true;
+                return StringUtils.substringBetween(email.getContent().toString(), "<a href=\"", "\">");
             }
+        }
+        return null;
+    }
+
+    public boolean checkMessage(String url, String type){
+        driver.get(url);
+        try{
+            waitForElement(successMessage);
+            String message = findElement(successMessage).getText();
+
+            if (type == "unsubscribe"){
+                if (message.equals("You were successfully unsubscribed.")){
+                    return true;
+                }
+                return false;
+            }
+            if (type == "subscribe"){
+                if(message.equals("Account successfully activated.")){
+                    return true;
+                }
+                return false;
+            }
+            if (type == "subscribe_43"){
+                if(message.equals("Account successfully activated.")){
+                    return true;
+                }
+                return false;
+            }
+        } catch (ElementNotFoundException e1) {
+        } catch (ElementNotVisibleException e2) {
+        } catch (TimeoutException e3) {
         }
         return false;
     }
