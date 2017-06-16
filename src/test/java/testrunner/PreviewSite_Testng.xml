@@ -74,5 +74,10 @@
             <class name="specs.PreviewSite.CheckFormBuilderPr" />
         </classes>
     </test>
+    <test name="CheckJobApplicationPr">
+        <classes>
+            <class name="specs.PreviewSite.CheckJobApplicationPr" />
+        </classes>
+    </test>
 
 </suite>

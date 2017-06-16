@@ -271,7 +271,7 @@ public class CheckPressReleaseEmailAlert extends AbstractSpec {
         }
     }
 
-    @Test(dataProvider = DATA, priority = 2)
+    @Test(dataProvider = DATA, priority = 3, alwaysRun=true)
     public void cleanUp(JSONObject data) {
 
         try {

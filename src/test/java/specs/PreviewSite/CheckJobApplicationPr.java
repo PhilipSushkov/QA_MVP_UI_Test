@@ -1,14 +1,19 @@
-package specs.PublicSite;
+package specs.PreviewSite;
 
-import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.TimeoutException;
 import org.testng.Assert;
 import org.testng.annotations.*;
 import pageobjects.LiveSite.HomePage;
 import pageobjects.LiveSite.JobApplicationsPage;
+import pageobjects.LoginPage.LoginPage;
 import specs.AbstractSpec;
+import specs.PublicSite.CheckJobApplicationsPage;
 
 import javax.mail.MessagingException;
 import java.io.FileNotFoundException;
@@ -17,9 +22,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * Created by andyp on 2017-05-17.
+ * Created by andyp on 2017-06-07.
  */
-public class CheckJobApplicationsPage extends AbstractSpec {
+
+public class CheckJobApplicationPr extends AbstractSpec {
 
     private static HomePage homePage;
     private static JobApplicationsPage jobApplicationsPage;
@@ -33,16 +39,16 @@ public class CheckJobApplicationsPage extends AbstractSpec {
     private final String subject = "Job Application for position";
 
     @BeforeTest
-    public void setUp(){
+    public void goToPreviewSite() throws Exception {
         sPathToFile = System.getProperty("user.dir") + propUIPublicSite.getProperty("dataPath_LiveSite");
         sDataFileJson = propUIPublicSite.getProperty("json_JobApplicationData");
 
         parser = new JSONParser();
 
-        driver.get("http://chicagotest.q4web.com/English/Investors/");
+        new LoginPage(driver).loginUser().previewSite().goToInvestorsPage();
         homePage = new HomePage(driver);
         jobApplicationsPage = new JobApplicationsPage(driver);
-        homePage.selectJobApplicationFromMenu();
+
     }
 
     @Test(dataProvider = DATA, priority = 1)
@@ -52,7 +58,7 @@ public class CheckJobApplicationsPage extends AbstractSpec {
         Assert.assertTrue(homePage.selectJobApplicationFromMenu().applicationPageDisplayed(), "Job Applications Page couldn't be opened");
         Assert.assertTrue(jobApplicationsPage.submitJobApplication(data).contains(sMessage),"Job Application Submission doesn't work properly");
 
-        Thread.sleep(3500);
+        Thread.sleep(3000);
         deleteMail(user, password, subject);
     }
 
@@ -62,6 +68,7 @@ public class CheckJobApplicationsPage extends AbstractSpec {
         if (data.get("check_file").toString() == "false") {
             //Strictly checking if an email was sent
             if (data.get("check_email").toString() == "true") {
+                Thread.sleep(5000);
                 deleteMail(user, password, subject);
                 homePage.selectJobApplicationFromMenu();
                 jobApplicationsPage.submitJobApplication(data);
