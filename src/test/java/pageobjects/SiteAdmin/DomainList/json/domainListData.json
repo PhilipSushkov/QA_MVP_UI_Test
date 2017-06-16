@@ -1,0 +1,11 @@
+{
+  "domain_list": [
+      {
+        "do_assertions":true,
+        "domain_name":"Stuff1.com",
+        "alt_domain_name": "stuff2.com",
+        "landing_page":"Investors",
+        "comment": "Submitting"
+      }
+  ]
+}
