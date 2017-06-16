@@ -29,7 +29,7 @@ import static specs.AbstractSpec.*;
 public class PageForModules extends AbstractPageObject {
     private static By addNewBtn, backBtn, sectionTitleInput, pageTypeInternalRd, publishBtn, hasContentChk;
     private static By pageTemplateSelect, parentPageSelect, showNavChk, openNewWindChk, saveBtn, workflowStateSpan;
-    private static By parentUrlSpan, seoNameInput, commentsTxt, deleteBtn;
+    private static By parentUrlSpan, seoNameInput, commentsTxt, deleteBtn, currentContentSpan;
     private static By saveAndSubmitBtn, pageLayoutSelect, globalModulesChk;
     private static String sPathToFile, sFilePageJson;
     private static JSONParser parser;
@@ -53,6 +53,7 @@ public class PageForModules extends AbstractPageObject {
         commentsTxt = By.xpath(propUIPageAdmin.getProperty("txtarea_Comments"));
         pageLayoutSelect = By.xpath(propUIPageAdmin.getProperty("select_PageLayout"));
         globalModulesChk = By.xpath(propUIPageAdmin.getProperty("chk_GlobalModuleSet"));
+        currentContentSpan = By.xpath(propUIPageAdmin.getProperty("span_CurrentContent"));
 
         saveBtn = By.xpath(propUIPageAdmin.getProperty("btn_Save"));
         deleteBtn = By.xpath(propUIPageAdmin.getProperty("btn_Delete"));
@@ -281,6 +282,103 @@ public class PageForModules extends AbstractPageObject {
 
             System.out.println(pageName+ ": New "+pageName+" Page has been published");
             return findElement(workflowStateSpan).getText();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public String setupAsDeletedPage(String pageName) throws InterruptedException {
+        try {
+            JSONObject jsonObj = (JSONObject) parser.parse(new FileReader(sPathToFile + sFilePageJson));
+
+            String pageUrl = getPageUrl(jsonObj, pageName);
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+
+            waitForElement(commentsTxt);
+            findElement(commentsTxt).sendKeys("Removing the page");
+
+            try {
+                findElement(deleteBtn).click();
+                Thread.sleep(DEFAULT_PAUSE);
+                driver.get(pageUrl);
+            } catch (UnhandledAlertException e) {
+                driver.switchTo().alert().accept();
+                Thread.sleep(DEFAULT_PAUSE);
+                driver.get(pageUrl);
+            }
+
+            findElement(currentContentSpan).click();
+            Thread.sleep(DEFAULT_PAUSE);
+
+            JSONObject pageObj = (JSONObject) jsonObj.get(pageName);
+
+            pageObj.put("workflow_state", WorkflowState.FOR_APPROVAL.state());
+
+            jsonObj.put(pageName, pageObj);
+
+            FileWriter file = new FileWriter(sPathToFile + sFilePageJson);
+            file.write(jsonObj.toJSONString().replace("\\", ""));
+            file.flush();
+
+            System.out.println(pageName+ ": Page set up as deleted");
+            return findElement(currentContentSpan).getText();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public String removePage(JSONObject pageDataObj, String pageName) throws InterruptedException {
+        try {
+            JSONObject jsonObj = (JSONObject) parser.parse(new FileReader(sPathToFile + sFilePageJson));
+
+            String pageUrl = getPageUrl(jsonObj, pageName);
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+
+            if (findElement(currentContentSpan).getText().equals(WorkflowState.DELETE_PENDING.state())) {
+
+                waitForElement(commentsTxt);
+                findElement(commentsTxt).sendKeys("Approving the page removal");
+
+                try {
+                    findElement(publishBtn).click();
+                    Thread.sleep(DEFAULT_PAUSE*2);
+                    driver.get(pageUrl);
+                } catch (UnhandledAlertException e) {
+                    driver.switchTo().alert().accept();
+                    Thread.sleep(DEFAULT_PAUSE*2);
+                    driver.get(pageUrl);
+                }
+
+                driver.get(pageUrl);
+                Thread.sleep(DEFAULT_PAUSE);
+
+                jsonObj.remove(pageName);
+
+                FileWriter file = new FileWriter(sPathToFile + sFilePageJson);
+                file.write(jsonObj.toJSONString().replace("\\", ""));
+                file.flush();
+
+                Thread.sleep(DEFAULT_PAUSE*2);
+                driver.navigate().refresh();
+
+                System.out.println(pageName+ ": Page has been removed");
+                return findElement(workflowStateSpan).getText();
+            }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParseException e) {

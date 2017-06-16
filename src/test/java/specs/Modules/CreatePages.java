@@ -4,10 +4,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 import org.testng.Assert;
 
 import org.openqa.selenium.By;
@@ -53,13 +50,24 @@ public class CreatePages extends AbstractSpec {
         loginPage.loginUser();
     }
 
-    @Test(dataProvider=PAGE_DATA, priority=1)
+    @BeforeMethod
+    public void beforeMethod() throws Exception {
+        dashboard.openPageFromCommonTasks(pageAdminMenuButton);
+    }
+
+    @Test(dataProvider=PAGE_DATA, priority=1, enabled=true)
     public void createModulePage(JSONObject page) throws Exception {
         String pageName = page.get(SECTION_TITLE).toString();
-        dashboard.openPageFromCommonTasks(pageAdminMenuButton);
         Assert.assertEquals(pageForModules.savePage(page, pageName), WorkflowState.IN_PROGRESS.state(), "New "+pageName+" Page didn't create properly");
         Assert.assertEquals(pageForModules.saveAndSubmitPage(page, pageName), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New "+pageName+" Page");
         Assert.assertEquals(pageForModules.publishPage(pageName), WorkflowState.LIVE.state(), "Couldn't publish New "+pageName+" Page properly");
+    }
+
+    @Test(dataProvider=PAGE_DATA, priority=2, enabled=false)
+    public void removeModulePage(JSONObject page) throws Exception {
+        String pageName = page.get(SECTION_TITLE).toString();
+        Assert.assertEquals(pageForModules.setupAsDeletedPage(pageName), WorkflowState.DELETE_PENDING.state(), pageName+" Page didn't setup as Deleted properly");
+        Assert.assertEquals(pageForModules.removePage(page, pageName), WorkflowState.NEW_ITEM.state(), "Couldn't remove "+pageName+" Page. Something went wrong.");
     }
 
     @DataProvider
