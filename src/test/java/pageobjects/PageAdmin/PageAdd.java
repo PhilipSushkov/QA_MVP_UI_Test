@@ -27,8 +27,7 @@ import static specs.AbstractSpec.propUIPageAdmin;
 public class PageAdd extends AbstractPageObject {
     private static By addNewBtn, backBtn, sectionTitleInput, pageTypeInternalRd, pageTypeExternalRd, externalURLInput, publishBtn;
     private static By pageTemplateSelect, parentPageSelect, showNavChk, openNewWindChk, saveBtn, workflowStateSpan, currentContentSpan;
-    private static By revertBtn, parentUrlSpan, seoNameInput, previewLnk, breadcrumbDiv, commentsTxt, deleteBtn, addNewInput;
-    private static By saveAndSubmitBtn, rejectBtn;
+    private static By revertBtn, parentUrlSpan, seoNameInput, previewLnk, commentsTxt, deleteBtn, addNewInput, saveAndSubmitBtn;
     private static String sPathToFile, sFilePagesJson, sFileModulesJson;
     private static JSONParser parser;
     private static final long DEFAULT_PAUSE = 2500;
@@ -50,7 +49,6 @@ public class PageAdd extends AbstractPageObject {
         parentUrlSpan = By.xpath(propUIPageAdmin.getProperty("span_YourPageUrl"));
         seoNameInput = By.xpath(propUIPageAdmin.getProperty("input_SeoName"));
         previewLnk = By.xpath(propUIPageAdmin.getProperty("lnk_Preview"));
-        breadcrumbDiv = By.xpath(propUIPageAdmin.getProperty("div_Breadcrumb"));
         commentsTxt = By.xpath(propUIPageAdmin.getProperty("txtarea_Comments"));
         addNewInput = By.xpath(propUIPageAdmin.getProperty("input_AddNew"));
         currentContentSpan = By.xpath(propUIPageAdmin.getProperty("span_CurrentContent"));
@@ -61,7 +59,6 @@ public class PageAdd extends AbstractPageObject {
         publishBtn = By.xpath(propUIPageAdmin.getProperty("btn_Publish"));
         backBtn = By.xpath(propUIPageAdmin.getProperty("btn_Back"));
         saveAndSubmitBtn = By.xpath(propUIPageAdmin.getProperty("btn_SaveAndSubmit"));
-        rejectBtn = By.xpath(propUIPageAdmin.getProperty("btn_Reject"));
 
         sPathToFile = System.getProperty("user.dir") + propUIPageAdmin.getProperty("dataPath_PageAdmin");
         sFilePagesJson = propUIPageAdmin.getProperty("json_PagesProp");

@@ -28,8 +28,8 @@ import static specs.AbstractSpec.*;
 
 public class StockHistorical2_375 extends AbstractPageObject {
     private static By addNewModuleBtn, backBtn, moduleTitleInput, moduleDefinitionSelect, includeLagacyModulesChk;
-    private static By publishBtn, saveBtn, workflowStateSpan, currentContentSpan;
-    private static By commentsTxt, deleteBtn, saveAndSubmitBtn;
+    private static By publishBtn, saveBtn, workflowStateSpan, currentContentSpan, propertiesHref;
+    private static By commentsTxt, deleteBtn, saveAndSubmitBtn, regionNameSelect;
     private static String sPathToPageFile, sFilePageJson, sPathToModuleFile, sFileModuleJson;
     private static JSONParser parser;
     private static final long DEFAULT_PAUSE = 2500;
@@ -41,9 +41,11 @@ public class StockHistorical2_375 extends AbstractPageObject {
         moduleTitleInput = By.xpath(propUIModules.getProperty("input_ModuleTitle"));
         moduleDefinitionSelect = By.xpath(propUIModules.getProperty("select_ModuleDefinition"));
         includeLagacyModulesChk = By.xpath(propUIModules.getProperty("chk_IncludeLagacyModules"));
+        regionNameSelect = By.xpath(propUIModules.getProperty("select_RegionName"));
         workflowStateSpan = By.xpath(propUIPageAdmin.getProperty("select_WorkflowState"));
         commentsTxt = By.xpath(propUIPageAdmin.getProperty("txtarea_Comments"));
         currentContentSpan = By.xpath(propUIPageAdmin.getProperty("span_CurrentContent"));
+        propertiesHref = By.xpath(propUIModules.getProperty("href_Properties"));
 
         saveBtn = By.xpath(propUIPageAdmin.getProperty("btn_Save"));
         deleteBtn = By.xpath(propUIPageAdmin.getProperty("btn_Delete"));
@@ -60,13 +62,13 @@ public class StockHistorical2_375 extends AbstractPageObject {
     }
 
     public String saveModule(JSONObject modulesDataObj, String moduleName) throws InterruptedException {
-        String module_title, module_definition;
-        String pageName = moduleName;
+        String module_title, module_definition, region_name;
 
         try {
+
             JSONObject jsonObj = (JSONObject) parser.parse(new FileReader(sPathToPageFile + sFilePageJson));
 
-            String pageUrl = getPageUrl(jsonObj, pageName);
+            String pageUrl = getPageUrl(jsonObj, moduleName);
             driver.get(pageUrl);
             Thread.sleep(DEFAULT_PAUSE);
 
@@ -90,100 +92,19 @@ public class StockHistorical2_375 extends AbstractPageObject {
             findElement(moduleDefinitionSelect).sendKeys(module_definition);
             module.put("module_definition", module_definition);
 
-
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        /*
-        String your_page_url, parent_page, page_type;
-
-        waitForElement(addNewBtn);
-        findElement(addNewBtn).click();
-        waitForElement(backBtn);
-
-        try {
-            findElement(sectionTitleInput).sendKeys(pageName);
-
-            try {
-                page_type = pagesDataObj.get("page_type").toString();
-                if (pagesDataObj.get("page_type").toString().equals("Internal")) {
-                    findElement(pageTypeInternalRd).click();
-                    Thread.sleep(DEFAULT_PAUSE);
-                    findElement(pageTemplateSelect).sendKeys(pagesDataObj.get("page_template").toString());
-                } else {
-                    System.out.println("Page type in not defined. May lead to incorrect test implementation.");
-                }
-            } catch (NullPointerException e) {
-                page_type = "Internal";
-                findElement(pageTypeInternalRd).click();
-                Thread.sleep(DEFAULT_PAUSE);
-                findElement(pageTemplateSelect).sendKeys("Blank Template");
-            }
-
-            parent_page = pagesDataObj.get("parent_page").toString();
-            findElement(parentPageSelect).sendKeys(parent_page);
-
-            try {
-                if (Boolean.parseBoolean(pagesDataObj.get("show_in_navigation").toString())) {
-                    if (!Boolean.parseBoolean(findElement(showNavChk).getAttribute("checked"))) {
-                        findElement(showNavChk).click();
-                    } else {
-                    }
-                } else {
-                    if (!Boolean.parseBoolean(findElement(showNavChk).getAttribute("checked"))) {
-                    } else {
-                        findElement(showNavChk).click();
-                    }
-                }
-            } catch (NullPointerException e) {
-            }
-
-            try {
-                if (Boolean.parseBoolean(pagesDataObj.get("open_in_new_window").toString())) {
-                    if (!Boolean.parseBoolean(findElement(openNewWindChk).getAttribute("checked"))) {
-                        findElement(openNewWindChk).click();
-                    } else {
-                    }
-                } else {
-                    if (!Boolean.parseBoolean(findElement(openNewWindChk).getAttribute("checked"))) {
-                    } else {
-                        findElement(openNewWindChk).click();
-                    }
-                }
-            } catch (NullPointerException e) {
-            }
-
+            region_name = modulesDataObj.get("region_name").toString();
+            findElement(regionNameSelect).sendKeys(region_name);
+            module.put("region_name", region_name);
 
             Thread.sleep(DEFAULT_PAUSE);
 
             findElement(saveBtn).click();
+            Thread.sleep(DEFAULT_PAUSE);
             waitForElement(deleteBtn);
 
-            Thread.sleep(DEFAULT_PAUSE);
 
-            // Write page parameters to json
-            JSONObject jsonObj = new JSONObject();
-
-            try {
-                jsonObj = (JSONObject) parser.parse(new FileReader(sPathToFile + sFilePageJson));
-            } catch (ParseException e) {
-                jsonObj = (JSONObject) parser.parse("{}");
-            }
-
-            JSONObject page = new JSONObject();
-            your_page_url = findElement(parentUrlSpan).getText() + findElement(seoNameInput).getAttribute("value");
-            page.put("your_page_url", your_page_url);
-            page.put("parent_page", parent_page);
-            page.put("page_type", page_type);
-
-            page.put("workflow_state", WorkflowState.IN_PROGRESS.state());
-            page.put("active", "true");
-            page.put("show_in_navigation", "true");
+            module.put("workflow_state", WorkflowState.IN_PROGRESS.state());
+            module.put("active", "true");
 
             URL pageURL = new URL(getUrl());
             String[] params = pageURL.getQuery().split("&");
@@ -191,12 +112,20 @@ public class StockHistorical2_375 extends AbstractPageObject {
             for (String param:params) {
                 jsonURLQuery.put(param.split("=")[0], param.split("=")[1]);
             }
-            page.put("url_query", jsonURLQuery);
-            jsonObj.put(pageName, page);
+            module.put("url_query", jsonURLQuery);
+
+            JSONObject jsonObjSave;
+            try {
+                jsonObjSave = (JSONObject) parser.parse(new FileReader(sPathToModuleFile + sFileModuleJson));
+            } catch (ParseException e) {
+                jsonObjSave = (JSONObject) parser.parse("{}");
+            }
+
+            jsonObjSave.put(module_title, module);
 
             try {
-                FileWriter file = new FileWriter(sPathToFile + sFilePageJson);
-                file.write(jsonObj.toJSONString().replace("\\", ""));
+                FileWriter file = new FileWriter(sPathToModuleFile + sFileModuleJson);
+                file.write(jsonObjSave.toJSONString().replace("\\", ""));
                 file.flush();
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -204,22 +133,206 @@ public class StockHistorical2_375 extends AbstractPageObject {
                 e.printStackTrace();
             }
 
-            System.out.println(pageName+ ": New "+pageName+" Page has been created");
+            System.out.println("New "+moduleName+" has been created");
             return findElement(workflowStateSpan).getText();
 
-        } catch (Exception e) {
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
             e.printStackTrace();
         }
 
-        */
-
-        return "In Progress";
+        return null;
     }
 
-    private String getPageUrl(JSONObject obj, String pageName) {
-        String  sItemID = JsonPath.read(obj, "$.['"+pageName+"'].url_query.ItemID");
-        String  sLanguageId = JsonPath.read(obj, "$.['"+pageName+"'].url_query.LanguageId");
-        String  sSectionId = JsonPath.read(obj, "$.['"+pageName+"'].url_query.SectionId");
+    public String saveAndSubmitModule(JSONObject modulesDataObj, String moduleName) throws InterruptedException {
+
+        try {
+            JSONObject jsonObj = (JSONObject) parser.parse(new FileReader(sPathToModuleFile + sFileModuleJson));
+            JSONArray jsonArrProp = (JSONArray) modulesDataObj.get("properties");
+
+            String moduleUrl = getModuleUrl(jsonObj, moduleName);
+            driver.get(moduleUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+
+            waitForElement(commentsTxt);
+
+            JSONObject module = (JSONObject) jsonObj.get(moduleName);
+
+            findElement(propertiesHref).click();
+            Thread.sleep(DEFAULT_PAUSE);
+
+            for (int i=0; i<jsonArrProp.size(); i++) {
+                //System.out.println(jsonArrProp.get(i).toString());
+                //String prop[] = jsonArrProp.get(i).toString().split(";");
+                //System.out.println(prop[0]);
+                By propertyValue = By.xpath("//td[contains(@class, 'DataGridItemBorderLeft')][(text()='"+jsonArrProp.get(i).toString().split(";")[0]+"')]/parent::tr/td/div/input[contains(@id, 'txtStatic')]");
+                findElement(propertyValue).clear();
+                findElement(propertyValue).sendKeys(jsonArrProp.get(i).toString().split(";")[1]);
+            }
+
+            findElement(commentsTxt).sendKeys(modulesDataObj.get("comment_module").toString());
+            findElement(saveAndSubmitBtn).click();
+            Thread.sleep(DEFAULT_PAUSE);
+
+            driver.get(moduleUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+
+            module.put("properties", jsonArrProp);
+            module.put("workflow_state", WorkflowState.FOR_APPROVAL.state());
+
+            jsonObj.put(moduleName, module);
+
+            FileWriter file = new FileWriter(sPathToModuleFile + sFileModuleJson);
+            file.write(jsonObj.toJSONString().replace("\\", ""));
+            file.flush();
+
+            System.out.println(moduleName+ ": New "+moduleName+" has been submitted");
+            return findElement(workflowStateSpan).getText();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+        return "For Approval";
+    }
+
+    public String publishModule(String moduleName) throws InterruptedException {
+        try {
+            JSONObject jsonObj = (JSONObject) parser.parse(new FileReader(sPathToModuleFile + sFileModuleJson));
+
+            String moduleUrl = getModuleUrl(jsonObj, moduleName);
+            driver.get(moduleUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+
+            waitForElement(publishBtn);
+            findElement(publishBtn).click();
+            Thread.sleep(DEFAULT_PAUSE*2);
+
+            driver.get(moduleUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+
+            JSONObject moduleObj = (JSONObject) jsonObj.get(moduleName);
+
+            moduleObj.put("workflow_state", WorkflowState.LIVE.state());
+
+            jsonObj.put(moduleName, moduleObj);
+
+            FileWriter file = new FileWriter(sPathToModuleFile + sFileModuleJson);
+            file.write(jsonObj.toJSONString().replace("\\", ""));
+            file.flush();
+
+
+            Thread.sleep(DEFAULT_PAUSE*2);
+            driver.navigate().refresh();
+
+            System.out.println("New "+moduleName+" has been published");
+            return findElement(workflowStateSpan).getText();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public String setupAsDeletedModule(String moduleName) throws InterruptedException {
+        try {
+            JSONObject jsonObj = (JSONObject) parser.parse(new FileReader(sPathToModuleFile + sFileModuleJson));
+
+            String moduleUrl = getModuleUrl(jsonObj, moduleName);
+            driver.get(moduleUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+
+            waitForElement(commentsTxt);
+            findElement(commentsTxt).sendKeys("Removing the module");
+            findElement(deleteBtn).click();
+
+            Thread.sleep(DEFAULT_PAUSE);
+
+            driver.get(moduleUrl);
+            waitForElement(currentContentSpan);
+
+            JSONObject moduleObj = (JSONObject) jsonObj.get(moduleName);
+
+            moduleObj.put("workflow_state", WorkflowState.FOR_APPROVAL.state());
+
+            jsonObj.put(moduleName, moduleObj);
+
+            FileWriter file = new FileWriter(sPathToModuleFile + sFileModuleJson);
+            file.write(jsonObj.toJSONString().replace("\\", ""));
+            file.flush();
+
+            System.out.println(moduleName+ ": Module set up as deleted");
+            return findElement(currentContentSpan).getText();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public String removeModule(JSONObject modulesDataObj, String moduleName) throws InterruptedException {
+        try {
+            JSONObject jsonObj = (JSONObject) parser.parse(new FileReader(sPathToModuleFile + sFileModuleJson));
+
+            String moduleUrl = getModuleUrl(jsonObj, moduleName);
+            driver.get(moduleUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+
+            if (findElement(currentContentSpan).getText().equals(WorkflowState.DELETE_PENDING.state())) {
+
+                waitForElement(commentsTxt);
+                findElement(commentsTxt).sendKeys("Approving the module removal");
+                findElement(publishBtn).click();
+
+                Thread.sleep(DEFAULT_PAUSE*2);
+
+                driver.get(moduleUrl);
+                Thread.sleep(DEFAULT_PAUSE);
+
+                jsonObj.remove(moduleName);
+
+                FileWriter file = new FileWriter(sPathToModuleFile + sFileModuleJson);
+                file.write(jsonObj.toJSONString().replace("\\", ""));
+                file.flush();
+
+                Thread.sleep(DEFAULT_PAUSE*2);
+                driver.navigate().refresh();
+
+                System.out.println(moduleName+ ": Module has been removed");
+                return findElement(workflowStateSpan).getText();
+            }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    private String getPageUrl(JSONObject obj, String moduleName) {
+        String  sItemID = JsonPath.read(obj, "$.['"+moduleName+"'].url_query.ItemID");
+        String  sLanguageId = JsonPath.read(obj, "$.['"+moduleName+"'].url_query.LanguageId");
+        String  sSectionId = JsonPath.read(obj, "$.['"+moduleName+"'].url_query.SectionId");
+        return desktopUrl.toString()+"default.aspx?ItemID="+sItemID+"&LanguageId="+sLanguageId+"&SectionId="+sSectionId;
+    }
+
+    private String getModuleUrl(JSONObject obj, String moduleName) {
+        String  sItemID = JsonPath.read(obj, "$.['"+moduleName+"'].url_query.ItemId");
+        String  sLanguageId = JsonPath.read(obj, "$.['"+moduleName+"'].url_query.LanguageId");
+        String  sSectionId = JsonPath.read(obj, "$.['"+moduleName+"'].url_query.SectionId");
         return desktopUrl.toString()+"default.aspx?ItemID="+sItemID+"&LanguageId="+sLanguageId+"&SectionId="+sSectionId;
     }
 
