@@ -33,7 +33,7 @@
       "fail": false,
       "mailing_list": false,
       "unsubscribe": false,
-      "email": "email@email.com",
+      "email": "test@q4websystems.com",
       "expected": "Thank you for signing up for the mailing lists. An activation email will be sent to you shortly."
     },
     {
@@ -47,11 +47,11 @@
     },
     {
       "do_assertions": true,
-      "name": "Checking for successful subscription",
+      "name": "Checking for successful unsubscription",
       "fail": false,
       "mailing_list": false,
       "unsubscribe": true,
-      "email": "email@email.com",
+      "email": "test@q4websystems.com",
       "expected": "Unsubscription Email Sent!"
     }
   ]

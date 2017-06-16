@@ -13,6 +13,7 @@ import pageobjects.LiveSite.HomePage;
 import pageobjects.LoginPage.LoginPage;
 import specs.AbstractSpec;
 
+import javax.mail.MessagingException;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -32,6 +33,10 @@ public class CheckEmailAlertPr extends AbstractSpec {
     private static JSONParser parser;
     private final String DATA="getData";
 
+    private final String user = "test@q4websystems.com";
+    private final String password = "testing!";
+    private final String subscribeSubject = "ChicagoTest Website - Validate Account";
+    private final String unsubscribeSubject = "ChicagoTest Website - Unsubscribe";
 
     @BeforeTest
     public void setUp() throws Exception {
@@ -43,10 +48,13 @@ public class CheckEmailAlertPr extends AbstractSpec {
         new LoginPage(driver).loginUser().previewSite().goToInvestorsPage();
         homePage = new HomePage(driver);
         emailAlertsPage = new EmailAlertsPage(driver);
+
+        deleteMail(user, password, subscribeSubject);
+        deleteMail(user, password, unsubscribeSubject);
     }
 
     @Test(dataProvider = DATA, priority = 1)
-    public void signUpEmailAlert(JSONObject data) {
+    public void signUpEmailAlert(JSONObject data) throws InterruptedException, MessagingException, IOException {
         if(data.get("unsubscribe").toString() =="false") {
             String sMessage = data.get("expected").toString();
             String type = "subscribe";
@@ -60,10 +68,16 @@ public class CheckEmailAlertPr extends AbstractSpec {
 
             Assert.assertTrue(emailAlertsPage.eventAlertPageDisplayed(), "Email Alerts Page did not load properly");
             Assert.assertEquals(emailAlertsPage.subscribe(data, type), sMessage, "Email Alert sign up does not work properly ");
+
+            //Checking for email
+            if (data.get("fail").toString() == "false") {
+                Assert.assertTrue(emailAlertsPage.getEmailContent(user, password, subscribeSubject), "Subscription email was not sent");
+                deleteMail(user, password, subscribeSubject);
+            }
         }
     }
     @Test(dataProvider = DATA, priority = 2)
-    public void signUpEmailAlert_43(JSONObject data) {
+    public void signUpEmailAlert_43(JSONObject data) throws InterruptedException, MessagingException, IOException {
         if(data.get("unsubscribe").toString() =="false") {
             String sMessage = data.get("expected").toString();
             String type = "subscribe_43";
@@ -77,21 +91,31 @@ public class CheckEmailAlertPr extends AbstractSpec {
 
             Assert.assertTrue(emailAlertsPage.eventAlertPageDisplayed(), "Email Alerts Page did not load properly");
             Assert.assertEquals(emailAlertsPage.subscribe(data, type), sMessage, "Email Alert sign up does not work properly ");
+
+            //Checking for email
+            if (data.get("fail").toString() == "false") {
+                Assert.assertTrue(emailAlertsPage.getEmailContent(user, password, subscribeSubject), "Subscription email was not sent for 4.3");
+                deleteMail(user, password, subscribeSubject);
+            }
         }
     }
+
     @Test(dataProvider = DATA, priority = 2)
-    public void unsubscribeEmailAlert(JSONObject data){
+    public void unsubscribeEmailAlert(JSONObject data) throws InterruptedException, MessagingException, IOException {
         if(data.get("unsubscribe").toString() =="true") {
             String sMessage = data.get("expected").toString();
             String type = "unsubscribe";
 
             Assert.assertTrue(emailAlertsPage.eventAlertPageDisplayed(), "Email Alerts Page did not load properly");
             Assert.assertEquals(emailAlertsPage.unsubscribe(data, type), sMessage, "Email Alert sign up does not work properly ");
+
+            //Checking for email
+            if (data.get("fail").toString() == "false") {
+                Assert.assertTrue(emailAlertsPage.getEmailContent(user, password, unsubscribeSubject), "Unsubscription email was not sent");
+                deleteMail(user, password, unsubscribeSubject);
+            }
         }
     }
-
-    //Edit subscription
-    //Unsubscribe
 
     @DataProvider
     public Object[][] getData() {

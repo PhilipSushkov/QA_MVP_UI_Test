@@ -4,14 +4,23 @@ import org.json.simple.JSONObject;
 import org.openqa.selenium.*;
 import pageobjects.AbstractPageObject;
 
+import javax.mail.Message;
+import javax.mail.MessagingException;
+
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import static specs.AbstractSpec.propUIPublicSite;
+import static util.Functions.getSpecificMail;
 
 /**
  * Created by kelvint on 11/17/16.
  */
 public class EmailAlertsPage extends AbstractPageObject {
 
-    private final By subscribeTitle, subscribeTitle_43, unsubscribeTitle;
+    private final By subscribeTitle;
     private final By emailSubTextField, pressReleaseBtn, testListBtn, eodBtn, submitBtn, submitMessage, errorMessage;
     private final By emailSubTextField_43, pressReleaseBtn_43, testListBtn_43, eodBtn_43, submitBtn_43, submitMessage_43, errorMessage_43;
     private final By emailUnsubTextField, unsubscribeBtn, unsubscribeMessage;
@@ -20,8 +29,6 @@ public class EmailAlertsPage extends AbstractPageObject {
         super(driver);
 
         subscribeTitle = By.xpath(propUIPublicSite.getProperty("subscribeTitle"));
-        subscribeTitle_43 = By.xpath(propUIPublicSite.getProperty("subscribeTitle_4.3"));
-        unsubscribeTitle = By.xpath(propUIPublicSite.getProperty("unsubscribeTitle"));
 
         emailSubTextField = By.xpath(propUIPublicSite.getProperty("emailSubTextField"));
         pressReleaseBtn = By.xpath(propUIPublicSite.getProperty("pressReleaseBtn"));
@@ -42,9 +49,12 @@ public class EmailAlertsPage extends AbstractPageObject {
         emailUnsubTextField = By.xpath(propUIPublicSite.getProperty("emailUnsubTextField"));
         unsubscribeBtn = By.xpath(propUIPublicSite.getProperty("unsubscribeBtn"));
         unsubscribeMessage =By.xpath(propUIPublicSite.getProperty("unsubscribeMessage"));
+
     }
 
     public String subscribe(JSONObject data, String type){
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+
         if (type == "subscribe"){
             findElement(emailSubTextField).clear();
             findElement(emailSubTextField).click();
@@ -57,6 +67,7 @@ public class EmailAlertsPage extends AbstractPageObject {
                 findElement(pressReleaseBtn).click();
             }
             findElement(submitBtn).click();
+            System.out.println("Subscription was submitted at: " + dateFormat.format(new Date()));
 
             return getSysMessage(data, type).getText();
         } else if (type == "subscribe_43"){
@@ -71,6 +82,7 @@ public class EmailAlertsPage extends AbstractPageObject {
                 findElement(pressReleaseBtn_43).click();
             }
             findElement(submitBtn_43).click();
+            System.out.println("Subscription was submitted at: " + dateFormat.format(new Date()));
 
             return getSysMessage(data, type).getText();
         }
@@ -78,10 +90,13 @@ public class EmailAlertsPage extends AbstractPageObject {
     }
 
     public String unsubscribe(JSONObject data, String type){
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+
         findElement(emailUnsubTextField).clear();
         findElement(emailUnsubTextField).click();
         findElement(emailUnsubTextField).sendKeys(data.get("email").toString());
         findElement(unsubscribeBtn).click();
+        System.out.println("Unsubscription was submitted at: " + dateFormat.format(new Date()));
 
         return getSysMessage(data, type).getText();
     }
@@ -155,4 +170,18 @@ public class EmailAlertsPage extends AbstractPageObject {
         return null;
     }
 
+    public boolean getEmailContent(String user, String password, String title) throws InterruptedException, IOException, MessagingException {
+        //Repeat if email is not found
+        for(int i =1;i <=5; i++){
+            Message email = getSpecificMail(user, password, title);
+            if ( email == null){
+                System.out.println("Email was not found, attempt # "+ i);
+            } else{
+                System.out.println("Email found");
+                System.out.println("Email was sent at: " + email.getSentDate());
+                return true;
+            }
+        }
+        return false;
+    }
 }

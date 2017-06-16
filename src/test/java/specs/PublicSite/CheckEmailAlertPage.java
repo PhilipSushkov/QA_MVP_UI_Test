@@ -11,6 +11,7 @@ import org.testng.annotations.Test;
 import pageobjects.LiveSite.*;
 import specs.AbstractSpec;
 
+import javax.mail.MessagingException;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -23,13 +24,20 @@ import java.util.ArrayList;
 public class CheckEmailAlertPage extends AbstractSpec {
 
     //// WHEN ADDING A TEST TO THIS CLASS, ADD A ENTRY TO IT IN CheckSitePr.java \\\\
+    // PLEASE make sure that the testing email account does not exist already in the subscription list
 
     private static HomePage homePage;
     private static EmailAlertsPage emailAlertsPage;
 
     private static String sPathToFile, sDataFileJson;
     private static JSONParser parser;
-    private final String DATA="getData";
+    private final String DATA = "getData";
+
+    private final String user = "test@q4websystems.com";
+    private final String password = "testing!";
+
+    private final String subscribeSubject = "ChicagoTest Website - Validate Account";
+    private final String unsubscribeSubject = "ChicagoTest Website - Unsubscribe";
 
     @BeforeTest
     public void setUp() {
@@ -42,12 +50,14 @@ public class CheckEmailAlertPage extends AbstractSpec {
         homePage = new HomePage(driver);
         emailAlertsPage = new EmailAlertsPage(driver);
 
+        deleteMail(user, password, subscribeSubject);
+        deleteMail(user, password, unsubscribeSubject);
     }
 
 
     @Test(dataProvider = DATA, priority = 1)
-    public void signUpEmailAlert(JSONObject data) {
-        if(data.get("unsubscribe").toString() =="false") {
+    public void signUpEmailAlert(JSONObject data) throws InterruptedException, MessagingException, IOException {
+        if (data.get("unsubscribe").toString() == "false") {
             String sMessage = data.get("expected").toString();
             String type = "subscribe";
 
@@ -60,11 +70,18 @@ public class CheckEmailAlertPage extends AbstractSpec {
 
             Assert.assertTrue(emailAlertsPage.eventAlertPageDisplayed(), "Email Alerts Page did not load properly");
             Assert.assertEquals(emailAlertsPage.subscribe(data, type), sMessage, "Email Alert sign up does not work properly ");
+
+            //Checking for email
+            if (data.get("fail").toString() == "false") {
+                Assert.assertTrue(emailAlertsPage.getEmailContent(user, password, subscribeSubject), "Subscription email was not sent");
+                deleteMail(user, password, subscribeSubject);
+            }
         }
     }
+
     @Test(dataProvider = DATA, priority = 2)
-    public void signUpEmailAlert_43(JSONObject data) {
-        if(data.get("unsubscribe").toString() =="false") {
+    public void signUpEmailAlert_43 (JSONObject data) throws InterruptedException, MessagingException, IOException {
+        if (data.get("unsubscribe").toString() == "false") {
             String sMessage = data.get("expected").toString();
             String type = "subscribe_43";
 
@@ -77,53 +94,63 @@ public class CheckEmailAlertPage extends AbstractSpec {
 
             Assert.assertTrue(emailAlertsPage.eventAlertPageDisplayed(), "Email Alerts Page did not load properly");
             Assert.assertEquals(emailAlertsPage.subscribe(data, type), sMessage, "Email Alert sign up does not work properly ");
+
+            //Checking for email
+            if (data.get("fail").toString() == "false") {
+                Assert.assertTrue(emailAlertsPage.getEmailContent(user, password, subscribeSubject), "Subscription email was not sent for 4.3");
+                deleteMail(user, password, subscribeSubject);
+                }
+            }
         }
-    }
     @Test(dataProvider = DATA, priority = 2)
-    public void unsubscribeEmailAlert(JSONObject data){
-        if(data.get("unsubscribe").toString() =="true") {
+    public void unsubscribeEmailAlert (JSONObject data) throws InterruptedException, MessagingException, IOException {
+        if (data.get("unsubscribe").toString() == "true") {
             String sMessage = data.get("expected").toString();
             String type = "unsubscribe";
 
             Assert.assertTrue(emailAlertsPage.eventAlertPageDisplayed(), "Email Alerts Page did not load properly");
             Assert.assertEquals(emailAlertsPage.unsubscribe(data, type), sMessage, "Email Alert sign up does not work properly ");
+
+            //Checking for email
+            if (data.get("fail").toString() == "false") {
+                Assert.assertTrue(emailAlertsPage.getEmailContent(user, password, unsubscribeSubject), "Unsubscription email was not sent");
+                deleteMail(user, password, unsubscribeSubject);
+            }
         }
     }
 
-    //TODO Check Subscription Email
-    //TODO Check Unsubscription email
-
     @DataProvider
-    public Object[][] getData() {
+    public Object[][] getData () {
 
         try {
             JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFileJson));
             JSONArray jsonArray = (JSONArray) jsonObject.get("email_alert");
             ArrayList<Object> zoom = new ArrayList();
 
-            for (int i = 0; i < jsonArray.size(); i++) {
-                JSONObject pageObj = (JSONObject) jsonArray.get(i);
-                if (Boolean.parseBoolean(pageObj.get("do_assertions").toString())) {
-                    zoom.add(jsonArray.get(i));
+                    for (int i = 0; i < jsonArray.size(); i++) {
+                        JSONObject pageObj = (JSONObject) jsonArray.get(i);
+                        if (Boolean.parseBoolean(pageObj.get("do_assertions").toString())) {
+                            zoom.add(jsonArray.get(i));
+                        }
+                    }
+
+                    Object[][] data = new Object[zoom.size()][1];
+                    for (int i = 0; i < zoom.size(); i++) {
+                        data[i][0] = zoom.get(i);
+                    }
+
+                    return data;
+
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ParseException e) {
+                    e.printStackTrace();
                 }
-            }
 
-            Object[][] data = new Object[zoom.size()][1];
-            for (int i = 0; i < zoom.size(); i++) {
-                data[i][0] = zoom.get(i);
-            }
-
-            return data;
-
-        }  catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        return null;
+                return null;
     }
 
 }
+
