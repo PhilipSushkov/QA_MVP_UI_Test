@@ -40,7 +40,6 @@ public class CheckQuickLinkAdd extends AbstractSpec {
     public void setUp() throws Exception {
         contentAdminMenuButton = By.xpath(propUIContentAdmin.getProperty("btnMenu_ContentAdmin"));
         quickLinkListMenuItem = By.xpath(propUIContentAdmin.getProperty("btnMenu_QuickLinks"));
-        //addNewLink = By.xpath(propUIContentAdmin.getProperty("input_AddNew"));
 
         loginPage = new LoginPage(driver);
         dashboard = new Dashboard(driver);
@@ -91,31 +90,31 @@ public class CheckQuickLinkAdd extends AbstractSpec {
         Assert.assertTrue(quickLinkAdd.checkQuickLink(data, sQuickLinkName), "Submitted New "+ PAGE_NAME +" data doesn't fit well to entry data (after Revert To Live)");
     }
 
-//    @Test(dataProvider=DATA, priority=5)
-//    public void changeAndSubmitQuickLink(JSONObject data) throws Exception {
-//        String sQuickLinkName = data.get(QUICKLINK_DESCRIPTION).toString();
-//
-//        Assert.assertEquals(quickLinkAdd.changeAndSubmitQuickLink(data, sQuickLinkName), WorkflowState.FOR_APPROVAL.state(), "Some fields of New "+ PAGE_NAME +" didn't change properly (after Save and Submit)");
-//        Assert.assertTrue(quickLinkAdd.checkQuickLinkCh(data, sQuickLinkName), "Submitted New "+ PAGE_NAME +" changes don't fit well to change data (after Change And Submit)");
-//    }
-//
-//    @Test(dataProvider=DATA, priority=6)
-//    public void publishEditQuickLink(JSONObject data) throws InterruptedException {
-//        String sQuickLinkName = data.get(QUICKLINK_DESCRIPTION).toString();
-//        Assert.assertEquals(quickLinkAdd.publishQuickLink(data, sQuickLinkName), WorkflowState.LIVE.state(), "New "+ PAGE_NAME +" doesn't publish properly (after Publish)");
-//    }
-//
-//    @Test(dataProvider=DATA, priority=7)
-//    public void deleteQuickLink(JSONObject data) throws Exception {
-//        String sQuickLinkName = data.get(QUICKLINK_DESCRIPTION).toString();
-//        Assert.assertEquals(quickLinkAdd.setupAsDeletedQuickLink(sQuickLinkName), WorkflowState.DELETE_PENDING.state(), "New "+ PAGE_NAME +" didn't setup as Deleted properly");
-//    }
-//
-//    @Test(dataProvider=DATA, priority=8)
-//    public void removeQuickLink(JSONObject data) throws Exception {
-//        String sQuickLinkName = data.get(QUICKLINK_DESCRIPTION).toString();
-//        Assert.assertEquals(quickLinkAdd.removeQuickLink(data, sQuickLinkName), WorkflowState.NEW_ITEM.state(), "Couldn't remove New "+ PAGE_NAME +". Something went wrong.");
-//    }
+    @Test(dataProvider=DATA, priority=5)
+    public void changeAndSubmitQuickLink(JSONObject data) throws Exception {
+        String sQuickLinkName = data.get(QUICKLINK_DESCRIPTION).toString();
+
+        Assert.assertEquals(quickLinkAdd.changeAndSubmitQuickLink(data, sQuickLinkName), WorkflowState.FOR_APPROVAL.state(), "Some fields of New "+ PAGE_NAME +" didn't change properly (after Save and Submit)");
+        Assert.assertTrue(quickLinkAdd.checkQuickLinkCh(data, sQuickLinkName), "Submitted New "+ PAGE_NAME +" changes don't fit well to change data (after Change And Submit)");
+    }
+
+    @Test(dataProvider=DATA, priority=6)
+    public void publishEditQuickLink(JSONObject data) throws InterruptedException {
+        String sQuickLinkName = data.get(QUICKLINK_DESCRIPTION).toString();
+        Assert.assertEquals(quickLinkAdd.publishQuickLink(data, sQuickLinkName), WorkflowState.LIVE.state(), "New "+ PAGE_NAME +" doesn't publish properly (after Publish)");
+    }
+
+    @Test(dataProvider=DATA, priority=7)
+    public void deleteQuickLink(JSONObject data) throws Exception {
+        String sQuickLinkName = data.get(QUICKLINK_DESCRIPTION).toString();
+        Assert.assertEquals(quickLinkAdd.setupAsDeletedQuickLink(sQuickLinkName), WorkflowState.DELETE_PENDING.state(), "New "+ PAGE_NAME +" didn't setup as Deleted properly");
+    }
+
+    @Test(dataProvider=DATA, priority=8)
+    public void removeQuickLink(JSONObject data) throws Exception {
+        String sQuickLinkName = data.get(QUICKLINK_DESCRIPTION).toString();
+        Assert.assertEquals(quickLinkAdd.removeQuickLink(data, sQuickLinkName), WorkflowState.NEW_ITEM.state(), "Couldn't remove New "+ PAGE_NAME +". Something went wrong.");
+    }
 
     @DataProvider
     public Object[][] getData() {

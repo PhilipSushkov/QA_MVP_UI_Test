@@ -4,34 +4,41 @@
       "do_assertions": true,
       "description": "Quick Link 1",
       "type": "External",
+      "type_ch":"Email",
       "URL": "canada.com",
-      "text": "Stuff",
+      "URL_ch": "usa@canada.com",
+      "text": "Link 1",
       "tags": "Stuff",
       "link_to_new": false,
       "active": true,
-      "comment": "External quick link"
+      "comment": "External quick link",
+      "comment_ch": "Changing type to Email, changing url"
     },
     {
       "do_assertions": true,
       "description": "Quick Link 2",
       "type": "Internal",
       "URL": "Home",
-      "text": "Stuff",
+      "text": "Link 2",
       "tags": "Stuff",
       "link_to_new": false,
       "active": true,
-      "comment": "Internal quick link"
+      "active_ch": false,
+      "comment": "Internal quick link",
+      "comment_ch": "Changing active"
     },
     {
       "do_assertions": true,
       "description": "Quick Link 3",
       "type": "Document",
       "URL": "123.txt",
-      "text": "Stuff",
+      "text": "Link 3",
       "tags": "Stuff",
+      "tags_ch":"Things",
       "link_to_new": false,
       "active": true,
-      "comment": "Document quick link"
+      "comment": "Document quick link",
+      "comment_ch": "Change tag"
     }
   ]
 }
