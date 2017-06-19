@@ -1,0 +1,43 @@
+{
+  "person": [
+    {
+      "do_assertions": true,
+      "first_name": "John",
+      "first_name_ch": "Jane",
+      "last_name": "Doe",
+      "suffix": "the Mundane",
+      "title": "Test (first chair)",
+      "description": "A generic human being",
+      "career_highlight": "Being used for this test",
+      "department": "Management",
+      "tags": "TestTag1",
+      "photo_path": "lego_man.jpg",
+      "thumbnail_path": "book.jpg",
+      "high_resolution_path": "Penguins.jpg",
+      "low_resolution_path": "banana_man.jpg",
+      "active": true,
+      "comment": "testing personAdd (1a)",
+      "comment_ch": "testing personAdd (1b)"
+    },
+
+    {
+      "do_assertions": true,
+      "first_name": "Patrick",
+      "first_name_ch": "Pat",
+      "last_name": "Priestly",
+      "suffix": "the Great",
+      "title": "Test (second chair)",
+      "description": "QA Manager",
+      "career_highlight": "Hiring the summer 2017 co-ops",
+      "department": "Board of Directors",
+      "tags": "TestTag2",
+      "photo_path": "nick_cage.jpeg",
+      "thumbnail_path": "Scary-Monsters-icon.png",
+      "high_resolution_path": "Hydrangeas.jpg",
+      "low_resolution_path": "maxv.jpg",
+      "active": false,
+      "comment": "testing personAdd (2a)",
+      "comment_ch": "testing personAdd (2b)"
+    }
+  ]
+}
