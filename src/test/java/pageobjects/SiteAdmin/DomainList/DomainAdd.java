@@ -214,7 +214,7 @@ public class DomainAdd extends AbstractPageObject {
             }
 
             try {
-                if (!findElement(landingPageSelect).getAttribute("innerhtml").equals(data.get("landing_page").toString())) {
+                if (!findElement(selectedlandingPage).getAttribute("innerhtml").equals(data.get("landing_page").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
@@ -303,7 +303,7 @@ public class DomainAdd extends AbstractPageObject {
                 if (!data.get("domain_name_ch").toString().isEmpty()) {
                     findElement(domainNameInput).clear();
                     findElement(domainNameInput).sendKeys(data.get("domain_name_ch").toString());
-                    jsonObj.put("domain_name", data.get("domain_name_h").toString());
+                    jsonObj.put("domain_name", data.get("domain_name_ch").toString());
                 }
             } catch (NullPointerException e) {
             }
@@ -419,25 +419,55 @@ public class DomainAdd extends AbstractPageObject {
             waitForElement(commentsTxt);
 
             // Compare field values with entry data
-            try {
-                if (!findElement(domainNameInput).getAttribute("value").equals(data.get("domain_name").toString())) {
-                    return false;
+            try{
+                if (!data.get("domain_name_ch").toString().isEmpty()){
+                    try {
+                        if (!findElement(domainNameInput).getAttribute("value").equals(data.get("domain_name_ch").toString())) {
+                            return false;
+                        }
+                    } catch (NullPointerException e) {
+                    }
+                } else {
+                    try {
+                        if (!findElement(domainNameInput).getAttribute("value").equals(data.get("domain_name").toString())) {
+                            return false;
+                        }
+                    } catch (NullPointerException e) {
+                    }
                 }
-            } catch (NullPointerException e) {
-            }
+                if (!data.get("landing_page_ch").toString().isEmpty()){
+                    try {
+                        if (!findElement(selectedlandingPage).getText().contains(data.get("landing_page_ch").toString())) {
+                            return false;
+                        }
+                    } catch (NullPointerException e) {
+                    }
+                } else{
+                    try {
+                        if (!findElement(selectedlandingPage).getText().contains(data.get("landing_page").toString())) {
+                            return false;
+                        }
+                    } catch (NullPointerException e) {
+                    }
+                }
 
-            try {
-                if (!findElement(landingPageSelect).getAttribute("innerhtml").equals(data.get("landing_page").toString())) {
-                    return false;
+                if((!data.get("alt_domain_name_ch").toString().isEmpty())){
+                    try {
+                        if (!findElement(altDomainName).getText().contains(data.get("alt_domain_name_ch").toString())) {
+                            return false;
+                        }
+                    } catch (NullPointerException e) {
+                    }
+                } else{
+                    try {
+                        if (!findElement(altDomainName).getText().contains(data.get("alt_domain_name").toString())) {
+                            return false;
+                        }
+                    } catch (NullPointerException e) {
+                    }
                 }
-            } catch (NullPointerException e) {
-            }
-            try {
-                System.out.println(findElement(altDomainName).getAttribute("innerhtml"));
-                if (!findElement(altDomainName).getAttribute("innerhtml").contains(data.get("alt_domain_name").toString())) {
-                    return false;
-                }
-            } catch (NullPointerException e) {
+
+            } catch(NullPointerException e){
             }
 
             System.out.println(name+ ": New "+PAGE_NAME+" has been checked");
