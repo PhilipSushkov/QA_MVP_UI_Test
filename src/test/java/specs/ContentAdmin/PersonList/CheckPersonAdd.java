@@ -21,6 +21,7 @@ import java.util.ArrayList;
 /**
  * Created by zacharyk on 2017-06-15.
  */
+
 public class CheckPersonAdd extends AbstractSpec {
     private static By contentAdminMenuButton, personListMenuItem;
     private static LoginPage loginPage;
@@ -91,7 +92,7 @@ public class CheckPersonAdd extends AbstractSpec {
         String sPersonName = data.get(PERSON_NAME).toString();
 
         Assert.assertEquals(personAdd.changeAndSubmitPerson(data, sPersonName), WorkflowState.FOR_APPROVAL.state(), "Some fields of New "+ PAGE_NAME +" didn't change properly (after Save and Submit)");
-        Assert.assertTrue(personAdd.checkLookupCh(data, sPersonName), "Submitted New "+ PAGE_NAME +" changes don't fit well to change data (after Change And Submit)");
+        Assert.assertTrue(personAdd.checkPersonCh(data, sPersonName), "Submitted New "+ PAGE_NAME +" changes don't fit well to change data (after Change And Submit)");
     }
 
     @Test(dataProvider=DATA, priority=6)
