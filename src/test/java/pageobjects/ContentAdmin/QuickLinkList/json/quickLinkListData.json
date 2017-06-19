@@ -1,0 +1,37 @@
+{
+  "quick_link":[
+    {
+      "do_assertions": true,
+      "description": "Quick Link 1",
+      "type": "External",
+      "URL": "canada.com",
+      "text": "Stuff",
+      "tags": "Stuff",
+      "link_to_new": false,
+      "active": true,
+      "comment": "External quick link"
+    },
+    {
+      "do_assertions": true,
+      "description": "Quick Link 2",
+      "type": "Internal",
+      "URL": "Home",
+      "text": "Stuff",
+      "tags": "Stuff",
+      "link_to_new": false,
+      "active": true,
+      "comment": "Internal quick link"
+    },
+    {
+      "do_assertions": true,
+      "description": "Quick Link 3",
+      "type": "Document",
+      "URL": "123.txt",
+      "text": "Stuff",
+      "tags": "Stuff",
+      "link_to_new": false,
+      "active": true,
+      "comment": "Document quick link"
+    }
+  ]
+}
