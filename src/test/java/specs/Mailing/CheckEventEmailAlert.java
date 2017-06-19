@@ -7,6 +7,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.openqa.selenium.By;
 import org.testng.Assert;
+import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -78,7 +79,7 @@ public class CheckEventEmailAlert extends AbstractSpec {
 
     private final String DATA="getData";
 
-    private final Long MED_WAIT = 5000L;
+    private final Long MED_WAIT = 10000L;
 
     SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
     SimpleDateFormat hourFormat = new SimpleDateFormat("h");
@@ -136,7 +137,7 @@ public class CheckEventEmailAlert extends AbstractSpec {
 
     }
 
-    @Test(dataProvider = DATA, priority = 0)
+    @Test(dataProvider = DATA, priority = 1)
     public void checkRequirements(JSONObject data) throws Exception {
 
         try {
@@ -169,7 +170,7 @@ public class CheckEventEmailAlert extends AbstractSpec {
         }
     }
 
-    @Test(dataProvider = DATA, priority = 1)
+    @Test(dataProvider = DATA, priority = 2)
     public void publishEvent(JSONObject data) throws Exception {
 
         try {
@@ -229,7 +230,7 @@ public class CheckEventEmailAlert extends AbstractSpec {
         }
     }
 
-    @Test(dataProvider = DATA, priority = 2)
+    @Test(dataProvider = DATA, priority = 3)
     public void checkEventEmailAlert(JSONObject data) throws Exception {
 
         try {
@@ -264,7 +265,7 @@ public class CheckEventEmailAlert extends AbstractSpec {
         }
     }
 
-    @Test(dataProvider = DATA, priority = 2)
+    @Test(dataProvider = DATA, priority = 4, alwaysRun=true)
     public void cleanUp(JSONObject data) {
 
         try {
@@ -287,6 +288,11 @@ public class CheckEventEmailAlert extends AbstractSpec {
                         companySubjectTag + title);
             }
 
+            savedData.remove(data.get("title").toString());
+            FileWriter file = new FileWriter(sPathToFile + sFileJson);
+            file.write(savedData.toJSONString());
+            file.flush();
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -297,6 +303,9 @@ public class CheckEventEmailAlert extends AbstractSpec {
             e.printStackTrace();
         }
     }
+
+    @AfterTest
+    public void tearDown() { dashboard.logoutFromAdmin(); }
 
     @DataProvider
     public Object[][] getData() {

@@ -31,6 +31,8 @@ import java.io.IOException;
 
 public class CheckFormBuilderPage extends AbstractSpec {
 
+    //// WHEN ADDING A TEST TO THIS CLASS, ADD A ENTRY TO IT IN CheckFormBuilderPr.java \\\\
+
     private static HomePage homePage;
     private static FormBuilderPage formBuilderPage;
 

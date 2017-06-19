@@ -66,4 +66,14 @@
             <class name="specs.PublicSite.CheckPrintPreview" />
         </classes>
     </test>
+    <test name="CheckFormBuilderPage">
+        <classes>
+            <class name="specs.PublicSite.CheckFormBuilderPage" />
+        </classes>
+    </test>
+    <test name="CheckJobApplicationsPage">
+        <classes>
+            <class name="specs.PublicSite.CheckJobApplicationsPage" />
+        </classes>
+    </test>
 </suite>

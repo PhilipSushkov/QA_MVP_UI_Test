@@ -17,6 +17,8 @@ public class SocialMediaSummary extends AbstractPageObject {
     private static By linkedInCompanySelectButton, facebookStatusIndicator, facebookStatusMessage, facebookAccountName;
     private static By facebookPage, facebookFans, facebookAuthorizeButton, facebookDeAuthorizeButton, facebookDisableButton;
     private static By facebookEnableButton, facebookReAuthorizeButton, facebookSettingsButton, facebookPageRadioSelector, facebookPageSelectButton;
+    private static By twitterStatusIndicator, twitterStatusMessage, twitterAuthorizeButton, twitterReAuthorizeButton, twitterDisableButton;
+    private static By twitterAccountName, twitterFollowers, twitterDeAuthorizeButton, twitterSettingsButton, twitterEnableButton;
 
     private static By linkedInSpan, facebookSpan, twitterSpan, stockTwitsSpan, slideShareSpan, googleAPISpan, bitLySpan;
     private static By linkedInDiv, facebookDiv, twitterDiv, stockTwitsDiv, slideShareDiv, googleAPIDiv, bitLyDiv;
@@ -58,6 +60,19 @@ public class SocialMediaSummary extends AbstractPageObject {
         facebookSettingsButton = By.cssSelector(propUISocialMedia.getProperty("btn_facebook_Settings"));
         facebookPageRadioSelector = By.xpath(propUISocialMedia.getProperty("sel_facebook_PageRadio"));
         facebookPageSelectButton = By.cssSelector(propUISocialMedia.getProperty("btn_facebook_PageSelect"));
+
+        // Twitter section
+        twitterStatusIndicator = By.xpath(propUISocialMedia.getProperty("twitter_StatusInd"));
+        twitterStatusMessage = By.xpath(propUISocialMedia.getProperty("msg_twitter_Status"));
+        twitterAccountName = By.xpath(propUISocialMedia.getProperty("twitter_AccountName"));
+        twitterFollowers = By.xpath(propUISocialMedia.getProperty("twitter_Followers"));
+        twitterAuthorizeButton = By.xpath(propUISocialMedia.getProperty("btn_twitter_Authorize"));
+        twitterReAuthorizeButton = By.xpath(propUISocialMedia.getProperty("btn_twitter_ReAuthorize"));
+        twitterDeAuthorizeButton = By.xpath(propUISocialMedia.getProperty("btn_twitter_DeAuthorize"));
+        twitterEnableButton = By.xpath(propUISocialMedia.getProperty("btn_twitter_Enable"));
+        twitterDisableButton = By.xpath(propUISocialMedia.getProperty("btn_twitter_Disable"));
+        twitterSettingsButton = By.xpath(propUISocialMedia.getProperty("btn_twitter_Settings"));
+
 
         linkedInSpan = By.xpath(propUISocialMedia.getProperty("span_LinkedIn"));
         facebookSpan = By.xpath(propUISocialMedia.getProperty("span_Facebook"));
@@ -322,6 +337,115 @@ public class SocialMediaSummary extends AbstractPageObject {
 
     public boolean facebookAuthorizeButtonIsDisplayed(){
         return doesElementExist(facebookAuthorizeButton) && findElement(facebookAuthorizeButton).isDisplayed();
+    }
+
+    // TWITTER SECTION METHODS
+
+    public String getTwitterStatusMessage(){
+        if (!doesElementExist(twitterStatusMessage) || !findElement(twitterStatusMessage).isDisplayed()){
+            return "";
+        }
+        return findElement(twitterStatusMessage).getText();
+    }
+
+    public TwitterLogin authorizeTwitterAccount(){
+        waitForElement(twitterAuthorizeButton);
+        findElement(twitterAuthorizeButton).click();
+        return new TwitterLogin(getDriver());
+    }
+
+    // This deletes the Facebook session cookie (named "xs") in order to undo the login that occurred during the authorization process
+    public SocialMediaSummary logoutFromTwitter(){
+        String currentURL = driver.getCurrentUrl();
+        driver.get("https://www.twitter.com"); //need to navigate to twitter.com because WebDriver can only delete cookies from current domain
+        driver.manage().deleteCookieNamed("xs");
+        driver.get(currentURL);
+        return this;
+    }
+
+    public TwitterLogin reAuthorizeTwitterAccount(){
+        waitForElement(twitterReAuthorizeButton);
+        findElement(twitterReAuthorizeButton).click();
+        return new TwitterLogin(getDriver());
+    }
+
+    public SocialMediaSummary disableTwitterAccount(){
+        waitForElement(twitterDisableButton);
+        findElement(twitterDisableButton).click();
+        return this;
+    }
+
+    public SocialMediaSummary enableTwitterAccount(){
+        waitForElement(twitterEnableButton);
+        findElement(twitterEnableButton).click();
+        return this;
+    }
+
+    public SocialMediaSummary deAuthorizeTwitterAccount(){
+        waitForElement(twitterDeAuthorizeButton);
+        findElement(twitterDeAuthorizeButton).click();
+        Alert confirmation = driver.switchTo().alert();
+        confirmation.accept();
+        driver.switchTo().defaultContent();
+        return this;
+    }
+
+    public SocialTemplates openTwitterSettings(){
+        waitForElement(twitterSettingsButton);
+        findElement(twitterSettingsButton).click();
+        pause(3000);
+        return new SocialTemplates(getDriver());
+    }
+
+    public String getTwitterAccountName(){
+        if (!doesElementExist(twitterAccountName) || !findElement(twitterAccountName).isDisplayed()){
+            fail("Twitter account name is not displayed.");
+        }
+        return findElement(twitterAccountName).getText();
+    }
+
+    // checks that a number of fans of at least zero is displayed
+    public boolean numberOfTwitterFollowersIsDisplayed(){
+        if (!doesElementExist(twitterFollowers) || !findElement(twitterFollowers).isDisplayed()){
+            fail("Number of Twitter followers is not displayed.");
+        }
+        try {
+            return Integer.parseInt(findElement(twitterFollowers).getText().substring(11)) >= 0;
+        }catch (NumberFormatException e){
+            return false;
+        }
+    }
+
+    // returns image file path containing /unchecked.png (red X; not setup), /checked.png (green checkmark; setup), or /disabled.png (grey checkmark; disabled)
+    public String getTwitterStatusIndicator(){
+        if (!doesElementExist(twitterStatusIndicator) || !findElement(twitterStatusIndicator).isDisplayed()){
+            fail("Twitter status indicator is not displayed.");
+        }
+        return findElement(twitterStatusIndicator).getCssValue("background-image");
+    }
+
+    public boolean twitterSettingsButtonIsDisplayed(){
+        return doesElementExist(twitterSettingsButton) && findElement(twitterSettingsButton).isDisplayed();
+    }
+
+    public boolean twitterDeAuthorizeButtonIsDisplayed(){
+        return doesElementExist(twitterDeAuthorizeButton) && findElement(twitterDeAuthorizeButton).isDisplayed();
+    }
+
+    public boolean twitterDisableButtonIsDisplayed(){
+        return doesElementExist(twitterDisableButton) && findElement(twitterDisableButton).isDisplayed();
+    }
+
+    public boolean twitterEnableButtonIsDisplayed(){
+        return doesElementExist(twitterEnableButton) && findElement(twitterEnableButton).isDisplayed();
+    }
+
+    public boolean twitterReAuthorizeButtonIsDisplayed(){
+        return doesElementExist(twitterReAuthorizeButton) && findElement(twitterReAuthorizeButton).isDisplayed();
+    }
+
+    public boolean twitterAuthorizeButtonIsDisplayed(){
+        return doesElementExist(twitterAuthorizeButton) && findElement(twitterAuthorizeButton).isDisplayed();
     }
 
     public WebElement getLinkedInSpan() {

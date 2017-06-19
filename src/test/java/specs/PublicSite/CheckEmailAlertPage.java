@@ -1,14 +1,25 @@
 package specs.PublicSite;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.TimeoutException;
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import pageobjects.Dashboard.Dashboard;
+import pageobjects.EmailAdmin.Subscribers.MailingListUsers;
 import pageobjects.LiveSite.*;
+import pageobjects.LoginPage.LoginPage;
 import specs.AbstractSpec;
 
+import javax.mail.MessagingException;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 
 
 /**
@@ -18,92 +29,167 @@ public class CheckEmailAlertPage extends AbstractSpec {
 
     //// WHEN ADDING A TEST TO THIS CLASS, ADD A ENTRY TO IT IN CheckSitePr.java \\\\
 
-
-    /** Changes necessary to make include removing all the "new XXX(drivers).YYY with a declaration, instead, in the @Before
-     and replacing it in all pieces of code. DONE
-     Second changes include making a .properties file including ALL the selectors. THEN making them all do the .property thing. DONE
-     Last is switching this to testNG*/
-
     private static HomePage homePage;
+    private static EmailAlertsPage emailAlertsPage;
+    private static LoginPage loginPage;
+    private static Dashboard dashboard;
+    private static MailingListUsers mailingListUsers;
+
+    private static String sPathToFile, sDataFileJson;
+    private static JSONParser parser;
+    private final String DATA = "getData";
+
+    private final String user = "test@q4websystems.com";
+    private final String password = "testing!";
+
+    private final String subscribeSubject = "ChicagoTest Website - Validate Account";
+    private final String unsubscribeSubject = "ChicagoTest Website - Unsubscribe";
+
+    private static By emailAdminMenuButton, subscribersMenuItem;
 
     @BeforeTest
-    public void goToPublicSite() {
+    public void setUp() throws Exception {
+        sPathToFile = System.getProperty("user.dir") + propUIPublicSite.getProperty("dataPath_LiveSite");
+        sDataFileJson = propUIPublicSite.getProperty("json_EmailAlertData");
+        emailAdminMenuButton = By.xpath(propUIEmailAdmin.getProperty("btnMenu_EmailAdmin"));
+        subscribersMenuItem = By.xpath(propUIEmailAdmin.getProperty("btnMenu_Subscribers"));
 
-        driver.get(desktopUrlPublic.toString()+"English/Investors/Email-Alerts/default.aspx");
+        parser = new JSONParser();
 
         homePage = new HomePage(driver);
+        emailAlertsPage = new EmailAlertsPage(driver);
+        loginPage = new LoginPage(driver);
+        dashboard = new Dashboard(driver);
+        mailingListUsers = new MailingListUsers(driver);
 
-        Assert.assertTrue(homePage.logoIsPresent(), "Home page of public site has not been loaded.");
+        //Delete user if they exist already, otherwise exception will be casted
+        loginPage.loginUser();
+        dashboard.openPageFromMenu(emailAdminMenuButton, subscribersMenuItem);
+        mailingListUsers.deleteUser(user);
 
+        driver.get("http://chicagotest.q4web.com/English/Investors/");
+
+        deleteMail(user, password, subscribeSubject);
+        deleteMail(user, password, unsubscribeSubject);
     }
 
 
-    @Test
-    public void emailAlertsWork() {
-        EmailAlertsPage emailAlertsPage = homePage.selectEmailAlertsFromMenu();
-        String wrongEmail = "QWEASDZXC1234567";
-        String rightEmail = "kelvint@q4inc.com";
-        boolean buttonsActivated = true; //State of the buttons
-        emailAlertsPage.clickAllButtons();
-        Assert.assertTrue(emailAlertsPage.clickAllButtonsWorks(buttonsActivated)
-                , "Buttons did not behave as expected" );
+    @Test(dataProvider = DATA, priority = 1)
+    public void signUpEmailAlert(JSONObject data) throws InterruptedException, MessagingException, IOException {
+        if (data.get("unsubscribe").toString() == "false") {
+            String sMessage = data.get("expected").toString();
+            String type = "subscribe";
 
-        buttonsActivated = false;
+            homePage.selectEmailAlertsFromMenu();
 
-        Assert.assertTrue(emailAlertsPage.clickAllButtonsWorks(buttonsActivated)
-                , "Buttons did not behave as expected");
-        emailAlertsPage.clickAllButtons();
+            //Checking the checkboxes - all should not be checked
+            Assert.assertTrue(emailAlertsPage.getEODChkBox(type), "EOD checkbox should be checked");
+            Assert.assertTrue(emailAlertsPage.getTestListChkBox(type), "Test List checkbox should be checked");
+            Assert.assertTrue(emailAlertsPage.getPressReleaseChkBox(type), "Press Release checkbox should be checked");
 
-        Assert.assertFalse(emailAlertsPage.clickSubmitWorks()
-                , "Entering no credentials allowed submitting");
+            Assert.assertTrue(emailAlertsPage.eventAlertPageDisplayed(), "Email Alerts Page did not load properly");
+            Assert.assertEquals(emailAlertsPage.subscribe(data, type), sMessage, "Email Alert sign up does not work properly ");
 
-        emailAlertsPage.enterSubEmailAddress(rightEmail);
-        Assert.assertFalse(emailAlertsPage.clickSubmitWorks()
-                , "Selecting no options for the mailing list still allowed submitting");
+            //Checking for email
+            if (data.get("fail").toString() == "false") {
+                String url = emailAlertsPage.checkAndGetEmail(user, password, subscribeSubject);
 
-        emailAlertsPage.clearAllTextFields();
-        emailAlertsPage.enterSubEmailAddress(wrongEmail);
-        Assert.assertFalse(emailAlertsPage.clickSubmitWorks()
-                , "Entering an incorrectly formatted email works");
-
-        emailAlertsPage.clearAllTextFields();
-        emailAlertsPage.enterSubEmailAddress(rightEmail);
-        emailAlertsPage.clickAllButtons();
-        try{
-            Assert.assertTrue(emailAlertsPage.clickSubmitWorks(), "Submitting doesn't work");
-        }catch (TimeoutException e){
-            driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
+                Assert.assertNotNull(url, "Subscription email was not sent");
+                Assert.assertTrue(emailAlertsPage.checkMessage(url, type), "Subscription could not be validated");
+                deleteMail(user, password, subscribeSubject);
+            }
         }
     }
 
-    @Test
-    public void unsubscribeEmailAlertsWorks() { //Timeouts still occur, despite all the escapes :/
-        EmailAlertsPage emailAlertsPage = homePage.selectEmailAlertsFromMenu();
-        String incorrectFormEmail = "QWEASDZXC1234567";
-        String wrongEmail = "telvink@q4inc.com"; //never used to subscribe
-        String rightEmail = "kelvint@q4inc.com";
-        emailAlertsPage.clickAllButtons();
-        Assert.assertFalse(emailAlertsPage.clickUnsubscribeWorks()
-                , "Entering no credentials allowed submitting");
+    @Test(dataProvider = DATA, priority = 2)
+    public void unsubscribeEmailAlert (JSONObject data) throws Exception {
+        if (data.get("unsubscribe").toString() == "true") {
+            String sMessage = data.get("expected").toString();
+            String type = "unsubscribe";
 
-        emailAlertsPage.enterUnsubEmailAddress(incorrectFormEmail);
-        Assert.assertFalse(emailAlertsPage.clickUnsubscribeWorks()
-                , "Unsubbing with an incorrectly formatted email works");
+            homePage.selectEmailAlertsFromMenu();
 
-        emailAlertsPage.clearAllTextFields();
-        emailAlertsPage.enterUnsubEmailAddress(wrongEmail);
+            Assert.assertTrue(emailAlertsPage.eventAlertPageDisplayed(), "Email Alerts Page did not load properly");
+            Assert.assertEquals(emailAlertsPage.unsubscribe(data, type), sMessage, "Email Alert sign up does not work properly ");
 
-        Assert.assertFalse(emailAlertsPage.clickUnsubscribeWorks()
-                , "Unsubbing with a non-subscribed email works");
-        emailAlertsPage.clearAllTextFields();
+            //Checking for email
+            if (data.get("fail").toString() == "false") {
+                String url = emailAlertsPage.checkAndGetEmail(user, password, unsubscribeSubject);
 
-        emailAlertsPage.enterUnsubEmailAddress(rightEmail);
+                Assert.assertNotNull(url, "Unsubscription email was not sent");
+                Assert.assertTrue(emailAlertsPage.checkMessage(url, type), "Unsubscription could not be validated");
+                deleteMail(user, password, unsubscribeSubject);
 
-        try{
-            Assert.assertTrue(emailAlertsPage.clickUnsubscribeWorks(), "Unsubscribing doesn't work");
-        }catch (TimeoutException e) {
-            driver.findElement(By.tagName("body")).sendKeys(Keys.ESCAPE);
+                //Delete user
+                driver.get("http://chicagotest.s3.q4web.com/admin");
+                dashboard.openPageFromMenu(emailAdminMenuButton, subscribersMenuItem);
+                mailingListUsers.deleteUser(user);
+
+            }
         }
+    }
+
+    @Test(dataProvider = DATA, priority = 3)
+    public void signUpEmailAlert_43 (JSONObject data) throws Exception {
+        if (data.get("unsubscribe").toString() == "false") {
+            String sMessage = data.get("expected").toString();
+            String type = "subscribe_43";
+
+            driver.get("http://chicagotest.q4web.com/English/Investors/");
+            homePage.selectEmailAlertsFromMenu();
+
+            //Checking the checkboxes - all should be unchecked
+            Assert.assertTrue(emailAlertsPage.getEODChkBox(type), "EOD checkbox should be unchecked");
+            Assert.assertTrue(emailAlertsPage.getTestListChkBox(type), "Test List checkbox should be unchecked");
+            Assert.assertTrue(emailAlertsPage.getPressReleaseChkBox(type), "Press Release checkbox should be unchecked");
+
+            Assert.assertTrue(emailAlertsPage.eventAlertPageDisplayed(), "Email Alerts Page did not load properly");
+            Assert.assertEquals(emailAlertsPage.subscribe(data, type), sMessage, "Email Alert sign up does not work properly ");
+
+            //Checking for email
+            if (data.get("fail").toString() == "false") {
+                String url = emailAlertsPage.checkAndGetEmail(user, password, subscribeSubject);
+
+                Assert.assertNotNull(url, "Subscription email was not sent for 4.3");
+                Assert.assertTrue(emailAlertsPage.checkMessage(url, type), "Subscription could not be validated");
+                deleteMail(user, password, subscribeSubject);
+                }
+            }
+        }
+
+
+    @DataProvider
+    public Object[][] getData () {
+
+        try {
+            JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFileJson));
+            JSONArray jsonArray = (JSONArray) jsonObject.get("email_alert");
+            ArrayList<Object> zoom = new ArrayList();
+
+                    for (int i = 0; i < jsonArray.size(); i++) {
+                        JSONObject pageObj = (JSONObject) jsonArray.get(i);
+                        if (Boolean.parseBoolean(pageObj.get("do_assertions").toString())) {
+                            zoom.add(jsonArray.get(i));
+                        }
+                    }
+
+                    Object[][] data = new Object[zoom.size()][1];
+                    for (int i = 0; i < zoom.size(); i++) {
+                        data[i][0] = zoom.get(i);
+                    }
+
+                    return data;
+
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                return null;
     }
 
 }
+

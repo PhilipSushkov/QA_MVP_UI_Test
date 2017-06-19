@@ -226,28 +226,28 @@ public class LookupAdd extends AbstractPageObject {
 
             // Compare field values with entry data
             try {
-                if (findElement(lookupTypeField).toString().equals(data.get("lookup_type").toString())) {
+                if (!findElement(lookupTypeField).getAttribute("value").equals(data.get("lookup_type").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
             }
 
             try {
-                if (findElement(lookupTextField).toString().equals(data.get("lookup_text").toString())) {
+                if (!findElement(lookupTextField).getAttribute("value").equals(data.get("lookup_text").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
             }
 
             try {
-                if (findElement(lookupValueField).toString().equals(data.get("lookup_value").toString())) {
+                if (!findElement(lookupValueField).getAttribute("value").equals(data.get("lookup_value").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
             }
 
             try {
-                if (findElement(additionalInfoField).toString().equals(data.get("additional_info").toString())) {
+                if (!findElement(additionalInfoField).getAttribute("value").equals(data.get("additional_info").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
@@ -453,28 +453,28 @@ public class LookupAdd extends AbstractPageObject {
 
             // Compare field values with entry data
             try {
-                if (findElement(lookupTypeField).toString().equals(data.get("lookup_type").toString())) {
+                if (!findElement(lookupTypeField).getAttribute("value").equals(data.get("lookup_type").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
             }
 
             try {
-                if (findElement(lookupTextField).toString().equals(data.get("lookup_text").toString())) {
+                if (!findElement(lookupTextField).getAttribute("value").equals(data.get("lookup_text").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
             }
 
             try {
-                if (findElement(lookupValueField).toString().equals(data.get("lookup_value_ch").toString())) {
+                if (!findElement(lookupValueField).getAttribute("value").equals(data.get("lookup_value_ch").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
             }
 
             try {
-                if (findElement(additionalInfoField).toString().equals(data.get("additional_info").toString())) {
+                if (!findElement(additionalInfoField).getAttribute("value").equals(data.get("additional_info").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {

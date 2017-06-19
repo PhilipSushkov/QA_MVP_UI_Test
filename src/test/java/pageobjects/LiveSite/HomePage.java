@@ -36,7 +36,6 @@ public class HomePage extends AbstractPageObject {
         super(driver);
 
 
-
         Q4Logo = By.className(propUIPublicSite.getProperty("Q4Logo"));
         versionNumber = By.className(propUIPublicSite.getProperty("versionNumber"));
         stockInformation = By.linkText(propUIPublicSite.getProperty("stockInformation"));
@@ -52,7 +51,7 @@ public class HomePage extends AbstractPageObject {
         emailAlerts = By.linkText(propUIPublicSite.getProperty("emailAlerts"));
         investmentCalculator = By.linkText(propUIPublicSite.getProperty("investmentCalculator"));
         faq = By.linkText(propUIPublicSite.getProperty("faq"));
-        jobApplications = By.xpath("/html/body[@class='BodyBackground']//ul[@class='level2']/li[6]/a");
+        jobApplications = By.xpath("//ul[@class='level2']/li[6]/a");
         formBuilder = By.linkText(propUIPublicSite.getProperty("formBuilder"));
         sitemap = By.xpath("//a[contains(string(),'Site Map')]");
     }

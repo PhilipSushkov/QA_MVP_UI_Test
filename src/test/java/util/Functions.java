@@ -12,6 +12,7 @@ import org.openqa.selenium.*;
 
 import java.io.*;
 import java.net.HttpURLConnection;
+import javax.net.ssl.HttpsURLConnection;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -20,7 +21,6 @@ import java.util.*;
 import java.util.Properties;
 
 import javax.mail.*;
-import javax.mail.search.SearchTerm;
 import javax.mail.search.SubjectTerm;
 import com.sun.mail.gimap.GmailFolder;
 import com.sun.mail.gimap.GmailRawSearchTerm;
@@ -193,7 +193,31 @@ public class Functions {
         }
     }
 
-    public static boolean compareImages (String exp, String cur, String diff) {
+    public static int GetResponseCodeSsl(String urlString) throws IOException {
+        try {
+            URL url = new URL(urlString);
+            System.setProperty("https.proxyHost", "69.172.200.167");
+            System.setProperty("https.proxyPort", "443");
+            HttpsURLConnection huc = (HttpsURLConnection)url.openConnection();
+            huc.setRequestMethod("GET");
+            //System.out.println(huc.getContentLength());
+            //huc.connect();
+
+            //System.out.println(Integer.toString(huc.getContentLength()));
+            //System.out.println(Integer.toString(huc.getInputStream().available()));
+
+            int iResponseCode = huc.getResponseCode();
+            huc.disconnect();
+
+            return iResponseCode;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return 404;
+        }
+    }
+
+    public static boolean compareImages(String exp, String cur, String diff) {
         // This instance wraps the compare command
         CompareCmd compare = new CompareCmd();
 
@@ -222,7 +246,7 @@ public class Functions {
         }
     }
 
-    public static String takeScreenshot (WebDriver driver, String sShotName, String sPageName) {
+    public static String takeScreenshot(WebDriver driver, String sShotName, String sPageName) {
         String path = null;
 
         try {
@@ -251,89 +275,44 @@ public class Functions {
         }
     }
 
-    public static Message getRecentMail(String user, String password, String subjectID) {
+    public static Message getSpecificMail(String user, String password, String subjectID) throws InterruptedException, IOException {
+        //Use this one if the email in question has files
 
-        // Gets the first email message whose subject contains subjectID
-        // Use with javax.mail api
+        Properties props = System.getProperties();
+        props.setProperty("mail.store.protocol", "gimap");
+        Thread.sleep(10000);
+
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date = new Date();
+        System.out.println("Email checked at: " + dateFormat.format(date));
 
         try {
+            Session session = Session.getDefaultInstance(props, null);
+            GmailStore store = (GmailStore) session.getStore("gimap");
+            store.connect("imap.gmail.com", user, password);
+            GmailFolder inbox = (GmailFolder) store.getFolder("INBOX");
+            inbox.open(Folder.READ_ONLY);
+            Message[] Messages = inbox.search(new GmailRawSearchTerm("subject:" + subjectID));
 
-            Properties properties = new Properties();
-
-            properties.put("mail.pop3.host", "pop.gmail.com");
-            properties.put("mail.pop3.port", "995");
-            properties.put("mail.pop3.starttls.enable", "true");
-            Session emailSession = Session.getDefaultInstance(properties);
-
-            Store store = emailSession.getStore("pop3s");
-
-            store.connect("pop.gmail.com", user, password);
-
-            Folder emailFolder = store.getFolder("INBOX");
-            emailFolder.open(Folder.READ_ONLY);
-
-            Message[] messages = emailFolder.getMessages();
-
-            for (int i = 0; i < messages.length; i++) {
-                if (messages[i].getSubject().contains(subjectID)) {
-                    return messages[i];
+            if (Messages != null){
+                for (int i = 0; i < Messages.length; i++){
+                    return Messages[i];
                 }
             }
 
-            return null;
+            inbox.close(true);
+            store.close();
 
         } catch (NoSuchProviderException e) {
             e.printStackTrace();
         } catch (MessagingException e) {
             e.printStackTrace();
         }
-
-        return null;
-    }
-
-    public static Message getSpecificMail(String user, String password, String subjectID, String date) {
-
-        try {
-
-            Properties properties = new Properties();
-
-            properties.put("mail.pop3.host", "pop.gmail.com");
-            properties.put("mail.pop3.port", "995");
-            properties.put("mail.pop3.starttls.enable", "true");
-            Session emailSession = Session.getDefaultInstance(properties);
-
-            Store store = emailSession.getStore("pop3s");
-
-            store.connect("pop.gmail.com", user, password);
-
-            Folder emailFolder = store.getFolder("INBOX");
-            emailFolder.open(Folder.READ_ONLY);
-
-            DateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
-
-            Message[] messages = emailFolder.getMessages();
-
-
-            for (int i = 0; i < messages.length; i++) {
-                if (messages[i].getSubject().contains(subjectID) && (date.equals(dateFormat.format(messages[i].getSentDate())))) {
-                    return messages[i];
-                }
-            }
-
-            return null;
-
-        } catch (NoSuchProviderException e) {
-            e.printStackTrace();
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
-
         return null;
     }
 
     public static Message[] getMail(String user, String password, String subjectID) {
 
-        // Deletes email messages with a provided subject
         // Email account must have POP/IMAP enabled
 
         Properties props = System.getProperties();
@@ -374,6 +353,7 @@ public class Functions {
             if (foundMessages != null){
                 for (int i = 0; i < foundMessages.length; i++){
                     foundMessages[i].setFlag(Flags.Flag.DELETED, true);
+                    System.out.println(foundMessages[i].getSubject() + ", sent at " + foundMessages[i].getSentDate() + " has been deleted");
                 }
             }
             inbox.close(true);
@@ -384,5 +364,6 @@ public class Functions {
         } catch (MessagingException e) {
             e.printStackTrace();
         }
+
     }
 }

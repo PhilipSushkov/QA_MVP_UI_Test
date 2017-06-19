@@ -8,7 +8,6 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
-import org.openqa.selenium.firefox.internal.ProfilesIni;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriverService;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -70,6 +69,14 @@ public abstract class AbstractSpec extends util.Functions {
     public static Properties propUISocialMedia;
     private static final String PATHTO_PAGEADMIN_PROP = "PageAdmin/PageAdminMap.properties";
     public static Properties propUIPageAdmin;
+    private static final String PATHTO_MODULES_PROP = "Modules/Modules.properties";
+    public static Properties propUIModules;
+    private static final String PATHTO_MODULESFEED_PROP = "Modules/Feed/Feed.properties";
+    public static Properties propUIModulesFeed;
+    private static final String PATHTO_MODULESPRESSRELEASE_PROP = "Modules/PressRelease/PressRelease.properties";
+    public static Properties propUIModulesPressRelease;
+    private static final String PATHTO_API_PROP = "api/ApiMap.properties";
+    public static Properties propAPI;
 
 
     @BeforeTest
@@ -137,7 +144,7 @@ public abstract class AbstractSpec extends util.Functions {
         driver = new ChromeDriver(capabilities);
 
         driver.manage().timeouts().implicitlyWait(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
-        driver.manage().timeouts().pageLoadTimeout(80, TimeUnit.SECONDS); //Increased to 20 to perhaps reduce timeouts?
+        driver.manage().timeouts().pageLoadTimeout(50, TimeUnit.SECONDS); //Increased to 20 to perhaps reduce timeouts?
         //driver.manage().window().setSize(new Dimension(1400, 1400));
         driver.get(desktopUrl.toString());
 
@@ -249,6 +256,10 @@ public abstract class AbstractSpec extends util.Functions {
         propUIPublicSite = ConnectToPropUI(PATHTO_PUBLICSITE_PROP);
         propUISocialMedia = ConnectToPropUI(PATHTO_SOCIALMEDIA_PROP);
         propUIPageAdmin = ConnectToPropUI(PATHTO_PAGEADMIN_PROP);
+        propUIModules = ConnectToPropUI(PATHTO_MODULES_PROP);
+        propUIModulesFeed = ConnectToPropUI(PATHTO_MODULESFEED_PROP);
+        propUIModulesPressRelease = ConnectToPropUI(PATHTO_MODULESPRESSRELEASE_PROP);
+        propAPI = ConnectToPropUI(PATHTO_API_PROP);
     }
 
 }

@@ -20,6 +20,7 @@ public class CheckSiteMaintenance extends AbstractSpec {
     private static LoginPage loginPage;
     private static Dashboard dashboard;
     private static SiteMaintenance siteMaintenance;
+    private static final long DEFAULT_PAUSE = 2500;
 
     @BeforeTest
     public void setUp() throws Exception {
@@ -38,6 +39,8 @@ public class CheckSiteMaintenance extends AbstractSpec {
         final String expectedTitle = "Site Maintenance";
 
         dashboard.openPageFromMenu(systemAdminMenuButton, siteMaintenanceMenuItem);
+
+        Thread.sleep(DEFAULT_PAUSE);
 
         Assert.assertNotNull(siteMaintenance.getUrl());
 

@@ -36,7 +36,7 @@ public class LoginPage extends Page {
         findElement(passwordField).sendKeys("qwerty@01");
 
         //findElement(emailField).sendKeys("philips");
-        //findElement(passwordField).sendKeys("q4pass1234!");
+        //findElement(passwordField).sendKeys("qwerty@01");
 
         Thread.sleep(DEFAULT_PAUSE);
         retryClick(loginButton);
