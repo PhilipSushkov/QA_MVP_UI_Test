@@ -139,7 +139,7 @@ public class CheckPresentationEmailAlert extends AbstractSpec {
 
     }
 
-    @Test(dataProvider = DATA, priority = 0)
+    @Test(dataProvider = DATA, priority = 1)
     public void checkRequirements(JSONObject data) throws Exception {
 
         try {
@@ -172,7 +172,7 @@ public class CheckPresentationEmailAlert extends AbstractSpec {
         }
     }
 
-    @Test(dataProvider = DATA, priority = 1)
+    @Test(dataProvider = DATA, priority = 2)
     public void publishPresentation(JSONObject data) throws Exception {
 
         try {
@@ -232,7 +232,7 @@ public class CheckPresentationEmailAlert extends AbstractSpec {
         }
     }
 
-    @Test(dataProvider = DATA, priority = 2)
+    @Test(dataProvider = DATA, priority = 3)
     public void checkPresentationEmailAlert(JSONObject data) throws Exception {
 
         try {
@@ -267,7 +267,7 @@ public class CheckPresentationEmailAlert extends AbstractSpec {
         }
     }
 
-    @Test(dataProvider = DATA, priority = 3, alwaysRun=true)
+    @Test(dataProvider = DATA, priority = 4, alwaysRun=true)
     public void cleanUp(JSONObject data) {
 
         try {
