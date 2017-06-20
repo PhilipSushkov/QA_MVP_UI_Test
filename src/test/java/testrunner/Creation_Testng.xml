@@ -94,6 +94,11 @@
             <class name="specs.ContentAdmin.PersonList.CheckPersonAdd" />
         </classes>
     </test>
+    <test name="CheckQuickLinkAdd">
+        <classes>
+            <class name="specs.ContentAdmin.QuickLinkList.CheckQuickLinkAdd" />
+        </classes>
+    </test>
 
 
     <test name="CreateNewUser">

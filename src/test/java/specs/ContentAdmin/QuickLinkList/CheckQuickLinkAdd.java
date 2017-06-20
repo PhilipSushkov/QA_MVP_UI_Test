@@ -10,7 +10,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import pageobjects.ContentAdmin.Glossary.GlossaryAdd;
 import pageobjects.ContentAdmin.QuickLinkList.QuickLinkAdd;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.LoginPage.LoginPage;
@@ -25,6 +24,7 @@ import java.util.ArrayList;
 /**
  * Created by andyp on 2017-06-19.
  */
+
 public class CheckQuickLinkAdd extends AbstractSpec {
     private static By contentAdminMenuButton, quickLinkListMenuItem;
     private static LoginPage loginPage;
