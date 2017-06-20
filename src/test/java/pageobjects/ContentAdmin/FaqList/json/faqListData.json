@@ -1,0 +1,13 @@
+{
+  "faq": [
+    {
+      "do_assertions": true,
+      "name_EN": "Name",
+      "name_GE": "Name",
+      "active": true,
+      "question":"Whats my name",
+      "answer": "Rihanna",
+      "comment": "Dog"
+    }
+  ]
+}
