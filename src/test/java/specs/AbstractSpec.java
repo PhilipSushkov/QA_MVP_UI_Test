@@ -155,6 +155,7 @@ public abstract class AbstractSpec extends util.Functions {
             if (!driver.getCurrentUrl().contains(desktopUrl.toString())) {
                 System.out.println("Home site page didn't download yet: "+desktopUrl.toString());
                 //System.out.println(driver.getCurrentUrl());
+                driver.navigate().refresh();
                 driver.get(desktopUrl.toString());
                 Thread.sleep(DEFAULT_PAUSE);
             } else {
