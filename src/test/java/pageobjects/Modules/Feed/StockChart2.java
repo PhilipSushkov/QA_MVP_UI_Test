@@ -5,28 +5,24 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import pageobjects.AbstractPageObject;
+import pageobjects.PageAdmin.WorkflowState;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.openqa.selenium.*;
-import pageobjects.AbstractPageObject;
-import pageobjects.PageAdmin.PageAdminList;
-import pageobjects.PageAdmin.WorkflowState;
-import util.Functions;
 
 import static specs.AbstractSpec.*;
+import static specs.AbstractSpec.desktopUrl;
 
 /**
- * Created by philipsushkov on 2017-06-12.
+ * Created by zacharyk on 2017-06-21.
  */
-
-public class StockHistorical2_375 extends AbstractPageObject {
+public class StockChart2 extends AbstractPageObject {
     private static By addNewModuleBtn, backBtn, moduleTitleInput, moduleDefinitionSelect, includeLagacyModulesChk;
     private static By publishBtn, saveBtn, workflowStateSpan, currentContentSpan, propertiesHref, previewLnk;
     private static By commentsTxt, deleteBtn, saveAndSubmitBtn, regionNameSelect;
@@ -35,12 +31,7 @@ public class StockHistorical2_375 extends AbstractPageObject {
 
     private static final long DEFAULT_PAUSE = 2500;
 
-    // This test checks specific historical data on the following day:
-    private static final String lookupMonth = "Jul";
-    private static final String lookupDay = "1";
-    private static final String lookupYear = "2015";
-
-    public StockHistorical2_375(WebDriver driver) {
+    public StockChart2(WebDriver driver) {
         super(driver);
 
         addNewModuleBtn = By.xpath(propUIModules.getProperty("btn_AddNewModule"));
@@ -63,7 +54,7 @@ public class StockHistorical2_375 extends AbstractPageObject {
         sPathToPageFile = System.getProperty("user.dir") + propUIModules.getProperty("dataPath_Modules");
         sFilePageJson = propUIModules.getProperty("json_PagesProp");
         sPathToModuleFile = System.getProperty("user.dir") + propUIModulesFeed.getProperty("dataPath_Feed");
-        sFileModuleJson = propUIModulesFeed.getProperty("json_StockHistorical2_375Prop");
+        sFileModuleJson = propUIModulesFeed.getProperty("json_StockChart2Prop");
 
         parser = new JSONParser();
     }
@@ -329,82 +320,6 @@ public class StockHistorical2_375 extends AbstractPageObject {
         return null;
     }
 
-    public String openModulePreview(String moduleName) {
-        try {
-            JSONObject jsonObj = (JSONObject) parser.parse(new FileReader(sPathToModuleFile + sFileModuleJson));
-            String moduleURL = getModuleUrl(jsonObj, moduleName);
-            driver.get(moduleURL);
-
-            findElement(previewLnk).click();
-
-            Thread.sleep(DEFAULT_PAUSE);
-
-            ArrayList<String> tabs = new ArrayList<> (driver.getWindowHandles());
-            driver.switchTo().window(tabs.get(1));
-
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        return driver.getTitle();
-    }
-
-    public String openModuleLiveSite(String moduleName) {
-        try {
-            ((JavascriptExecutor)driver).executeScript("window.open();");
-
-            Thread.sleep(DEFAULT_PAUSE);
-
-            ArrayList<String> tabs = new ArrayList<> (driver.getWindowHandles());
-            driver.switchTo().window(tabs.get(1));
-
-            JSONObject jsonObj = (JSONObject)  parser.parse(new FileReader(sPathToPageFile + sFilePageJson));
-            String moduleURL = JsonPath.read(jsonObj, "$.['"+moduleName+"'].your_page_url");
-            driver.get(moduleURL);
-
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        return driver.getTitle();
-    }
-
-    public void closeWindow() {
-        try {
-            ArrayList<String> tabs = new ArrayList<>(driver.getWindowHandles());
-
-            driver.switchTo().window(tabs.get(1)).close();
-            Thread.sleep(DEFAULT_PAUSE);
-            driver.switchTo().window(tabs.get(0));
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void lookupHistoricalValue(JSONObject module) {
-        By lookupMonthSelect = By.xpath(module.get("module_path").toString() + propUIModulesFeed.getProperty("select_LookupMonth"));
-        By lookupDaySelect = By.xpath(module.get("module_path").toString() + propUIModulesFeed.getProperty("select_LookupDay"));
-        By lookupYearSelect = By.xpath(module.get("module_path").toString() + propUIModulesFeed.getProperty("select_LookupYear"));
-        By lookupBtn = By.xpath(module.get("module_path").toString() + propUIModulesFeed.getProperty("btn_Lookup"));
-
-        findElement(lookupMonthSelect).sendKeys(lookupMonth);
-        findElement(lookupDaySelect).sendKeys(lookupDay);
-        findElement(lookupYearSelect).sendKeys(lookupYear);
-        findElement(lookupBtn).click();
-    }
-
     private String getPageUrl(JSONObject obj, String moduleName) {
         String  sItemID = JsonPath.read(obj, "$.['"+moduleName+"'].url_query.ItemID");
         String  sLanguageId = JsonPath.read(obj, "$.['"+moduleName+"'].url_query.LanguageId");
@@ -418,5 +333,4 @@ public class StockHistorical2_375 extends AbstractPageObject {
         String  sSectionId = JsonPath.read(obj, "$.['"+moduleName+"'].url_query.SectionId");
         return desktopUrl.toString()+"default.aspx?ItemID="+sItemID+"&LanguageId="+sLanguageId+"&SectionId="+sSectionId;
     }
-
 }
