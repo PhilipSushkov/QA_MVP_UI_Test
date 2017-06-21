@@ -7,9 +7,6 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.openqa.selenium.*;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.remote.server.handler.FindElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
 import pageobjects.PageAdmin.WorkflowState;
 
@@ -333,7 +330,7 @@ public class StockQuoteHeader_375 extends AbstractPageObject {
         return null;
     }
 
-    public void openModulePreview(String moduleName) {
+    public String openModulePreview(String moduleName) {
         try {
             JSONObject jsonObj = (JSONObject) parser.parse(new FileReader(sPathToModuleFile + sFileModuleJson));
             String moduleURL = getModuleUrl(jsonObj, moduleName);
@@ -355,9 +352,11 @@ public class StockQuoteHeader_375 extends AbstractPageObject {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+
+        return driver.getTitle();
     }
 
-    public void openModuleLiveSite(String moduleName) {
+    public String openModuleLiveSite(String moduleName) {
         try {
             ((JavascriptExecutor)driver).executeScript("window.open();");
 
@@ -379,6 +378,8 @@ public class StockQuoteHeader_375 extends AbstractPageObject {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+
+        return driver.getTitle();
     }
 
     public void closeWindow() {
@@ -390,86 +391,6 @@ public class StockQuoteHeader_375 extends AbstractPageObject {
             driver.switchTo().window(tabs.get(0));
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
-    }
-
-    public Boolean checkExpectedValues(String expected, JSONObject module) {
-        String elementPath, expectedValue, attribute, valueName, moduleCompare;
-        By element;
-
-        String modulePath = module.get("module_path").toString();
-        String moduleName = module.get("module_title").toString();
-
-        String[] data = expected.split(";");
-        String type = data[0];
-
-        switch (type) {
-            case "text":
-
-                elementPath = data[1];
-                expectedValue = data[2];
-
-                element = By.xpath(modulePath + propUIModulesFeed.getProperty(elementPath));
-                return findElement(element).getText().contains(expectedValue);
-
-            case "attribute":
-
-                elementPath = data[1];
-                attribute  = data[2];
-                expectedValue = data[3];
-                element = By.xpath(modulePath + propUIModulesFeed.getProperty(elementPath));
-                return findElement(element).getAttribute(attribute).contains(expectedValue);
-
-            case "save":
-
-                try {
-                    JSONObject jsonObj = (JSONObject) parser.parse(new FileReader(sPathToModuleFile + sFileModuleJson));
-
-                    elementPath = data[1];
-                    valueName = data[2];
-
-                    JSONObject moduleObj = (JSONObject) jsonObj.get(moduleName);
-                    element = By.xpath(propUIModulesFeed.getProperty(elementPath));
-
-                    moduleObj.put(valueName, findElement(element).getText());
-                    jsonObj.put(moduleName, moduleObj);
-
-                    FileWriter file = new FileWriter(sPathToModuleFile + sFileModuleJson);
-                    file.write(jsonObj.toJSONString().replace("\\", ""));
-                    file.flush();
-
-                    return true;
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                return false;
-
-            case "compare":
-                try {
-                    JSONObject jsonObj = (JSONObject) parser.parse(new FileReader(sPathToModuleFile + sFileModuleJson));
-
-                    elementPath = data[1];
-                    valueName = data[2];
-                    moduleCompare = data[3];
-
-                    Boolean compareEquals = Boolean.valueOf(data[4]);
-
-                    JSONObject moduleObj = (JSONObject) jsonObj.get(moduleCompare);
-                    element = By.xpath(modulePath + propUIModulesFeed.getProperty(elementPath));
-
-                    if (compareEquals) {
-                        return findElement(element).getText().equals(moduleObj.get(valueName).toString());
-                    } else {
-                        return !findElement(element).getText().equals(moduleObj.get(valueName).toString());
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            default: return false;
         }
     }
 

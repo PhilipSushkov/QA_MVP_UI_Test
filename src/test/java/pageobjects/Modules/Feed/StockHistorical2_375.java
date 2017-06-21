@@ -28,11 +28,17 @@ import static specs.AbstractSpec.*;
 
 public class StockHistorical2_375 extends AbstractPageObject {
     private static By addNewModuleBtn, backBtn, moduleTitleInput, moduleDefinitionSelect, includeLagacyModulesChk;
-    private static By publishBtn, saveBtn, workflowStateSpan, currentContentSpan, propertiesHref;
+    private static By publishBtn, saveBtn, workflowStateSpan, currentContentSpan, propertiesHref, previewLnk;
     private static By commentsTxt, deleteBtn, saveAndSubmitBtn, regionNameSelect;
     private static String sPathToPageFile, sFilePageJson, sPathToModuleFile, sFileModuleJson;
     private static JSONParser parser;
+
     private static final long DEFAULT_PAUSE = 2500;
+
+    // This test checks specific historical data on the following day:
+    private static final String lookupMonth = "Jul";
+    private static final String lookupDay = "1";
+    private static final String lookupYear = "2015";
 
     public StockHistorical2_375(WebDriver driver) {
         super(driver);
@@ -46,6 +52,7 @@ public class StockHistorical2_375 extends AbstractPageObject {
         commentsTxt = By.xpath(propUIPageAdmin.getProperty("txtarea_Comments"));
         currentContentSpan = By.xpath(propUIPageAdmin.getProperty("span_CurrentContent"));
         propertiesHref = By.xpath(propUIModules.getProperty("href_Properties"));
+        previewLnk = By.xpath(propUIModules.getProperty("lnk_Preview"));
 
         saveBtn = By.xpath(propUIPageAdmin.getProperty("btn_Save"));
         deleteBtn = By.xpath(propUIPageAdmin.getProperty("btn_Delete"));
@@ -56,7 +63,7 @@ public class StockHistorical2_375 extends AbstractPageObject {
         sPathToPageFile = System.getProperty("user.dir") + propUIModules.getProperty("dataPath_Modules");
         sFilePageJson = propUIModules.getProperty("json_PagesProp");
         sPathToModuleFile = System.getProperty("user.dir") + propUIModulesFeed.getProperty("dataPath_Feed");
-        sFileModuleJson = propUIModulesFeed.getProperty("json_DtockHistorical2_375Prop");
+        sFileModuleJson = propUIModulesFeed.getProperty("json_StockHistorical2_375Prop");
 
         parser = new JSONParser();
     }
@@ -321,6 +328,110 @@ public class StockHistorical2_375 extends AbstractPageObject {
 
         return null;
     }
+
+    public String openModulePreview(String moduleName) {
+        try {
+            JSONObject jsonObj = (JSONObject) parser.parse(new FileReader(sPathToModuleFile + sFileModuleJson));
+            String moduleURL = getModuleUrl(jsonObj, moduleName);
+            driver.get(moduleURL);
+
+            findElement(previewLnk).click();
+
+            Thread.sleep(DEFAULT_PAUSE);
+
+            ArrayList<String> tabs = new ArrayList<> (driver.getWindowHandles());
+            driver.switchTo().window(tabs.get(1));
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return driver.getTitle();
+    }
+
+    public String openModuleLiveSite(String moduleName) {
+        try {
+            ((JavascriptExecutor)driver).executeScript("window.open();");
+
+            Thread.sleep(DEFAULT_PAUSE);
+
+            ArrayList<String> tabs = new ArrayList<> (driver.getWindowHandles());
+            driver.switchTo().window(tabs.get(1));
+
+            JSONObject jsonObj = (JSONObject)  parser.parse(new FileReader(sPathToPageFile + sFilePageJson));
+            String moduleURL = JsonPath.read(jsonObj, "$.['"+moduleName+"'].your_page_url");
+            driver.get(moduleURL);
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return driver.getTitle();
+    }
+
+    public void closeWindow() {
+        try {
+            ArrayList<String> tabs = new ArrayList<>(driver.getWindowHandles());
+
+            driver.switchTo().window(tabs.get(1)).close();
+            Thread.sleep(DEFAULT_PAUSE);
+            driver.switchTo().window(tabs.get(0));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void lookupHistoricalValue(JSONObject module) {
+        By lookupMonthSelect = By.xpath(module.get("module_path").toString() + propUIModulesFeed.getProperty("select_LookupMonth"));
+        By lookupDaySelect = By.xpath(module.get("module_path").toString() + propUIModulesFeed.getProperty("select_LookupDay"));
+        By lookupYearSelect = By.xpath(module.get("module_path").toString() + propUIModulesFeed.getProperty("select_LookupYear"));
+        By lookupBtn = By.xpath(module.get("module_path").toString() + propUIModulesFeed.getProperty("btn_Lookup"));
+
+        findElement(lookupMonthSelect).sendKeys(lookupMonth);
+        findElement(lookupDaySelect).sendKeys(lookupDay);
+        findElement(lookupYearSelect).sendKeys(lookupYear);
+        findElement(lookupBtn).click();
+    }
+
+    /*public Boolean checkExpectedValues(String expected, JSONObject module) {
+        String type, elementPath, expectedValue, attribute;
+        By element;
+
+        String modulePath = module.get("module_path").toString();
+
+        String[] data = expected.split(";");
+        type = data[0];
+        elementPath = data[1];
+
+        switch (type) {
+            case "text":
+
+                expectedValue = data[2];
+                element = By.xpath(modulePath + propUIModulesFeed.getProperty(elementPath));
+                return findElement(element).getText().contains(expectedValue);
+
+            case "attribute":
+
+                attribute  = data[2];
+                expectedValue = data[3];
+                element = By.xpath(modulePath + propUIModulesFeed.getProperty(elementPath));
+                return findElement(element).getAttribute(attribute).contains(expectedValue);
+
+            default: return false;
+        }
+    }*/
 
     private String getPageUrl(JSONObject obj, String moduleName) {
         String  sItemID = JsonPath.read(obj, "$.['"+moduleName+"'].url_query.ItemID");
