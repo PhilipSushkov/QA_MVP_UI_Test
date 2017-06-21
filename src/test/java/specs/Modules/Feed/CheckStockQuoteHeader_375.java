@@ -9,11 +9,11 @@ import org.testng.Assert;
 import org.testng.annotations.*;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.LoginPage.LoginPage;
-import pageobjects.Modules.Feed.StockHistorical2_375;
 import pageobjects.Modules.Feed.StockQuoteHeader_375;
 import pageobjects.Modules.PageForModules;
 import pageobjects.PageAdmin.WorkflowState;
 import specs.AbstractSpec;
+import specs.Modules.util.ModuleFunctions;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -30,7 +30,7 @@ public class CheckStockQuoteHeader_375 extends AbstractSpec {
     private static PageForModules pageForModules;
     private static StockQuoteHeader_375 stockQuoteHeader_375;
 
-    private static String sPathToFile, sDataFileJson, homepageURL;
+    private static String sPathToFile, sDataFileJson, sPathToModuleFile, sFileModuleJson;
     private static JSONParser parser;
 
     private final String MODULE_DATA="moduleData", MODULE_NAME="stock_quote_header_375";
@@ -48,7 +48,8 @@ public class CheckStockQuoteHeader_375 extends AbstractSpec {
 
         sPathToFile = System.getProperty("user.dir") + propUIModulesFeed.getProperty("dataPath_Feed");
         sDataFileJson = propUIModulesFeed.getProperty("json_StockQuoteHeader_375Data");
-        homepageURL = propUIModules.getProperty("url_HomePage");
+        sPathToModuleFile = System.getProperty("user.dir") + propUIModulesFeed.getProperty("dataPath_Feed");
+        sFileModuleJson = propUIModulesFeed.getProperty("json_StockQuoteHeader_375Prop");
 
         parser = new JSONParser();
 
@@ -81,12 +82,13 @@ public class CheckStockQuoteHeader_375 extends AbstractSpec {
 
         try {
             String sModuleNameSet = module.get("module_title").toString();
-            stockQuoteHeader_375.openModulePreview(sModuleNameSet);
+            Assert.assertTrue(stockQuoteHeader_375.openModulePreview(sModuleNameSet).contains(MODULE_NAME),"Did not open correct page");
 
             JSONArray expectedResults = (JSONArray) module.get("expected");
             for (Object expected : expectedResults) {
                 String sExpected = expected.toString();
-                Assert.assertTrue(stockQuoteHeader_375.checkExpectedValues(sExpected, module));
+                Assert.assertTrue(ModuleFunctions.checkExpectedValue(driver, sExpected, module, sPathToModuleFile + sFileModuleJson),
+                        "Did not find correct " + sExpected.split(";")[0] + " at item " + sExpected.split(";")[1]);
             }
         } finally {
             stockQuoteHeader_375.closeWindow();
@@ -97,12 +99,13 @@ public class CheckStockQuoteHeader_375 extends AbstractSpec {
     public void checkStockQuoteHeader_375Live(JSONObject module) throws InterruptedException {
 
         try {
-            stockQuoteHeader_375.openModuleLiveSite(MODULE_NAME);
+            Assert.assertTrue(stockQuoteHeader_375.openModuleLiveSite(MODULE_NAME).contains(MODULE_NAME),"Did not open correct page");
 
             JSONArray expectedResults = (JSONArray) module.get("expected");
             for (Object expected : expectedResults) {
                 String sExpected = expected.toString();
-                Assert.assertTrue(stockQuoteHeader_375.checkExpectedValues(sExpected, module));
+                Assert.assertTrue(ModuleFunctions.checkExpectedValue(driver, sExpected, module, sPathToModuleFile + sFileModuleJson),
+                        "Did not find correct " + sExpected.split(";")[0] + " at item " + sExpected.split(";")[1]);
             }
         } finally {
             stockQuoteHeader_375.closeWindow();
