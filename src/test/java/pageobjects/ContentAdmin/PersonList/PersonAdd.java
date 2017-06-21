@@ -8,7 +8,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.server.handler.FindElement;
 import org.openqa.selenium.support.ui.Select;
 import pageobjects.AbstractPageObject;
 import pageobjects.PageAdmin.WorkflowState;
@@ -464,7 +463,7 @@ public class PersonAdd extends AbstractPageObject {
         return null;
     }
 
-    public Boolean checkLookupCh(JSONObject data, String name) throws InterruptedException {
+    public Boolean checkPersonCh(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
 
         try {

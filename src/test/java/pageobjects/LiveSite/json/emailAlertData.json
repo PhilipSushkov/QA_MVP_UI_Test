@@ -1,0 +1,58 @@
+{
+  "email_alert": [
+    {
+      "do_assertions": true,
+      "name": "Checking for no email",
+      "fail": true,
+      "mailing_list": false,
+      "unsubscribe": false,
+      "email": "",
+      "expected": "Email address is required."
+    },
+    {
+      "do_assertions": true,
+      "name": "Checking for invalid email formatting",
+      "fail": true,
+      "mailing_list": false,
+      "unsubscribe": false,
+      "email": "emailemail.com",
+      "expected": "Email address is not valid."
+    },
+    {
+      "do_assertions": true,
+      "name": "Checking for not having any mailing lists selected",
+      "fail": true,
+      "mailing_list": true,
+      "unsubscribe": false,
+      "email": "email@email.com",
+      "expected": "Mailing list selection is required."
+    },
+    {
+      "do_assertions": true,
+      "name": "Checking for successful subscription",
+      "fail": false,
+      "mailing_list": false,
+      "unsubscribe": false,
+      "email": "test@q4websystems.com",
+      "expected": "Thank you for signing up for the mailing lists. An activation email will be sent to you shortly."
+    },
+    {
+      "do_assertions": true,
+      "name": "Checking for unsuccessful unsubscription",
+      "fail": true,
+      "mailing_list": false,
+      "unsubscribe": true,
+      "email": "rqqss123@qwef.com",
+      "expected": "Unsubscription Failed."
+    },
+    {
+      "do_assertions": true,
+      "name": "Checking for successful unsubscription",
+      "fail": false,
+      "mailing_list": false,
+      "unsubscribe": true,
+      "email": "test@q4websystems.com",
+      "expected": "Unsubscription Email Sent!"
+    }
+  ]
+}

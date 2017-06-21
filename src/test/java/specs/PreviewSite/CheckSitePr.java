@@ -106,15 +106,15 @@ public class CheckSitePr extends AbstractSpec {
         publicTests.rssPresentationsWorks();
     }
 
-    @Test
-    public void emailAlertsWork(){
-        publicTests.emailAlertsWork();
-    }
-
-    @Test
-    public void unsubscribeEmailAlertsWorks(){
-        publicTests.unsubscribeEmailAlertsWorks();
-    }
+//    @Test
+//    public void emailAlertsWork(){
+//        publicTests.emailAlertsWork();
+//    }
+//
+//    @Test
+//    public void unsubscribeEmailAlertsWorks(){
+//        publicTests.unsubscribeEmailAlertsWorks();
+//    }
 
     @Test
     public void investmentCalculatorWorks(){

@@ -1,4 +1,4 @@
-package pageobjects.ContentAdmin.Glossary;
+package pageobjects.SiteAdmin.DomainList;
 
 import com.jayway.jsonpath.JsonPath;
 import org.json.simple.JSONObject;
@@ -16,50 +16,55 @@ import java.io.IOException;
 import java.net.URL;
 
 import static specs.AbstractSpec.desktopUrl;
-import static specs.AbstractSpec.propUIContentAdmin;
+import static specs.AbstractSpec.propUISiteAdmin;
 
 /**
- * Created by andyp on 2017-06-13.
+ * Created by andyp on 2017-06-15.
  */
-public class GlossaryAdd extends AbstractPageObject{
-    private static By moduleTitle, titleInput, textArea;
-    private static By activeChk, saveBtn, revertBtn, cancelBtn, deleteBtn, addNewLink, publishBtn;
-    private static By switchToHtml, workflowStateSpan, commentsTxt, successMsg, saveAndSubmitBtn, currentContentSpan;
-    private static By radEditor, radEditorContent;
+public class DomainAdd extends AbstractPageObject {
+    private static By moduleTitle, domainNameInput, landingPageSelect, selectedlandingPage;
+    private static By addAltDomainLink, altDomainNameInput, altDomainCancelBtn, altDomainOKBtn;
+    private static By saveBtn, cancelBtn, deleteBtn,publishBtn, revertBtn, addNewLink;
+    private static By workflowStateSpan, commentsTxt, successMsg, saveAndSubmitBtn, currentContentSpan;
+    private static By altDomainName, altDomainEditBtn;
     private static String sPathToFile, sFileJson;
     private static JSONParser parser;
     private static final long DEFAULT_PAUSE = 2500;
-    private final String PAGE_NAME="Glossary";
+    private final String PAGE_NAME="Domain";
 
-    public GlossaryAdd(WebDriver driver) {
+    public DomainAdd(WebDriver driver) {
         super(driver);
-        moduleTitle = By.xpath(propUIContentAdmin.getProperty("spanModule_Title"));
-        titleInput = By.xpath(propUIContentAdmin.getProperty("input_Title"));
-        activeChk = By.xpath(propUIContentAdmin.getProperty("chk_Active"));
+        moduleTitle = By.xpath(propUISiteAdmin.getProperty("spanModule_Title"));
+        domainNameInput = By.xpath(propUISiteAdmin.getProperty("input_DomainName"));
+        landingPageSelect = By.xpath(propUISiteAdmin.getProperty("select_LandingPage"));
+        selectedlandingPage = By.xpath(propUISiteAdmin.getProperty("option_SelectedLandingPage"));
 
-        switchToHtml = By.className(propUIContentAdmin.getProperty("html_SwitchTo"));
-        moduleTitle = By.xpath(propUIContentAdmin.getProperty("spanModule_Title"));
-        saveBtn = By.xpath(propUIContentAdmin.getProperty("btn_Save"));
-        cancelBtn = By.xpath(propUIContentAdmin.getProperty("btn_Cancel"));
-        deleteBtn = By.xpath(propUIContentAdmin.getProperty("btn_Delete"));
-        publishBtn = By.xpath(propUIContentAdmin.getProperty("btn_Publish"));
-        addNewLink = By.xpath(propUIContentAdmin.getProperty("input_AddNew"));
-        revertBtn = By.xpath(propUIContentAdmin.getProperty("btn_Revert"));
-        workflowStateSpan = By.xpath(propUIContentAdmin.getProperty("select_WorkflowState"));
-        commentsTxt = By.xpath(propUIContentAdmin.getProperty("txtarea_Comments"));
-        successMsg = By.xpath(propUIContentAdmin.getProperty("msg_Success"));
-        saveAndSubmitBtn = By.xpath(propUIContentAdmin.getProperty("btn_SaveAndSubmit"));
-        currentContentSpan = By.xpath(propUIContentAdmin.getProperty("span_CurrentContent"));
-        textArea = By.tagName(propUIContentAdmin.getProperty("frame_Textarea"));
+        addAltDomainLink = By.xpath(propUISiteAdmin.getProperty("href_AddNewAlt"));
+        altDomainNameInput = By.xpath(propUISiteAdmin.getProperty("input_DomainNameAlt"));
+        altDomainCancelBtn = By.xpath(propUISiteAdmin.getProperty("btn_CancelAlt"));
+        altDomainOKBtn = By.xpath(propUISiteAdmin.getProperty("btn_OKAlt"));
+        altDomainName = By.xpath(propUISiteAdmin.getProperty("td_DomainName"));
+        altDomainEditBtn = By.xpath(propUISiteAdmin.getProperty("a_EditAltDomain"));
 
-        radEditor = By.xpath(propUIContentAdmin.getProperty("frame_RadEditor"));
-        radEditorContent = By.xpath(propUIContentAdmin.getProperty("field_RadEContent"));
+        saveBtn = By.xpath(propUISiteAdmin.getProperty("btn_Save"));
+        cancelBtn = By.xpath(propUISiteAdmin.getProperty("btn_Cancel"));
+        deleteBtn = By.xpath(propUISiteAdmin.getProperty("btn_Delete"));
+        publishBtn = By.xpath(propUISiteAdmin.getProperty("btn_Publish"));
+        addNewLink = By.xpath(propUISiteAdmin.getProperty("input_AddNew"));
+        revertBtn = By.xpath(propUISiteAdmin.getProperty("btn_Revert"));
+        workflowStateSpan = By.xpath(propUISiteAdmin.getProperty("select_WorkflowState"));
+        commentsTxt = By.xpath(propUISiteAdmin.getProperty("txtarea_Comments"));
+        successMsg = By.xpath(propUISiteAdmin.getProperty("msg_Success"));
+        saveAndSubmitBtn = By.xpath(propUISiteAdmin.getProperty("btn_SaveAndSubmit"));
+        currentContentSpan = By.xpath(propUISiteAdmin.getProperty("span_CurrentContent"));
 
         parser = new JSONParser();
 
-        sPathToFile = System.getProperty("user.dir") + propUIContentAdmin.getProperty("dataPath_glossaryListData");
-        sFileJson = propUIContentAdmin.getProperty("json_glossaryList");
+        sPathToFile = System.getProperty("user.dir") + propUISiteAdmin.getProperty("dataPath_DomainList");
+        sFileJson = propUISiteAdmin.getProperty("json_DomainList");
+
     }
+
     public String getTitle() {
         findElement(addNewLink).click();
         waitForElement(moduleTitle);
@@ -68,9 +73,8 @@ public class GlossaryAdd extends AbstractPageObject{
         return sTitle;
     }
 
-    public String saveGlossary(JSONObject data, String name) {
-        String title, description;
-        Boolean active;
+    public String saveDomain(JSONObject data, String name) {
+        String domain_name, landing_page, alt_domain;
         JSONObject jsonObj = new JSONObject();
         JSONObject jsonMain = new JSONObject();
 
@@ -85,35 +89,21 @@ public class GlossaryAdd extends AbstractPageObject{
             } catch (ParseException e) {
             }
 
-            title = data.get("title").toString();
-            System.out.println(title);
-            findElement(titleInput).clear();
-            findElement(titleInput).sendKeys(title);
-            jsonObj.put("title", title);
+            domain_name = data.get("domain_name").toString();
+            findElement(domainNameInput).sendKeys(domain_name);
+            jsonObj.put("domain_name", domain_name);
 
-            findElement(switchToHtml).click();
+            landing_page = data.get("landing_page").toString();
+            findElement(landingPageSelect).sendKeys(landing_page);
+            jsonObj.put("landing_page", landing_page);
 
-            description = data.get("description").toString();
-            driver.switchTo().frame(2);
-            findElement(textArea).sendKeys(description);
-            driver.switchTo().defaultContent();
-            pause(1000L);
-            jsonObj.put("description", description);
+            findElement(addAltDomainLink).click();
+            waitForElement(altDomainNameInput);
 
-            // Save Active checkbox
-            active = Boolean.parseBoolean(data.get("active").toString());
-            jsonObj.put("active", Boolean.parseBoolean(data.get("active").toString()));
-            if (active) {
-                if (!Boolean.parseBoolean(findElement(activeChk).getAttribute("checked"))) {
-                    findElement(activeChk).click();
-                } else {
-                }
-            } else {
-                if (!Boolean.parseBoolean(findElement(activeChk).getAttribute("checked"))) {
-                } else {
-                    findElement(activeChk).click();
-                }
-            }
+            alt_domain = data.get("alt_domain_name").toString();
+            findElement(altDomainNameInput).sendKeys(alt_domain);
+            jsonObj.put("alt_domain_name", alt_domain);
+            findElement(altDomainOKBtn).click();
 
             findElement(saveBtn).click();
             Thread.sleep(DEFAULT_PAUSE);
@@ -143,9 +133,9 @@ public class GlossaryAdd extends AbstractPageObject{
         return null;
     }
 
-    public String saveAndSubmitGlossary(JSONObject data, String name) throws InterruptedException {
+    public String saveAndSubmitDomain(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
-        By editBtn = By.xpath("//td[(text()='" + data.get("title").toString() + "')]/parent::tr/td/input[contains(@id, 'imgEdit')][contains(@id, 'Glossary')]");
+        By editBtn = By.xpath("//td[(text()='" + data.get("domain_name").toString() + "')]/parent::tr/td/input[contains(@id, 'imgEdit')][contains(@id, 'Domain')]");
 
         try {
             waitForElement(moduleTitle);
@@ -198,8 +188,7 @@ public class GlossaryAdd extends AbstractPageObject{
 
         return null;
     }
-
-    public Boolean checkGlossary(JSONObject data, String name) throws InterruptedException {
+    public Boolean checkDomain(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
 
         try {
@@ -218,27 +207,25 @@ public class GlossaryAdd extends AbstractPageObject{
 
             // Compare field values with entry data
             try {
-                if (!findElement(titleInput).getAttribute("value").equals(data.get("title").toString())) {
+                if (!findElement(domainNameInput).getAttribute("value").equals(data.get("domain_name").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
             }
 
             try {
-                driver.switchTo().frame(findElement(radEditor));
-                if (!findElement(radEditorContent).getText().equals(data.get("description").toString())) {
+                if (!findElement(selectedlandingPage).getAttribute("innerhtml").equals(data.get("landing_page").toString())) {
                     return false;
                 }
-                driver.switchTo().defaultContent();
+            } catch (NullPointerException e) {
+            }
+            try {
+                if (!findElement(altDomainName).getAttribute("innerhtml").contains(data.get("alt_domain_name").toString())) {
+                    return false;
+                }
             } catch (NullPointerException e) {
             }
 
-            try {
-                if (!findElement(activeChk).getAttribute("checked").equals(data.get("active").toString())) {
-                    return false;
-                }
-            } catch (NullPointerException e) {
-            }
 
             System.out.println(name+ ": New "+PAGE_NAME+" has been checked");
             return true;
@@ -249,7 +236,7 @@ public class GlossaryAdd extends AbstractPageObject{
         return null;
     }
 
-    public String publishGlossary(JSONObject data, String name) throws InterruptedException {
+    public String publishDomain(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
         JSONObject jsonObj = new JSONObject();
 
@@ -295,7 +282,83 @@ public class GlossaryAdd extends AbstractPageObject{
         return null;
     }
 
-    public String revertToLiveGlossary(String name) throws InterruptedException {
+    public String changeAndSubmitDomain(JSONObject data, String name) throws InterruptedException {
+        JSONObject jsonMain = new JSONObject();
+        JSONObject jsonObj = new JSONObject();
+
+        try {
+            try {
+                FileReader readFile = new FileReader(sPathToFile + sFileJson);
+                jsonMain = (JSONObject) parser.parse(readFile);
+                jsonObj = (JSONObject) jsonMain.get(name);
+            } catch (ParseException e) {
+            }
+
+            String pageUrl = getPageUrl(jsonMain, name);
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+            waitForElement(saveAndSubmitBtn);
+
+            try {
+                if (!data.get("domain_name_ch").toString().isEmpty()) {
+                    findElement(domainNameInput).clear();
+                    findElement(domainNameInput).sendKeys(data.get("domain_name_ch").toString());
+                    jsonObj.put("domain_name", data.get("domain_name_ch").toString());
+                }
+            } catch (NullPointerException e) {
+            }
+
+            try {
+                if (!data.get("landing_page_ch").toString().isEmpty()) {
+                    findElement(landingPageSelect).sendKeys(data.get("landing_page_ch").toString());
+                    jsonObj.put("landing_page", data.get("landing_page_ch").toString());
+                }
+            } catch (NullPointerException e) {
+            }
+
+            try {
+                if (!data.get("alt_domain_name_ch").toString().isEmpty()) {
+                    findElement(altDomainEditBtn).click();
+                    findElement(altDomainNameInput).clear();
+                    findElement(altDomainNameInput).sendKeys(data.get("alt_domain_name_ch").toString());
+                    findElement(altDomainOKBtn).click();
+                    jsonObj.put("alt_domain_name", data.get("alt_domain_name_ch").toString());
+                }
+            } catch (NullPointerException e) {
+            }
+
+            try {
+                findElement(commentsTxt).clear();
+                findElement(commentsTxt).sendKeys(data.get("comment_ch").toString());
+            } catch (NullPointerException e) {
+            }
+
+            findElement(saveAndSubmitBtn).click();
+            Thread.sleep(DEFAULT_PAUSE);
+
+            jsonObj.put("workflow_state", WorkflowState.FOR_APPROVAL.state());
+            jsonObj.put("deleted", "false");
+
+            jsonMain.put(name, jsonObj);
+
+            FileWriter file = new FileWriter(sPathToFile + sFileJson);
+            file.write(jsonMain.toJSONString().replace("\\", ""));
+            file.flush();
+
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+            waitForElement(workflowStateSpan);
+
+            System.out.println(name+ ": New "+PAGE_NAME+" changes have been submitted");
+            return findElement(workflowStateSpan).getText();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public String revertToLiveDomain(String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
         JSONObject jsonObj = new JSONObject();
 
@@ -340,86 +403,7 @@ public class GlossaryAdd extends AbstractPageObject{
         return null;
     }
 
-    public String changeAndSubmitGlossary(JSONObject data, String name) throws InterruptedException {
-        JSONObject jsonMain = new JSONObject();
-        JSONObject jsonObj = new JSONObject();
-
-        try {
-            try {
-                FileReader readFile = new FileReader(sPathToFile + sFileJson);
-                jsonMain = (JSONObject) parser.parse(readFile);
-                jsonObj = (JSONObject) jsonMain.get(name);
-            } catch (ParseException e) {
-            }
-
-            String pageUrl = getPageUrl(jsonMain, name);
-            driver.get(pageUrl);
-            Thread.sleep(DEFAULT_PAUSE);
-            waitForElement(saveAndSubmitBtn);
-
-            try {
-                if (!data.get("description_ch").toString().isEmpty()) {
-                    findElement(switchToHtml).click();
-                    driver.switchTo().frame(2);
-                    findElement(textArea).clear();
-                    findElement(textArea).sendKeys(data.get("description_ch").toString());
-                    driver.switchTo().defaultContent();
-                    jsonObj.put("description", data.get("description_ch").toString());
-                }
-            } catch (NullPointerException e) {
-            }
-
-            jsonObj.put("active", Boolean.parseBoolean(data.get("active").toString()));
-            try {
-                // Save Active checkbox
-                if (Boolean.parseBoolean(data.get("active_ch").toString())) {
-                    if (!Boolean.parseBoolean(findElement(activeChk).getAttribute("checked"))) {
-                        findElement(activeChk).click();
-                        jsonObj.put("active", true);
-                    } else {
-                    }
-                } else {
-                    if (!Boolean.parseBoolean(findElement(activeChk).getAttribute("checked"))) {
-                    } else {
-                        findElement(activeChk).click();
-                        jsonObj.put("active", false);
-                    }
-                }
-            } catch (NullPointerException e) {
-            }
-
-            try {
-                findElement(commentsTxt).clear();
-                findElement(commentsTxt).sendKeys(data.get("comment_ch").toString());
-            } catch (NullPointerException e) {
-            }
-
-            findElement(saveAndSubmitBtn).click();
-            Thread.sleep(DEFAULT_PAUSE);
-
-            jsonObj.put("workflow_state", WorkflowState.FOR_APPROVAL.state());
-            jsonObj.put("deleted", "false");
-
-            jsonMain.put(name, jsonObj);
-
-            FileWriter file = new FileWriter(sPathToFile + sFileJson);
-            file.write(jsonMain.toJSONString().replace("\\", ""));
-            file.flush();
-
-            driver.get(pageUrl);
-            Thread.sleep(DEFAULT_PAUSE);
-            waitForElement(workflowStateSpan);
-
-            System.out.println(name+ ": New "+PAGE_NAME+" changes have been submitted");
-            return findElement(workflowStateSpan).getText();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
-    public Boolean checkGlossaryCh(JSONObject data, String name) throws InterruptedException {
+    public Boolean checkDomainCh(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
 
         try {
@@ -435,30 +419,55 @@ public class GlossaryAdd extends AbstractPageObject{
             waitForElement(commentsTxt);
 
             // Compare field values with entry data
-            try {
-                if (!findElement(titleInput).getAttribute("value").equals(data.get("title").toString())) {
-                    return false;
+            try{
+                if (!data.get("domain_name_ch").toString().isEmpty()){
+                    try {
+                        if (!findElement(domainNameInput).getAttribute("value").equals(data.get("domain_name_ch").toString())) {
+                            return false;
+                        }
+                    } catch (NullPointerException e) {
+                    }
+                } else {
+                    try {
+                        if (!findElement(domainNameInput).getAttribute("value").equals(data.get("domain_name").toString())) {
+                            return false;
+                        }
+                    } catch (NullPointerException e) {
+                    }
                 }
-            } catch (NullPointerException e) {
-            }
+                if (!data.get("landing_page_ch").toString().isEmpty()){
+                    try {
+                        if (!findElement(selectedlandingPage).getText().contains(data.get("landing_page_ch").toString())) {
+                            return false;
+                        }
+                    } catch (NullPointerException e) {
+                    }
+                } else{
+                    try {
+                        if (!findElement(selectedlandingPage).getText().contains(data.get("landing_page").toString())) {
+                            return false;
+                        }
+                    } catch (NullPointerException e) {
+                    }
+                }
 
-            try {
-                driver.switchTo().frame(findElement(radEditor));
-                if (!findElement(radEditorContent).getText().equals(data.get("description_ch").toString())) {
-                    driver.switchTo().defaultContent();
-                    return false;
+                if((!data.get("alt_domain_name_ch").toString().isEmpty())){
+                    try {
+                        if (!findElement(altDomainName).getText().contains(data.get("alt_domain_name_ch").toString())) {
+                            return false;
+                        }
+                    } catch (NullPointerException e) {
+                    }
+                } else{
+                    try {
+                        if (!findElement(altDomainName).getText().contains(data.get("alt_domain_name").toString())) {
+                            return false;
+                        }
+                    } catch (NullPointerException e) {
+                    }
                 }
-                driver.switchTo().defaultContent();
-            } catch (NullPointerException e) {
-            }
 
-            try {
-                driver.switchTo().defaultContent();
-                waitForElementToAppear(activeChk);
-                if (!findElement(activeChk).getAttribute("checked").equals(data.get("active_ch").toString())) {
-                    return false;
-                }
-            } catch (NullPointerException e) {
+            } catch(NullPointerException e){
             }
 
             System.out.println(name+ ": New "+PAGE_NAME+" has been checked");
@@ -470,7 +479,7 @@ public class GlossaryAdd extends AbstractPageObject{
         return null;
     }
 
-    public String setupAsDeletedGlossary(String name) throws InterruptedException {
+    public String setupAsDeletedDomain(String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
         JSONObject jsonObj = new JSONObject();
 
@@ -513,7 +522,7 @@ public class GlossaryAdd extends AbstractPageObject{
         return null;
     }
 
-    public String removeGlossary(JSONObject data, String name) throws InterruptedException {
+    public String removeDomain(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
 
         try {
@@ -563,5 +572,4 @@ public class GlossaryAdd extends AbstractPageObject{
         String  sSectionId = JsonPath.read(obj, "$.['"+name+"'].url_query.SectionId");
         return desktopUrl.toString()+"default.aspx?ItemID="+sItemID+"&LanguageId="+sLanguageId+"&SectionId="+sSectionId;
     }
-
 }

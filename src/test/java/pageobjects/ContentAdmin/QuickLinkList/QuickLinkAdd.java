@@ -1,11 +1,13 @@
-package pageobjects.ContentAdmin.Glossary;
+package pageobjects.ContentAdmin.QuickLinkList;
 
 import com.jayway.jsonpath.JsonPath;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import pageobjects.AbstractPageObject;
 import pageobjects.PageAdmin.WorkflowState;
 
@@ -17,32 +19,45 @@ import java.net.URL;
 
 import static specs.AbstractSpec.desktopUrl;
 import static specs.AbstractSpec.propUIContentAdmin;
+import static specs.AbstractSpec.propUISiteAdmin;
+
 
 /**
- * Created by andyp on 2017-06-13.
+ * Created by andyp on 2017-06-19.
  */
-public class GlossaryAdd extends AbstractPageObject{
-    private static By moduleTitle, titleInput, textArea;
-    private static By activeChk, saveBtn, revertBtn, cancelBtn, deleteBtn, addNewLink, publishBtn;
-    private static By switchToHtml, workflowStateSpan, commentsTxt, successMsg, saveAndSubmitBtn, currentContentSpan;
-    private static By radEditor, radEditorContent;
+public class QuickLinkAdd extends AbstractPageObject {
+
+    private static By moduleTitle, addNewLink, descriptionInput, urlInput, textInput, tagsInput, internalUrlSelect, documentUrlInput;
+    private static By typeExternalRadio, typeInternalRadio, typeEmailRadio, typeDocumentRadio, selectedUrl;
+    private static By quickLinkPagesLink, linkToNewChk, activeChk, gridPagesTable, currentContentSpan;
+    private static By saveBtn, cancelBtn, deleteBtn, publishBtn, revertBtn, workflowStateSpan, commentsTxt, successMsg, saveAndSubmitBtn;
     private static String sPathToFile, sFileJson;
     private static JSONParser parser;
     private static final long DEFAULT_PAUSE = 2500;
-    private final String PAGE_NAME="Glossary";
+    private final String PAGE_NAME="Quicklink";
 
-    public GlossaryAdd(WebDriver driver) {
+    public QuickLinkAdd(WebDriver driver) {
         super(driver);
         moduleTitle = By.xpath(propUIContentAdmin.getProperty("spanModule_Title"));
-        titleInput = By.xpath(propUIContentAdmin.getProperty("input_Title"));
-        activeChk = By.xpath(propUIContentAdmin.getProperty("chk_Active"));
+        descriptionInput = By.xpath(propUIContentAdmin.getProperty("input_Description"));
+        urlInput = By.xpath(propUIContentAdmin.getProperty("input_Url"));
+        internalUrlSelect = By.xpath(propUIContentAdmin.getProperty("select_internalUrl"));
+        selectedUrl = By.xpath(propUIContentAdmin.getProperty("option_selectedUrl"));
+        documentUrlInput = By.xpath(propUIContentAdmin.getProperty("input_documentUrl"));
+        textInput = By.xpath(propUIContentAdmin.getProperty("input_Text"));
+        tagsInput = By.xpath(propUIContentAdmin.getProperty("input_Tags"));
 
-        switchToHtml = By.className(propUIContentAdmin.getProperty("html_SwitchTo"));
-        moduleTitle = By.xpath(propUIContentAdmin.getProperty("spanModule_Title"));
+        typeExternalRadio = By.xpath(propUIContentAdmin.getProperty("rdo_TypeExternal"));
+        typeInternalRadio = By.xpath(propUIContentAdmin.getProperty("rdo_TypeInternal"));
+        typeEmailRadio = By.xpath(propUIContentAdmin.getProperty("rdo_TypeEmail"));
+        typeDocumentRadio = By.xpath(propUIContentAdmin.getProperty("rdo_TypeDocument"));
+
+        quickLinkPagesLink = By.xpath(propUIContentAdmin.getProperty("href_QuickLinkPages"));
+        gridPagesTable = By.xpath(propUIContentAdmin.getProperty("table_GridPages"));
         saveBtn = By.xpath(propUIContentAdmin.getProperty("btn_Save"));
         cancelBtn = By.xpath(propUIContentAdmin.getProperty("btn_Cancel"));
         deleteBtn = By.xpath(propUIContentAdmin.getProperty("btn_Delete"));
-        publishBtn = By.xpath(propUIContentAdmin.getProperty("btn_Publish"));
+        publishBtn = By.xpath(propUIContentAdmin.getProperty("btn_Publish")+"[@type='submit']");
         addNewLink = By.xpath(propUIContentAdmin.getProperty("input_AddNew"));
         revertBtn = By.xpath(propUIContentAdmin.getProperty("btn_Revert"));
         workflowStateSpan = By.xpath(propUIContentAdmin.getProperty("select_WorkflowState"));
@@ -50,16 +65,16 @@ public class GlossaryAdd extends AbstractPageObject{
         successMsg = By.xpath(propUIContentAdmin.getProperty("msg_Success"));
         saveAndSubmitBtn = By.xpath(propUIContentAdmin.getProperty("btn_SaveAndSubmit"));
         currentContentSpan = By.xpath(propUIContentAdmin.getProperty("span_CurrentContent"));
-        textArea = By.tagName(propUIContentAdmin.getProperty("frame_Textarea"));
 
-        radEditor = By.xpath(propUIContentAdmin.getProperty("frame_RadEditor"));
-        radEditorContent = By.xpath(propUIContentAdmin.getProperty("field_RadEContent"));
+        linkToNewChk = By.xpath(propUIContentAdmin.getProperty("chk_LinkToNew"));
+        activeChk = By.xpath(propUIContentAdmin.getProperty("chk_Active"));
 
         parser = new JSONParser();
 
-        sPathToFile = System.getProperty("user.dir") + propUIContentAdmin.getProperty("dataPath_glossaryListData");
-        sFileJson = propUIContentAdmin.getProperty("json_glossaryList");
+        sPathToFile = System.getProperty("user.dir") + propUIContentAdmin.getProperty("dataPath_quickLinkListData");
+        sFileJson = propUIContentAdmin.getProperty("json_quickLinkList");
     }
+
     public String getTitle() {
         findElement(addNewLink).click();
         waitForElement(moduleTitle);
@@ -68,9 +83,9 @@ public class GlossaryAdd extends AbstractPageObject{
         return sTitle;
     }
 
-    public String saveGlossary(JSONObject data, String name) {
-        String title, description;
-        Boolean active;
+    public String saveQuickLink(JSONObject data, String name) {
+        String description, URL, text, tags, type;
+        Boolean active, linkToNew;
         JSONObject jsonObj = new JSONObject();
         JSONObject jsonMain = new JSONObject();
 
@@ -85,20 +100,65 @@ public class GlossaryAdd extends AbstractPageObject{
             } catch (ParseException e) {
             }
 
-            title = data.get("title").toString();
-            System.out.println(title);
-            findElement(titleInput).clear();
-            findElement(titleInput).sendKeys(title);
-            jsonObj.put("title", title);
-
-            findElement(switchToHtml).click();
-
             description = data.get("description").toString();
-            driver.switchTo().frame(2);
-            findElement(textArea).sendKeys(description);
-            driver.switchTo().defaultContent();
-            pause(1000L);
+            findElement(descriptionInput).clear();
+            findElement(descriptionInput).sendKeys(description);
             jsonObj.put("description", description);
+
+            text = data.get("text").toString();
+            findElement(textInput).clear();
+            findElement(textInput).sendKeys(text);
+            jsonObj.put("text", text);
+
+            tags = data.get("tags").toString();
+            findElement(tagsInput).clear();
+            findElement(tagsInput).sendKeys(tags);
+            jsonObj.put("tags", tags);
+
+            type = data.get("type").toString();
+            switch(type){
+                case "External":
+                    findElement(typeExternalRadio).click();
+                    URL = data.get("URL").toString();
+                    findElement(urlInput).clear();
+                    findElement(urlInput).sendKeys(URL);
+                    jsonObj.put("URL", URL);
+                    break;
+
+                case "Internal":
+                    findElement(typeInternalRadio).click();
+                    waitForElement(internalUrlSelect);
+                    URL = data.get("URL").toString();
+                    findElement(internalUrlSelect).sendKeys(URL);
+                    jsonObj.put("URL", URL);
+                    break;
+
+                case "Document":
+                    findElement(typeDocumentRadio).click();
+                    waitForElement(documentUrlInput);
+                    URL = data.get("URL").toString();
+                    JavascriptExecutor js = (JavascriptExecutor) driver;
+                    WebElement elemSrc =  driver.findElement(documentUrlInput);
+                    js.executeScript("arguments[0].setAttribute(arguments[1], arguments[2]);", elemSrc, "value", "files/"+URL);
+                    jsonObj.put("URL",URL);
+                    break;
+
+            }
+
+            //Link to new
+            linkToNew = Boolean.parseBoolean(data.get("link_to_new").toString());
+            jsonObj.put("link_to_new", Boolean.parseBoolean(data.get("link_to_new").toString()));
+            if (linkToNew) {
+                if (!Boolean.parseBoolean(findElement(linkToNewChk).getAttribute("checked"))) {
+                    findElement(linkToNewChk).click();
+                } else {
+                }
+            } else {
+                if (!Boolean.parseBoolean(findElement(linkToNewChk).getAttribute("checked"))) {
+                } else {
+                    findElement(linkToNewChk).click();
+                }
+            }
 
             // Save Active checkbox
             active = Boolean.parseBoolean(data.get("active").toString());
@@ -143,9 +203,9 @@ public class GlossaryAdd extends AbstractPageObject{
         return null;
     }
 
-    public String saveAndSubmitGlossary(JSONObject data, String name) throws InterruptedException {
+    public String saveAndSubmitQuickLink(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
-        By editBtn = By.xpath("//td[(text()='" + data.get("title").toString() + "')]/parent::tr/td/input[contains(@id, 'imgEdit')][contains(@id, 'Glossary')]");
+        By editBtn = By.xpath("//td[(text()='" + data.get("description").toString() + "')]/parent::tr/td/input[contains(@id, 'imgEdit')][contains(@id, 'QuickLink')]");
 
         try {
             waitForElement(moduleTitle);
@@ -199,8 +259,9 @@ public class GlossaryAdd extends AbstractPageObject{
         return null;
     }
 
-    public Boolean checkGlossary(JSONObject data, String name) throws InterruptedException {
+    public Boolean checkQuickLink(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
+        String type;
 
         try {
             try {
@@ -218,23 +279,75 @@ public class GlossaryAdd extends AbstractPageObject{
 
             // Compare field values with entry data
             try {
-                if (!findElement(titleInput).getAttribute("value").equals(data.get("title").toString())) {
+                if (!findElement(descriptionInput).getAttribute("value").equals(data.get("description").toString())) {
+                    System.out.println("Description is wrong");
+                    return false;
+                }
+            } catch (NullPointerException e) {
+            }
+
+            type = data.get("type").toString();
+            switch(type){
+                case "External":
+                    try {
+                        if (!findElement(urlInput).getAttribute("value").equals(data.get("URL").toString())) {
+                            System.out.println("URL input is wrong");
+                            return false;
+                        }
+                    } catch (NullPointerException e) {
+                    }
+                    break;
+
+                case "Internal":
+                    try {
+                        if (!findElement(selectedUrl).getAttribute("innerhtml").equals(data.get("URL").toString())) {
+                            System.out.println("URL input is wrong");
+                            return false;
+                        }
+                    } catch (NullPointerException e) {
+                    }
+                    break;
+
+                case "Document":
+                    try {
+                        if (!findElement(documentUrlInput).getAttribute("value").equals("files/" + data.get("URL").toString())) {
+                            System.out.println("URL input is wrong");
+                            return false;
+                        }
+                    } catch (NullPointerException e) {
+                    }
+                    break;
+
+            }
+
+            try {
+                if (!findElement(textInput).getAttribute("value").equals(data.get("text").toString())) {
+                    System.out.println("Text does not correspond to data");
                     return false;
                 }
             } catch (NullPointerException e) {
             }
 
             try {
-                driver.switchTo().frame(findElement(radEditor));
-                if (!findElement(radEditorContent).getText().equals(data.get("description").toString())) {
+                //Contains because adding a tag automatically adds a space at the end
+                if (!findElement(tagsInput).getAttribute("value").contains(data.get("tags").toString())) {
+                    System.out.println("Tag does not correspond to data");
                     return false;
                 }
-                driver.switchTo().defaultContent();
+            } catch (NullPointerException e) {
+            }
+
+            try {
+                if (!findElement(linkToNewChk).getAttribute("checked").equals(data.get("link_to_new").toString())) {
+                    System.out.println("Link to new does not correspond to data");
+                    return false;
+                }
             } catch (NullPointerException e) {
             }
 
             try {
                 if (!findElement(activeChk).getAttribute("checked").equals(data.get("active").toString())) {
+                    System.out.println("Active checkbox does not correspond to data");
                     return false;
                 }
             } catch (NullPointerException e) {
@@ -249,7 +362,7 @@ public class GlossaryAdd extends AbstractPageObject{
         return null;
     }
 
-    public String publishGlossary(JSONObject data, String name) throws InterruptedException {
+    public String publishQuickLink(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
         JSONObject jsonObj = new JSONObject();
 
@@ -295,7 +408,7 @@ public class GlossaryAdd extends AbstractPageObject{
         return null;
     }
 
-    public String revertToLiveGlossary(String name) throws InterruptedException {
+    public String revertToLiveQuickLink(String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
         JSONObject jsonObj = new JSONObject();
 
@@ -340,7 +453,7 @@ public class GlossaryAdd extends AbstractPageObject{
         return null;
     }
 
-    public String changeAndSubmitGlossary(JSONObject data, String name) throws InterruptedException {
+    public String changeAndSubmitQuickLink(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
         JSONObject jsonObj = new JSONObject();
 
@@ -357,18 +470,23 @@ public class GlossaryAdd extends AbstractPageObject{
             Thread.sleep(DEFAULT_PAUSE);
             waitForElement(saveAndSubmitBtn);
 
+            // Change type
             try {
-                if (!data.get("description_ch").toString().isEmpty()) {
-                    findElement(switchToHtml).click();
-                    driver.switchTo().frame(2);
-                    findElement(textArea).clear();
-                    findElement(textArea).sendKeys(data.get("description_ch").toString());
-                    driver.switchTo().defaultContent();
-                    jsonObj.put("description", data.get("description_ch").toString());
-                }
-            } catch (NullPointerException e) {
-            }
+                if (!data.get("type_ch").toString().isEmpty()) {
+                    String type_ch = data.get("type_ch").toString();
+                    String url_ch = data.get("URL_ch").toString();
 
+                    findElement(typeEmailRadio).click();
+                    waitForElement(urlInput);
+                    findElement(urlInput).clear();
+                    findElement(urlInput).sendKeys(url_ch);
+
+                    jsonObj.put("type", type_ch);
+                    jsonObj.put("URL", url_ch);
+                }
+            } catch (NullPointerException e){
+            }
+            // Changing active
             jsonObj.put("active", Boolean.parseBoolean(data.get("active").toString()));
             try {
                 // Save Active checkbox
@@ -386,6 +504,19 @@ public class GlossaryAdd extends AbstractPageObject{
                     }
                 }
             } catch (NullPointerException e) {
+            }
+
+            //Changing tags
+            try {
+                if (!data.get("tags_ch").toString().isEmpty()) {
+                    String tags_ch = data.get("tags_ch").toString();
+                    waitForElement(tagsInput);
+                    findElement(tagsInput).clear();
+                    findElement(tagsInput).sendKeys(tags_ch);
+
+                    jsonObj.put("tags", tags_ch);
+                }
+            } catch (NullPointerException e){
             }
 
             try {
@@ -419,7 +550,7 @@ public class GlossaryAdd extends AbstractPageObject{
         return null;
     }
 
-    public Boolean checkGlossaryCh(JSONObject data, String name) throws InterruptedException {
+    public Boolean checkQuickLinkCh(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
 
         try {
@@ -434,29 +565,42 @@ public class GlossaryAdd extends AbstractPageObject{
             Thread.sleep(DEFAULT_PAUSE);
             waitForElement(commentsTxt);
 
-            // Compare field values with entry data
+            // Compare field values with changed data
             try {
-                if (!findElement(titleInput).getAttribute("value").equals(data.get("title").toString())) {
-                    return false;
+                if(data.get("active_ch").toString() != null){
+                    if (!findElement(activeChk).getAttribute("checked").equals(data.get("active_ch").toString())) {
+                        System.out.println("Change in active button was not reflected");
+                        System.out.println("Expected: "+ findElement(activeChk).getAttribute("checked") +", but found: "+ data.get("active_ch").toString());
+                        return false;
+                    }
                 }
             } catch (NullPointerException e) {
             }
 
             try {
-                driver.switchTo().frame(findElement(radEditor));
-                if (!findElement(radEditorContent).getText().equals(data.get("description_ch").toString())) {
-                    driver.switchTo().defaultContent();
-                    return false;
+                if(data.get("tags_ch").toString() != null){
+                    if (!findElement(tagsInput).getAttribute("value").contains(data.get("tags_ch").toString())) {
+                        System.out.println("Change in tag was not reflected");
+                        System.out.println("Expected: "+ findElement(tagsInput).getAttribute("value") +", but found: "+ data.get("tags_ch").toString());
+                        return false;
+                    }
                 }
-                driver.switchTo().defaultContent();
             } catch (NullPointerException e) {
             }
 
+            //Check changing type
             try {
-                driver.switchTo().defaultContent();
-                waitForElementToAppear(activeChk);
-                if (!findElement(activeChk).getAttribute("checked").equals(data.get("active_ch").toString())) {
-                    return false;
+                if(data.get("type_ch") != null){
+                    if (!findElement(typeEmailRadio).getAttribute("checked").equals("true")) {
+                        System.out.println("Change in type was not reflected");
+                        return false;
+                    }
+                    if (!findElement(urlInput).getAttribute("innerhtml").equals(data.get("URL_ch"))) {
+
+                        System.out.println("Change in url was not reflected");
+                        System.out.println("Expected: "+ findElement(urlInput).getAttribute("innerhtml") +", but found: "+ data.get("URL_ch").toString());
+                        return false;
+                    }
                 }
             } catch (NullPointerException e) {
             }
@@ -470,7 +614,7 @@ public class GlossaryAdd extends AbstractPageObject{
         return null;
     }
 
-    public String setupAsDeletedGlossary(String name) throws InterruptedException {
+    public String setupAsDeletedQuickLink(String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
         JSONObject jsonObj = new JSONObject();
 
@@ -513,7 +657,7 @@ public class GlossaryAdd extends AbstractPageObject{
         return null;
     }
 
-    public String removeGlossary(JSONObject data, String name) throws InterruptedException {
+    public String removeQuickLink(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
 
         try {

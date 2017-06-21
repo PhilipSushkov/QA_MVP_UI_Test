@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="Web CMS Suite Creation" parallel="tests" thread-count="3">
+<suite name="Web CMS Suite Creation" parallel="tests" thread-count="4">
   
     <test name="CheckPageAdd">
         <classes>
@@ -76,11 +76,27 @@
             <class name="specs.SiteAdmin.EmployeeList.CheckEmployeeAdd" />
         </classes>
     </test>
+    <test name="CheckDomainAdd">
+        <classes>
+            <class name="specs.SiteAdmin.DomainList.CheckDomainAdd" />
+        </classes>
+    </test>
+
 
     <!-- Content Admin -->
     <test name="CheckGlossaryAdd">
         <classes>
             <class name="specs.ContentAdmin.Glossary.CheckGlossaryAdd" />
+        </classes>
+    </test>
+    <test name="CheckPersonAdd">
+        <classes>
+            <class name="specs.ContentAdmin.PersonList.CheckPersonAdd" />
+        </classes>
+    </test>
+    <test name="CheckQuickLinkAdd">
+        <classes>
+            <class name="specs.ContentAdmin.QuickLinkList.CheckQuickLinkAdd" />
         </classes>
     </test>
 
