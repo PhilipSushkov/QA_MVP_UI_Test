@@ -24,7 +24,7 @@ import java.util.ArrayList;
 /**
  * Created by andyp on 2017-06-20.
  */
-public class CheckFaqListAdd extends AbstractSpec {
+public class CheckFaqAdd extends AbstractSpec {
     private static By contentAdminMenuButton, faqListMenuItem;
     private static LoginPage loginPage;
     private static Dashboard dashboard;
