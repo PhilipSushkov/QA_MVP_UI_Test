@@ -1,9 +1,11 @@
 package specs.Modules.util;
 
+import org.apache.xpath.operations.Bool;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -39,6 +41,11 @@ public class ModuleFunctions {
                 expectedValue = data[3];
                 return checkAttribute(driver, element, attribute, expectedValue);
 
+            case "element":
+
+                Boolean expectPresent = Boolean.valueOf(data[2]);
+                return checkElementPresent(driver, element, expectPresent);
+
             case "save":
 
                 valueName = data[2];
@@ -61,6 +68,10 @@ public class ModuleFunctions {
 
     private static Boolean checkAttribute(WebDriver driver, By element, String attribute, String expected) {
         return driver.findElement(element).getAttribute(attribute).contains(expected);
+    }
+
+    private static Boolean checkElementPresent(WebDriver driver, By element, Boolean expectPresent) {
+        return driver.findElements(element).isEmpty() != expectPresent;
     }
 
     private static Boolean saveValue(WebDriver driver, By element, String valueName, String jsonModulePath, String moduleName) {
