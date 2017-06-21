@@ -1,6 +1,7 @@
 package pageobjects.ContentAdmin.FaqList;
 
 import com.jayway.jsonpath.JsonPath;
+import org.apache.commons.lang.ObjectUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -183,7 +184,7 @@ public class FaqAdd extends AbstractPageObject {
             jsonObj.put("answer", answer);
             
             findElement(saveBtn).click();
-            Thread.sleep(DEFAULT_PAUSE);
+            waitForElement(questionsListName);
 
             jsonMain.put(name, jsonObj);
 
@@ -234,7 +235,7 @@ public class FaqAdd extends AbstractPageObject {
 
             waitForElement(editBtn);
             findElement(editBtn).click();
-            Thread.sleep(DEFAULT_PAUSE);
+            waitForElement(commentsTxt);
 
             JSONObject jsonObj = (JSONObject) jsonMain.get(name);
 
@@ -298,6 +299,7 @@ public class FaqAdd extends AbstractPageObject {
             // Compare field values with entry data
             try {
                 if (!findElement(nameInputEN).getAttribute("value").equals(data.get("name_EN").toString())) {
+                    System.out.println("Name (English) does not match data");
                     return false;
                 }
             } catch (NullPointerException e) {
@@ -305,6 +307,7 @@ public class FaqAdd extends AbstractPageObject {
 
             try {
                 if (!findElement(nameInputGE).getAttribute("value").equals(data.get("name_GE").toString())) {
+                    System.out.println("Name (German) does not match data");
                     return false;
                 }
             } catch (NullPointerException e) {
@@ -312,6 +315,7 @@ public class FaqAdd extends AbstractPageObject {
             
             try {
                 if (!findElement(activeChk).getAttribute("checked").equals(data.get("active").toString())) {
+                    System.out.println("Active checkbox does not match data");
                     return false;
                 }
             } catch (NullPointerException e) {
@@ -323,6 +327,7 @@ public class FaqAdd extends AbstractPageObject {
 
             try {
                 if (!findElement(questionInput).getAttribute("value").equals(data.get("question").toString())) {
+                    System.out.println("Question does not match data");
                     return false;
                 }
             } catch (NullPointerException e) {
@@ -331,6 +336,7 @@ public class FaqAdd extends AbstractPageObject {
             try {
                 driver.switchTo().frame(findElement(radEditor));
                 if (!findElement(radEditorContent).getText().equals(data.get("answer").toString())) {
+                    System.out.println("Answer does not match data");
                     return false;
                 }
                 driver.switchTo().defaultContent();
@@ -361,7 +367,7 @@ public class FaqAdd extends AbstractPageObject {
 
             String pageUrl = getPageUrl(jsonMain, name);
             driver.get(pageUrl);
-            Thread.sleep(DEFAULT_PAUSE);
+            //Thread.sleep(DEFAULT_PAUSE);
 
             waitForElement(publishBtn);
             findElement(publishBtn).click();
@@ -386,6 +392,334 @@ public class FaqAdd extends AbstractPageObject {
 
             System.out.println(name+ ": New "+PAGE_NAME+" has been published");
             return findElement(workflowStateSpan).getText();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public String revertToLiveFaq(String name) throws InterruptedException {
+        JSONObject jsonMain = new JSONObject();
+        JSONObject jsonObj = new JSONObject();
+
+        try {
+            try {
+                FileReader readFile = new FileReader(sPathToFile + sFileJson);
+                jsonMain = (JSONObject) parser.parse(readFile);
+                jsonObj = (JSONObject) jsonMain.get(name);
+            } catch (ParseException e) {
+            }
+
+            String pageUrl = getPageUrl(jsonMain, name);
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+            waitForElement(revertBtn);
+
+            if (jsonObj.get("workflow_state").toString().equals(WorkflowState.FOR_APPROVAL.state())) {
+                findElement(revertBtn).click();
+                Thread.sleep(DEFAULT_PAUSE);
+
+                jsonObj.put("workflow_state", WorkflowState.LIVE.state());
+                jsonObj.put("deleted", "false");
+
+                jsonMain.put(name, jsonObj);
+
+                FileWriter file = new FileWriter(sPathToFile + sFileJson);
+                file.write(jsonMain.toJSONString().replace("\\", ""));
+                file.flush();
+
+                driver.get(pageUrl);
+                Thread.sleep(DEFAULT_PAUSE);
+                waitForElement(workflowStateSpan);
+
+                System.out.println(name+ ": "+PAGE_NAME+" has been reverted to Live");
+                return findElement(workflowStateSpan).getText();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public String changeAndSubmitFaq(JSONObject data, String name) throws InterruptedException {
+        JSONObject jsonMain = new JSONObject();
+        JSONObject jsonObj = new JSONObject();
+
+        try {
+            try {
+                FileReader readFile = new FileReader(sPathToFile + sFileJson);
+                jsonMain = (JSONObject) parser.parse(readFile);
+                jsonObj = (JSONObject) jsonMain.get(name);
+            } catch (ParseException e) {
+            }
+
+            // Change type
+            try {
+                if (!data.get("question_ch").toString().isEmpty()) {
+                    //Opening question edit page
+                    String pageUrl2 = getPageUrlQuestion(jsonMain, name);
+                    driver.get(pageUrl2);
+                    waitForElement(questionInput);
+
+                    findElement(questionInput).clear();
+                    findElement(questionInput).sendKeys(data.get("question_ch").toString());
+
+                    jsonObj.put("question", data.get("question_ch").toString());
+                }
+            } catch (NullPointerException e){
+            }
+
+            try {
+                if (!data.get("answer_ch").toString().isEmpty()) {
+                    findElement(switchToHtml).click();
+                    driver.switchTo().frame(2);
+                    findElement(textArea).clear();
+                    findElement(textArea).sendKeys(data.get("answer_ch").toString());
+                    driver.switchTo().defaultContent();
+                    jsonObj.put("answer", data.get("answer_ch").toString());
+
+                    //Save button is in here so it only runs when question page is being changed
+                    findElement(saveBtn).click();
+                }
+            } catch (NullPointerException e) {
+            }
+
+            String pageUrl = getPageUrl(jsonMain, name);
+            driver.get(pageUrl);
+            waitForElement(commentsTxt);
+
+            try {
+                if (!data.get("name_EN_ch").toString().isEmpty()) {
+                    waitForElement(nameInputEN);
+                    findElement(nameInputEN).clear();
+                    findElement(nameInputEN).sendKeys(data.get("name_EN_ch").toString());
+
+                    jsonObj.put("name_EN", data.get("name_EN_ch").toString());
+                }
+            } catch (NullPointerException e){
+            }
+
+            // Changing active
+            jsonObj.put("active", Boolean.parseBoolean(data.get("active").toString()));
+            try {
+                // Save Active checkbox
+                if (Boolean.parseBoolean(data.get("active_ch").toString())) {
+                    if (!Boolean.parseBoolean(findElement(activeChk).getAttribute("checked"))) {
+                        findElement(activeChk).click();
+                        jsonObj.put("active", true);
+                    } else {
+                    }
+                } else {
+                    if (!Boolean.parseBoolean(findElement(activeChk).getAttribute("checked"))) {
+                    } else {
+                        findElement(activeChk).click();
+                        jsonObj.put("active", false);
+                    }
+                }
+            } catch (NullPointerException e) {
+            }
+
+            try {
+                findElement(commentsTxt).clear();
+                findElement(commentsTxt).sendKeys(data.get("comment_ch").toString());
+            } catch (NullPointerException e) {
+            }
+
+            findElement(saveAndSubmitBtn).click();
+            Thread.sleep(DEFAULT_PAUSE);
+
+            jsonObj.put("workflow_state", WorkflowState.FOR_APPROVAL.state());
+            jsonObj.put("deleted", "false");
+
+            jsonMain.put(name, jsonObj);
+
+            FileWriter file = new FileWriter(sPathToFile + sFileJson);
+            file.write(jsonMain.toJSONString().replace("\\", ""));
+            file.flush();
+
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+            waitForElement(workflowStateSpan);
+
+            System.out.println(name+ ": New "+PAGE_NAME+" changes have been submitted");
+            return findElement(workflowStateSpan).getText();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public Boolean checkFaqCh(JSONObject data, String name) throws InterruptedException {
+        By editQuestionBtn = By.xpath("//input[contains(@id, 'btnEdit')]");
+        JSONObject jsonMain = new JSONObject();
+
+        try {
+            try {
+                FileReader readFile = new FileReader(sPathToFile + sFileJson);
+                jsonMain = (JSONObject) parser.parse(readFile);
+            } catch (ParseException e) {
+            }
+
+            String pageUrl = getPageUrl(jsonMain, name);
+            driver.get(pageUrl);
+            waitForElement(commentsTxt);
+
+            // Compare field values with entry data
+            try {
+                if (!data.get("name_EN_ch").toString().isEmpty()){
+                    try {
+                        if (!findElement(nameInputEN).getAttribute("value").equals(data.get("name_EN_ch").toString())) {
+                            System.out.println("English name does not match changed value");
+                            return false;
+                        }
+                    } catch (NullPointerException e) {
+                    }
+
+                    try {
+                        if (!findElement(nameInputGE).getAttribute("value").equals(data.get("name_GE").toString())) {
+                            System.out.println("German name does not match original value");
+                            return false;
+                        }
+                    } catch (NullPointerException e) {
+                    }
+
+                    try {
+                        System.out.println(findElement(activeChk).getAttribute("checked"));
+                        //Unchecked attribute has "checked" value of null
+                        if (!findElement(activeChk).getAttribute("checked").equals(data.get("active_ch").toString())) {
+                            System.out.println("Active checkbox does not match changed value");
+                            return false;
+                        }
+                    } catch (NullPointerException e) {
+                    }
+                }
+            } catch (NullPointerException e){
+            }
+
+            // Check Questions edit page if edited
+            try {
+                if (!data.get("question_ch").toString().isEmpty()) {
+                    waitForElementToAppear(questionsListName);
+
+                    try {
+                        if (!findElement(questionsListName).getText().equals(data.get("question_ch").toString())) {
+                            return false;
+                        }
+                        findElement(editQuestionBtn).click();
+                        waitForElement(questionInput);
+
+                        if (!findElement(questionInput).getAttribute("value").equals(data.get("question_ch").toString())) {
+                            System.out.println("Question does not match changed value");
+                            return false;
+                        }
+                    } catch (NullPointerException e) {
+                    }
+
+                    try {
+                        driver.switchTo().frame(findElement(radEditor));
+                        if (!findElement(radEditorContent).getText().equals(data.get("answer_ch").toString())) {
+                            System.out.println("Answer does not match changed value");
+                            driver.switchTo().defaultContent();
+                            return false;
+                        }
+                        driver.switchTo().defaultContent();
+                    } catch (NullPointerException e) {
+                    }
+                }
+            }catch (NullPointerException e){
+            }
+
+            System.out.println(name+ ": New "+PAGE_NAME+" has been checked");
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public String setupAsDeletedFaq(String name) throws InterruptedException {
+        JSONObject jsonMain = new JSONObject();
+        JSONObject jsonObj = new JSONObject();
+
+        try {
+            try {
+                FileReader readFile = new FileReader(sPathToFile + sFileJson);
+                jsonMain = (JSONObject) parser.parse(readFile);
+                jsonObj = (JSONObject) jsonMain.get(name);
+            } catch (ParseException e) {
+            }
+
+            String pageUrl = getPageUrl(jsonMain, name);
+            driver.get(pageUrl);
+
+            waitForElement(commentsTxt);
+            findElement(commentsTxt).sendKeys("Removing "+PAGE_NAME);
+            findElement(deleteBtn).click();
+            Thread.sleep(DEFAULT_PAUSE);
+
+            driver.get(pageUrl);
+            waitForElement(currentContentSpan);
+
+            jsonObj.put("workflow_state", WorkflowState.FOR_APPROVAL.state());
+            jsonObj.put("deleted", "true");
+
+            jsonMain.put(name, jsonObj);
+
+            FileWriter file = new FileWriter(sPathToFile + sFileJson);
+            file.write(jsonMain.toJSONString().replace("\\", ""));
+            file.flush();
+
+            System.out.println(name+ ": "+PAGE_NAME+" set up as deleted");
+            return findElement(currentContentSpan).getText();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public String removeFaq(JSONObject data, String name) throws InterruptedException {
+        JSONObject jsonMain = new JSONObject();
+
+        try {
+            try {
+                FileReader readFile = new FileReader(sPathToFile + sFileJson);
+                jsonMain = (JSONObject) parser.parse(readFile);
+            } catch (ParseException e) {
+            }
+
+            String pageUrl = getPageUrl(jsonMain, name);
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+
+            if (findElement(currentContentSpan).getText().equals(WorkflowState.DELETE_PENDING.state())) {
+
+                waitForElement(commentsTxt);
+                findElement(commentsTxt).sendKeys("Approving "+PAGE_NAME+" removal");
+                findElement(publishBtn).click();
+
+                Thread.sleep(DEFAULT_PAUSE*2);
+
+                driver.get(pageUrl);
+                Thread.sleep(DEFAULT_PAUSE);
+
+                jsonMain.remove(name);
+
+                FileWriter file = new FileWriter(sPathToFile + sFileJson);
+                file.write(jsonMain.toJSONString().replace("\\", ""));
+                file.flush();
+
+                Thread.sleep(DEFAULT_PAUSE*2);
+                driver.navigate().refresh();
+
+                System.out.println(name+ ": New "+PAGE_NAME+" has been removed");
+                return findElement(workflowStateSpan).getText();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
