@@ -1,7 +1,6 @@
 {
   "stock_quote": [{
     "do_assertions": true,
-    "parent_page": "Feed Modules",
     "module_title": "Stock_Quote/3_7_5/StockQuote2_375.aspx_01",
     "module_definition": "Stock_Quote2/3_7_5/StockQuote2_375.ascx",
     "region_name": "Content Pane",
@@ -18,7 +17,6 @@
 
     {
       "do_assertions": true,
-      "parent_page": "Feed Modules",
       "module_title": "Stock_Quote/3_7_5/StockQuote2_375.aspx_02",
       "module_definition": "Stock_Quote2/3_7_5/StockQuote2_375.ascx",
       "region_name": "Content Pane",
@@ -65,7 +63,6 @@
 
     {
       "do_assertions": true,
-      "parent_page": "Feed Modules",
       "module_title": "Stock_Quote/3_5_9/StockQuote2_359_375.aspx_02",
       "module_definition": "Stock_Quote/3_5_9/StockQuote2_359_375.ascx",
       "region_name": "Content Pane",
@@ -112,7 +109,6 @@
 
     {
       "do_assertions": true,
-      "parent_page": "Feed Modules",
       "module_title": "Stock_Quote/4_2_2/StockQuote.aspx_02",
       "module_definition": "Stock_Quote/4_2_2/StockQuote.ascx",
       "region_name": "Content Pane",
@@ -142,7 +138,6 @@
 
     {
       "do_assertions": true,
-      "parent_page": "Feed Modules",
       "module_title": "Stock_Quote2/StockQuote2_375.aspx_01",
       "module_definition": "StockQuote2_375.ascx",
       "region_name": "Content Pane",
@@ -158,7 +153,6 @@
 
     {
       "do_assertions": true,
-      "parent_page": "Feed Modules",
       "module_title": "Stock_Quote2/StockQuote2_375.aspx_02",
       "module_definition": "StockQuote2_375.ascx",
       "region_name": "Content Pane",

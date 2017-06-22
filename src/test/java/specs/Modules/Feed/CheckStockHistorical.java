@@ -61,15 +61,15 @@ public class CheckStockHistorical extends AbstractSpec {
         dashboard.openPageFromCommonTasks(pageAdminMenuButton);
     }
 
-    @Test(dataProvider=PAGE_DATA, priority=1, enabled=false)
-    public void createStockHistorical2_375Page(JSONObject page) throws InterruptedException {
+    @Test(dataProvider=PAGE_DATA, priority=1, enabled=true)
+    public void createStockHistoricalPage(JSONObject page) throws InterruptedException {
         Assert.assertEquals(pageForModules.savePage(page, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+MODULE_NAME+" Page didn't save properly");
         Assert.assertEquals(pageForModules.saveAndSubmitPage(page, MODULE_NAME), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New "+MODULE_NAME+" Page properly");
         Assert.assertEquals(pageForModules.publishPage(MODULE_NAME), WorkflowState.LIVE.state(), "Couldn't publish New "+MODULE_NAME+" Page properly");
     }
 
     @Test(dataProvider=MODULE_DATA, priority=2, enabled=true)
-    public void createStockHistorical2_375Module(JSONObject module) throws InterruptedException {
+    public void createStockHistoricalModule(JSONObject module) throws InterruptedException {
         String sModuleNameSet = module.get("module_title").toString();
         Assert.assertEquals(stockHistorical.saveModule(module, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+sModuleNameSet+" Module didn't save properly");
         Assert.assertEquals(stockHistorical.saveAndSubmitModule(module, sModuleNameSet), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New "+sModuleNameSet+" Module properly");
@@ -77,7 +77,7 @@ public class CheckStockHistorical extends AbstractSpec {
     }
 
     @Test(dataProvider=MODULE_DATA, priority=3, enabled=true)
-    public void checkStockQuoteHeader_375Preview(JSONObject module) throws InterruptedException {
+    public void checkStockHistoricalPreview(JSONObject module) throws InterruptedException {
 
         try {
             String sModuleNameSet = module.get("module_title").toString();
@@ -97,7 +97,7 @@ public class CheckStockHistorical extends AbstractSpec {
     }
 
     @Test(dataProvider=MODULE_DATA, priority=4, enabled=true)
-    public void checkStockQuoteHeader_375Live(JSONObject module) throws InterruptedException {
+    public void checkStockHistoricalLive(JSONObject module) throws InterruptedException {
 
         try {
             Assert.assertTrue(stockHistorical.openModuleLiveSite(MODULE_NAME).contains(MODULE_NAME), "Did not open correct page");
@@ -116,14 +116,14 @@ public class CheckStockHistorical extends AbstractSpec {
     }
 
     @Test(dataProvider=MODULE_DATA, priority=5, enabled=true)
-    public void removeStockHistorical2_375Module(JSONObject module) throws Exception {
+    public void removeStockHistoricalModule(JSONObject module) throws Exception {
         String sModuleNameSet = module.get("module_title").toString();
         Assert.assertEquals(stockHistorical.setupAsDeletedModule(sModuleNameSet), WorkflowState.DELETE_PENDING.state(), "New "+sModuleNameSet+" Module didn't setup as Deleted properly");
         Assert.assertEquals(stockHistorical.removeModule(module, sModuleNameSet), WorkflowState.NEW_ITEM.state(), "Couldn't remove "+sModuleNameSet+" Module. Something went wrong.");
     }
 
     @Test(dataProvider=PAGE_DATA, priority=6, enabled = false)
-    public void removeStockHistorical2_375Page(JSONObject page) throws Exception {
+    public void removeStockHistoricalPage(JSONObject page) throws Exception {
         Assert.assertEquals(pageForModules.setupAsDeletedPage(MODULE_NAME), WorkflowState.DELETE_PENDING.state(), "New "+MODULE_NAME+" Page didn't setup as Deleted properly");
         Assert.assertEquals(pageForModules.removePage(page, MODULE_NAME), WorkflowState.NEW_ITEM.state(), "Couldn't remove "+MODULE_NAME+" Page. Something went wrong.");
     }
@@ -166,7 +166,7 @@ public class CheckStockHistorical extends AbstractSpec {
 
         try {
             JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFileJson));
-            JSONArray pageData = (JSONArray) jsonObject.get(MODULE_NAME);
+            JSONArray pageData = (JSONArray) jsonObject.get(PAGE_NAME);
             ArrayList<Object> zoom = new ArrayList();
 
             for (int i = 0; i < pageData.size(); i++) {

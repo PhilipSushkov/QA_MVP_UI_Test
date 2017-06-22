@@ -63,7 +63,7 @@ public class StockHistorical extends AbstractPageObject {
         sPathToPageFile = System.getProperty("user.dir") + propUIModules.getProperty("dataPath_Modules");
         sFilePageJson = propUIModules.getProperty("json_PagesProp");
         sPathToModuleFile = System.getProperty("user.dir") + propUIModulesFeed.getProperty("dataPath_Feed");
-        sFileModuleJson = propUIModulesFeed.getProperty("json_StockHistorical2_375Prop");
+        sFileModuleJson = propUIModulesFeed.getProperty("json_StockHistoricalProp");
 
         parser = new JSONParser();
     }
@@ -178,7 +178,7 @@ public class StockHistorical extends AbstractPageObject {
                 findElement(propertyValue).sendKeys(jsonArrProp.get(i).toString().split(";")[1]);
             }
 
-            findElement(commentsTxt).sendKeys(modulesDataObj.get("comment_module").toString());
+            findElement(commentsTxt).sendKeys(modulesDataObj.get("comment").toString());
             findElement(saveAndSubmitBtn).click();
             Thread.sleep(DEFAULT_PAUSE);
 
