@@ -88,7 +88,7 @@ public class CheckStockSplit extends AbstractSpec {
             JSONArray expectedResults = (JSONArray) module.get("expected");
             for (Object expected : expectedResults) {
                 String sExpected = expected.toString();
-                Assert.assertTrue(ModuleFunctions.checkExpectedValue(driver, sExpected, module, sPathToModuleFile + sFileModuleJson),
+                Assert.assertTrue(ModuleFunctions.checkExpectedValue(driver, sExpected, module, sPathToModuleFile + sFileModuleJson, propUIModulesFeed),
                         "Did not find correct " + sExpected.split(";")[0] + " at item " + sExpected.split(";")[1]);
             }
         } finally {
@@ -105,7 +105,7 @@ public class CheckStockSplit extends AbstractSpec {
             JSONArray expectedResults = (JSONArray) module.get("expected");
             for (Object expected : expectedResults) {
                 String sExpected = expected.toString();
-                Assert.assertTrue(ModuleFunctions.checkExpectedValue(driver, sExpected, module, sPathToModuleFile + sFileModuleJson),
+                Assert.assertTrue(ModuleFunctions.checkExpectedValue(driver, sExpected, module, sPathToModuleFile + sFileModuleJson, propUIModulesFeed),
                         "Did not find correct " + sExpected.split(";")[0] + " at item " + sExpected.split(";")[1]);
             }
         } finally {

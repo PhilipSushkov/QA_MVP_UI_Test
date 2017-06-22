@@ -1,12 +1,13 @@
 package pageobjects.Modules.Feed;
 
 import com.jayway.jsonpath.JsonPath;
-import org.apache.xpath.operations.Bool;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
 import pageobjects.AbstractPageObject;
 import pageobjects.PageAdmin.WorkflowState;
 
@@ -21,9 +22,9 @@ import static specs.AbstractSpec.*;
 import static specs.AbstractSpec.desktopUrl;
 
 /**
- * Created by zacharyk on 2017-06-19.
+ * Created by zacharyk on 2017-06-21.
  */
-public class StockQuoteHeader_375 extends AbstractPageObject {
+public class StockQuote2 extends AbstractPageObject {
     private static By addNewModuleBtn, backBtn, moduleTitleInput, moduleDefinitionSelect, includeLegacyModulesChk;
     private static By publishBtn, saveBtn, workflowStateSpan, currentContentSpan, propertiesHref, previewLnk;
     private static By commentsTxt, deleteBtn, saveAndSubmitBtn, regionNameSelect;
@@ -32,7 +33,7 @@ public class StockQuoteHeader_375 extends AbstractPageObject {
     private static JSONParser parser;
     private static final long DEFAULT_PAUSE = 2500;
 
-    public StockQuoteHeader_375(WebDriver driver) {
+    public StockQuote2(WebDriver driver) {
         super(driver);
 
         addNewModuleBtn = By.xpath(propUIModules.getProperty("btn_AddNewModule"));
@@ -59,7 +60,7 @@ public class StockQuoteHeader_375 extends AbstractPageObject {
         sPathToPageFile = System.getProperty("user.dir") + propUIModules.getProperty("dataPath_Modules");
         sFilePageJson = propUIModules.getProperty("json_PagesProp");
         sPathToModuleFile = System.getProperty("user.dir") + propUIModulesFeed.getProperty("dataPath_Feed");
-        sFileModuleJson = propUIModulesFeed.getProperty("json_StockQuoteHeader_375Prop");
+        sFileModuleJson = propUIModulesFeed.getProperty("json_StockQuote2Prop");
 
         parser = new JSONParser();
     }
