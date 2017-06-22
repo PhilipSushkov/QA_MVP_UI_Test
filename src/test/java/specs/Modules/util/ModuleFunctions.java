@@ -9,6 +9,7 @@ import org.openqa.selenium.WebElement;
 
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.util.Properties;
 
 import static specs.AbstractSpec.propUIModulesFeed;
 
@@ -17,7 +18,7 @@ import static specs.AbstractSpec.propUIModulesFeed;
  */
 public class ModuleFunctions {
 
-    public static Boolean checkExpectedValue(WebDriver driver, String expected, JSONObject module, String jsonModulePath) { //path = sPathToModuleFile + sFileModuleJson
+    public static Boolean checkExpectedValue(WebDriver driver, String expected, JSONObject module, String jsonModulePath, Properties propUIFile) {
 
         String type, elementPath, expectedValue, attribute, valueName, moduleCompare;
 
@@ -27,7 +28,7 @@ public class ModuleFunctions {
         String[] data = expected.split(";");
         type = data[0];
         elementPath = data[1];
-        By element = By.xpath(modulePath+propUIModulesFeed.getProperty(elementPath));
+        By element = By.xpath(modulePath+propUIFile.getProperty(elementPath));
 
         switch (type) {
             case "text":
