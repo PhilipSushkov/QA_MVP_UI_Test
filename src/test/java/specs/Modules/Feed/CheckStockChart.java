@@ -9,7 +9,7 @@ import org.testng.Assert;
 import org.testng.annotations.*;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.LoginPage.LoginPage;
-import pageobjects.Modules.Feed.StockChart2;
+import pageobjects.Modules.Feed.StockChart;
 import pageobjects.Modules.PageForModules;
 import pageobjects.PageAdmin.WorkflowState;
 import specs.AbstractSpec;
@@ -22,17 +22,17 @@ import java.util.ArrayList;
 /**
  * Created by zacharyk on 2017-06-21.
  */
-public class CheckStockChart2 extends AbstractSpec {
+public class CheckStockChart extends AbstractSpec {
     private static By pageAdminMenuButton;
     private static LoginPage loginPage;
     private static Dashboard dashboard;
     private static PageForModules pageForModules;
-    private static StockChart2 stockChart2;
+    private static StockChart stockChart;
 
     private static String sPathToFile, sDataFileJson;
     private static JSONParser parser;
 
-    private final String MODULE_DATA="moduleData", MODULE_NAME="stock_chart2";
+    private final String MODULE_DATA="moduleData", MODULE_NAME="stock_chart";
 
     @BeforeTest
     public void setUp() throws Exception {
@@ -41,10 +41,10 @@ public class CheckStockChart2 extends AbstractSpec {
         loginPage = new LoginPage(driver);
         dashboard = new Dashboard(driver);
         pageForModules = new PageForModules(driver);
-        stockChart2 = new StockChart2(driver);
+        stockChart = new StockChart(driver);
 
         sPathToFile = System.getProperty("user.dir") + propUIModulesFeed.getProperty("dataPath_Feed");
-        sDataFileJson = propUIModulesFeed.getProperty("json_StockChart2Data");
+        sDataFileJson = propUIModulesFeed.getProperty("json_StockChartData");
 
         parser = new JSONParser();
 
@@ -66,9 +66,9 @@ public class CheckStockChart2 extends AbstractSpec {
     @Test(dataProvider=MODULE_DATA, priority=2, enabled=true)
     public void createStockChart2Module(JSONObject module) throws InterruptedException {
         String sModuleNameSet = module.get("module_title").toString();
-        Assert.assertEquals(stockChart2.saveModule(module, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+sModuleNameSet+" Module didn't save properly");
-        Assert.assertEquals(stockChart2.saveAndSubmitModule(module, sModuleNameSet), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New "+sModuleNameSet+" Module properly");
-        Assert.assertEquals(stockChart2.publishModule(sModuleNameSet), WorkflowState.LIVE.state(), "Couldn't publish New "+sModuleNameSet+" Module properly");
+        Assert.assertEquals(stockChart.saveModule(module, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+sModuleNameSet+" Module didn't save properly");
+        Assert.assertEquals(stockChart.saveAndSubmitModule(module, sModuleNameSet), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New "+sModuleNameSet+" Module properly");
+        Assert.assertEquals(stockChart.publishModule(sModuleNameSet), WorkflowState.LIVE.state(), "Couldn't publish New "+sModuleNameSet+" Module properly");
     }
 
     // No properties testing; this module is 3rd-party and is not being provided to new clients
@@ -76,8 +76,8 @@ public class CheckStockChart2 extends AbstractSpec {
     @Test(dataProvider=MODULE_DATA, priority=5, enabled=true)
     public void removeStockChart2Module(JSONObject module) throws Exception {
         String sModuleNameSet = module.get("module_title").toString();
-        Assert.assertEquals(stockChart2.setupAsDeletedModule(sModuleNameSet), WorkflowState.DELETE_PENDING.state(), "New "+sModuleNameSet+" Module didn't setup as Deleted properly");
-        Assert.assertEquals(stockChart2.removeModule(module, sModuleNameSet), WorkflowState.NEW_ITEM.state(), "Couldn't remove "+sModuleNameSet+" Module. Something went wrong.");
+        Assert.assertEquals(stockChart.setupAsDeletedModule(sModuleNameSet), WorkflowState.DELETE_PENDING.state(), "New "+sModuleNameSet+" Module didn't setup as Deleted properly");
+        Assert.assertEquals(stockChart.removeModule(module, sModuleNameSet), WorkflowState.NEW_ITEM.state(), "Couldn't remove "+sModuleNameSet+" Module. Something went wrong.");
     }
 
     @Test(dataProvider=MODULE_DATA, priority=6, enabled=false)

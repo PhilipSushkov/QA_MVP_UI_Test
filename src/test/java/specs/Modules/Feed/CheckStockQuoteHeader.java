@@ -75,7 +75,7 @@ public class CheckStockQuoteHeader extends AbstractSpec {
         Assert.assertEquals(stockQuoteHeader.publishModule(sModuleNameSet), WorkflowState.LIVE.state(), "Couldn't publish New "+sModuleNameSet+" Module properly");
     }
 
-    @Test(dataProvider=MODULE_DATA, priority=3, enabled=false)
+    @Test(dataProvider=MODULE_DATA, priority=3, enabled=true)
     public void checkStockQuoteHeaderPreview(JSONObject module) throws InterruptedException {
 
         try {
@@ -93,7 +93,7 @@ public class CheckStockQuoteHeader extends AbstractSpec {
         }
     }
 
-    @Test(dataProvider=MODULE_DATA, priority=4, enabled=false)
+    @Test(dataProvider=MODULE_DATA, priority=4, enabled=true)
     public void checkStockQuoteHeaderLive(JSONObject module) throws InterruptedException {
 
         try {

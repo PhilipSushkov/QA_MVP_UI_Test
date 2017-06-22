@@ -24,7 +24,7 @@ import static specs.AbstractSpec.desktopUrl;
 /**
  * Created by zacharyk on 2017-06-21.
  */
-public class StockQuote2 extends AbstractPageObject {
+public class StockQuote extends AbstractPageObject {
     private static By addNewModuleBtn, backBtn, moduleTitleInput, moduleDefinitionSelect, includeLegacyModulesChk;
     private static By publishBtn, saveBtn, workflowStateSpan, currentContentSpan, propertiesHref, previewLnk;
     private static By commentsTxt, deleteBtn, saveAndSubmitBtn, regionNameSelect;
@@ -33,7 +33,7 @@ public class StockQuote2 extends AbstractPageObject {
     private static JSONParser parser;
     private static final long DEFAULT_PAUSE = 2500;
 
-    public StockQuote2(WebDriver driver) {
+    public StockQuote(WebDriver driver) {
         super(driver);
 
         addNewModuleBtn = By.xpath(propUIModules.getProperty("btn_AddNewModule"));
