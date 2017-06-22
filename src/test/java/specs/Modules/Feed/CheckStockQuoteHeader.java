@@ -110,7 +110,7 @@ public class CheckStockQuoteHeader extends AbstractSpec {
         }
     }
 
-    @Test(dataProvider=MODULE_DATA, priority=5, enabled=false)
+    @Test(dataProvider=MODULE_DATA, priority=5, enabled=true)
     public void removeStockQuoteHeaderModule(JSONObject module) throws Exception {
         String sModuleNameSet = module.get("module_title").toString();
         Assert.assertEquals(stockQuoteHeader.setupAsDeletedModule(sModuleNameSet), WorkflowState.DELETE_PENDING.state(), "New "+sModuleNameSet+" Module didn't setup as Deleted properly");
@@ -132,8 +132,8 @@ public class CheckStockQuoteHeader extends AbstractSpec {
             ArrayList<Object> zoom = new ArrayList();
 
             for (int i = 0; i < moduleData.size(); i++) {
-                JSONObject pageObj = (JSONObject) moduleData.get(i);
-                if (Boolean.parseBoolean(pageObj.get("do_assertions").toString())) {
+                JSONObject moduleObj = (JSONObject) moduleData.get(i);
+                if (Boolean.parseBoolean(moduleObj.get("do_assertions").toString())) {
                     zoom.add(moduleData.get(i));
                 }
             }

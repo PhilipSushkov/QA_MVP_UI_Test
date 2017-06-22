@@ -60,7 +60,7 @@ public class StockQuote extends AbstractPageObject {
         sPathToPageFile = System.getProperty("user.dir") + propUIModules.getProperty("dataPath_Modules");
         sFilePageJson = propUIModules.getProperty("json_PagesProp");
         sPathToModuleFile = System.getProperty("user.dir") + propUIModulesFeed.getProperty("dataPath_Feed");
-        sFileModuleJson = propUIModulesFeed.getProperty("json_StockQuote2Prop");
+        sFileModuleJson = propUIModulesFeed.getProperty("json_StockQuoteProp");
 
         parser = new JSONParser();
     }
@@ -180,7 +180,7 @@ public class StockQuote extends AbstractPageObject {
                 }
             }
 
-            findElement(commentsTxt).sendKeys(modulesDataObj.get("comment_module").toString());
+            findElement(commentsTxt).sendKeys(modulesDataObj.get("comment").toString());
             findElement(saveAndSubmitBtn).click();
             Thread.sleep(DEFAULT_PAUSE);
 
@@ -203,7 +203,6 @@ public class StockQuote extends AbstractPageObject {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
 
         return "For Approval";
     }
