@@ -1,0 +1,28 @@
+{
+  "faq": [
+    {
+      "do_assertions": true,
+      "name_EN": "FAQ 1",
+      "name_EN_ch": "QAF 1",
+      "name_GE": "FAQ 1 but in German",
+      "active": true,
+      "active_ch": false,
+      "question":"Whats my name",
+      "answer": "Rihanna",
+      "comment": "Submitting FAQ 1",
+      "comment_ch": "Changing active state and english name"
+    },
+    {
+      "do_assertions": true,
+      "name_EN": "FAQ 2",
+      "name_GE": "F Q A 2",
+      "active": true,
+      "question":"What is my purpose?",
+      "question_ch": "What team?",
+      "answer": "To pass butter",
+      "answer_ch": "Wildcats!",
+      "comment": "Submitting FAQ 2",
+      "comment_ch": "Changing question and answer"
+    }
+  ]
+}
