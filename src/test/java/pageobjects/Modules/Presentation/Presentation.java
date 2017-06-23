@@ -29,7 +29,6 @@ public class Presentation extends AbstractPageObject {
     private static By addNewModuleBtn, backBtn, moduleTitleInput, moduleDefinitionSelect, includeLegacyModulesChk;
     private static By publishBtn, saveBtn, workflowStateSpan, currentContentSpan, propertiesHref, previewLnk;
     private static By commentsTxt, deleteBtn, saveAndSubmitBtn, regionNameSelect;
-    private static By livePageTitle, liveModuleTitleSpan, liveFeedModulePageMenuBtn;
     private static String sPathToPageFile, sFilePageJson, sPathToModuleFile, sFileModuleJson;
     private static JSONParser parser;
     private static final long DEFAULT_PAUSE = 2500;
@@ -54,14 +53,10 @@ public class Presentation extends AbstractPageObject {
         backBtn = By.xpath(propUIPageAdmin.getProperty("btn_Back"));
         saveAndSubmitBtn = By.xpath(propUIPageAdmin.getProperty("btn_SaveAndSubmit"));
 
-        livePageTitle = By.xpath(propUIModules.getProperty("page_Title"));
-        liveModuleTitleSpan = By.xpath(propUIModules.getProperty("span_LiveModuleTitle"));
-        liveFeedModulePageMenuBtn = By.xpath(propUIModules.getProperty("btnMenu_LiveFeedModulePage"));
-
         sPathToPageFile = System.getProperty("user.dir") + propUIModules.getProperty("dataPath_Modules");
         sFilePageJson = propUIModules.getProperty("json_PagesProp");
         sPathToModuleFile = System.getProperty("user.dir") + propUIModulesPresentation.getProperty("dataPath_Presentation");
-        sFileModuleJson = propUIModulesFeed.getProperty("json_PresentationProp");
+        sFileModuleJson = propUIModulesPresentation.getProperty("json_PresentationProp");
 
         parser = new JSONParser();
     }

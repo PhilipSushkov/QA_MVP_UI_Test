@@ -24,6 +24,9 @@ import java.util.ArrayList;
  * Created by zacharyk on 2017-06-22.
  */
 public class CheckPresentation extends AbstractSpec {
+
+    // This test is heavily dependent on pre-existing content on the testing site
+
     private static By pageAdminMenuButton;
     private static LoginPage loginPage;
     private static Dashboard dashboard;
@@ -39,17 +42,17 @@ public class CheckPresentation extends AbstractSpec {
 
     @BeforeTest
     public void setUp() throws Exception {
-        pageAdminMenuButton = By.xpath(propUIModulesFeed.getProperty("btnMenu_PageAdmin"));
+        pageAdminMenuButton = By.xpath(propUIModulesPresentation.getProperty("btnMenu_PageAdmin"));
 
         loginPage = new LoginPage(driver);
         dashboard = new Dashboard(driver);
         pageForModules = new PageForModules(driver);
         presentation = new Presentation(driver);
 
-        sPathToFile = System.getProperty("user.dir") + propUIModulesFeed.getProperty("dataPath_Feed");
-        sDataFileJson = propUIModulesFeed.getProperty("json_PresentationData");
-        sPathToModuleFile = System.getProperty("user.dir") + propUIModulesFeed.getProperty("dataPath_Feed");
-        sFileModuleJson = propUIModulesFeed.getProperty("json_PresentationProp");
+        sPathToFile = System.getProperty("user.dir") + propUIModulesPresentation.getProperty("dataPath_Presentation");
+        sDataFileJson = propUIModulesPresentation.getProperty("json_PresentationData");
+        sPathToModuleFile = System.getProperty("user.dir") + propUIModulesPresentation.getProperty("dataPath_Presentation");
+        sFileModuleJson = propUIModulesPresentation.getProperty("json_PresentationProp");
 
         parser = new JSONParser();
 
@@ -69,7 +72,7 @@ public class CheckPresentation extends AbstractSpec {
         Assert.assertEquals(pageForModules.publishPage(MODULE_NAME), WorkflowState.LIVE.state(), "Couldn't publish New "+MODULE_NAME+" Page properly");
     }
 
-    @Test(dataProvider=MODULE_DATA, priority=2, enabled=true)
+    @Test(dataProvider=MODULE_DATA, priority=2, enabled=false)
     public void createPresentationModule(JSONObject module) throws InterruptedException {
         String sModuleNameSet = module.get("module_title").toString();
         Assert.assertEquals(presentation.saveModule(module, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+sModuleNameSet+" Module didn't save properly");
@@ -87,7 +90,7 @@ public class CheckPresentation extends AbstractSpec {
             JSONArray expectedResults = (JSONArray) module.get("expected");
             for (Object expected : expectedResults) {
                 String sExpected = expected.toString();
-                Assert.assertTrue(ModuleFunctions.checkExpectedValue(driver, sExpected, module, sPathToModuleFile + sFileModuleJson, propUIModulesFeed),
+                Assert.assertTrue(ModuleFunctions.checkExpectedValue(driver, sExpected, module, sPathToModuleFile + sFileModuleJson, propUIModulesPresentation),
                         "Did not find correct " + sExpected.split(";")[0] + " at item " + sExpected.split(";")[1]);
             }
         } finally {
@@ -104,7 +107,7 @@ public class CheckPresentation extends AbstractSpec {
             JSONArray expectedResults = (JSONArray) module.get("expected");
             for (Object expected : expectedResults) {
                 String sExpected = expected.toString();
-                Assert.assertTrue(ModuleFunctions.checkExpectedValue(driver, sExpected, module, sPathToModuleFile + sFileModuleJson, propUIModulesFeed),
+                Assert.assertTrue(ModuleFunctions.checkExpectedValue(driver, sExpected, module, sPathToModuleFile + sFileModuleJson, propUIModulesPresentation),
                         "Did not find correct " + sExpected.split(";")[0] + " at item " + sExpected.split(";")[1]);
             }
         } finally {
@@ -112,7 +115,7 @@ public class CheckPresentation extends AbstractSpec {
         }
     }
 
-    @Test(dataProvider=MODULE_DATA, priority=5, enabled=true)
+    @Test(dataProvider=MODULE_DATA, priority=5, enabled=false)
     public void removePresentationModule(JSONObject module) throws Exception {
         String sModuleNameSet = module.get("module_title").toString();
         Assert.assertEquals(presentation.setupAsDeletedModule(sModuleNameSet), WorkflowState.DELETE_PENDING.state(), "New "+sModuleNameSet+" Module didn't setup as Deleted properly");
