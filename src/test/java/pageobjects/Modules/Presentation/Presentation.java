@@ -1,4 +1,4 @@
-package pageobjects.Modules.Feed;
+package pageobjects.Modules.Presentation;
 
 import com.jayway.jsonpath.JsonPath;
 import org.json.simple.JSONArray;
@@ -6,38 +6,40 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import pageobjects.AbstractPageObject;
 import pageobjects.PageAdmin.WorkflowState;
+import pageobjects.PageObject;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 
 import static specs.AbstractSpec.*;
 import static specs.AbstractSpec.desktopUrl;
 
 /**
- * Created by zacharyk on 2017-06-21.
+ * Created by zacharyk on 2017-06-22.
  */
-public class StockChart2 extends AbstractPageObject {
-    private static By addNewModuleBtn, backBtn, moduleTitleInput, moduleDefinitionSelect, includeLagacyModulesChk;
+public class Presentation extends AbstractPageObject {
+    private static By addNewModuleBtn, backBtn, moduleTitleInput, moduleDefinitionSelect, includeLegacyModulesChk;
     private static By publishBtn, saveBtn, workflowStateSpan, currentContentSpan, propertiesHref, previewLnk;
     private static By commentsTxt, deleteBtn, saveAndSubmitBtn, regionNameSelect;
     private static String sPathToPageFile, sFilePageJson, sPathToModuleFile, sFileModuleJson;
     private static JSONParser parser;
-
     private static final long DEFAULT_PAUSE = 2500;
 
-    public StockChart2(WebDriver driver) {
+    public Presentation(WebDriver driver) {
         super(driver);
 
         addNewModuleBtn = By.xpath(propUIModules.getProperty("btn_AddNewModule"));
         moduleTitleInput = By.xpath(propUIModules.getProperty("input_ModuleTitle"));
         moduleDefinitionSelect = By.xpath(propUIModules.getProperty("select_ModuleDefinition"));
-        includeLagacyModulesChk = By.xpath(propUIModules.getProperty("chk_IncludeLagacyModules"));
+        includeLegacyModulesChk = By.xpath(propUIModules.getProperty("chk_IncludeLagacyModules"));
         regionNameSelect = By.xpath(propUIModules.getProperty("select_RegionName"));
         workflowStateSpan = By.xpath(propUIPageAdmin.getProperty("select_WorkflowState"));
         commentsTxt = By.xpath(propUIPageAdmin.getProperty("txtarea_Comments"));
@@ -53,8 +55,8 @@ public class StockChart2 extends AbstractPageObject {
 
         sPathToPageFile = System.getProperty("user.dir") + propUIModules.getProperty("dataPath_Modules");
         sFilePageJson = propUIModules.getProperty("json_PagesProp");
-        sPathToModuleFile = System.getProperty("user.dir") + propUIModulesFeed.getProperty("dataPath_Feed");
-        sFileModuleJson = propUIModulesFeed.getProperty("json_StockChart2Prop");
+        sPathToModuleFile = System.getProperty("user.dir") + propUIModulesPresentation.getProperty("dataPath_Presentation");
+        sFileModuleJson = propUIModulesPresentation.getProperty("json_PresentationProp");
 
         parser = new JSONParser();
     }
@@ -74,9 +76,9 @@ public class StockChart2 extends AbstractPageObject {
 
             findElement(addNewModuleBtn).click();
             Thread.sleep(DEFAULT_PAUSE);
-            waitForElement(includeLagacyModulesChk);
+            waitForElement(includeLegacyModulesChk);
 
-            findElement(includeLagacyModulesChk).click();
+            findElement(includeLegacyModulesChk).click();
             Thread.sleep(DEFAULT_PAUSE);
             waitForElement(moduleTitleInput);
 
@@ -164,9 +166,14 @@ public class StockChart2 extends AbstractPageObject {
                 //System.out.println(jsonArrProp.get(i).toString());
                 //String prop[] = jsonArrProp.get(i).toString().split(";");
                 //System.out.println(prop[0]);
-                By propertyValue = By.xpath("//td[contains(@class, 'DataGridItemBorderLeft')][(text()='"+jsonArrProp.get(i).toString().split(";")[0]+"')]/parent::tr/td/div/input[contains(@id, 'txtStatic')]");
-                findElement(propertyValue).clear();
-                findElement(propertyValue).sendKeys(jsonArrProp.get(i).toString().split(";")[1]);
+                try {
+                    By propertyTextValue = By.xpath("//td[contains(@class, 'DataGridItemBorderLeft')][(text()='" + jsonArrProp.get(i).toString().split(";")[0] + "')]/parent::tr/td/div/input[contains(@id, 'txtStatic')]");
+                    findElement(propertyTextValue).clear();
+                    findElement(propertyTextValue).sendKeys(jsonArrProp.get(i).toString().split(";")[1]);
+                } catch (PageObject.ElementNotFoundException e) {
+                    By propertyDropdownValue = By.xpath("//td[contains(@class, 'DataGridItemBorderLeft')][(text()='" + jsonArrProp.get(i).toString().split(";")[0] + "')]/parent::tr/td/div/select[contains(@id, 'ddlDynamic')]");
+                    findElement(propertyDropdownValue).sendKeys(jsonArrProp.get(i).toString().split(";")[1]);
+                }
             }
 
             findElement(commentsTxt).sendKeys(modulesDataObj.get("comment_module").toString());
@@ -318,6 +325,70 @@ public class StockChart2 extends AbstractPageObject {
         }
 
         return null;
+    }
+
+    public String openModulePreview(String moduleName) {
+        try {
+            JSONObject jsonObj = (JSONObject) parser.parse(new FileReader(sPathToModuleFile + sFileModuleJson));
+            String moduleURL = getModuleUrl(jsonObj, moduleName);
+            driver.get(moduleURL);
+
+            findElement(previewLnk).click();
+
+            Thread.sleep(DEFAULT_PAUSE);
+
+            ArrayList<String> tabs = new ArrayList<> (driver.getWindowHandles());
+            driver.switchTo().window(tabs.get(1));
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return driver.getTitle();
+    }
+
+    public String openModuleLiveSite(String moduleName) {
+        try {
+            ((JavascriptExecutor)driver).executeScript("window.open();");
+
+            Thread.sleep(DEFAULT_PAUSE);
+
+            ArrayList<String> tabs = new ArrayList<> (driver.getWindowHandles());
+            driver.switchTo().window(tabs.get(1));
+
+            JSONObject jsonObj = (JSONObject)  parser.parse(new FileReader(sPathToPageFile + sFilePageJson));
+            String moduleURL = JsonPath.read(jsonObj, "$.['"+moduleName+"'].your_page_url");
+            driver.get(moduleURL);
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return driver.getTitle();
+    }
+
+    public void closeWindow() {
+        try {
+            ArrayList<String> tabs = new ArrayList<>(driver.getWindowHandles());
+
+            driver.switchTo().window(tabs.get(1)).close();
+            Thread.sleep(DEFAULT_PAUSE);
+            driver.switchTo().window(tabs.get(0));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private String getPageUrl(JSONObject obj, String moduleName) {

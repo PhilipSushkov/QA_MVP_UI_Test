@@ -179,7 +179,7 @@ public class StockQuoteHeader extends AbstractPageObject {
                 }
             }
 
-            findElement(commentsTxt).sendKeys(modulesDataObj.get("comment_module").toString());
+            findElement(commentsTxt).sendKeys(modulesDataObj.get("comment").toString());
             findElement(saveAndSubmitBtn).click();
             Thread.sleep(DEFAULT_PAUSE);
 

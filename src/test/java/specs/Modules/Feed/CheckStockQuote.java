@@ -9,9 +9,7 @@ import org.testng.Assert;
 import org.testng.annotations.*;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.LoginPage.LoginPage;
-import pageobjects.Modules.Feed.StockSplit;
-import pageobjects.Modules.Feed.StockSplit;
-import pageobjects.Modules.ModuleBase;
+import pageobjects.Modules.Feed.StockQuote;
 import pageobjects.Modules.PageForModules;
 import pageobjects.PageAdmin.WorkflowState;
 import specs.AbstractSpec;
@@ -25,19 +23,19 @@ import java.util.ArrayList;
 /**
  * Created by zacharyk on 2017-06-21.
  */
-
-public class CheckStockSplit extends AbstractSpec {
+public class CheckStockQuote extends AbstractSpec {
     private static By pageAdminMenuButton;
     private static LoginPage loginPage;
     private static Dashboard dashboard;
     private static PageForModules pageForModules;
-    private static StockSplit stockSplit;
-    private static ModuleBase moduleBase;
+    private static StockQuote stockQuote;
 
     private static String sPathToFile, sDataFileJson, sPathToModuleFile, sFileModuleJson;
     private static JSONParser parser;
 
-    private final String PAGE_DATA="pageData", PAGE_NAME="feed_modules", MODULE_DATA="moduleData", MODULE_NAME="stock_split";
+    private final String PAGE_DATA="pageData", PAGE_NAME="feed_modules", MODULE_DATA="moduleData", MODULE_NAME="stock_quote";
+
+
 
     @BeforeTest
     public void setUp() throws Exception {
@@ -46,14 +44,12 @@ public class CheckStockSplit extends AbstractSpec {
         loginPage = new LoginPage(driver);
         dashboard = new Dashboard(driver);
         pageForModules = new PageForModules(driver);
-        stockSplit = new StockSplit(driver);
+        stockQuote = new StockQuote(driver);
 
         sPathToFile = System.getProperty("user.dir") + propUIModulesFeed.getProperty("dataPath_Feed");
-        sDataFileJson = propUIModulesFeed.getProperty("json_StockSplitData");
+        sDataFileJson = propUIModulesFeed.getProperty("json_StockQuoteData");
         sPathToModuleFile = System.getProperty("user.dir") + propUIModulesFeed.getProperty("dataPath_Feed");
-        sFileModuleJson = propUIModulesFeed.getProperty("json_StockSplitProp");
-
-        moduleBase = new ModuleBase(driver, sPathToModuleFile, sFileModuleJson);
+        sFileModuleJson = propUIModulesFeed.getProperty("json_StockQuoteProp");
 
         parser = new JSONParser();
 
@@ -66,27 +62,27 @@ public class CheckStockSplit extends AbstractSpec {
         dashboard.openPageFromCommonTasks(pageAdminMenuButton);
     }
 
-    @Test(dataProvider=PAGE_DATA, priority=1, enabled=true)
-    public void createStockSplitPage(JSONObject page) throws InterruptedException {
+    @Test(dataProvider=PAGE_DATA, priority=1, enabled=false)
+    public void createStockQuotePage(JSONObject page) throws InterruptedException {
         Assert.assertEquals(pageForModules.savePage(page, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+MODULE_NAME+" Page didn't save properly");
         Assert.assertEquals(pageForModules.saveAndSubmitPage(page, MODULE_NAME), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New "+MODULE_NAME+" Page properly");
         Assert.assertEquals(pageForModules.publishPage(MODULE_NAME), WorkflowState.LIVE.state(), "Couldn't publish New "+MODULE_NAME+" Page properly");
     }
 
     @Test(dataProvider=MODULE_DATA, priority=2, enabled=true)
-    public void createStockSplitModule(JSONObject module) throws InterruptedException {
+    public void createStockQuoteModule(JSONObject module) throws InterruptedException {
         String sModuleNameSet = module.get("module_title").toString();
-        Assert.assertEquals(moduleBase.saveModule(module, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+sModuleNameSet+" Module didn't save properly");
-        Assert.assertEquals(stockSplit.saveAndSubmitModule(module, sModuleNameSet), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New "+sModuleNameSet+" Module properly");
-        Assert.assertEquals(moduleBase.publishModule(sModuleNameSet), WorkflowState.LIVE.state(), "Couldn't publish New "+sModuleNameSet+" Module properly");
+        Assert.assertEquals(stockQuote.saveModule(module, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+sModuleNameSet+" Module didn't save properly");
+        Assert.assertEquals(stockQuote.saveAndSubmitModule(module, sModuleNameSet), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New "+sModuleNameSet+" Module properly");
+        Assert.assertEquals(stockQuote.publishModule(sModuleNameSet), WorkflowState.LIVE.state(), "Couldn't publish New "+sModuleNameSet+" Module properly");
     }
 
     @Test(dataProvider=MODULE_DATA, priority=3, enabled=true)
-    public void checkStockSplitPreview(JSONObject module) throws InterruptedException {
+    public void checkStockQuotePreview(JSONObject module) throws InterruptedException {
 
         try {
             String sModuleNameSet = module.get("module_title").toString();
-            Assert.assertTrue(moduleBase.openModulePreview(sModuleNameSet).contains(MODULE_NAME),"Did not open correct page");
+            Assert.assertTrue(stockQuote.openModulePreview(sModuleNameSet).contains(MODULE_NAME),"Did not open correct page");
 
             JSONArray expectedResults = (JSONArray) module.get("expected");
             for (Object expected : expectedResults) {
@@ -95,15 +91,15 @@ public class CheckStockSplit extends AbstractSpec {
                         "Did not find correct " + sExpected.split(";")[0] + " at item " + sExpected.split(";")[1]);
             }
         } finally {
-            moduleBase.closeWindow();
+            stockQuote.closeWindow();
         }
     }
 
     @Test(dataProvider=MODULE_DATA, priority=4, enabled=true)
-    public void checkStockSplitLive(JSONObject module) throws InterruptedException {
+    public void checkStockQuoteLive(JSONObject module) throws InterruptedException {
 
         try {
-            Assert.assertTrue(moduleBase.openModuleLiveSite(MODULE_NAME).contains(MODULE_NAME),"Did not open correct page");
+            Assert.assertTrue(stockQuote.openModuleLiveSite(MODULE_NAME).contains(MODULE_NAME),"Did not open correct page");
 
             JSONArray expectedResults = (JSONArray) module.get("expected");
             for (Object expected : expectedResults) {
@@ -112,19 +108,19 @@ public class CheckStockSplit extends AbstractSpec {
                         "Did not find correct " + sExpected.split(";")[0] + " at item " + sExpected.split(";")[1]);
             }
         } finally {
-            moduleBase.closeWindow();
+            stockQuote.closeWindow();
         }
     }
 
     @Test(dataProvider=MODULE_DATA, priority=5, enabled=true)
-    public void removeStockSplitModule(JSONObject module) throws Exception {
+    public void removeStockQuoteModule(JSONObject module) throws Exception {
         String sModuleNameSet = module.get("module_title").toString();
-        Assert.assertEquals(moduleBase.setupAsDeletedModule(sModuleNameSet), WorkflowState.DELETE_PENDING.state(), "New "+sModuleNameSet+" Module didn't setup as Deleted properly");
-        Assert.assertEquals(moduleBase.removeModule(module, sModuleNameSet), WorkflowState.NEW_ITEM.state(), "Couldn't remove "+sModuleNameSet+" Module. Something went wrong.");
+        Assert.assertEquals(stockQuote.setupAsDeletedModule(sModuleNameSet), WorkflowState.DELETE_PENDING.state(), "New "+sModuleNameSet+" Module didn't setup as Deleted properly");
+        Assert.assertEquals(stockQuote.removeModule(module, sModuleNameSet), WorkflowState.NEW_ITEM.state(), "Couldn't remove "+sModuleNameSet+" Module. Something went wrong.");
     }
 
     @Test(dataProvider=PAGE_DATA, priority=6, enabled=true)
-    public void removeStockSplitPage(JSONObject page) throws Exception {
+    public void removeStockQuotePage(JSONObject page) throws Exception {
         Assert.assertEquals(pageForModules.setupAsDeletedPage(MODULE_NAME), WorkflowState.DELETE_PENDING.state(), "New "+MODULE_NAME+" Page didn't setup as Deleted properly");
         Assert.assertEquals(pageForModules.removePage(page, MODULE_NAME), WorkflowState.NEW_ITEM.state(), "Couldn't remove "+MODULE_NAME+" Page. Something went wrong.");
     }

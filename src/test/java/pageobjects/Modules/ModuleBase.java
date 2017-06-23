@@ -1,4 +1,4 @@
-package pageobjects.Modules.Feed;
+package pageobjects.Modules;
 
 import com.jayway.jsonpath.JsonPath;
 import org.json.simple.JSONArray;
@@ -24,22 +24,25 @@ import static specs.AbstractSpec.desktopUrl;
 /**
  * Created by zacharyk on 2017-06-21.
  */
-public class StockQuote2 extends AbstractPageObject {
-    private static By addNewModuleBtn, backBtn, moduleTitleInput, moduleDefinitionSelect, includeLegacyModulesChk;
-    private static By publishBtn, saveBtn, workflowStateSpan, currentContentSpan, propertiesHref, previewLnk;
-    private static By commentsTxt, deleteBtn, saveAndSubmitBtn, regionNameSelect;
-    private static By livePageTitle, liveModuleTitleSpan, liveFeedModulePageMenuBtn;
+
+public class ModuleBase extends AbstractPageObject {
+    private static By addNewModuleBtn, moduleTitleInput, moduleDefinitionSelect, includeLagacyModulesChk;
+    private static By publishBtn, saveBtn, workflowStateSpan, currentContentSpan, propertiesHref;
+    private static By commentsTxt, deleteBtn, saveAndSubmitBtn, regionNameSelect, previewLnk;
     private static String sPathToPageFile, sFilePageJson, sPathToModuleFile, sFileModuleJson;
     private static JSONParser parser;
+
     private static final long DEFAULT_PAUSE = 2500;
 
-    public StockQuote2(WebDriver driver) {
+    public ModuleBase(WebDriver driver, String sPathToSection, String sPathToModuleProp) {
         super(driver);
+        this.sPathToModuleFile = sPathToSection;
+        this.sFileModuleJson = sPathToModuleProp;
 
         addNewModuleBtn = By.xpath(propUIModules.getProperty("btn_AddNewModule"));
         moduleTitleInput = By.xpath(propUIModules.getProperty("input_ModuleTitle"));
         moduleDefinitionSelect = By.xpath(propUIModules.getProperty("select_ModuleDefinition"));
-        includeLegacyModulesChk = By.xpath(propUIModules.getProperty("chk_IncludeLagacyModules"));
+        includeLagacyModulesChk = By.xpath(propUIModules.getProperty("chk_IncludeLagacyModules"));
         regionNameSelect = By.xpath(propUIModules.getProperty("select_RegionName"));
         workflowStateSpan = By.xpath(propUIPageAdmin.getProperty("select_WorkflowState"));
         commentsTxt = By.xpath(propUIPageAdmin.getProperty("txtarea_Comments"));
@@ -50,17 +53,10 @@ public class StockQuote2 extends AbstractPageObject {
         saveBtn = By.xpath(propUIPageAdmin.getProperty("btn_Save"));
         deleteBtn = By.xpath(propUIPageAdmin.getProperty("btn_Delete"));
         publishBtn = By.xpath(propUIPageAdmin.getProperty("btn_Publish"));
-        backBtn = By.xpath(propUIPageAdmin.getProperty("btn_Back"));
         saveAndSubmitBtn = By.xpath(propUIPageAdmin.getProperty("btn_SaveAndSubmit"));
-
-        livePageTitle = By.xpath(propUIModules.getProperty("page_Title"));
-        liveModuleTitleSpan = By.xpath(propUIModules.getProperty("span_LiveModuleTitle"));
-        liveFeedModulePageMenuBtn = By.xpath(propUIModules.getProperty("btnMenu_LiveFeedModulePage"));
 
         sPathToPageFile = System.getProperty("user.dir") + propUIModules.getProperty("dataPath_Modules");
         sFilePageJson = propUIModules.getProperty("json_PagesProp");
-        sPathToModuleFile = System.getProperty("user.dir") + propUIModulesFeed.getProperty("dataPath_Feed");
-        sFileModuleJson = propUIModulesFeed.getProperty("json_StockQuote2Prop");
 
         parser = new JSONParser();
     }
@@ -80,9 +76,9 @@ public class StockQuote2 extends AbstractPageObject {
 
             findElement(addNewModuleBtn).click();
             Thread.sleep(DEFAULT_PAUSE);
-            waitForElement(includeLegacyModulesChk);
+            waitForElement(includeLagacyModulesChk);
 
-            findElement(includeLegacyModulesChk).click();
+            findElement(includeLagacyModulesChk).click();
             Thread.sleep(DEFAULT_PAUSE);
             waitForElement(moduleTitleInput);
 
@@ -170,17 +166,12 @@ public class StockQuote2 extends AbstractPageObject {
                 //System.out.println(jsonArrProp.get(i).toString());
                 //String prop[] = jsonArrProp.get(i).toString().split(";");
                 //System.out.println(prop[0]);
-                try {
-                    By propertyTextValue = By.xpath("//td[contains(@class, 'DataGridItemBorderLeft')][(text()='" + jsonArrProp.get(i).toString().split(";")[0] + "')]/parent::tr/td/div/input[contains(@id, 'txtStatic')]");
-                    findElement(propertyTextValue).clear();
-                    findElement(propertyTextValue).sendKeys(jsonArrProp.get(i).toString().split(";")[1]);
-                } catch (ElementNotFoundException e) {
-                    By propertyDropdownValue = By.xpath("//td[contains(@class, 'DataGridItemBorderLeft')][(text()='" + jsonArrProp.get(i).toString().split(";")[0] + "')]/parent::tr/td/div/select[contains(@id, 'ddlDynamic')]");
-                    findElement(propertyDropdownValue).sendKeys(jsonArrProp.get(i).toString().split(";")[1]);
-                }
+                By propertyValue = By.xpath("//td[contains(@class, 'DataGridItemBorderLeft')][(text()='"+jsonArrProp.get(i).toString().split(";")[0]+"')]/parent::tr/td/div/input[contains(@id, 'txtStatic')]");
+                findElement(propertyValue).clear();
+                findElement(propertyValue).sendKeys(jsonArrProp.get(i).toString().split(";")[1]);
             }
 
-            findElement(commentsTxt).sendKeys(modulesDataObj.get("comment_module").toString());
+            findElement(commentsTxt).sendKeys(modulesDataObj.get("comment").toString());
             findElement(saveAndSubmitBtn).click();
             Thread.sleep(DEFAULT_PAUSE);
 
@@ -204,8 +195,7 @@ public class StockQuote2 extends AbstractPageObject {
             e.printStackTrace();
         }
 
-
-        return "For Approval";
+        return null;
     }
 
     public String publishModule(String moduleName) throws InterruptedException {

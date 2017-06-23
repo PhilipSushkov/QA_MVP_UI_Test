@@ -60,6 +60,11 @@ public class ModuleFunctions {
                 Boolean compareEquals = Boolean.valueOf(data[4]);
                 return compareValue(driver, element, valueName, jsonModulePath, moduleCompare, compareEquals);
 
+            case "text_exists":
+
+                Boolean expectText = Boolean.valueOf(data[2]);
+                return checkTextExists(driver, element, expectText);
+
             default: return false;
         }
     }
@@ -74,6 +79,10 @@ public class ModuleFunctions {
 
     private static Boolean checkElementPresent(WebDriver driver, By element, Boolean expectPresent) {
         return driver.findElements(element).isEmpty() != expectPresent;
+    }
+
+    private static Boolean checkTextExists(WebDriver driver, By element, Boolean expectText) {
+        return driver.findElement(element).getText().isEmpty() != expectText;
     }
 
     private static Boolean saveValue(WebDriver driver, By element, String valueName, String jsonModulePath, String moduleName) {
@@ -116,4 +125,5 @@ public class ModuleFunctions {
             return false;
         }
     }
+
 }

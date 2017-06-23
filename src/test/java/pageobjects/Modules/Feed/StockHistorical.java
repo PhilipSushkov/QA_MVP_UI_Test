@@ -1,15 +1,10 @@
-package pageobjects.Modules.PressRelease;
+package pageobjects.Modules.Feed;
 
 import com.jayway.jsonpath.JsonPath;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import pageobjects.AbstractPageObject;
-import pageobjects.PageAdmin.WorkflowState;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -18,28 +13,37 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 
+import org.openqa.selenium.*;
+import pageobjects.AbstractPageObject;
+import pageobjects.PageAdmin.WorkflowState;
+
 import static specs.AbstractSpec.*;
-import static specs.AbstractSpec.desktopUrl;
 
 /**
  * Created by philipsushkov on 2017-06-12.
  */
-public class PressRelease extends AbstractPageObject {
-    private static By addNewModuleBtn, backBtn, moduleTitleInput, moduleDefinitionSelect, includeLegacyModulesChk;
+
+public class StockHistorical extends AbstractPageObject {
+    private static By addNewModuleBtn, backBtn, moduleTitleInput, moduleDefinitionSelect, includeLagacyModulesChk;
     private static By publishBtn, saveBtn, workflowStateSpan, currentContentSpan, propertiesHref, previewLnk;
     private static By commentsTxt, deleteBtn, saveAndSubmitBtn, regionNameSelect;
-    private static By livePageTitle, liveModuleTitleSpan, livePressReleaseModulePageMenuBtn;
     private static String sPathToPageFile, sFilePageJson, sPathToModuleFile, sFileModuleJson;
     private static JSONParser parser;
+
     private static final long DEFAULT_PAUSE = 2500;
 
-    public PressRelease(WebDriver driver) {
+    // This test checks specific historical data on the following day:
+    private static final String lookupMonth = "Jul";
+    private static final String lookupDay = "1";
+    private static final String lookupYear = "2015";
+
+    public StockHistorical(WebDriver driver) {
         super(driver);
 
         addNewModuleBtn = By.xpath(propUIModules.getProperty("btn_AddNewModule"));
         moduleTitleInput = By.xpath(propUIModules.getProperty("input_ModuleTitle"));
         moduleDefinitionSelect = By.xpath(propUIModules.getProperty("select_ModuleDefinition"));
-        includeLegacyModulesChk = By.xpath(propUIModules.getProperty("chk_IncludeLagacyModules"));
+        includeLagacyModulesChk = By.xpath(propUIModules.getProperty("chk_IncludeLagacyModules"));
         regionNameSelect = By.xpath(propUIModules.getProperty("select_RegionName"));
         workflowStateSpan = By.xpath(propUIPageAdmin.getProperty("select_WorkflowState"));
         commentsTxt = By.xpath(propUIPageAdmin.getProperty("txtarea_Comments"));
@@ -53,14 +57,10 @@ public class PressRelease extends AbstractPageObject {
         backBtn = By.xpath(propUIPageAdmin.getProperty("btn_Back"));
         saveAndSubmitBtn = By.xpath(propUIPageAdmin.getProperty("btn_SaveAndSubmit"));
 
-        livePageTitle = By.xpath(propUIModules.getProperty("page_Title"));
-        liveModuleTitleSpan = By.xpath(propUIModules.getProperty("span_LiveModuleTitle"));
-        livePressReleaseModulePageMenuBtn = By.xpath(propUIModules.getProperty("btnMenu_LivePressReleaseModulePage"));
-
         sPathToPageFile = System.getProperty("user.dir") + propUIModules.getProperty("dataPath_Modules");
         sFilePageJson = propUIModules.getProperty("json_PagesProp");
-        sPathToModuleFile = System.getProperty("user.dir") + propUIModulesPressRelease.getProperty("dataPath_PressRelease");
-        sFileModuleJson = propUIModulesPressRelease.getProperty("json_PressReleaseProp");
+        sPathToModuleFile = System.getProperty("user.dir") + propUIModulesFeed.getProperty("dataPath_Feed");
+        sFileModuleJson = propUIModulesFeed.getProperty("json_StockHistoricalProp");
 
         parser = new JSONParser();
     }
@@ -80,9 +80,9 @@ public class PressRelease extends AbstractPageObject {
 
             findElement(addNewModuleBtn).click();
             Thread.sleep(DEFAULT_PAUSE);
-            waitForElement(includeLegacyModulesChk);
+            waitForElement(includeLagacyModulesChk);
 
-            findElement(includeLegacyModulesChk).click();
+            findElement(includeLagacyModulesChk).click();
             Thread.sleep(DEFAULT_PAUSE);
             waitForElement(moduleTitleInput);
 
@@ -170,17 +170,12 @@ public class PressRelease extends AbstractPageObject {
                 //System.out.println(jsonArrProp.get(i).toString());
                 //String prop[] = jsonArrProp.get(i).toString().split(";");
                 //System.out.println(prop[0]);
-                try {
-                    By propertyTextValue = By.xpath("//td[contains(@class, 'DataGridItemBorderLeft')][(text()='" + jsonArrProp.get(i).toString().split(";")[0] + "')]/parent::tr/td/div/input[contains(@id, 'txtStatic')]");
-                    findElement(propertyTextValue).clear();
-                    findElement(propertyTextValue).sendKeys(jsonArrProp.get(i).toString().split(";")[1]);
-                } catch (ElementNotFoundException e) {
-                    By propertyDropdownValue = By.xpath("//td[contains(@class, 'DataGridItemBorderLeft')][(text()='" + jsonArrProp.get(i).toString().split(";")[0] + "')]/parent::tr/td/div/select[contains(@id, 'ddlDynamic')]");
-                    findElement(propertyDropdownValue).sendKeys(jsonArrProp.get(i).toString().split(";")[1]);
-                }
+                By propertyValue = By.xpath("//td[contains(@class, 'DataGridItemBorderLeft')][(text()='"+jsonArrProp.get(i).toString().split(";")[0]+"')]/parent::tr/td/div/input[contains(@id, 'txtStatic')]");
+                findElement(propertyValue).clear();
+                findElement(propertyValue).sendKeys(jsonArrProp.get(i).toString().split(";")[1]);
             }
 
-            findElement(commentsTxt).sendKeys(modulesDataObj.get("comment_module").toString());
+            findElement(commentsTxt).sendKeys(modulesDataObj.get("comment").toString());
             findElement(saveAndSubmitBtn).click();
             Thread.sleep(DEFAULT_PAUSE);
 
@@ -395,6 +390,18 @@ public class PressRelease extends AbstractPageObject {
         }
     }
 
+    public void lookupHistoricalValue(JSONObject module) {
+        By lookupMonthSelect = By.xpath(module.get("module_path").toString() + propUIModulesFeed.getProperty("select_LookupMonth"));
+        By lookupDaySelect = By.xpath(module.get("module_path").toString() + propUIModulesFeed.getProperty("select_LookupDay"));
+        By lookupYearSelect = By.xpath(module.get("module_path").toString() + propUIModulesFeed.getProperty("select_LookupYear"));
+        By lookupBtn = By.xpath(module.get("module_path").toString() + propUIModulesFeed.getProperty("btn_Lookup"));
+
+        findElement(lookupMonthSelect).sendKeys(lookupMonth);
+        findElement(lookupDaySelect).sendKeys(lookupDay);
+        findElement(lookupYearSelect).sendKeys(lookupYear);
+        findElement(lookupBtn).click();
+    }
+
     private String getPageUrl(JSONObject obj, String moduleName) {
         String  sItemID = JsonPath.read(obj, "$.['"+moduleName+"'].url_query.ItemID");
         String  sLanguageId = JsonPath.read(obj, "$.['"+moduleName+"'].url_query.LanguageId");
@@ -408,5 +415,5 @@ public class PressRelease extends AbstractPageObject {
         String  sSectionId = JsonPath.read(obj, "$.['"+moduleName+"'].url_query.SectionId");
         return desktopUrl.toString()+"default.aspx?ItemID="+sItemID+"&LanguageId="+sLanguageId+"&SectionId="+sSectionId;
     }
-}
 
+}
