@@ -6,6 +6,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import pageobjects.AbstractPageObject;
 import pageobjects.PageAdmin.WorkflowState;
@@ -15,6 +16,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 
 import static specs.AbstractSpec.*;
 import static specs.AbstractSpec.desktopUrl;
@@ -26,7 +28,7 @@ import static specs.AbstractSpec.desktopUrl;
 public class ModuleBase extends AbstractPageObject {
     private static By addNewModuleBtn, moduleTitleInput, moduleDefinitionSelect, includeLagacyModulesChk;
     private static By publishBtn, saveBtn, workflowStateSpan, currentContentSpan, propertiesHref;
-    private static By commentsTxt, deleteBtn, saveAndSubmitBtn, regionNameSelect;
+    private static By commentsTxt, deleteBtn, saveAndSubmitBtn, regionNameSelect, previewLnk;
     private static String sPathToPageFile, sFilePageJson, sPathToModuleFile, sFileModuleJson;
     private static JSONParser parser;
 
@@ -46,6 +48,7 @@ public class ModuleBase extends AbstractPageObject {
         commentsTxt = By.xpath(propUIPageAdmin.getProperty("txtarea_Comments"));
         currentContentSpan = By.xpath(propUIPageAdmin.getProperty("span_CurrentContent"));
         propertiesHref = By.xpath(propUIModules.getProperty("href_Properties"));
+        previewLnk = By.xpath(propUIModules.getProperty("lnk_Preview"));
 
         saveBtn = By.xpath(propUIPageAdmin.getProperty("btn_Save"));
         deleteBtn = By.xpath(propUIPageAdmin.getProperty("btn_Delete"));
@@ -316,6 +319,70 @@ public class ModuleBase extends AbstractPageObject {
         }
 
         return null;
+    }
+
+    public String openModulePreview(String moduleName) {
+        try {
+            JSONObject jsonObj = (JSONObject) parser.parse(new FileReader(sPathToModuleFile + sFileModuleJson));
+            String moduleURL = getModuleUrl(jsonObj, moduleName);
+            driver.get(moduleURL);
+
+            findElement(previewLnk).click();
+
+            Thread.sleep(DEFAULT_PAUSE);
+
+            ArrayList<String> tabs = new ArrayList<> (driver.getWindowHandles());
+            driver.switchTo().window(tabs.get(1));
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return driver.getTitle();
+    }
+
+    public String openModuleLiveSite(String moduleName) {
+        try {
+            ((JavascriptExecutor)driver).executeScript("window.open();");
+
+            Thread.sleep(DEFAULT_PAUSE);
+
+            ArrayList<String> tabs = new ArrayList<> (driver.getWindowHandles());
+            driver.switchTo().window(tabs.get(1));
+
+            JSONObject jsonObj = (JSONObject)  parser.parse(new FileReader(sPathToPageFile + sFilePageJson));
+            String moduleURL = JsonPath.read(jsonObj, "$.['"+moduleName+"'].your_page_url");
+            driver.get(moduleURL);
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return driver.getTitle();
+    }
+
+    public void closeWindow() {
+        try {
+            ArrayList<String> tabs = new ArrayList<>(driver.getWindowHandles());
+
+            driver.switchTo().window(tabs.get(1)).close();
+            Thread.sleep(DEFAULT_PAUSE);
+            driver.switchTo().window(tabs.get(0));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private String getPageUrl(JSONObject obj, String moduleName) {
