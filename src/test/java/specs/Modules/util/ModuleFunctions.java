@@ -28,6 +28,7 @@ public class ModuleFunctions {
         String[] data = expected.split(";");
         type = data[0];
         elementPath = data[1];
+        System.out.println(elementPath);
         By element = By.xpath(modulePath+propUIFile.getProperty(elementPath));
 
         switch (type) {
