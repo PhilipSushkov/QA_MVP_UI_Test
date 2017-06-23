@@ -46,7 +46,6 @@
 
     {
       "do_assertions": true,
-      "parent_page": "Feed Modules",
       "module_title": "Stock_Quote/3_5_9/StockQuote2_359_375.aspx_01",
       "module_definition": "Stock_Quote/3_5_9/StockQuote2_359_375.ascx",
       "region_name": "Content Pane",
@@ -92,7 +91,6 @@
 
     {
       "do_assertions": true,
-      "parent_page": "Feed Modules",
       "module_title": "Stock_Quote/4_2_2/StockQuote.aspx_01",
       "module_definition": "Stock_Quote/4_2_2/StockQuote.ascx",
       "region_name": "Content Pane",

@@ -12,13 +12,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 
 import org.openqa.selenium.*;
 import pageobjects.AbstractPageObject;
-import pageobjects.PageAdmin.PageAdminList;
 import pageobjects.PageAdmin.WorkflowState;
-import util.Functions;
 
 import static specs.AbstractSpec.*;
 

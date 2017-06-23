@@ -10,6 +10,7 @@ import org.testng.annotations.*;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.LoginPage.LoginPage;
 import pageobjects.Modules.Feed.StockChart;
+import pageobjects.Modules.ModuleBase;
 import pageobjects.Modules.PageForModules;
 import pageobjects.PageAdmin.WorkflowState;
 import specs.AbstractSpec;
@@ -22,17 +23,19 @@ import java.util.ArrayList;
 /**
  * Created by zacharyk on 2017-06-21.
  */
+
 public class CheckStockChart extends AbstractSpec {
     private static By pageAdminMenuButton;
     private static LoginPage loginPage;
     private static Dashboard dashboard;
     private static PageForModules pageForModules;
     private static StockChart stockChart;
+    private static ModuleBase moduleBase;
 
-    private static String sPathToFile, sDataFileJson;
+    private static String sPathToFile, sDataFileJson, sPathToModuleFile, sFileModuleJson;
     private static JSONParser parser;
 
-    private final String MODULE_DATA="moduleData", MODULE_NAME="stock_chart";
+    private final String PAGE_DATA="pageData", PAGE_NAME="feed_modules", MODULE_DATA="moduleData", MODULE_NAME="stock_chart";
 
     @BeforeTest
     public void setUp() throws Exception {
@@ -46,6 +49,11 @@ public class CheckStockChart extends AbstractSpec {
         sPathToFile = System.getProperty("user.dir") + propUIModulesFeed.getProperty("dataPath_Feed");
         sDataFileJson = propUIModulesFeed.getProperty("json_StockChartData");
 
+        sPathToModuleFile = System.getProperty("user.dir") + propUIModulesFeed.getProperty("dataPath_Feed");
+        sFileModuleJson = propUIModulesFeed.getProperty("json_StockChartProp");
+
+        moduleBase = new ModuleBase(driver, sPathToModuleFile, sFileModuleJson);
+
         parser = new JSONParser();
 
         loginPage.loginUser();
@@ -56,34 +64,34 @@ public class CheckStockChart extends AbstractSpec {
         dashboard.openPageFromCommonTasks(pageAdminMenuButton);
     }
 
-    @Test(dataProvider=MODULE_DATA, priority=1, enabled=true)
-    public void createStockChart2Page(JSONObject module) throws InterruptedException {
-        Assert.assertEquals(pageForModules.savePage(module, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+MODULE_NAME+" Page didn't save properly");
-        Assert.assertEquals(pageForModules.saveAndSubmitPage(module, MODULE_NAME), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New "+MODULE_NAME+" Page properly");
+    @Test(dataProvider=PAGE_DATA, priority=1, enabled=true)
+    public void createStockChartPage(JSONObject page) throws InterruptedException {
+        Assert.assertEquals(pageForModules.savePage(page, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+MODULE_NAME+" Page didn't save properly");
+        Assert.assertEquals(pageForModules.saveAndSubmitPage(page, MODULE_NAME), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New "+MODULE_NAME+" Page properly");
         Assert.assertEquals(pageForModules.publishPage(MODULE_NAME), WorkflowState.LIVE.state(), "Couldn't publish New "+MODULE_NAME+" Page properly");
     }
 
     @Test(dataProvider=MODULE_DATA, priority=2, enabled=true)
-    public void createStockChart2Module(JSONObject module) throws InterruptedException {
+    public void createStockChartModule(JSONObject module) throws InterruptedException {
         String sModuleNameSet = module.get("module_title").toString();
-        Assert.assertEquals(stockChart.saveModule(module, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+sModuleNameSet+" Module didn't save properly");
-        Assert.assertEquals(stockChart.saveAndSubmitModule(module, sModuleNameSet), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New "+sModuleNameSet+" Module properly");
-        Assert.assertEquals(stockChart.publishModule(sModuleNameSet), WorkflowState.LIVE.state(), "Couldn't publish New "+sModuleNameSet+" Module properly");
+        Assert.assertEquals(moduleBase.saveModule(module, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+sModuleNameSet+" Module didn't save properly");
+        Assert.assertEquals(moduleBase.saveAndSubmitModule(module, sModuleNameSet), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New "+sModuleNameSet+" Module properly");
+        Assert.assertEquals(moduleBase.publishModule(sModuleNameSet), WorkflowState.LIVE.state(), "Couldn't publish New "+sModuleNameSet+" Module properly");
     }
 
     // No properties testing; this module is 3rd-party and is not being provided to new clients
 
     @Test(dataProvider=MODULE_DATA, priority=5, enabled=true)
-    public void removeStockChart2Module(JSONObject module) throws Exception {
+    public void removeStockChartModule(JSONObject module) throws Exception {
         String sModuleNameSet = module.get("module_title").toString();
-        Assert.assertEquals(stockChart.setupAsDeletedModule(sModuleNameSet), WorkflowState.DELETE_PENDING.state(), "New "+sModuleNameSet+" Module didn't setup as Deleted properly");
-        Assert.assertEquals(stockChart.removeModule(module, sModuleNameSet), WorkflowState.NEW_ITEM.state(), "Couldn't remove "+sModuleNameSet+" Module. Something went wrong.");
+        Assert.assertEquals(moduleBase.setupAsDeletedModule(sModuleNameSet), WorkflowState.DELETE_PENDING.state(), "New "+sModuleNameSet+" Module didn't setup as Deleted properly");
+        Assert.assertEquals(moduleBase.removeModule(module, sModuleNameSet), WorkflowState.NEW_ITEM.state(), "Couldn't remove "+sModuleNameSet+" Module. Something went wrong.");
     }
 
-    @Test(dataProvider=MODULE_DATA, priority=6, enabled=false)
-    public void removeStockChart2Page(JSONObject module) throws Exception {
+    @Test(dataProvider=PAGE_DATA, priority=6, enabled=true)
+    public void removeStockChartPage(JSONObject page) throws Exception {
         Assert.assertEquals(pageForModules.setupAsDeletedPage(MODULE_NAME), WorkflowState.DELETE_PENDING.state(), "New "+MODULE_NAME+" Page didn't setup as Deleted properly");
-        Assert.assertEquals(pageForModules.removePage(module, MODULE_NAME), WorkflowState.NEW_ITEM.state(), "Couldn't remove "+MODULE_NAME+" Page. Something went wrong.");
+        Assert.assertEquals(pageForModules.removePage(page, MODULE_NAME), WorkflowState.NEW_ITEM.state(), "Couldn't remove "+MODULE_NAME+" Page. Something went wrong.");
     }
 
     @DataProvider
@@ -91,7 +99,40 @@ public class CheckStockChart extends AbstractSpec {
 
         try {
             JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFileJson));
-            JSONArray pageData = (JSONArray) jsonObject.get(MODULE_NAME);
+            JSONArray moduleData = (JSONArray) jsonObject.get(MODULE_NAME);
+            ArrayList<Object> zoom = new ArrayList();
+
+            for (int i = 0; i < moduleData.size(); i++) {
+                JSONObject moduleObj = (JSONObject) moduleData.get(i);
+                if (Boolean.parseBoolean(moduleObj.get("do_assertions").toString())) {
+                    zoom.add(moduleData.get(i));
+                }
+            }
+
+            Object[][] newModules = new Object[zoom.size()][1];
+            for (int i = 0; i < zoom.size(); i++) {
+                newModules[i][0] = zoom.get(i);
+            }
+
+            return newModules;
+
+        }  catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    @DataProvider
+    public Object[][] pageData() {
+
+        try {
+            JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFileJson));
+            JSONArray pageData = (JSONArray) jsonObject.get(PAGE_NAME);
             ArrayList<Object> zoom = new ArrayList();
 
             for (int i = 0; i < pageData.size(); i++) {

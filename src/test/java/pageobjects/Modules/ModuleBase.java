@@ -1,4 +1,4 @@
-package pageobjects.Modules.Feed;
+package pageobjects.Modules;
 
 import com.jayway.jsonpath.JsonPath;
 import org.json.simple.JSONArray;
@@ -6,7 +6,6 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import pageobjects.AbstractPageObject;
 import pageobjects.PageAdmin.WorkflowState;
@@ -16,7 +15,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 
 import static specs.AbstractSpec.*;
 import static specs.AbstractSpec.desktopUrl;
@@ -24,43 +22,38 @@ import static specs.AbstractSpec.desktopUrl;
 /**
  * Created by zacharyk on 2017-06-21.
  */
-public class StockSplit extends AbstractPageObject {
-    private static By addNewModuleBtn, backBtn, moduleTitleInput, moduleDefinitionSelect, includeLegacyModulesChk;
-    private static By publishBtn, saveBtn, workflowStateSpan, currentContentSpan, propertiesHref, previewLnk;
+
+public class ModuleBase extends AbstractPageObject {
+    private static By addNewModuleBtn, moduleTitleInput, moduleDefinitionSelect, includeLagacyModulesChk;
+    private static By publishBtn, saveBtn, workflowStateSpan, currentContentSpan, propertiesHref;
     private static By commentsTxt, deleteBtn, saveAndSubmitBtn, regionNameSelect;
-    private static By livePageTitle, liveModuleTitleSpan, liveFeedModulePageMenuBtn;
     private static String sPathToPageFile, sFilePageJson, sPathToModuleFile, sFileModuleJson;
     private static JSONParser parser;
+
     private static final long DEFAULT_PAUSE = 2500;
 
-    public StockSplit(WebDriver driver) {
+    public ModuleBase(WebDriver driver, String sPathToSection, String sPathToModuleProp) {
         super(driver);
+        this.sPathToModuleFile = sPathToSection;
+        this.sFileModuleJson = sPathToModuleProp;
 
         addNewModuleBtn = By.xpath(propUIModules.getProperty("btn_AddNewModule"));
         moduleTitleInput = By.xpath(propUIModules.getProperty("input_ModuleTitle"));
         moduleDefinitionSelect = By.xpath(propUIModules.getProperty("select_ModuleDefinition"));
-        includeLegacyModulesChk = By.xpath(propUIModules.getProperty("chk_IncludeLagacyModules"));
+        includeLagacyModulesChk = By.xpath(propUIModules.getProperty("chk_IncludeLagacyModules"));
         regionNameSelect = By.xpath(propUIModules.getProperty("select_RegionName"));
         workflowStateSpan = By.xpath(propUIPageAdmin.getProperty("select_WorkflowState"));
         commentsTxt = By.xpath(propUIPageAdmin.getProperty("txtarea_Comments"));
         currentContentSpan = By.xpath(propUIPageAdmin.getProperty("span_CurrentContent"));
         propertiesHref = By.xpath(propUIModules.getProperty("href_Properties"));
-        previewLnk = By.xpath(propUIModules.getProperty("lnk_Preview"));
 
         saveBtn = By.xpath(propUIPageAdmin.getProperty("btn_Save"));
         deleteBtn = By.xpath(propUIPageAdmin.getProperty("btn_Delete"));
         publishBtn = By.xpath(propUIPageAdmin.getProperty("btn_Publish"));
-        backBtn = By.xpath(propUIPageAdmin.getProperty("btn_Back"));
         saveAndSubmitBtn = By.xpath(propUIPageAdmin.getProperty("btn_SaveAndSubmit"));
-
-        livePageTitle = By.xpath(propUIModules.getProperty("page_Title"));
-        liveModuleTitleSpan = By.xpath(propUIModules.getProperty("span_LiveModuleTitle"));
-        liveFeedModulePageMenuBtn = By.xpath(propUIModules.getProperty("btnMenu_LiveFeedModulePage"));
 
         sPathToPageFile = System.getProperty("user.dir") + propUIModules.getProperty("dataPath_Modules");
         sFilePageJson = propUIModules.getProperty("json_PagesProp");
-        sPathToModuleFile = System.getProperty("user.dir") + propUIModulesFeed.getProperty("dataPath_Feed");
-        sFileModuleJson = propUIModulesFeed.getProperty("json_StockSplitProp");
 
         parser = new JSONParser();
     }
@@ -80,9 +73,9 @@ public class StockSplit extends AbstractPageObject {
 
             findElement(addNewModuleBtn).click();
             Thread.sleep(DEFAULT_PAUSE);
-            waitForElement(includeLegacyModulesChk);
+            waitForElement(includeLagacyModulesChk);
 
-            findElement(includeLegacyModulesChk).click();
+            findElement(includeLagacyModulesChk).click();
             Thread.sleep(DEFAULT_PAUSE);
             waitForElement(moduleTitleInput);
 
@@ -170,14 +163,9 @@ public class StockSplit extends AbstractPageObject {
                 //System.out.println(jsonArrProp.get(i).toString());
                 //String prop[] = jsonArrProp.get(i).toString().split(";");
                 //System.out.println(prop[0]);
-                try {
-                    By propertyTextValue = By.xpath("//td[contains(@class, 'DataGridItemBorderLeft')][(text()='" + jsonArrProp.get(i).toString().split(";")[0] + "')]/parent::tr/td/div/input[contains(@id, 'txtStatic')]");
-                    findElement(propertyTextValue).clear();
-                    findElement(propertyTextValue).sendKeys(jsonArrProp.get(i).toString().split(";")[1]);
-                } catch (ElementNotFoundException e) {
-                    By propertyDropdownValue = By.xpath("//td[contains(@class, 'DataGridItemBorderLeft')][(text()='" + jsonArrProp.get(i).toString().split(";")[0] + "')]/parent::tr/td/div/select[contains(@id, 'ddlDynamic')]");
-                    findElement(propertyDropdownValue).sendKeys(jsonArrProp.get(i).toString().split(";")[1]);
-                }
+                By propertyValue = By.xpath("//td[contains(@class, 'DataGridItemBorderLeft')][(text()='"+jsonArrProp.get(i).toString().split(";")[0]+"')]/parent::tr/td/div/input[contains(@id, 'txtStatic')]");
+                findElement(propertyValue).clear();
+                findElement(propertyValue).sendKeys(jsonArrProp.get(i).toString().split(";")[1]);
             }
 
             findElement(commentsTxt).sendKeys(modulesDataObj.get("comment").toString());
@@ -204,8 +192,7 @@ public class StockSplit extends AbstractPageObject {
             e.printStackTrace();
         }
 
-
-        return "For Approval";
+        return null;
     }
 
     public String publishModule(String moduleName) throws InterruptedException {
@@ -329,70 +316,6 @@ public class StockSplit extends AbstractPageObject {
         }
 
         return null;
-    }
-
-    public String openModulePreview(String moduleName) {
-        try {
-            JSONObject jsonObj = (JSONObject) parser.parse(new FileReader(sPathToModuleFile + sFileModuleJson));
-            String moduleURL = getModuleUrl(jsonObj, moduleName);
-            driver.get(moduleURL);
-
-            findElement(previewLnk).click();
-
-            Thread.sleep(DEFAULT_PAUSE);
-
-            ArrayList<String> tabs = new ArrayList<> (driver.getWindowHandles());
-            driver.switchTo().window(tabs.get(1));
-
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        return driver.getTitle();
-    }
-
-    public String openModuleLiveSite(String moduleName) {
-        try {
-            ((JavascriptExecutor)driver).executeScript("window.open();");
-
-            Thread.sleep(DEFAULT_PAUSE);
-
-            ArrayList<String> tabs = new ArrayList<> (driver.getWindowHandles());
-            driver.switchTo().window(tabs.get(1));
-
-            JSONObject jsonObj = (JSONObject)  parser.parse(new FileReader(sPathToPageFile + sFilePageJson));
-            String moduleURL = JsonPath.read(jsonObj, "$.['"+moduleName+"'].your_page_url");
-            driver.get(moduleURL);
-
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        return driver.getTitle();
-    }
-
-    public void closeWindow() {
-        try {
-            ArrayList<String> tabs = new ArrayList<>(driver.getWindowHandles());
-
-            driver.switchTo().window(tabs.get(1)).close();
-            Thread.sleep(DEFAULT_PAUSE);
-            driver.switchTo().window(tabs.get(0));
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     private String getPageUrl(JSONObject obj, String moduleName) {
