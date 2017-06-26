@@ -9,6 +9,7 @@ import org.testng.Assert;
 import org.testng.annotations.*;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.LoginPage.LoginPage;
+import pageobjects.Modules.ModuleBase;
 import pageobjects.Modules.PressRelease.PressReleaseLatest;
 import pageobjects.Modules.PageForModules;
 import pageobjects.PageAdmin.WorkflowState;
@@ -23,17 +24,19 @@ import java.util.ArrayList;
 /**
  * Created by dannyl on 2017-06-22.
  */
+
 public class CheckPressReleaseLatest extends AbstractSpec{
     private static By pageAdminMenuButton;
     private static LoginPage loginPage;
     private static Dashboard dashboard;
     private static PageForModules pageForModules;
     private static PressReleaseLatest pressReleaseLatest;
+    private static ModuleBase moduleBase;
 
     private static String sPathToFile, sDataFileJson, sPathToModuleFile, sFileModuleJson;
     private static JSONParser parser;
 
-    private final String MODULE_DATA="moduleData", MODULE_NAME="press_release_latest";
+    private final String PAGE_DATA="pageData", PAGE_NAME="press_release_modules", MODULE_DATA="moduleData", MODULE_NAME="press_release_latest";
 
 
 
@@ -51,6 +54,8 @@ public class CheckPressReleaseLatest extends AbstractSpec{
         sPathToModuleFile = System.getProperty("user.dir") + propUIModulesPressRelease.getProperty("dataPath_PressRelease");
         sFileModuleJson = propUIModulesPressRelease.getProperty("json_pressReleaseLatestProp");
 
+        moduleBase = new ModuleBase(driver, sPathToModuleFile, sFileModuleJson);
+
         parser = new JSONParser();
 
         loginPage.loginUser();
@@ -62,19 +67,19 @@ public class CheckPressReleaseLatest extends AbstractSpec{
         dashboard.openPageFromCommonTasks(pageAdminMenuButton);
     }
 
-    @Test(dataProvider=MODULE_DATA, priority=1, enabled=false)
-    public void createPressReleaseLatestPage(JSONObject module) throws InterruptedException {
-        Assert.assertEquals(pageForModules.savePage(module, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+MODULE_NAME+" Page didn't save properly");
-        Assert.assertEquals(pageForModules.saveAndSubmitPage(module, MODULE_NAME), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New "+MODULE_NAME+" Page properly");
+    @Test(dataProvider=PAGE_DATA, priority=1, enabled=true)
+    public void createPressReleaseLatestPage(JSONObject page) throws InterruptedException {
+        Assert.assertEquals(pageForModules.savePage(page, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+MODULE_NAME+" Page didn't save properly");
+        Assert.assertEquals(pageForModules.saveAndSubmitPage(page, MODULE_NAME), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New "+MODULE_NAME+" Page properly");
         Assert.assertEquals(pageForModules.publishPage(MODULE_NAME), WorkflowState.LIVE.state(), "Couldn't publish New "+MODULE_NAME+" Page properly");
     }
 
-    @Test(dataProvider=MODULE_DATA, priority=2, enabled=false)
+    @Test(dataProvider=MODULE_DATA, priority=2, enabled=true)
     public void createPressReleaseLatestModule(JSONObject module) throws InterruptedException {
         String sModuleNameSet = module.get("module_title").toString();
-        Assert.assertEquals(pressReleaseLatest.saveModule(module, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+sModuleNameSet+" Module didn't save properly");
+        Assert.assertEquals(moduleBase.saveModule(module, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+sModuleNameSet+" Module didn't save properly");
         Assert.assertEquals(pressReleaseLatest.saveAndSubmitModule(module, sModuleNameSet), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New "+sModuleNameSet+" Module properly");
-        Assert.assertEquals(pressReleaseLatest.publishModule(sModuleNameSet), WorkflowState.LIVE.state(), "Couldn't publish New "+sModuleNameSet+" Module properly");
+        Assert.assertEquals(moduleBase.publishModule(sModuleNameSet), WorkflowState.LIVE.state(), "Couldn't publish New "+sModuleNameSet+" Module properly");
     }
 
     @Test(dataProvider=MODULE_DATA, priority=3, enabled=true)
@@ -82,7 +87,7 @@ public class CheckPressReleaseLatest extends AbstractSpec{
 
         try {
             String sModuleNameSet = module.get("module_title").toString();
-            Assert.assertTrue(pressReleaseLatest.openModulePreview(sModuleNameSet).contains(MODULE_NAME),"Did not open correct page");
+            Assert.assertTrue(moduleBase.openModulePreview(sModuleNameSet).contains(MODULE_NAME),"Did not open correct page");
 
             JSONArray expectedResults = (JSONArray) module.get("expected");
             for (Object expected : expectedResults) {
@@ -91,7 +96,7 @@ public class CheckPressReleaseLatest extends AbstractSpec{
                         "Did not find correct " + sExpected.split(";")[0] + " at item " + sExpected.split(";")[1]);
             }
         } finally {
-            pressReleaseLatest.closeWindow();
+            moduleBase.closeWindow();
         }
     }
 
@@ -99,7 +104,7 @@ public class CheckPressReleaseLatest extends AbstractSpec{
     public void checkPressReleaseLatestLive(JSONObject module) throws InterruptedException {
 
         try {
-            Assert.assertTrue(pressReleaseLatest.openModuleLiveSite(MODULE_NAME).contains(MODULE_NAME),"Did not open correct page");
+            Assert.assertTrue(moduleBase.openModuleLiveSite(MODULE_NAME).contains(MODULE_NAME),"Did not open correct page");
 
             JSONArray expectedResults = (JSONArray) module.get("expected");
             for (Object expected : expectedResults) {
@@ -108,21 +113,21 @@ public class CheckPressReleaseLatest extends AbstractSpec{
                         "Did not find correct " + sExpected.split(";")[0] + " at item " + sExpected.split(";")[1]);
             }
         } finally {
-            pressReleaseLatest.closeWindow();
+            moduleBase.closeWindow();
         }
     }
 
-    @Test(dataProvider=MODULE_DATA, priority=5, enabled=false)
+    @Test(dataProvider=MODULE_DATA, priority=5, enabled=true)
     public void removePressReleaseLatestModule(JSONObject module) throws Exception {
         String sModuleNameSet = module.get("module_title").toString();
-        Assert.assertEquals(pressReleaseLatest.setupAsDeletedModule(sModuleNameSet), WorkflowState.DELETE_PENDING.state(), "New "+sModuleNameSet+" Module didn't setup as Deleted properly");
-        Assert.assertEquals(pressReleaseLatest.removeModule(module, sModuleNameSet), WorkflowState.NEW_ITEM.state(), "Couldn't remove "+sModuleNameSet+" Module. Something went wrong.");
+        Assert.assertEquals(moduleBase.setupAsDeletedModule(sModuleNameSet), WorkflowState.DELETE_PENDING.state(), "New "+sModuleNameSet+" Module didn't setup as Deleted properly");
+        Assert.assertEquals(moduleBase.removeModule(module, sModuleNameSet), WorkflowState.NEW_ITEM.state(), "Couldn't remove "+sModuleNameSet+" Module. Something went wrong.");
     }
 
-    @Test(dataProvider=MODULE_DATA, priority=6, enabled=false)
-    public void removePressReleaseLatestPage(JSONObject module) throws Exception {
+    @Test(dataProvider=PAGE_DATA, priority=6, enabled=true)
+    public void removePressReleaseLatestPage(JSONObject page) throws Exception {
         Assert.assertEquals(pageForModules.setupAsDeletedPage(MODULE_NAME), WorkflowState.DELETE_PENDING.state(), "New "+MODULE_NAME+" Page didn't setup as Deleted properly");
-        Assert.assertEquals(pageForModules.removePage(module, MODULE_NAME), WorkflowState.NEW_ITEM.state(), "Couldn't remove "+MODULE_NAME+" Page. Something went wrong.");
+        Assert.assertEquals(pageForModules.removePage(page, MODULE_NAME), WorkflowState.NEW_ITEM.state(), "Couldn't remove "+MODULE_NAME+" Page. Something went wrong.");
     }
 
     @DataProvider
@@ -130,7 +135,40 @@ public class CheckPressReleaseLatest extends AbstractSpec{
 
         try {
             JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFileJson));
-            JSONArray pageData = (JSONArray) jsonObject.get(MODULE_NAME);
+            JSONArray moduleData = (JSONArray) jsonObject.get(MODULE_NAME);
+            ArrayList<Object> zoom = new ArrayList();
+
+            for (int i = 0; i < moduleData.size(); i++) {
+                JSONObject moduleObj = (JSONObject) moduleData.get(i);
+                if (Boolean.parseBoolean(moduleObj.get("do_assertions").toString())) {
+                    zoom.add(moduleData.get(i));
+                }
+            }
+
+            Object[][] newModules = new Object[zoom.size()][1];
+            for (int i = 0; i < zoom.size(); i++) {
+                newModules[i][0] = zoom.get(i);
+            }
+
+            return newModules;
+
+        }  catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    @DataProvider
+    public Object[][] pageData() {
+
+        try {
+            JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFileJson));
+            JSONArray pageData = (JSONArray) jsonObject.get(PAGE_NAME);
             ArrayList<Object> zoom = new ArrayList();
 
             for (int i = 0; i < pageData.size(); i++) {
