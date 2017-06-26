@@ -8,7 +8,9 @@ import org.json.simple.parser.ParseException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.Select;
 import pageobjects.AbstractPageObject;
+import pageobjects.Dashboard.Dashboard;
 import pageobjects.PageAdmin.WorkflowState;
 
 import java.io.FileNotFoundException;
@@ -62,7 +64,7 @@ public class ModuleBase extends AbstractPageObject {
     }
 
     public String saveModule(JSONObject modulesDataObj, String moduleName) throws InterruptedException {
-        String module_title, module_definition, region_name;
+        String module_title, module_definition, region_name, source_file;
 
         try {
 
@@ -84,11 +86,28 @@ public class ModuleBase extends AbstractPageObject {
 
             JSONObject module = new JSONObject();
 
+            module_definition = modulesDataObj.get("module_definition").toString();
+            source_file = modulesDataObj.get("source_file").toString();
+            Boolean moduleDefinitionExists = checkModuleDefinitionExists(module_definition);
+
+            if (!moduleDefinitionExists) {
+                try {
+                    String moduleDefinitionState = addModuleDefinition(module_definition, source_file);
+                    if (moduleDefinitionState.equals("Live")) {
+                        driver.navigate().refresh();
+                        Thread.sleep(DEFAULT_PAUSE);
+                        waitForElement(commentsTxt);
+                    } else {
+                        return null;
+                    }
+                } catch (Exception e) {
+                    return null;
+                }
+            }
+
             module_title = modulesDataObj.get("module_title").toString();
             findElement(moduleTitleInput).sendKeys(module_title);
-            module.put("module_title", module_title);
 
-            module_definition = modulesDataObj.get("module_definition").toString();
             findElement(moduleDefinitionSelect).sendKeys(module_definition);
             module.put("module_definition", module_definition);
 
@@ -397,5 +416,63 @@ public class ModuleBase extends AbstractPageObject {
         String  sLanguageId = JsonPath.read(obj, "$.['"+moduleName+"'].url_query.LanguageId");
         String  sSectionId = JsonPath.read(obj, "$.['"+moduleName+"'].url_query.SectionId");
         return desktopUrl.toString()+"default.aspx?ItemID="+sItemID+"&LanguageId="+sLanguageId+"&SectionId="+sSectionId;
+    }
+
+    private boolean checkModuleDefinitionExists(String sModuleDefinition) {
+        Select select = new Select(findElement(moduleDefinitionSelect));
+        for (int i=0; i < select.getOptions().size(); i++) {
+            //System.out.println(select.getOptions().get(i).getAttribute("text").toString() + " - " + sModuleDefinition);
+            if (select.getOptions().get(i).getAttribute("text").toString().trim().equals(sModuleDefinition)) {
+
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private String addModuleDefinition(String friendly_name, String source_file) throws Exception {
+        ((JavascriptExecutor)driver).executeScript("window.open();");
+        Thread.sleep(DEFAULT_PAUSE);
+
+        ArrayList<String> tabs = new ArrayList<> (driver.getWindowHandles());
+        driver.switchTo().window(tabs.get(1));
+
+        driver.get(desktopUrl.toString());
+
+        Dashboard dashboard = new Dashboard(driver);
+        By siteAdminMenuButton = By.xpath(propUISiteAdmin.getProperty("btnMenu_SiteAdmin"));
+        By moduleDefinitionListMenuItem = By.xpath(propUISiteAdmin.getProperty("itemMenu_ModuleDefinitionList"));
+        dashboard.openPageFromMenu(siteAdminMenuButton, moduleDefinitionListMenuItem);
+
+        By addNewLink = By.xpath(propUISiteAdmin.getProperty("input_AddNew"));
+        waitForElement(addNewLink);
+        findElement(addNewLink).click();
+        waitForElement(saveAndSubmitBtn);
+
+        URL pageURL = new URL(getUrl());
+        By friendlyNameField = By.xpath(propUISiteAdmin.getProperty("input_FriendlyName"));
+        By sourceFileField = By.xpath(propUISiteAdmin.getProperty("input_SourceFile"));
+        By useDefaultRb = By.xpath(propUISiteAdmin.getProperty("rb_UseDefault"));
+        findElement(friendlyNameField).sendKeys(friendly_name);
+        findElement(sourceFileField).sendKeys(source_file);
+        findElement(useDefaultRb).click();
+        findElement(commentsTxt).sendKeys("Adding a new Module Definition: " + friendly_name);
+        findElement(saveAndSubmitBtn).click();
+
+        driver.get(pageURL.toString());
+        waitForElement(publishBtn);
+
+        findElement(commentsTxt).sendKeys("Publish a new Module Definition: " + friendly_name);
+        findElement(publishBtn).click();
+        Thread.sleep(DEFAULT_PAUSE);
+
+        driver.get(pageURL.toString());
+        String state = findElement(workflowStateSpan).getText();
+
+        driver.switchTo().window(tabs.get(1)).close();
+        Thread.sleep(DEFAULT_PAUSE);
+        driver.switchTo().window(tabs.get(0));
+
+        return state;
     }
 }
