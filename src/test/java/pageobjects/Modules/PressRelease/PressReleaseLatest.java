@@ -1,12 +1,13 @@
-package pageobjects.Modules.Feed;
+package pageobjects.Modules.PressRelease;
 
 import com.jayway.jsonpath.JsonPath;
-import org.apache.xpath.operations.Bool;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
 import pageobjects.AbstractPageObject;
 import pageobjects.PageAdmin.WorkflowState;
 
@@ -21,18 +22,19 @@ import static specs.AbstractSpec.*;
 import static specs.AbstractSpec.desktopUrl;
 
 /**
- * Created by zacharyk on 2017-06-19.
+ * Created by dannyl on 2017-06-22.
  */
-public class StockQuoteHeader extends AbstractPageObject {
+
+public class PressReleaseLatest extends AbstractPageObject {
     private static By addNewModuleBtn, backBtn, moduleTitleInput, moduleDefinitionSelect, includeLegacyModulesChk;
     private static By publishBtn, saveBtn, workflowStateSpan, currentContentSpan, propertiesHref, previewLnk;
     private static By commentsTxt, deleteBtn, saveAndSubmitBtn, regionNameSelect;
-    private static By livePageTitle, liveModuleTitleSpan, liveFeedModulePageMenuBtn;
     private static String sPathToPageFile, sFilePageJson, sPathToModuleFile, sFileModuleJson;
     private static JSONParser parser;
+
     private static final long DEFAULT_PAUSE = 2500;
 
-    public StockQuoteHeader(WebDriver driver) {
+    public PressReleaseLatest(WebDriver driver) {
         super(driver);
 
         addNewModuleBtn = By.xpath(propUIModules.getProperty("btn_AddNewModule"));
@@ -52,18 +54,13 @@ public class StockQuoteHeader extends AbstractPageObject {
         backBtn = By.xpath(propUIPageAdmin.getProperty("btn_Back"));
         saveAndSubmitBtn = By.xpath(propUIPageAdmin.getProperty("btn_SaveAndSubmit"));
 
-        livePageTitle = By.xpath(propUIModules.getProperty("page_Title"));
-        liveModuleTitleSpan = By.xpath(propUIModules.getProperty("span_LiveModuleTitle"));
-        liveFeedModulePageMenuBtn = By.xpath(propUIModules.getProperty("btnMenu_LiveFeedModulePage"));
-
         sPathToPageFile = System.getProperty("user.dir") + propUIModules.getProperty("dataPath_Modules");
         sFilePageJson = propUIModules.getProperty("json_PagesProp");
-        sPathToModuleFile = System.getProperty("user.dir") + propUIModulesFeed.getProperty("dataPath_Feed");
-        sFileModuleJson = propUIModulesFeed.getProperty("json_StockQuoteHeaderProp");
+        sPathToModuleFile = System.getProperty("user.dir") + propUIModulesPressRelease.getProperty("dataPath_PressRelease");
+        sFileModuleJson = propUIModulesPressRelease.getProperty("json_pressReleaseLatestProp");
 
         parser = new JSONParser();
     }
-
 
     public String saveAndSubmitModule(JSONObject modulesDataObj, String moduleName) throws InterruptedException {
 
@@ -82,7 +79,7 @@ public class StockQuoteHeader extends AbstractPageObject {
             findElement(propertiesHref).click();
             Thread.sleep(DEFAULT_PAUSE);
 
-            for (int i=0; i<jsonArrProp.size(); i++) {
+            for (int i = 0; i < jsonArrProp.size(); i++) {
                 try {
                     By propertyTextValue = By.xpath("//td[contains(@class, 'DataGridItemBorderLeft')][(text()='" + jsonArrProp.get(i).toString().split(";")[0] + "')]/parent::tr/td/div/input[contains(@id, 'txtStatic')]");
                     findElement(propertyTextValue).clear();
@@ -109,7 +106,7 @@ public class StockQuoteHeader extends AbstractPageObject {
             file.write(jsonObj.toJSONString().replace("\\", ""));
             file.flush();
 
-            System.out.println(moduleName+ ": New "+moduleName+" has been submitted");
+            System.out.println(moduleName + ": New " + moduleName + " has been submitted");
             return findElement(workflowStateSpan).getText();
         } catch (IOException e) {
             e.printStackTrace();
@@ -121,16 +118,16 @@ public class StockQuoteHeader extends AbstractPageObject {
     }
 
     private String getPageUrl(JSONObject obj, String moduleName) {
-        String  sItemID = JsonPath.read(obj, "$.['"+moduleName+"'].url_query.ItemID");
-        String  sLanguageId = JsonPath.read(obj, "$.['"+moduleName+"'].url_query.LanguageId");
-        String  sSectionId = JsonPath.read(obj, "$.['"+moduleName+"'].url_query.SectionId");
-        return desktopUrl.toString()+"default.aspx?ItemID="+sItemID+"&LanguageId="+sLanguageId+"&SectionId="+sSectionId;
+        String sItemID = JsonPath.read(obj, "$.['" + moduleName + "'].url_query.ItemID");
+        String sLanguageId = JsonPath.read(obj, "$.['" + moduleName + "'].url_query.LanguageId");
+        String sSectionId = JsonPath.read(obj, "$.['" + moduleName + "'].url_query.SectionId");
+        return desktopUrl.toString() + "default.aspx?ItemID=" + sItemID + "&LanguageId=" + sLanguageId + "&SectionId=" + sSectionId;
     }
 
     private String getModuleUrl(JSONObject obj, String moduleName) {
-        String  sItemID = JsonPath.read(obj, "$.['"+moduleName+"'].url_query.ItemId");
-        String  sLanguageId = JsonPath.read(obj, "$.['"+moduleName+"'].url_query.LanguageId");
-        String  sSectionId = JsonPath.read(obj, "$.['"+moduleName+"'].url_query.SectionId");
-        return desktopUrl.toString()+"default.aspx?ItemID="+sItemID+"&LanguageId="+sLanguageId+"&SectionId="+sSectionId;
+        String sItemID = JsonPath.read(obj, "$.['" + moduleName + "'].url_query.ItemId");
+        String sLanguageId = JsonPath.read(obj, "$.['" + moduleName + "'].url_query.LanguageId");
+        String sSectionId = JsonPath.read(obj, "$.['" + moduleName + "'].url_query.SectionId");
+        return desktopUrl.toString() + "default.aspx?ItemID=" + sItemID + "&LanguageId=" + sLanguageId + "&SectionId=" + sSectionId;
     }
 }
