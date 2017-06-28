@@ -427,16 +427,15 @@ public class EventWebcastEdit extends AbstractPageObject {
         //wait.until(ExpectedConditions.visibilityOf(findElement(yourPageUrlLabel)));
         waitForElement(yourPageUrlLabel);
 
-
         findElement(startDateInput).sendKeys(date);
         findElement(endDateInput).sendKeys(tomorrow);
-        findElements(startTimeHHSelect).get(0).sendKeys(hour);
-        findElements(endTimeHHSelect).get(1).sendKeys(hour);
-        findElements(startTimeMMSelect).get(0).sendKeys(minute);
-        findElements(endTimeMMSelect).get(1).sendKeys(minute);
+        findElement(startTimeHHSelect).sendKeys(hour);
+        findElement(endTimeHHSelect).sendKeys(hour);
+        findElement(startTimeMMSelect).sendKeys(minute);
+        findElement(endTimeMMSelect).sendKeys(minute);
         findElement(startTimeZoneSelect).sendKeys(timeZone);
-        findElements(startTimeAMSelect).get(0).sendKeys(AMPM);
-        findElements(endTimeAMSelect).get(1).sendKeys(AMPM);
+        findElement(startTimeAMSelect).sendKeys(AMPM);
+        findElement(endTimeAMSelect).sendKeys(AMPM);
         findElement(titleInput).sendKeys(headline);
         findElement(tagsInput).sendKeys(tags);
         findElement(locationInput).sendKeys(location);

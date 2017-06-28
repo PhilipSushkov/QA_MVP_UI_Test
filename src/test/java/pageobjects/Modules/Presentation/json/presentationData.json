@@ -69,7 +69,7 @@
     },
 
     {
-      "do_assertions": true,
+      "do_assertions": false,
       "module_title": "Presentation/Presentation.aspx_01",
       "module_definition": "Presentation/Presentation.ascx",
       "source_file": "~/Modules/IRPortal.Modules.Presentation/Presentation.ascx",
