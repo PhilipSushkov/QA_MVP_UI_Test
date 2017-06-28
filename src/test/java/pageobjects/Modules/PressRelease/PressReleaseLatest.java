@@ -93,6 +93,12 @@ public class PressReleaseLatest extends AbstractPageObject {
             findElement(commentsTxt).sendKeys(modulesDataObj.get("comment").toString());
             findElement(saveAndSubmitBtn).click();
             Thread.sleep(DEFAULT_PAUSE);
+            try{
+                findElement(saveAndSubmitBtn).click();
+            }
+            catch(Exception e){
+
+            }
 
             driver.get(moduleUrl);
             Thread.sleep(DEFAULT_PAUSE);

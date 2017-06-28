@@ -202,7 +202,12 @@ public class ModuleBase extends AbstractPageObject {
             findElement(commentsTxt).sendKeys(modulesDataObj.get("comment").toString());
             findElement(saveAndSubmitBtn).click();
             Thread.sleep(DEFAULT_PAUSE);
+            try{
+                findElement(saveAndSubmitBtn).click();
+            }
+            catch(Exception e){
 
+            }
             driver.get(moduleUrl);
             Thread.sleep(DEFAULT_PAUSE);
 
@@ -484,7 +489,12 @@ public class ModuleBase extends AbstractPageObject {
         findElement(useDefaultRb).click();
         findElement(commentsTxt).sendKeys("Adding a new Module Definition: " + friendly_name);
         findElement(saveAndSubmitBtn).click();
+        try{
+            findElement(saveAndSubmitBtn).click();
+        }
+        catch (Exception e){
 
+        }
         driver.get(pageURL.toString());
         waitForElement(publishBtn);
 
