@@ -28,7 +28,7 @@ public class ModuleFunctions {
         String[] data = expected.split(";");
         type = data[0];
         elementPath = data[1];
-        System.out.println(elementPath);
+        System.out.println("Checking " + elementPath);
         By element = By.xpath(modulePath+propUIFile.getProperty(elementPath));
 
         switch (type) {
@@ -43,10 +43,21 @@ public class ModuleFunctions {
                 expectedValue = data[3];
                 return checkAttribute(driver, element, attribute, expectedValue);
 
+            case "attribute_exists":
+
+                attribute = data[2];
+                Boolean expectAttribute = Boolean.valueOf(data[3]);
+                return checkAttributeExists(driver, element, attribute, expectAttribute);
+
             case "element":
 
                 Boolean expectPresent = Boolean.valueOf(data[2]);
                 return checkElementPresent(driver, element, expectPresent);
+
+            case "element_number":
+
+                int expectedNum = Integer.valueOf(data[2]);
+                return checkElementNumber(driver, element, expectedNum);
 
             case "save":
 
@@ -77,8 +88,16 @@ public class ModuleFunctions {
         return driver.findElement(element).getAttribute(attribute).contains(expected);
     }
 
+    private static Boolean checkAttributeExists(WebDriver driver, By element, String attribute, Boolean expectAttribute) {
+        return (driver.findElement(element).getAttribute(attribute) != null) == expectAttribute;
+    }
+
     private static Boolean checkElementPresent(WebDriver driver, By element, Boolean expectPresent) {
         return driver.findElements(element).isEmpty() != expectPresent;
+    }
+
+    private static Boolean checkElementNumber(WebDriver driver, By element, int expectedNum) {
+        return driver.findElements(element).size() == expectedNum;
     }
 
     private static Boolean checkTextExists(WebDriver driver, By element, Boolean expectText) {
