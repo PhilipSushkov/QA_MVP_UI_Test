@@ -146,7 +146,7 @@ public abstract class AbstractSpec extends util.Functions {
         driver = new ChromeDriver(capabilities);
 
         driver.manage().timeouts().implicitlyWait(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
-        driver.manage().timeouts().pageLoadTimeout(120, TimeUnit.SECONDS); //Increased to 20 to perhaps reduce timeouts?
+        driver.manage().timeouts().pageLoadTimeout(180, TimeUnit.SECONDS); //Increased to 20 to perhaps reduce timeouts?
         //driver.manage().window().setSize(new Dimension(1400, 1400));
         driver.get(desktopUrl.toString());
 

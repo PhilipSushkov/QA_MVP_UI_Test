@@ -11,6 +11,7 @@ import org.openqa.selenium.By;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.LoginPage.LoginPage;
 import pageobjects.Modules.Feed.StockHistorical;
+import pageobjects.Modules.ModuleBase;
 import pageobjects.Modules.PageForModules;
 import pageobjects.PageAdmin.WorkflowState;
 import specs.AbstractSpec;
@@ -31,6 +32,7 @@ public class CheckStockHistorical extends AbstractSpec {
     private static Dashboard dashboard;
     private static PageForModules pageForModules;
     private static StockHistorical stockHistorical;
+    private static ModuleBase moduleBase;
 
     private static String sPathToFile, sDataFileJson, sPathToModuleFile, sFileModuleJson;
     private static JSONParser parser;
@@ -50,6 +52,8 @@ public class CheckStockHistorical extends AbstractSpec {
         sDataFileJson = propUIModulesFeed.getProperty("json_StockHistoricalData");
         sPathToModuleFile = System.getProperty("user.dir") + propUIModulesFeed.getProperty("dataPath_Feed");
         sFileModuleJson = propUIModulesFeed.getProperty("json_StockHistoricalProp");
+
+        moduleBase = new ModuleBase(driver, sPathToModuleFile, sFileModuleJson);
 
         parser = new JSONParser();
 
@@ -71,9 +75,9 @@ public class CheckStockHistorical extends AbstractSpec {
     @Test(dataProvider=MODULE_DATA, priority=2, enabled=true)
     public void createStockHistoricalModule(JSONObject module) throws InterruptedException {
         String sModuleNameSet = module.get("module_title").toString();
-        Assert.assertEquals(stockHistorical.saveModule(module, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+sModuleNameSet+" Module didn't save properly");
+        Assert.assertEquals(moduleBase.saveModule(module, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+sModuleNameSet+" Module didn't save properly");
         Assert.assertEquals(stockHistorical.saveAndSubmitModule(module, sModuleNameSet), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New "+sModuleNameSet+" Module properly");
-        Assert.assertEquals(stockHistorical.publishModule(sModuleNameSet), WorkflowState.LIVE.state(), "Couldn't publish New "+sModuleNameSet+" Module properly");
+        Assert.assertEquals(moduleBase.publishModule(sModuleNameSet), WorkflowState.LIVE.state(), "Couldn't publish New "+sModuleNameSet+" Module properly");
     }
 
     @Test(dataProvider=MODULE_DATA, priority=3, enabled=true)
@@ -81,7 +85,7 @@ public class CheckStockHistorical extends AbstractSpec {
 
         try {
             String sModuleNameSet = module.get("module_title").toString();
-            Assert.assertTrue(stockHistorical.openModulePreview(sModuleNameSet).contains(MODULE_NAME), "Did not open correct page");
+            Assert.assertTrue(moduleBase.openModulePreview(sModuleNameSet).contains(MODULE_NAME), "Did not open correct page");
 
             stockHistorical.lookupHistoricalValue(module);
 
@@ -92,7 +96,7 @@ public class CheckStockHistorical extends AbstractSpec {
                         "Did not find correct " + sExpected.split(";")[0] + " at item " + sExpected.split(";")[1]);
             }
         } finally {
-            stockHistorical.closeWindow();
+            moduleBase.closeWindow();
         }
     }
 
@@ -100,7 +104,7 @@ public class CheckStockHistorical extends AbstractSpec {
     public void checkStockHistoricalLive(JSONObject module) throws InterruptedException {
 
         try {
-            Assert.assertTrue(stockHistorical.openModuleLiveSite(MODULE_NAME).contains(MODULE_NAME), "Did not open correct page");
+            Assert.assertTrue(moduleBase.openModuleLiveSite(MODULE_NAME).contains(MODULE_NAME), "Did not open correct page");
 
             stockHistorical.lookupHistoricalValue(module);
 
@@ -111,15 +115,15 @@ public class CheckStockHistorical extends AbstractSpec {
                         "Did not find correct " + sExpected.split(";")[0] + " at item " + sExpected.split(";")[1]);
             }
         } finally {
-            stockHistorical.closeWindow();
+            moduleBase.closeWindow();
         }
     }
 
     @Test(dataProvider=MODULE_DATA, priority=5, enabled=true)
     public void removeStockHistoricalModule(JSONObject module) throws Exception {
         String sModuleNameSet = module.get("module_title").toString();
-        Assert.assertEquals(stockHistorical.setupAsDeletedModule(sModuleNameSet), WorkflowState.DELETE_PENDING.state(), "New "+sModuleNameSet+" Module didn't setup as Deleted properly");
-        Assert.assertEquals(stockHistorical.removeModule(module, sModuleNameSet), WorkflowState.NEW_ITEM.state(), "Couldn't remove "+sModuleNameSet+" Module. Something went wrong.");
+        Assert.assertEquals(moduleBase.setupAsDeletedModule(sModuleNameSet), WorkflowState.DELETE_PENDING.state(), "New "+sModuleNameSet+" Module didn't setup as Deleted properly");
+        Assert.assertEquals(moduleBase.removeModule(module, sModuleNameSet), WorkflowState.NEW_ITEM.state(), "Couldn't remove "+sModuleNameSet+" Module. Something went wrong.");
     }
 
     @Test(dataProvider=PAGE_DATA, priority=6, enabled = true)

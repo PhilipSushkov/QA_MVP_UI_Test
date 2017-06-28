@@ -124,10 +124,10 @@ public class CheckPressReleaseLatest extends AbstractSpec{
         Assert.assertEquals(moduleBase.removeModule(module, sModuleNameSet), WorkflowState.NEW_ITEM.state(), "Couldn't remove "+sModuleNameSet+" Module. Something went wrong.");
     }
 
-    @Test(dataProvider=MODULE_DATA, priority=6, enabled=false)
-    public void removePressReleaseLatestPage(JSONObject module) throws Exception {
+    @Test(dataProvider=PAGE_DATA, priority=6, enabled=true)
+    public void removePressReleaseLatestPage(JSONObject page) throws Exception {
         Assert.assertEquals(pageForModules.setupAsDeletedPage(MODULE_NAME), WorkflowState.DELETE_PENDING.state(), "New "+MODULE_NAME+" Page didn't setup as Deleted properly");
-        Assert.assertEquals(pageForModules.removePage(module, MODULE_NAME), WorkflowState.NEW_ITEM.state(), "Couldn't remove "+MODULE_NAME+" Page. Something went wrong.");
+        Assert.assertEquals(pageForModules.removePage(page, MODULE_NAME), WorkflowState.NEW_ITEM.state(), "Couldn't remove "+MODULE_NAME+" Page. Something went wrong.");
     }
 
     @DataProvider
@@ -135,22 +135,22 @@ public class CheckPressReleaseLatest extends AbstractSpec{
 
         try {
             JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFileJson));
-            JSONArray pageData = (JSONArray) jsonObject.get(MODULE_NAME);
+            JSONArray moduleData = (JSONArray) jsonObject.get(MODULE_NAME);
             ArrayList<Object> zoom = new ArrayList();
 
-            for (int i = 0; i < pageData.size(); i++) {
-                JSONObject pageObj = (JSONObject) pageData.get(i);
-                if (Boolean.parseBoolean(pageObj.get("do_assertions").toString())) {
-                    zoom.add(pageData.get(i));
+            for (int i = 0; i < moduleData.size(); i++) {
+                JSONObject moduleObj = (JSONObject) moduleData.get(i);
+                if (Boolean.parseBoolean(moduleObj.get("do_assertions").toString())) {
+                    zoom.add(moduleData.get(i));
                 }
             }
 
-            Object[][] newPages = new Object[zoom.size()][1];
+            Object[][] newModules = new Object[zoom.size()][1];
             for (int i = 0; i < zoom.size(); i++) {
-                newPages[i][0] = zoom.get(i);
+                newModules[i][0] = zoom.get(i);
             }
 
-            return newPages;
+            return newModules;
 
         }  catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -195,7 +195,6 @@ public class CheckPressReleaseLatest extends AbstractSpec{
 
         return null;
     }
-
 
     @AfterTest
     public void tearDown() {

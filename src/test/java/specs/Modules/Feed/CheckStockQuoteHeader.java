@@ -10,6 +10,7 @@ import org.testng.annotations.*;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.LoginPage.LoginPage;
 import pageobjects.Modules.Feed.StockQuoteHeader;
+import pageobjects.Modules.ModuleBase;
 import pageobjects.Modules.PageForModules;
 import pageobjects.PageAdmin.WorkflowState;
 import specs.AbstractSpec;
@@ -23,12 +24,14 @@ import java.util.ArrayList;
 /**
  * Created by zacharyk on 2017-06-19.
  */
+
 public class CheckStockQuoteHeader extends AbstractSpec {
     private static By pageAdminMenuButton;
     private static LoginPage loginPage;
     private static Dashboard dashboard;
     private static PageForModules pageForModules;
     private static StockQuoteHeader stockQuoteHeader;
+    private static ModuleBase moduleBase;
 
     private static String sPathToFile, sDataFileJson, sPathToModuleFile, sFileModuleJson;
     private static JSONParser parser;
@@ -48,6 +51,8 @@ public class CheckStockQuoteHeader extends AbstractSpec {
         sDataFileJson = propUIModulesFeed.getProperty("json_StockQuoteHeaderData");
         sPathToModuleFile = System.getProperty("user.dir") + propUIModulesFeed.getProperty("dataPath_Feed");
         sFileModuleJson = propUIModulesFeed.getProperty("json_StockQuoteHeaderProp");
+
+        moduleBase = new ModuleBase(driver, sPathToModuleFile, sFileModuleJson);
 
         parser = new JSONParser();
 
@@ -70,9 +75,9 @@ public class CheckStockQuoteHeader extends AbstractSpec {
     @Test(dataProvider=MODULE_DATA, priority=2, enabled=true)
     public void createStockQuoteHeaderModule(JSONObject module) throws InterruptedException {
         String sModuleNameSet = module.get("module_title").toString();
-        Assert.assertEquals(stockQuoteHeader.saveModule(module, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+sModuleNameSet+" Module didn't save properly");
+        Assert.assertEquals(moduleBase.saveModule(module, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+sModuleNameSet+" Module didn't save properly");
         Assert.assertEquals(stockQuoteHeader.saveAndSubmitModule(module, sModuleNameSet), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New "+sModuleNameSet+" Module properly");
-        Assert.assertEquals(stockQuoteHeader.publishModule(sModuleNameSet), WorkflowState.LIVE.state(), "Couldn't publish New "+sModuleNameSet+" Module properly");
+        Assert.assertEquals(moduleBase.publishModule(sModuleNameSet), WorkflowState.LIVE.state(), "Couldn't publish New "+sModuleNameSet+" Module properly");
     }
 
     @Test(dataProvider=MODULE_DATA, priority=3, enabled=true)
@@ -80,7 +85,7 @@ public class CheckStockQuoteHeader extends AbstractSpec {
 
         try {
             String sModuleNameSet = module.get("module_title").toString();
-            Assert.assertTrue(stockQuoteHeader.openModulePreview(sModuleNameSet).contains(MODULE_NAME),"Did not open correct page");
+            Assert.assertTrue(moduleBase.openModulePreview(sModuleNameSet).contains(MODULE_NAME),"Did not open correct page");
 
             JSONArray expectedResults = (JSONArray) module.get("expected");
             for (Object expected : expectedResults) {
@@ -89,7 +94,7 @@ public class CheckStockQuoteHeader extends AbstractSpec {
                         "Did not find correct " + sExpected.split(";")[0] + " at item " + sExpected.split(";")[1]);
             }
         } finally {
-            stockQuoteHeader.closeWindow();
+            moduleBase.closeWindow();
         }
     }
 
@@ -97,7 +102,7 @@ public class CheckStockQuoteHeader extends AbstractSpec {
     public void checkStockQuoteHeaderLive(JSONObject module) throws InterruptedException {
 
         try {
-            Assert.assertTrue(stockQuoteHeader.openModuleLiveSite(MODULE_NAME).contains(MODULE_NAME),"Did not open correct page");
+            Assert.assertTrue(moduleBase.openModuleLiveSite(MODULE_NAME).contains(MODULE_NAME),"Did not open correct page");
 
             JSONArray expectedResults = (JSONArray) module.get("expected");
             for (Object expected : expectedResults) {
@@ -106,15 +111,15 @@ public class CheckStockQuoteHeader extends AbstractSpec {
                         "Did not find correct " + sExpected.split(";")[0] + " at item " + sExpected.split(";")[1]);
             }
         } finally {
-            stockQuoteHeader.closeWindow();
+            moduleBase.closeWindow();
         }
     }
 
     @Test(dataProvider=MODULE_DATA, priority=5, enabled=true)
     public void removeStockQuoteHeaderModule(JSONObject module) throws Exception {
         String sModuleNameSet = module.get("module_title").toString();
-        Assert.assertEquals(stockQuoteHeader.setupAsDeletedModule(sModuleNameSet), WorkflowState.DELETE_PENDING.state(), "New "+sModuleNameSet+" Module didn't setup as Deleted properly");
-        Assert.assertEquals(stockQuoteHeader.removeModule(module, sModuleNameSet), WorkflowState.NEW_ITEM.state(), "Couldn't remove "+sModuleNameSet+" Module. Something went wrong.");
+        Assert.assertEquals(moduleBase.setupAsDeletedModule(sModuleNameSet), WorkflowState.DELETE_PENDING.state(), "New "+sModuleNameSet+" Module didn't setup as Deleted properly");
+        Assert.assertEquals(moduleBase.removeModule(module, sModuleNameSet), WorkflowState.NEW_ITEM.state(), "Couldn't remove "+sModuleNameSet+" Module. Something went wrong.");
     }
 
     @Test(dataProvider=PAGE_DATA, priority=6, enabled=true)
