@@ -148,6 +148,7 @@ public class CreatePressRelease extends AbstractPageObject {
             JSONObject pressRelease = (JSONObject) pressReleasesObj.get(data.get("headline").toString());
 
             your_page_url = findElement(yourPageUrl).getText();
+            System.out.println(your_page_url);
 
             pressRelease.put("your_page_url", your_page_url);
             pressRelease.put("workflow_state", WorkflowState.FOR_APPROVAL.state());
