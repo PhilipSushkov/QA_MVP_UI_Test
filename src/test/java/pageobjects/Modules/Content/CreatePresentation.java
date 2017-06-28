@@ -152,7 +152,7 @@ public class CreatePresentation extends AbstractPageObject {
             JSONObject presentation = (JSONObject) presentationsObj.get(data.get("headline").toString());
 
             your_page_url = findElement(yourPageUrl).getText().trim();
-            //System.out.println(your_page_url);
+            System.out.println(your_page_url);
 
             presentation.put("your_page_url", your_page_url);
             presentation.put("workflow_state", WorkflowState.FOR_APPROVAL.state());
