@@ -6,34 +6,28 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import pageobjects.AbstractPageObject;
 import pageobjects.PageAdmin.WorkflowState;
 import pageobjects.PageObject;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
 
 import static specs.AbstractSpec.*;
-import static specs.AbstractSpec.desktopUrl;
 
 /**
- * Created by zacharyk on 2017-06-22.
+ * Created by zacharyk on 2017-06-29.
  */
-public class Presentation extends AbstractPageObject {
+public class PresentationLatest extends AbstractPageObject {
     private static By workflowStateSpan, propertiesHref, commentsTxt, saveAndSubmitBtn;
     private static String sPathToModuleFile, sFileModuleJson;
     private static JSONParser parser;
     private static final long DEFAULT_PAUSE = 2500;
 
-    public Presentation(WebDriver driver) {
+    public PresentationLatest(WebDriver driver) {
         super(driver);
-
 
         workflowStateSpan = By.xpath(propUIPageAdmin.getProperty("select_WorkflowState"));
         commentsTxt = By.xpath(propUIPageAdmin.getProperty("txtarea_Comments"));
@@ -41,7 +35,7 @@ public class Presentation extends AbstractPageObject {
         saveAndSubmitBtn = By.xpath(propUIPageAdmin.getProperty("btn_SaveAndSubmit"));
 
         sPathToModuleFile = System.getProperty("user.dir") + propUIModulesPresentation.getProperty("dataPath_Presentation");
-        sFileModuleJson = propUIModulesPresentation.getProperty("json_PresentationProp");
+        sFileModuleJson = propUIModulesPresentation.getProperty("json_PresentationLatestProp");
 
         parser = new JSONParser();
     }
@@ -64,6 +58,9 @@ public class Presentation extends AbstractPageObject {
             Thread.sleep(DEFAULT_PAUSE);
 
             for (int i=0; i<jsonArrProp.size(); i++) {
+                //System.out.println(jsonArrProp.get(i).toString());
+                //String prop[] = jsonArrProp.get(i).toString().split(";");
+                //System.out.println(prop[0]);
                 try {
                     By propertyTextValue = By.xpath("//td[contains(@class, 'DataGridItemBorderLeft')][(text()='" + jsonArrProp.get(i).toString().split(";")[0] + "')]/parent::tr/td/div/input[contains(@id, 'txtStatic')]");
                     findElement(propertyTextValue).clear();
@@ -74,7 +71,7 @@ public class Presentation extends AbstractPageObject {
                 }
             }
 
-            findElement(commentsTxt).sendKeys(modulesDataObj.get("comment").toString());
+            findElement(commentsTxt).sendKeys(modulesDataObj.get("comment_module").toString());
             findElement(saveAndSubmitBtn).click();
             Thread.sleep(DEFAULT_PAUSE);
 
@@ -98,7 +95,7 @@ public class Presentation extends AbstractPageObject {
             e.printStackTrace();
         }
 
-        return null;
+        return "For Approval";
     }
 
     private String getModuleUrl(JSONObject obj, String moduleName) {

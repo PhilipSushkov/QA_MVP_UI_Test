@@ -1,17 +1,15 @@
-{"presentation":
-  [
-    {
-      "do_assertions": false,
-      "headline": "Selenium Module Test Presentation 1",
-      "date": "06/01/17",
-      "hour": "1",
-      "minute": "00",
-      "AMPM": "AM",
-      "body": "This is presentation #01 for testing presentation module functionality. DO NOT EDIT OR REMOVE.",
-      "tags": "SELENIUM_PRESENTATION_TAG",
-      "comment": "Adding presentation for Selenium module testing"
-    },
-
+{
+  "presentation": [{
+    "do_assertions": false,
+    "headline": "Selenium Module Test Presentation 1",
+    "date": "06/01/17",
+    "hour": "1",
+    "minute": "00",
+    "AMPM": "AM",
+    "body": "This is presentation #01 for testing presentation module functionality. DO NOT EDIT OR REMOVE.",
+    "tags": "SELENIUM_PRESENTATION_TAG",
+    "comment": "Adding presentation for Selenium module testing"
+  },
     {
       "do_assertions": false,
       "headline": "Selenium Module Test Presentation 2",
@@ -23,7 +21,6 @@
       "tags": "SELENIUM_PRESENTATION_TAG",
       "comment": "Adding presentation for Selenium module testing"
     },
-
     {
       "do_assertions": false,
       "headline": "Selenium Module Test Presentation 3",
@@ -36,19 +33,17 @@
       "comment": "Adding presentation for Selenium module testing"
     }
   ],
-
-  "press_release": [
-    {
-      "do_assertions": true,
-      "headline": "Selenium Module Test Press Release 1",
-      "date": "06/01/17",
-      "hour": "1",
-      "minute": "00",
-      "AMPM": "AM",
-      "body": "This is press release #01 for testing press release module functionality. DO NOT EDIT OR REMOVE.",
-      "tags": "SELENIUM_PRESS_RELEASE_TAG",
-      "comment": "Adding press release for Selenium module testing"
-    },
+  "press_release": [{
+    "do_assertions": true,
+    "headline": "Selenium Module Test Press Release 1",
+    "date": "06/01/17",
+    "hour": "1",
+    "minute": "00",
+    "AMPM": "AM",
+    "body": "This is press release #01 for testing press release module functionality. DO NOT EDIT OR REMOVE.",
+    "tags": "SELENIUM_PRESS_RELEASE_TAG",
+    "comment": "Adding press release for Selenium module testing"
+  },
 
     {
       "do_assertions": true,
@@ -61,7 +56,6 @@
       "tags": "SELENIUM_PRESS_RELEASE_TAG",
       "comment": "Adding press release for Selenium module testing"
     },
-
     {
       "do_assertions": true,
       "headline": "Selenium Module Test Press Release 3",
@@ -74,24 +68,21 @@
       "comment": "Adding press release for Selenium module testing"
     }
   ],
-
-  "event": [
-    {
-      "do_assertions": false,
-      "headline": "Selenium Module Test Event 1",
-      "start_date": "06/01/17",
-      "start_hour": "1",
-      "start_minute": "00",
-      "start_AMPM": "AM",
-      "end_date": "06/02/17",
-      "end_hour": "1",
-      "end_minute": "00",
-      "end_AMPM": "PM",
-      "body": "This is event #01 for testing event module functionality. DO NOT EDIT OR REMOVE.",
-      "tags": "SELENIUM_EVENT_TAG",
-      "comment": "Adding event for Selenium module testing"
-    },
-
+  "event": [{
+    "do_assertions": true,
+    "headline": "Selenium Module Test Event 1",
+    "start_date": "06/01/17",
+    "start_hour": "1",
+    "start_minute": "00",
+    "start_AMPM": "AM",
+    "end_date": "06/02/17",
+    "end_hour": "1",
+    "end_minute": "00",
+    "end_AMPM": "PM",
+    "body": "This is event #01 for testing event module functionality. DO NOT EDIT OR REMOVE.",
+    "tags": "SELENIUM_EVENT_TAG",
+    "comment": "Adding event for Selenium module testing"
+  },
     {
       "do_assertions": false,
       "headline": "Selenium Module Test Event 2",
@@ -107,7 +98,6 @@
       "tags": "SELENIUM_EVENT_TAG",
       "comment": "Adding event for Selenium module testing"
     },
-
     {
       "do_assertions": false,
       "headline": "Selenium Module Test Event 3",
