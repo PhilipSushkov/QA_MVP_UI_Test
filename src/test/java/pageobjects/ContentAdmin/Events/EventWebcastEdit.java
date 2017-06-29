@@ -43,7 +43,7 @@ public class EventWebcastEdit extends AbstractPageObject {
         endTimeAMSelect = By.xpath(propUIContentAdmin.getProperty("select_EndTimeAM"));
 
         titleInput = By.xpath(propUIContentAdmin.getProperty("input_Title"));
-        yourPageUrlLabel = By.xpath(propUIContentAdmin.getProperty("span_YourPageUrl"));
+        yourPageUrlLabel = By.id(propUIContentAdmin.getProperty("label_YourPageUrl"));
         changeUrlLink = By.xpath(propUIContentAdmin.getProperty("href_ChangeUrl"));
         tagsInput = By.xpath(propUIContentAdmin.getProperty("input_Tags"));
         locationInput = By.xpath(propUIContentAdmin.getProperty("input_Location"));
@@ -77,7 +77,7 @@ public class EventWebcastEdit extends AbstractPageObject {
         saveAndSubmitButton = By.xpath(propUIContentAdmin.getProperty("btn_SaveAndSubmit"));
 
         textArea = By.tagName(propUIContentAdmin.getProperty("frame_Textarea"));
-        seoNameLiteral = By.xpath(propUIContentAdmin.getProperty("span_seoNameLiteral"));
+        seoNameLiteral = By.id(propUIContentAdmin.getProperty("span_seoNameLiteral"));
         workflowState = By.xpath(propUIContentAdmin.getProperty("span_WorkflowState"));
         updateComments = By.xpath(propUIContentAdmin.getProperty("txtarea_UpdateComments"));
         deleteButton = By.xpath(propUIContentAdmin.getProperty("btn_Delete"));

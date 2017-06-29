@@ -24,6 +24,7 @@ import static specs.AbstractSpec.desktopUrl;
 /**
  * Created by dannyl on 2017-06-22.
  */
+
 public class PressReleaseLatest extends AbstractPageObject {
     private static By addNewModuleBtn, backBtn, moduleTitleInput, moduleDefinitionSelect, includeLegacyModulesChk;
     private static By publishBtn, saveBtn, workflowStateSpan, currentContentSpan, propertiesHref, previewLnk;
@@ -61,7 +62,6 @@ public class PressReleaseLatest extends AbstractPageObject {
         parser = new JSONParser();
     }
 
-
     public String saveAndSubmitModule(JSONObject modulesDataObj, String moduleName) throws InterruptedException {
 
         try {
@@ -93,12 +93,6 @@ public class PressReleaseLatest extends AbstractPageObject {
             findElement(commentsTxt).sendKeys(modulesDataObj.get("comment").toString());
             findElement(saveAndSubmitBtn).click();
             Thread.sleep(DEFAULT_PAUSE);
-            try{
-                findElement(saveAndSubmitBtn).click();
-            }
-            catch(Exception e){
-
-            }
 
             driver.get(moduleUrl);
             Thread.sleep(DEFAULT_PAUSE);
@@ -120,8 +114,7 @@ public class PressReleaseLatest extends AbstractPageObject {
             e.printStackTrace();
         }
 
-
-        return "For Approval";
+        return null;
     }
 
     private String getPageUrl(JSONObject obj, String moduleName) {

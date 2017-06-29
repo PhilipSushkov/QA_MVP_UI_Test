@@ -24,6 +24,7 @@ import java.util.ArrayList;
 /**
  * Created by dannyl on 2017-06-22.
  */
+
 public class CheckPressReleaseLatest extends AbstractSpec{
     private static By pageAdminMenuButton;
     private static LoginPage loginPage;
@@ -35,8 +36,7 @@ public class CheckPressReleaseLatest extends AbstractSpec{
     private static String sPathToFile, sDataFileJson, sPathToModuleFile, sFileModuleJson;
     private static JSONParser parser;
 
-    private final String PAGE_DATA="pageData", PAGE_NAME="press_release_modules",
-            MODULE_DATA="moduleData", MODULE_NAME="press_release_latest";
+    private final String PAGE_DATA="pageData", PAGE_NAME="press_release_modules", MODULE_DATA="moduleData", MODULE_NAME="press_release_latest";
 
 
 
@@ -68,9 +68,9 @@ public class CheckPressReleaseLatest extends AbstractSpec{
     }
 
     @Test(dataProvider=PAGE_DATA, priority=1, enabled=true)
-    public void createPressReleaseLatestPage(JSONObject module) throws InterruptedException {
-        Assert.assertEquals(pageForModules.savePage(module, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+MODULE_NAME+" Page didn't save properly");
-        Assert.assertEquals(pageForModules.saveAndSubmitPage(module, MODULE_NAME), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New "+MODULE_NAME+" Page properly");
+    public void createPressReleaseLatestPage(JSONObject page) throws InterruptedException {
+        Assert.assertEquals(pageForModules.savePage(page, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+MODULE_NAME+" Page didn't save properly");
+        Assert.assertEquals(pageForModules.saveAndSubmitPage(page, MODULE_NAME), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New "+MODULE_NAME+" Page properly");
         Assert.assertEquals(pageForModules.publishPage(MODULE_NAME), WorkflowState.LIVE.state(), "Couldn't publish New "+MODULE_NAME+" Page properly");
     }
 
