@@ -31,7 +31,7 @@ public class PresentationEdit extends AbstractPageObject {
         timeAMSelect = By.xpath(propUIContentAdmin.getProperty("select_PresentationTimeAM"));
 
         titleInput = By.xpath(propUIContentAdmin.getProperty("input_Title"));
-        yourPageUrlLabel = By.id(propUIContentAdmin.getProperty("label_YourPageUrl"));
+        yourPageUrlLabel = By.xpath(propUIContentAdmin.getProperty("span_YourPageUrl"));
         changeUrlLink = By.xpath(propUIContentAdmin.getProperty("href_ChangeUrl"));
         tagsInput = By.xpath(propUIContentAdmin.getProperty("input_Tags"));
         radEditorFrame = By.xpath(propUIContentAdmin.getProperty("frame_RadEditor"));
@@ -53,7 +53,7 @@ public class PresentationEdit extends AbstractPageObject {
 
         switchToHtml = By.className(propUIContentAdmin.getProperty("html_SwitchTo"));
         textArea = By.tagName(propUIContentAdmin.getProperty("frame_Textarea"));
-        seoNameLiteral = By.id(propUIContentAdmin.getProperty("span_seoNameLiteral"));
+        seoNameLiteral = By.xpath(propUIContentAdmin.getProperty("span_seoNameLiteral"));
         workflowState = By.xpath(propUIContentAdmin.getProperty("span_WorkflowState"));
         updateComments = By.xpath(propUIContentAdmin.getProperty("txtarea_UpdateComments"));
         deleteButton = By.xpath(propUIContentAdmin.getProperty("btn_Delete"));

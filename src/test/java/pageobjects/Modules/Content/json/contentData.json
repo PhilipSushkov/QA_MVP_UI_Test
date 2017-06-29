@@ -11,7 +11,7 @@
     "comment": "Adding presentation for Selenium module testing"
   },
     {
-      "do_assertions": true,
+      "do_assertions": false,
       "headline": "Selenium Module Test Presentation 2",
       "date": "07/01/17",
       "hour": "2",
@@ -22,7 +22,7 @@
       "comment": "Adding presentation for Selenium module testing"
     },
     {
-      "do_assertions": true,
+      "do_assertions": false,
       "headline": "Selenium Module Test Presentation 3",
       "date": "08/01/17",
       "hour": "12",
@@ -68,23 +68,25 @@
       "comment": "Adding press release for Selenium module testing"
     }
   ],
-  "event": [{
-    "do_assertions": true,
-    "headline": "Selenium Module Test Event 1",
-    "start_date": "06/01/17",
-    "start_hour": "1",
-    "start_minute": "00",
-    "start_AMPM": "AM",
-    "end_date": "06/02/17",
-    "end_hour": "1",
-    "end_minute": "00",
-    "end_AMPM": "PM",
-    "body": "This is event #01 for testing event module functionality. DO NOT EDIT OR REMOVE.",
-    "tags": "SELENIUM_EVENT_TAG",
-    "comment": "Adding event for Selenium module testing"
-  },
+  
+  "event": [
     {
-      "do_assertions": true,
+      "do_assertions": false,
+      "headline": "Selenium Module Test Event 1",
+      "start_date": "06/01/17",
+      "start_hour": "1",
+      "start_minute": "00",
+      "start_AMPM": "AM",
+      "end_date": "06/02/17",
+      "end_hour": "1",
+      "end_minute": "00",
+      "end_AMPM": "PM",
+      "body": "This is event #01 for testing event module functionality. DO NOT EDIT OR REMOVE.",
+      "tags": "SELENIUM_EVENT_TAG",
+      "comment": "Adding event for Selenium module testing"
+    },
+    {
+      "do_assertions": false,
       "headline": "Selenium Module Test Event 2",
       "start_date": "07/01/17",
       "start_hour": "2",
@@ -99,7 +101,7 @@
       "comment": "Adding event for Selenium module testing"
     },
     {
-      "do_assertions": true,
+      "do_assertions": false,
       "headline": "Selenium Module Test Event 3",
       "start_date": "08/01/17",
       "start_hour": "12",
@@ -112,6 +114,44 @@
       "body": "This is event #03 for testing event module functionality. DO NOT EDIT OR REMOVE.",
       "tags": "",
       "comment": "Adding event for Selenium module testing"
+    }
+  ],
+
+  "lookup": [
+    {
+      "do_assertions": true,
+      "lookup_type": "SECindices",
+      "lookup_text": "SECindices",
+      "lookup_value": "CIK:0001326801",
+      "lookup_info": "Created by Q4Web CMS Selenium Test Suite. DO NOT EDIT OR REMOVE.",
+      "comment": "Adding lookup for Selenium module testing"
+    },
+
+    {
+      "do_assertions": true,
+      "lookup_type": "indices",
+      "lookup_text": "NASD:FB",
+      "lookup_value": "NASD:FB",
+      "lookup_info": "Created by Q4Web CMS Selenium Test Suite. DO NOT EDIT OR REMOVE.",
+      "comment": "Adding lookup for Selenium module testing"
+    },
+
+    {
+      "do_assertions": true,
+      "lookup_type": "indices",
+      "lookup_text": "XNAS:TSLA",
+      "lookup_value": "XNAS:TSLA",
+      "lookup_info": "Created by Q4Web CMS Selenium Test Suite. DO NOT EDIT OR REMOVE.",
+      "comment": "Adding lookup for Selenium module testing"
+    },
+
+    {
+      "do_assertions": true,
+      "lookup_type": "indices_test",
+      "lookup_text": "NYSE:RICE",
+      "lookup_value": "NYSE:RICE",
+      "lookup_info": "Created by Q4Web CMS Selenium Test Suite. DO NOT EDIT OR REMOVE.",
+      "comment": "Adding lookup for Selenium module testing"
     }
   ]
 }
