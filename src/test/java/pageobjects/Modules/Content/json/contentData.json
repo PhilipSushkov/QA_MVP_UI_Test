@@ -123,5 +123,43 @@
       "tags": "",
       "comment": "Adding event for Selenium module testing"
     }
+  ],
+
+  "lookup": [
+    {
+      "do_assertions": true,
+      "lookup_type": "SECindices",
+      "lookup_text": "SECindices",
+      "lookup_value": "CIK:0001326801",
+      "lookup_info": "Created by Q4Web CMS Selenium Test Suite. DO NOT EDIT OR REMOVE.",
+      "comment": "Adding lookup for Selenium module testing"
+    },
+
+    {
+      "do_assertions": true,
+      "lookup_type": "indices",
+      "lookup_text": "NASD:FB",
+      "lookup_value": "NASD:FB",
+      "lookup_info": "Created by Q4Web CMS Selenium Test Suite. DO NOT EDIT OR REMOVE.",
+      "comment": "Adding lookup for Selenium module testing"
+    },
+
+    {
+      "do_assertions": true,
+      "lookup_type": "indices",
+      "lookup_text": "XNAS:TSLA",
+      "lookup_value": "XNAS:TSLA",
+      "lookup_info": "Created by Q4Web CMS Selenium Test Suite. DO NOT EDIT OR REMOVE.",
+      "comment": "Adding lookup for Selenium module testing"
+    },
+
+    {
+      "do_assertions": true,
+      "lookup_type": "indices_test",
+      "lookup_text": "NYSE:RICE",
+      "lookup_value": "NYSE:RICE",
+      "lookup_info": "Created by Q4Web CMS Selenium Test Suite. DO NOT EDIT OR REMOVE.",
+      "comment": "Adding lookup for Selenium module testing"
+    }
   ]
 }

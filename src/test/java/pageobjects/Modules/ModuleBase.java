@@ -7,10 +7,12 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.Select;
 import pageobjects.AbstractPageObject;
 import pageobjects.Dashboard.Dashboard;
+import pageobjects.LoginPage.LoginPage;
 import pageobjects.PageAdmin.WorkflowState;
 
 import java.io.FileNotFoundException;
@@ -378,6 +380,16 @@ public class ModuleBase extends AbstractPageObject {
             JSONObject jsonObj = (JSONObject)  parser.parse(new FileReader(sPathToPageFile + sFilePageJson));
             String moduleURL = JsonPath.read(jsonObj, "$.['"+moduleName+"'].your_page_url");
             driver.get(moduleURL);
+
+            if (driver.getCurrentUrl().contains("secure.aspx")) {
+                try {
+                    new LoginPage(driver).loginUser();
+                    driver.get(moduleURL);
+                } catch (TimeoutException e) {
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
 
         } catch (InterruptedException e) {
             e.printStackTrace();
