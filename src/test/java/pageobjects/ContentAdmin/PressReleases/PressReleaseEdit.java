@@ -25,7 +25,7 @@ public class PressReleaseEdit extends AbstractPageObject {
         timeAMSelect = By.xpath(propUIContentAdmin.getProperty("select_PressReleaseTimeAM"));
 
         headlineInput = By.xpath(propUIContentAdmin.getProperty("input_Headline"));
-        yourPageUrlLabel = By.id(propUIContentAdmin.getProperty("label_YourPageUrl"));
+        yourPageUrlLabel = By.xpath(propUIContentAdmin.getProperty("span_YourPageUrl"));
         changeUrlLink = By.xpath(propUIContentAdmin.getProperty("href_ChangeUrl"));
         categorySelect = By.xpath(propUIContentAdmin.getProperty("input_Category"));
         tagsInput = By.xpath(propUIContentAdmin.getProperty("input_Tags"));
@@ -44,7 +44,7 @@ public class PressReleaseEdit extends AbstractPageObject {
 
         switchToHtml = By.className(propUIContentAdmin.getProperty("html_SwitchTo"));
         textArea = By.tagName(propUIContentAdmin.getProperty("frame_Textarea"));
-        seoNameLiteral = By.id(propUIContentAdmin.getProperty("span_seoNameLiteral"));
+        seoNameLiteral = By.xpath(propUIContentAdmin.getProperty("span_seoNameLiteral"));
         updateComments = By.xpath(propUIContentAdmin.getProperty("txtarea_UpdateComments"));
         deleteButton = By.xpath(propUIContentAdmin.getProperty("btn_Delete"));
 

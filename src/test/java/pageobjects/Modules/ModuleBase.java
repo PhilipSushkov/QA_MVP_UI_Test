@@ -7,10 +7,12 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.Select;
 import pageobjects.AbstractPageObject;
 import pageobjects.Dashboard.Dashboard;
+import pageobjects.LoginPage.LoginPage;
 import pageobjects.PageAdmin.WorkflowState;
 
 import java.io.FileNotFoundException;
@@ -30,7 +32,7 @@ import static specs.AbstractSpec.desktopUrl;
 public class ModuleBase extends AbstractPageObject {
     private static By addNewModuleBtn, moduleTitleInput, moduleDefinitionSelect, includeLagacyModulesChk;
     private static By publishBtn, saveBtn, workflowStateSpan, currentContentSpan, propertiesHref;
-    private static By commentsTxt, deleteBtn, saveAndSubmitBtn, regionNameSelect, previewLnk;
+    private static By commentsTxt, deleteBtn, saveAndSubmitBtn, regionNameSelect, previewLnk, sectionTitle;
     private static String sPathToPageFile, sFilePageJson, sPathToModuleFile, sFileModuleJson;
     private static JSONParser parser;
 
@@ -51,6 +53,7 @@ public class ModuleBase extends AbstractPageObject {
         currentContentSpan = By.xpath(propUIPageAdmin.getProperty("span_CurrentContent"));
         propertiesHref = By.xpath(propUIModules.getProperty("href_Properties"));
         previewLnk = By.xpath(propUIModules.getProperty("lnk_Preview"));
+        sectionTitle = By.xpath(propUIModules.getProperty("section_Title"));
 
         saveBtn = By.xpath(propUIPageAdmin.getProperty("btn_Save"));
         deleteBtn = By.xpath(propUIPageAdmin.getProperty("btn_Delete"));
@@ -76,8 +79,16 @@ public class ModuleBase extends AbstractPageObject {
 
             waitForElement(commentsTxt);
 
+            waitForElementToAppear(addNewModuleBtn);
             findElement(addNewModuleBtn).click();
             Thread.sleep(DEFAULT_PAUSE);
+            try
+            {
+            String pageTitle = findElement(sectionTitle).getText();
+            }
+            catch (Exception e){
+                findElement(addNewModuleBtn).click();
+            }
             waitForElement(includeLagacyModulesChk);
 
             findElement(includeLagacyModulesChk).click();
@@ -193,7 +204,12 @@ public class ModuleBase extends AbstractPageObject {
             findElement(commentsTxt).sendKeys(modulesDataObj.get("comment").toString());
             findElement(saveAndSubmitBtn).click();
             Thread.sleep(DEFAULT_PAUSE);
+            try{
+                findElement(saveAndSubmitBtn).click();
+            }
+            catch(Exception e){
 
+            }
             driver.get(moduleUrl);
             Thread.sleep(DEFAULT_PAUSE);
 
@@ -225,9 +241,15 @@ public class ModuleBase extends AbstractPageObject {
             driver.get(moduleUrl);
             Thread.sleep(DEFAULT_PAUSE);
 
-            waitForElement(publishBtn);
+            waitForElementToAppear(publishBtn);
             findElement(publishBtn).click();
             Thread.sleep(DEFAULT_PAUSE*2);
+            try{
+                String test = findElement(addNewModuleBtn).getText();
+            }
+            catch(Exception e){
+                findElement(publishBtn).click();
+            }
 
             driver.get(moduleUrl);
             Thread.sleep(DEFAULT_PAUSE);
@@ -268,6 +290,12 @@ public class ModuleBase extends AbstractPageObject {
             waitForElement(commentsTxt);
             findElement(commentsTxt).sendKeys("Removing the module");
             findElement(deleteBtn).click();
+            try{
+                findElement(deleteBtn).click();
+            }
+            catch(Exception e){
+
+            }
 
             Thread.sleep(DEFAULT_PAUSE);
 
@@ -312,6 +340,11 @@ public class ModuleBase extends AbstractPageObject {
                 findElement(publishBtn).click();
 
                 Thread.sleep(DEFAULT_PAUSE*2);
+                try {
+                    findElement(publishBtn).click();
+                }
+                catch(Exception e){
+                }
 
                 driver.get(moduleUrl);
                 Thread.sleep(DEFAULT_PAUSE);
@@ -378,6 +411,16 @@ public class ModuleBase extends AbstractPageObject {
             JSONObject jsonObj = (JSONObject)  parser.parse(new FileReader(sPathToPageFile + sFilePageJson));
             String moduleURL = JsonPath.read(jsonObj, "$.['"+moduleName+"'].your_page_url");
             driver.get(moduleURL);
+
+            if (driver.getCurrentUrl().contains("secure.aspx")) {
+                try {
+                    new LoginPage(driver).loginUser();
+                    driver.get(moduleURL);
+                } catch (TimeoutException e) {
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
 
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -458,7 +501,12 @@ public class ModuleBase extends AbstractPageObject {
         findElement(useDefaultRb).click();
         findElement(commentsTxt).sendKeys("Adding a new Module Definition: " + friendly_name);
         findElement(saveAndSubmitBtn).click();
+        try{
+            findElement(saveAndSubmitBtn).click();
+        }
+        catch (Exception e){
 
+        }
         driver.get(pageURL.toString());
         waitForElement(publishBtn);
 
