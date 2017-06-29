@@ -154,7 +154,7 @@ public class CreateEvent extends AbstractPageObject {
             JSONObject eventsObj = (JSONObject) jsonObj.get(CONTENT_TYPE);
             JSONObject event = (JSONObject) eventsObj.get(data.get("headline").toString());
 
-            your_page_url = findElement(yourPageUrl).getText();
+            your_page_url = findElement(yourPageUrl).getText().trim();
 
             event.put("your_page_url", your_page_url);
             event.put("workflow_state", WorkflowState.FOR_APPROVAL.state());

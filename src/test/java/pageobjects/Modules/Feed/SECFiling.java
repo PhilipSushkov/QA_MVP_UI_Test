@@ -1,4 +1,4 @@
-package pageobjects.Modules.Presentation;
+package pageobjects.Modules.Feed;
 
 import com.jayway.jsonpath.JsonPath;
 import org.json.simple.JSONArray;
@@ -6,57 +6,38 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import pageobjects.AbstractPageObject;
 import pageobjects.PageAdmin.WorkflowState;
 import pageobjects.PageObject;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
 
 import static specs.AbstractSpec.*;
 import static specs.AbstractSpec.desktopUrl;
 
 /**
- * Created by zacharyk on 2017-06-22.
+ * Created by zacharyk on 2017-06-26.
  */
-public class Presentation extends AbstractPageObject {
-    private static By addNewModuleBtn, backBtn, moduleTitleInput, moduleDefinitionSelect, includeLegacyModulesChk;
-    private static By publishBtn, saveBtn, workflowStateSpan, currentContentSpan, propertiesHref, previewLnk;
-    private static By commentsTxt, deleteBtn, saveAndSubmitBtn, regionNameSelect;
-    private static String sPathToPageFile, sFilePageJson, sPathToModuleFile, sFileModuleJson;
+public class SECFiling extends AbstractPageObject {
+    private static By workflowStateSpan, propertiesHref, commentsTxt, saveAndSubmitBtn;
+    private static String sPathToModuleFile, sFileModuleJson;
     private static JSONParser parser;
     private static final long DEFAULT_PAUSE = 2500;
 
-    public Presentation(WebDriver driver) {
+    public SECFiling(WebDriver driver) {
         super(driver);
 
-        addNewModuleBtn = By.xpath(propUIModules.getProperty("btn_AddNewModule"));
-        moduleTitleInput = By.xpath(propUIModules.getProperty("input_ModuleTitle"));
-        moduleDefinitionSelect = By.xpath(propUIModules.getProperty("select_ModuleDefinition"));
-        includeLegacyModulesChk = By.xpath(propUIModules.getProperty("chk_IncludeLagacyModules"));
-        regionNameSelect = By.xpath(propUIModules.getProperty("select_RegionName"));
         workflowStateSpan = By.xpath(propUIPageAdmin.getProperty("select_WorkflowState"));
         commentsTxt = By.xpath(propUIPageAdmin.getProperty("txtarea_Comments"));
-        currentContentSpan = By.xpath(propUIPageAdmin.getProperty("span_CurrentContent"));
         propertiesHref = By.xpath(propUIModules.getProperty("href_Properties"));
-        previewLnk = By.xpath(propUIModules.getProperty("lnk_Preview"));
 
-        saveBtn = By.xpath(propUIPageAdmin.getProperty("btn_Save"));
-        deleteBtn = By.xpath(propUIPageAdmin.getProperty("btn_Delete"));
-        publishBtn = By.xpath(propUIPageAdmin.getProperty("btn_Publish"));
-        backBtn = By.xpath(propUIPageAdmin.getProperty("btn_Back"));
         saveAndSubmitBtn = By.xpath(propUIPageAdmin.getProperty("btn_SaveAndSubmit"));
 
-        sPathToPageFile = System.getProperty("user.dir") + propUIModules.getProperty("dataPath_Modules");
-        sFilePageJson = propUIModules.getProperty("json_PagesProp");
-        sPathToModuleFile = System.getProperty("user.dir") + propUIModulesPresentation.getProperty("dataPath_Presentation");
-        sFileModuleJson = propUIModulesPresentation.getProperty("json_PresentationProp");
+        sPathToModuleFile = System.getProperty("user.dir") + propUIModulesFeed.getProperty("dataPath_Feed");
+        sFileModuleJson = propUIModulesFeed.getProperty("json_SECFilingProp");
 
         parser = new JSONParser();
     }
