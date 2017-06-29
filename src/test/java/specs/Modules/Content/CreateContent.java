@@ -44,6 +44,7 @@ public class CreateContent extends AbstractSpec {
     private static JSONParser parser;
 
     private final String PRESENTATION_DATA = "presentationData", PRESS_RELEASE_DATA = "pressReleaseData", EVENT_DATA = "eventData", LOOKUP_DATA = "lookupData";
+    private final String PRESENTATION_NAME = "presentation", PRESS_RELEASE_NAME = "press_release", EVENT_NAME = "event", LOOKUP_NAME = "lookup";
 
     @BeforeTest
     public void setUp() throws Exception {
@@ -172,5 +173,5 @@ public class CreateContent extends AbstractSpec {
     }
     
     @DataProvider
-    public Object[][] lookupData() { return genericProvider("lookup"); }
+    public Object[][] lookupData() { return genericProvider(LOOKUP_NAME); }
 }
