@@ -27,6 +27,7 @@ import java.util.ArrayList;
 /**
  * Created by zacharyk on 2017-06-26.
  */
+
 public class CreateContent extends AbstractSpec {
 
     // DESIGN CONTENT-DEPENDENT TESTS TO CONTINUE WORKING IF NEW CONTENT IS ADDED \\
@@ -68,7 +69,7 @@ public class CreateContent extends AbstractSpec {
         loginPage.loginUser();
     }
 
-    @Test(dataProvider=PRESENTATION_DATA)
+    @Test(dataProvider=PRESENTATION_DATA, priority=1, enabled=true)
     public void createPresentations(JSONObject data) throws Exception {
         dashboard.openPageFromCommonTasks(addNewPresentationButton);
         Assert.assertEquals(createPresentation.savePresentation(data), WorkflowState.IN_PROGRESS.state());
@@ -76,13 +77,13 @@ public class CreateContent extends AbstractSpec {
         Assert.assertEquals(createPresentation.publishPresentation(data.get("headline").toString()), WorkflowState.LIVE.state());
     }
 
-    @Test(dataProvider=PRESENTATION_DATA)
+    @Test(dataProvider=PRESENTATION_DATA, priority=2, enabled=false)
     public void removePresentations(JSONObject data) throws Exception {
         Assert.assertEquals(createPresentation.setupAsDeletedPresentation(data.get("headline").toString()), WorkflowState.DELETE_PENDING.state());
         Assert.assertEquals(createPresentation.removePresentation(data.get("headline").toString()), WorkflowState.NEW_ITEM.state());
     }
 
-    @Test(dataProvider=PRESS_RELEASE_DATA)
+    @Test(dataProvider=PRESS_RELEASE_DATA, priority=3, enabled=true)
     public void createPressRelease(JSONObject data) throws Exception {
         dashboard.openPageFromCommonTasks(addNewPressReleaseButton);
         Assert.assertEquals(createPressRelease.savePressRelease(data), WorkflowState.IN_PROGRESS.state());
@@ -90,13 +91,13 @@ public class CreateContent extends AbstractSpec {
         Assert.assertEquals(createPressRelease.publishPressRelease(data.get("headline").toString()), WorkflowState.LIVE.state());
     }
 
-    @Test(dataProvider=PRESS_RELEASE_DATA)
+    @Test(dataProvider=PRESS_RELEASE_DATA, priority=4, enabled=false)
     public void removePressRelease(JSONObject data) throws Exception {
         Assert.assertEquals(createPressRelease.setupAsDeletedPressRelease(data.get("headline").toString()), WorkflowState.DELETE_PENDING.state());
         Assert.assertEquals(createPressRelease.removePressRelease(data.get("headline").toString()), WorkflowState.NEW_ITEM.state());
     }
 
-    @Test(dataProvider=EVENT_DATA)
+    @Test(dataProvider=EVENT_DATA, priority=5, enabled=true)
     public void createEvents(JSONObject data) throws Exception {
         dashboard.openPageFromCommonTasks(addNewEventButton);
         Assert.assertEquals(createEvent.saveEvent(data), WorkflowState.IN_PROGRESS.state());
@@ -104,7 +105,7 @@ public class CreateContent extends AbstractSpec {
         Assert.assertEquals(createEvent.publishEvent(data.get("headline").toString()), WorkflowState.LIVE.state());
     }
 
-    @Test(dataProvider=EVENT_DATA)
+    @Test(dataProvider=EVENT_DATA, priority=6, enabled=false)
     public void removeEvents(JSONObject data) throws Exception {
         Assert.assertEquals(createEvent.setupAsDeletedEvent(data.get("headline").toString()), WorkflowState.DELETE_PENDING.state());
         Assert.assertEquals(createEvent.removeEvent(data.get("headline").toString()), WorkflowState.NEW_ITEM.state());
@@ -157,17 +158,17 @@ public class CreateContent extends AbstractSpec {
 
     @DataProvider
     public Object[][] presentationData() {
-        return genericProvider("presentation");
+        return genericProvider(PRESENTATION_NAME);
     }
 
     @DataProvider
     public Object[][] pressReleaseData() {
-        return genericProvider("press_release");
+        return genericProvider(PRESS_RELEASE_NAME);
     }
 
     @DataProvider
     public Object[][] eventData() {
-        return genericProvider("event");
+        return genericProvider(EVENT_NAME);
     }
     
     @DataProvider

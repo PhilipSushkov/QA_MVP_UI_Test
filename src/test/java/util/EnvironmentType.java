@@ -5,7 +5,7 @@ public enum EnvironmentType {
   //DEVELOP("chicagotest.s1.q4web.dev/admin/"),
   DEVELOP("fbreverseproxy.s1.q4web.dev/admin/"),
   //BETA("chicagotest.s1.q4web.newtest/admin/"), //chicagotest url
-  BETA("facebook.s1.q4web.newtest/admin/"), //chicagotest url
+  BETA("facebookrelease.s1.q4web.release/admin/"), //facebookrelease url
   PRODUCTION("chicagotest.s3.q4web.com/admin/");
 
   private final String host;
