@@ -135,13 +135,13 @@ public class EventWebcastEdit extends AbstractPageObject {
 
         try {
             waitForElement(startTimeHHSelect);
-            findElements(startTimeHHSelect).get(0);
+            findElement(startTimeHHSelect);
 
             waitForElement(startTimeMMSelect);
-            findElements(startTimeMMSelect).get(0);
+            findElement(startTimeMMSelect);
 
             waitForElement(startTimeAMSelect);
-            findElements(startTimeAMSelect).get(0);
+            findElement(startTimeAMSelect);
 
             waitForElement(startTimeZoneSelect);
             findElement(startTimeZoneSelect);
@@ -174,13 +174,13 @@ public class EventWebcastEdit extends AbstractPageObject {
 
         try {
             waitForElement(endTimeHHSelect);
-            findElements(endTimeHHSelect).get(1);
+            findElement(endTimeHHSelect);
 
             waitForElement(endTimeMMSelect);
-            findElements(endTimeMMSelect).get(1);
+            findElement(endTimeMMSelect);
 
             waitForElement(endTimeAMSelect);
-            findElements(endTimeAMSelect).get(1);
+            findElement(endTimeAMSelect);
 
             timeSet = true;
         } catch (ElementNotFoundException e1) {
