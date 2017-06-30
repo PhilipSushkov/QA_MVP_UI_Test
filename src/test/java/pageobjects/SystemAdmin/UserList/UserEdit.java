@@ -108,7 +108,7 @@ public class UserEdit extends AbstractPageObject {
     public Boolean createUsers() throws InterruptedException {
         int userNum = 20;
 
-        for(int i=1; i<=userNum; i++) {
+        for(int i=0; i<=userNum; i++) {
             findElement(emailField).clear();
             findElement(emailField).sendKeys("admintest"+Integer.toString(i)+"@gmail.com");
 

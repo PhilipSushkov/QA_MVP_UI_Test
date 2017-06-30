@@ -34,7 +34,7 @@ public class CheckPressRelease extends AbstractSpec {
     private static String sPathToFile, sDataFileJson, sPathToModuleFile, sFileModuleJson;
     private static JSONParser parser;
 
-    private final String MODULE_DATA="moduleData", MODULE_NAME="press_release";
+    private final String PAGE_DATA = "pageData", PAGE_NAME = "press_release_modules", MODULE_DATA="moduleData", MODULE_NAME="press_release";
 
     @BeforeTest
     public void setUp() throws Exception {
@@ -61,10 +61,10 @@ public class CheckPressRelease extends AbstractSpec {
         dashboard.openPageFromCommonTasks(pageAdminMenuButton);
     }
 
-    @Test(dataProvider=MODULE_DATA, priority=1, enabled=false)
-    public void createPressReleasePage(JSONObject module) throws InterruptedException {
-        Assert.assertEquals(pageForModules.savePage(module, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+MODULE_NAME+" Page didn't save properly");
-        Assert.assertEquals(pageForModules.saveAndSubmitPage(module, MODULE_NAME), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New "+MODULE_NAME+" Page properly");
+    @Test(dataProvider=PAGE_DATA, priority=1, enabled=true)
+    public void createPressReleasePage(JSONObject page) throws InterruptedException {
+        Assert.assertEquals(pageForModules.savePage(page, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+MODULE_NAME+" Page didn't save properly");
+        Assert.assertEquals(pageForModules.saveAndSubmitPage(page, MODULE_NAME), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New "+MODULE_NAME+" Page properly");
         Assert.assertEquals(pageForModules.publishPage(MODULE_NAME), WorkflowState.LIVE.state(), "Couldn't publish New "+MODULE_NAME+" Page properly");
     }
 
@@ -118,18 +118,16 @@ public class CheckPressRelease extends AbstractSpec {
         Assert.assertEquals(pressRelease.removeModule(module, sModuleNameSet), WorkflowState.NEW_ITEM.state(), "Couldn't remove "+sModuleNameSet+" Module. Something went wrong.");
     }
 
-    @Test(dataProvider=MODULE_DATA, priority=6, enabled=false)
-    public void removePressReleasePage(JSONObject module) throws Exception {
+    @Test(dataProvider=PAGE_DATA, priority=6, enabled=false)
+    public void removePressReleasePage(JSONObject page) throws Exception {
         Assert.assertEquals(pageForModules.setupAsDeletedPage(MODULE_NAME), WorkflowState.DELETE_PENDING.state(), "New "+MODULE_NAME+" Page didn't setup as Deleted properly");
-        Assert.assertEquals(pageForModules.removePage(module, MODULE_NAME), WorkflowState.NEW_ITEM.state(), "Couldn't remove "+MODULE_NAME+" Page. Something went wrong.");
+        Assert.assertEquals(pageForModules.removePage(page, MODULE_NAME), WorkflowState.NEW_ITEM.state(), "Couldn't remove "+MODULE_NAME+" Page. Something went wrong.");
     }
 
-    @DataProvider
-    public Object[][] moduleData() {
-
+    public Object[][] genericProvider(String dataType) {
         try {
             JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFileJson));
-            JSONArray pageData = (JSONArray) jsonObject.get(MODULE_NAME);
+            JSONArray pageData = (JSONArray) jsonObject.get(dataType);
             ArrayList<Object> zoom = new ArrayList();
 
             for (int i = 0; i < pageData.size(); i++) {
@@ -157,6 +155,15 @@ public class CheckPressRelease extends AbstractSpec {
         return null;
     }
 
+    @DataProvider
+    public Object[][] moduleData() {
+        return genericProvider(MODULE_NAME);
+    }
+
+    @DataProvider
+    public Object[][] pageData() {
+        return genericProvider(PAGE_NAME);
+    }
     @AfterTest
     public void tearDown() {
         dashboard.logoutFromAdmin();
