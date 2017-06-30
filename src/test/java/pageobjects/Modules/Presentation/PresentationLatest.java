@@ -6,34 +6,29 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import pageobjects.AbstractPageObject;
 import pageobjects.PageAdmin.WorkflowState;
 import pageobjects.PageObject;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
 
 import static specs.AbstractSpec.*;
-import static specs.AbstractSpec.desktopUrl;
 
 /**
- * Created by zacharyk on 2017-06-22.
+ * Created by zacharyk on 2017-06-29.
  */
-public class Presentation extends AbstractPageObject {
+
+public class PresentationLatest extends AbstractPageObject {
     private static By workflowStateSpan, propertiesHref, commentsTxt, saveAndSubmitBtn;
     private static String sPathToModuleFile, sFileModuleJson;
     private static JSONParser parser;
     private static final long DEFAULT_PAUSE = 2500;
 
-    public Presentation(WebDriver driver) {
+    public PresentationLatest(WebDriver driver) {
         super(driver);
-
 
         workflowStateSpan = By.xpath(propUIPageAdmin.getProperty("select_WorkflowState"));
         commentsTxt = By.xpath(propUIPageAdmin.getProperty("txtarea_Comments"));
@@ -41,7 +36,7 @@ public class Presentation extends AbstractPageObject {
         saveAndSubmitBtn = By.xpath(propUIPageAdmin.getProperty("btn_SaveAndSubmit"));
 
         sPathToModuleFile = System.getProperty("user.dir") + propUIModulesPresentation.getProperty("dataPath_Presentation");
-        sFileModuleJson = propUIModulesPresentation.getProperty("json_PresentationProp");
+        sFileModuleJson = propUIModulesPresentation.getProperty("json_PresentationLatestProp");
 
         parser = new JSONParser();
     }
