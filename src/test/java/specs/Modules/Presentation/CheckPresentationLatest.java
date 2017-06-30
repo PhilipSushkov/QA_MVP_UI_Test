@@ -24,6 +24,7 @@ import java.util.ArrayList;
 /**
  * Created by zacharyk on 2017-06-29.
  */
+
 public class CheckPresentationLatest extends AbstractSpec {
 
     // NOTE: THIS TEST DEPENDS ON PRE-EXISTING CONTENT ON THE TESTING SITE - USE CreateContent.java TO SET UP CONTENT
@@ -46,7 +47,6 @@ public class CheckPresentationLatest extends AbstractSpec {
     private static JSONParser parser;
 
     private final String MODULE_DATA="moduleData", MODULE_NAME="presentation_latest", PAGE_DATA = "pageData", PAGE_NAME = "presentation_modules";
-
 
 
     @BeforeTest
@@ -76,14 +76,14 @@ public class CheckPresentationLatest extends AbstractSpec {
         dashboard.openPageFromCommonTasks(pageAdminMenuButton);
     }
 
-    @Test(dataProvider=PAGE_DATA, priority=1, enabled=false)
+    @Test(dataProvider=PAGE_DATA, priority=1, enabled=true)
     public void createPresentationLatestPage(JSONObject module) throws InterruptedException {
         Assert.assertEquals(pageForModules.savePage(module, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+MODULE_NAME+" Page didn't save properly");
         Assert.assertEquals(pageForModules.saveAndSubmitPage(module, MODULE_NAME), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New "+MODULE_NAME+" Page properly");
         Assert.assertEquals(pageForModules.publishPage(MODULE_NAME), WorkflowState.LIVE.state(), "Couldn't publish New "+MODULE_NAME+" Page properly");
     }
 
-    @Test(dataProvider=MODULE_DATA, priority=2, enabled=false)
+    @Test(dataProvider=MODULE_DATA, priority=2, enabled=true)
     public void createPresentationLatestModule(JSONObject module) throws InterruptedException {
         String sModuleNameSet = module.get("module_title").toString();
         Assert.assertEquals(moduleBase.saveModule(module, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+sModuleNameSet+" Module didn't save properly");
@@ -133,7 +133,7 @@ public class CheckPresentationLatest extends AbstractSpec {
         Assert.assertEquals(moduleBase.removeModule(module, sModuleNameSet), WorkflowState.NEW_ITEM.state(), "Couldn't remove "+sModuleNameSet+" Module. Something went wrong.");
     }
 
-    @Test(dataProvider=PAGE_DATA, priority=6, enabled=false)
+    @Test(dataProvider=PAGE_DATA, priority=6, enabled=true)
     public void removePresentationLatestPage(JSONObject module) throws Exception {
         Assert.assertEquals(pageForModules.setupAsDeletedPage(MODULE_NAME), WorkflowState.DELETE_PENDING.state(), "New "+MODULE_NAME+" Page didn't setup as Deleted properly");
         Assert.assertEquals(pageForModules.removePage(module, MODULE_NAME), WorkflowState.NEW_ITEM.state(), "Couldn't remove "+MODULE_NAME+" Page. Something went wrong.");

@@ -5,10 +5,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.Select;
 import pageobjects.AbstractPageObject;
 import pageobjects.Dashboard.Dashboard;
@@ -290,16 +287,16 @@ public class ModuleBase extends AbstractPageObject {
             waitForElement(commentsTxt);
             findElement(commentsTxt).sendKeys("Removing the module");
             findElement(deleteBtn).click();
-            try{
-                findElement(deleteBtn).click();
+
+            try {
+                Thread.sleep(DEFAULT_PAUSE*2);
+                driver.get(moduleUrl);
+            } catch (UnhandledAlertException e) {
+                driver.switchTo().alert().accept();
+                Thread.sleep(DEFAULT_PAUSE*2);
+                driver.get(moduleUrl);
             }
-            catch(Exception e){
 
-            }
-
-            Thread.sleep(DEFAULT_PAUSE);
-
-            driver.get(moduleUrl);
             waitForElement(currentContentSpan);
 
             JSONObject moduleObj = (JSONObject) jsonObj.get(moduleName);

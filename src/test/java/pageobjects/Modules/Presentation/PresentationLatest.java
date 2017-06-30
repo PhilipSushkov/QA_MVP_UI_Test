@@ -20,6 +20,7 @@ import static specs.AbstractSpec.*;
 /**
  * Created by zacharyk on 2017-06-29.
  */
+
 public class PresentationLatest extends AbstractPageObject {
     private static By workflowStateSpan, propertiesHref, commentsTxt, saveAndSubmitBtn;
     private static String sPathToModuleFile, sFileModuleJson;
@@ -58,9 +59,6 @@ public class PresentationLatest extends AbstractPageObject {
             Thread.sleep(DEFAULT_PAUSE);
 
             for (int i=0; i<jsonArrProp.size(); i++) {
-                //System.out.println(jsonArrProp.get(i).toString());
-                //String prop[] = jsonArrProp.get(i).toString().split(";");
-                //System.out.println(prop[0]);
                 try {
                     By propertyTextValue = By.xpath("//td[contains(@class, 'DataGridItemBorderLeft')][(text()='" + jsonArrProp.get(i).toString().split(";")[0] + "')]/parent::tr/td/div/input[contains(@id, 'txtStatic')]");
                     findElement(propertyTextValue).clear();
@@ -71,7 +69,7 @@ public class PresentationLatest extends AbstractPageObject {
                 }
             }
 
-            findElement(commentsTxt).sendKeys(modulesDataObj.get("comment_module").toString());
+            findElement(commentsTxt).sendKeys(modulesDataObj.get("comment").toString());
             findElement(saveAndSubmitBtn).click();
             Thread.sleep(DEFAULT_PAUSE);
 
@@ -95,7 +93,7 @@ public class PresentationLatest extends AbstractPageObject {
             e.printStackTrace();
         }
 
-        return "For Approval";
+        return null;
     }
 
     private String getModuleUrl(JSONObject obj, String moduleName) {
