@@ -77,6 +77,8 @@ public abstract class AbstractSpec extends util.Functions {
     public static Properties propUIModulesPressRelease;
     private static final String PATHTO_MODULESPRESENTATION_PROP = "Modules/Presentation/Presentation.properties";
     public static Properties propUIModulesPresentation;
+    private static final String PATHTO_MODULESEVENT_PROP = "Modules/Event/Event.properties";
+    public static Properties propUIModulesEvent;
     private static final String PATHTO_API_PROP = "api/ApiMap.properties";
     public static Properties propAPI;
 
@@ -263,6 +265,7 @@ public abstract class AbstractSpec extends util.Functions {
         propUIModulesFeed = ConnectToPropUI(PATHTO_MODULESFEED_PROP);
         propUIModulesPressRelease = ConnectToPropUI(PATHTO_MODULESPRESSRELEASE_PROP);
         propUIModulesPresentation = ConnectToPropUI(PATHTO_MODULESPRESENTATION_PROP);
+        propUIModulesEvent = ConnectToPropUI(PATHTO_MODULESEVENT_PROP);
         propAPI = ConnectToPropUI(PATHTO_API_PROP);
     }
 
