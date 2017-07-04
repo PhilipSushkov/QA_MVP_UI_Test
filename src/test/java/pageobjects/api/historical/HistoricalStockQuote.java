@@ -140,7 +140,7 @@ public class HistoricalStockQuote {
         // E.G TXRH's value is 56e8468870ebdeb9f3b9b247
         try {
             // API Request format: {{url}}/api/stock/historical?appver={{appver}}&securityID={{securityId}}
-            String urlHistQuery = PROTOCOL + host + "/api/stock/56e8468870ebdeb9f3b9b247?" + app_ver;
+            String urlHistQuery = PROTOCOL + host + "/api/stock/56ecad3db067373674058454?" + app_ver;
             // System.out.println("Q4 query = " + urlHistQuery);
 
             HttpGet get = new HttpGet(urlHistQuery);
@@ -159,7 +159,7 @@ public class HistoricalStockQuote {
         try {
 
             // Collecting Q4Data for that date
-            String q4DataBaseIndividualRequest = PROTOCOL + host + "/api/stock/56e8468870ebdeb9f3b9b247?" + app_ver;
+            String q4DataBaseIndividualRequest = PROTOCOL + host + "/api/stock/56ecad3db067373674058454?" + app_ver;
             // Setting up new requests
             HttpGet getIndividual = new HttpGet((q4DataBaseIndividualRequest));
             // Setting up authentication headers for individual get query
