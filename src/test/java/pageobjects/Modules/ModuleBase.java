@@ -30,6 +30,7 @@ public class ModuleBase extends AbstractPageObject {
     private static By addNewModuleBtn, moduleTitleInput, moduleDefinitionSelect, includeLagacyModulesChk;
     private static By publishBtn, saveBtn, workflowStateSpan, currentContentSpan, propertiesHref;
     private static By commentsTxt, deleteBtn, saveAndSubmitBtn, regionNameSelect, previewLnk, sectionTitle;
+    private static By siteAdminBtn, linkToPageBtn, otherPageBtn, pageDropdown, commentsArea;
     private static String sPathToPageFile, sFilePageJson, sPathToModuleFile, sFileModuleJson;
     private static JSONParser parser;
 
@@ -56,6 +57,12 @@ public class ModuleBase extends AbstractPageObject {
         deleteBtn = By.xpath(propUIPageAdmin.getProperty("btn_Delete"));
         publishBtn = By.xpath(propUIPageAdmin.getProperty("btn_Publish"));
         saveAndSubmitBtn = By.xpath(propUIPageAdmin.getProperty("btn_SaveAndSubmit"));
+
+        siteAdminBtn = By.xpath(propUIPageAdmin.getProperty("span_SiteAdmin"));
+        linkToPageBtn = By.xpath(propUIPageAdmin.getProperty("li_LinkToPage"));
+        otherPageBtn = By.xpath(propUIPageAdmin.getProperty("other_PageBtn"));
+        pageDropdown = By.xpath(propUIPageAdmin.getProperty("page_Dropdown"));
+        commentsArea = By.xpath(propUIPageAdmin.getProperty("txtarea_Comments"));
 
         sPathToPageFile = System.getProperty("user.dir") + propUIModules.getProperty("dataPath_Modules");
         sFilePageJson = propUIModules.getProperty("json_PagesProp");
@@ -239,7 +246,7 @@ public class ModuleBase extends AbstractPageObject {
             Thread.sleep(DEFAULT_PAUSE);
 
             waitForElementToAppear(publishBtn);
-            findElement(publishBtn).click();
+            scrollToElementAndClick(publishBtn);
             Thread.sleep(DEFAULT_PAUSE*2);
             try{
                 String test = findElement(addNewModuleBtn).getText();
@@ -286,7 +293,16 @@ public class ModuleBase extends AbstractPageObject {
 
             waitForElement(commentsTxt);
             findElement(commentsTxt).sendKeys("Removing the module");
-            findElement(deleteBtn).click();
+            scrollToElementAndClick(deleteBtn);
+            // This try statement makes sure that if the deletebtn wasn't clicked the first time it is clicked the second time
+            try{
+                waitForElement(moduleDefinitionSelect);
+                findVisibleElement(deleteBtn).click();
+            }
+            catch (Exception e){
+            }
+
+
 
             try {
                 Thread.sleep(DEFAULT_PAUSE*2);
@@ -334,14 +350,18 @@ public class ModuleBase extends AbstractPageObject {
 
                 waitForElement(commentsTxt);
                 findElement(commentsTxt).sendKeys("Approving the module removal");
-                findElement(publishBtn).click();
+                scrollToElementAndClick(publishBtn);
+
+                // This try statement makes sure that if the deletebtn wasn't clicked the first time it is clicked the second time
+                try{
+                    waitForElement(moduleDefinitionSelect);
+                    findVisibleElement(publishBtn).click();
+                }
+                catch (Exception e){
+                }
+
 
                 Thread.sleep(DEFAULT_PAUSE*2);
-                try {
-                    findElement(publishBtn).click();
-                }
-                catch(Exception e){
-                }
 
                 driver.get(moduleUrl);
                 Thread.sleep(DEFAULT_PAUSE);
@@ -431,6 +451,70 @@ public class ModuleBase extends AbstractPageObject {
 
         return driver.getTitle();
     }
+
+    // linkToPage must be one of the Key names on the Link to Page List
+   public String linkToPageEdit(String pageTitle, String linkToPage){
+        String comment = "This is a test comment.";
+        waitForElementToAppear(otherPageBtn);
+        By page = By.xpath("//td[text()= '" + linkToPage + "']/../td/input");
+        // These two try catches looks for the page you want to link
+        try{
+            driver.findElement(page).click();
+        }
+        catch (Exception e)
+        {
+            driver.findElement(otherPageBtn).click();
+        }
+       try{
+           driver.findElement(page).click();
+       }
+       catch (Exception e)
+       {
+           System.out.println("Page not found.");
+       }
+       waitForElementToAppear(pageDropdown);
+        driver.findElement(pageDropdown).sendKeys(pageTitle);
+        driver.findElement(By.xpath("//option[text()= '" + pageTitle + "']")).click();
+        driver.findElement(commentsArea).sendKeys(comment);
+        driver.findElement(saveAndSubmitBtn).click();
+       waitForElementToAppear(otherPageBtn);
+
+       // These two try catches looks for the page you want to link
+       try{
+           driver.findElement(page).click();
+       }
+       catch (Exception e)
+       {
+           driver.findElement(otherPageBtn).click();
+       }
+       try{
+           driver.findElement(page).click();
+       }
+       catch (Exception e)
+       {
+           System.out.println("Page not found.");
+       }
+       waitForElementToAppear(publishBtn);
+       driver.findElement(publishBtn).click();
+
+       // These two try catches looks for the page you want to link
+       try{
+           driver.findElement(page).click();
+       }
+       catch (Exception e)
+       {
+           driver.findElement(otherPageBtn).click();
+       }
+       try{
+           driver.findElement(page).click();
+       }
+       catch (Exception e)
+       {
+           System.out.println("Page not found.");
+       }
+       return findElement(workflowStateSpan).getText();
+
+   }
 
     public void closeWindow() {
         try {
