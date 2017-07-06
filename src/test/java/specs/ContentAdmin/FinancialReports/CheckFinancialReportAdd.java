@@ -94,15 +94,23 @@ public class CheckFinancialReportAdd extends AbstractSpec {
     @Test(dataProvider=DATA, priority=6)
     public void publishRelatedDocument(JSONObject data) throws InterruptedException {
         getFinancialReportTitle(data);
-        Assert.assertEquals(financialReportAdd.publishRelatedDocument(data, sFinancialReportTitle), WorkflowState.LIVE.state(), "New "+ PAGE_NAME +" doesn't publish properly (after Publish)");
+        Assert.assertEquals(financialReportAdd.publishRelatedDocument(data, sFinancialReportTitle), WorkflowState.LIVE.state(), "New "+ PAGE_NAME +" Related Document doesn't publish properly (after Publish)");
     }
 
     @Test(dataProvider=DATA, priority=7)
     public void revertFinancialReport(JSONObject data) throws InterruptedException {
         getFinancialReportTitle(data);
         Assert.assertEquals(financialReportAdd.changeAndSubmitFinancialReport(data, sFinancialReportTitle), WorkflowState.FOR_APPROVAL.state(), "Some fields of New "+ PAGE_NAME +" didn't change properly (after Save and Submit)");
-        //Assert.assertEquals(financialReportAdd.revertToLiveFinancialReport(sFinancialReportTitle), WorkflowState.LIVE.state(), "Couldn't revert to Live changes for New "+ PAGE_NAME);
-        //Assert.assertTrue(financialReportAdd.checkFinancialReport(data, sFinancialReportTitle), "Submitted New "+ PAGE_NAME +" data doesn't fit well to entry data (after Revert To Live)");
+        Assert.assertEquals(financialReportAdd.revertToLiveFinancialReport(sFinancialReportTitle), WorkflowState.LIVE.state(), "Couldn't revert to Live changes for New "+ PAGE_NAME);
+        Assert.assertTrue(financialReportAdd.checkFinancialReport(data, sFinancialReportTitle), "Submitted New "+ PAGE_NAME +" data doesn't fit well to entry data (after Revert To Live)");
+    }
+
+    @Test(dataProvider=DATA, priority=8)
+    public void revertRelatedDocument(JSONObject data) throws InterruptedException {
+        getFinancialReportTitle(data);
+        Assert.assertEquals(financialReportAdd.changeAndSubmitRelatedDocument(data, sFinancialReportTitle), WorkflowState.FOR_APPROVAL.state(), "Some fields of New "+ PAGE_NAME +" Related Document didn't change properly (after Save and Submit)");
+        Assert.assertEquals(financialReportAdd.revertToLiveRelatedDocument(data, sFinancialReportTitle), WorkflowState.LIVE.state(), "Couldn't revert to Live changes for New "+ PAGE_NAME + " Related Document");
+        Assert.assertTrue(financialReportAdd.checkFinancialReport(data, sFinancialReportTitle), "Submitted New "+ PAGE_NAME +" data doesn't fit well to entry data (after Revert To Live)");
     }
 
     public void getFinancialReportTitle(JSONObject data) {

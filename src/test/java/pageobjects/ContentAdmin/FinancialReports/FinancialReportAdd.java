@@ -713,6 +713,173 @@ public class FinancialReportAdd extends AbstractPageObject {
         return null;
     }
 
+    public String changeAndSubmitRelatedDocument(JSONObject data, String name) throws InterruptedException {
+        JSONObject jsonMain = new JSONObject();
+        JSONObject jsonMainDoc = new JSONObject();
+        JSONObject jsonRelatedDoc = (JSONObject) data.get(RELATED_DOC);
+        String docTitle = jsonRelatedDoc.get("document_title").toString();
+
+        try {
+            waitForElement(moduleTitle);
+
+            try {
+                FileReader readFile = new FileReader(sPathToFile + sFileJson);
+                jsonMain = (JSONObject) parser.parse(readFile);
+                jsonMainDoc = (JSONObject) jsonMain.get(name);
+            } catch (ParseException e) {
+            }
+
+            String pageUrl = getPageDocUrl(jsonMainDoc, RELATED_DOC);
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+            waitForElement(saveAndSubmitBtn);
+
+            JSONObject jsonObjDoc = (JSONObject) jsonMainDoc.get(RELATED_DOC);
+
+            try {
+                if (!jsonRelatedDoc.get("document_category_ch").toString().isEmpty()) {
+                    findElement(documentCategorySelect).sendKeys(jsonRelatedDoc.get("document_category_ch").toString());
+                    jsonObjDoc.put("document_category", jsonRelatedDoc.get("document_category_ch").toString());
+                }
+            } catch (NullPointerException e) {
+            }
+
+            try {
+                if (!jsonRelatedDoc.get("document_title_ch").toString().isEmpty()) {
+                    findElement(documentTitleInput).clear();
+                    findElement(documentTitleInput).sendKeys(jsonRelatedDoc.get("document_title_ch").toString());
+                    jsonObjDoc.put("document_title", jsonRelatedDoc.get("document_title_ch").toString());
+                }
+            } catch (NullPointerException e) {
+            }
+
+            try {
+                findElement(commentsTxt).clear();
+                findElement(commentsTxt).sendKeys(jsonRelatedDoc.get("comment_ch").toString());
+            } catch (NullPointerException e) {
+            }
+
+            findElement(saveAndSubmitBtn).click();
+            Thread.sleep(DEFAULT_PAUSE);
+
+            jsonObjDoc.put("workflow_state", WorkflowState.FOR_APPROVAL.state());
+            jsonObjDoc.put("deleted", "false");
+
+            jsonMainDoc.put(RELATED_DOC, jsonObjDoc);
+
+            FileWriter file = new FileWriter(sPathToFile + sFileJson);
+            file.write(jsonMain.toJSONString().replace("\\", ""));
+            file.flush();
+
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+            waitForElement(workflowStateSpan);
+
+            System.out.println(name+ ": New "+docTitle+" changes have been submitted");
+            return findElement(workflowStateSpan).getText();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public String revertToLiveFinancialReport(String name) throws InterruptedException {
+        JSONObject jsonMain = new JSONObject();
+        JSONObject jsonObj = new JSONObject();
+
+        try {
+            try {
+                FileReader readFile = new FileReader(sPathToFile + sFileJson);
+                jsonMain = (JSONObject) parser.parse(readFile);
+                jsonObj = (JSONObject) jsonMain.get(name);
+            } catch (ParseException e) {
+            }
+
+            String pageUrl = getPageUrl(jsonMain, name);
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+            waitForElement(revertBtn);
+
+            if (jsonObj.get("workflow_state").toString().equals(WorkflowState.FOR_APPROVAL.state())) {
+                findElement(revertBtn).click();
+                Thread.sleep(DEFAULT_PAUSE);
+
+                jsonObj.put("workflow_state", WorkflowState.LIVE.state());
+                jsonObj.put("deleted", "false");
+
+                jsonMain.put(name, jsonObj);
+
+                FileWriter file = new FileWriter(sPathToFile + sFileJson);
+                file.write(jsonMain.toJSONString().replace("\\", ""));
+                file.flush();
+
+                driver.get(pageUrl);
+                Thread.sleep(DEFAULT_PAUSE);
+                waitForElement(workflowStateSpan);
+
+                System.out.println(name+ ": "+PAGE_NAME+" has been reverted to Live");
+                return findElement(workflowStateSpan).getText();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public String revertToLiveRelatedDocument(JSONObject data, String name) throws InterruptedException {
+        JSONObject jsonMain = new JSONObject();
+        JSONObject jsonMainDoc = new JSONObject();
+        JSONObject jsonRelatedDoc = (JSONObject) data.get(RELATED_DOC);
+        String docTitle = jsonRelatedDoc.get("document_title").toString();
+
+        try {
+            waitForElement(moduleTitle);
+
+            try {
+                FileReader readFile = new FileReader(sPathToFile + sFileJson);
+                jsonMain = (JSONObject) parser.parse(readFile);
+                jsonMainDoc = (JSONObject) jsonMain.get(name);
+            } catch (ParseException e) {
+            }
+
+            String pageUrl = getPageDocUrl(jsonMainDoc, RELATED_DOC);
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+            waitForElement(revertBtn);
+
+            JSONObject jsonObjDoc = (JSONObject) jsonMainDoc.get(RELATED_DOC);
+
+            if (jsonObjDoc.get("workflow_state").toString().equals(WorkflowState.FOR_APPROVAL.state())) {
+                findElement(revertBtn).click();
+                Thread.sleep(DEFAULT_PAUSE);
+
+                jsonObjDoc.put("workflow_state", WorkflowState.LIVE.state());
+                jsonObjDoc.put("deleted", "false");
+
+                jsonMainDoc.put(RELATED_DOC, jsonObjDoc);
+
+                FileWriter file = new FileWriter(sPathToFile + sFileJson);
+                file.write(jsonMain.toJSONString().replace("\\", ""));
+                file.flush();
+
+                driver.get(pageUrl);
+                Thread.sleep(DEFAULT_PAUSE);
+                waitForElement(workflowStateSpan);
+
+                System.out.println(name+ ": "+docTitle+" has been reverted to Live");
+                return findElement(workflowStateSpan).getText();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
     public String getPageUrl(JSONObject obj, String name) {
         String sItemID = JsonPath.read(obj, "$.['"+name+"'].url_query.ItemID");
         String sLanguageId = JsonPath.read(obj, "$.['"+name+"'].url_query.LanguageId");
