@@ -1,4 +1,4 @@
-package pageobjects.Modules.PressRelease;
+package pageobjects.Modules.Presentation;
 
 import com.jayway.jsonpath.JsonPath;
 import org.json.simple.JSONArray;
@@ -6,67 +6,40 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import pageobjects.AbstractPageObject;
 import pageobjects.PageAdmin.WorkflowState;
 import pageobjects.PageObject;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
 
 import static specs.AbstractSpec.*;
-import static specs.AbstractSpec.desktopUrl;
 
 /**
- * Created by dannyl on 2017-06-23.
+ * Created by andyp on 2017-07-05.
  */
-public class PressReleaseDetails extends AbstractPageObject{
-    private static By addNewModuleBtn, backBtn, moduleTitleInput, moduleDefinitionSelect, includeLegacyModulesChk;
-    private static By publishBtn, saveBtn, workflowStateSpan, currentContentSpan, propertiesHref, previewLnk;
-    private static By livePageTitle, liveModuleTitleSpan, livePressReleaseModulePageMenuBtn;
-    private static By commentsTxt, deleteBtn, saveAndSubmitBtn, regionNameSelect;
-    private static String sPathToPageFile, sFilePageJson, sPathToModuleFile, sFileModuleJson;
-    private static JSONParser parser;
 
+public class PresentationDetails extends AbstractPageObject {
+    private static By workflowStateSpan, propertiesHref, commentsTxt, saveAndSubmitBtn;
+    private static String sPathToModuleFile, sFileModuleJson;
+    private static JSONParser parser;
     private static final long DEFAULT_PAUSE = 2500;
 
-    public PressReleaseDetails(WebDriver driver) {
+    public PresentationDetails(WebDriver driver) {
         super(driver);
 
-        addNewModuleBtn = By.xpath(propUIModules.getProperty("btn_AddNewModule"));
-        moduleTitleInput = By.xpath(propUIModules.getProperty("input_ModuleTitle"));
-        moduleDefinitionSelect = By.xpath(propUIModules.getProperty("select_ModuleDefinition"));
-        includeLegacyModulesChk = By.xpath(propUIModules.getProperty("chk_IncludeLagacyModules"));
-        regionNameSelect = By.xpath(propUIModules.getProperty("select_RegionName"));
         workflowStateSpan = By.xpath(propUIPageAdmin.getProperty("select_WorkflowState"));
         commentsTxt = By.xpath(propUIPageAdmin.getProperty("txtarea_Comments"));
-        currentContentSpan = By.xpath(propUIPageAdmin.getProperty("span_CurrentContent"));
         propertiesHref = By.xpath(propUIModules.getProperty("href_Properties"));
-        previewLnk = By.xpath(propUIModules.getProperty("lnk_Preview"));
-
-        saveBtn = By.xpath(propUIPageAdmin.getProperty("btn_Save"));
-        deleteBtn = By.xpath(propUIPageAdmin.getProperty("btn_Delete"));
-        publishBtn = By.xpath(propUIPageAdmin.getProperty("btn_Publish"));
-        backBtn = By.xpath(propUIPageAdmin.getProperty("btn_Back"));
         saveAndSubmitBtn = By.xpath(propUIPageAdmin.getProperty("btn_SaveAndSubmit"));
 
-        livePageTitle = By.xpath(propUIModules.getProperty("page_Title"));
-        liveModuleTitleSpan = By.xpath(propUIModules.getProperty("span_LiveModuleTitle"));
-        livePressReleaseModulePageMenuBtn = By.xpath(propUIModules.getProperty("btnMenu_LivePressReleaseModulePage"));
-
-        sPathToPageFile = System.getProperty("user.dir") + propUIModules.getProperty("dataPath_Modules");
-        sFilePageJson = propUIModules.getProperty("json_PagesProp");
-        sPathToModuleFile = System.getProperty("user.dir") + propUIModulesPressRelease.getProperty("dataPath_PressRelease");
-        sFileModuleJson = propUIModulesPressRelease.getProperty("json_pressReleaseDetailsProp");
+        sPathToModuleFile = System.getProperty("user.dir") + propUIModulesPresentation.getProperty("dataPath_Presentation");
+        sFileModuleJson = propUIModulesPresentation.getProperty("json_PresentationDetailsProp");
 
         parser = new JSONParser();
     }
-
     public String saveAndSubmitModule(JSONObject modulesDataObj, String moduleName) throws InterruptedException {
 
         try {
@@ -89,7 +62,7 @@ public class PressReleaseDetails extends AbstractPageObject{
                     By propertyTextValue = By.xpath("//td[contains(@class, 'DataGridItemBorderLeft')][(text()='" + jsonArrProp.get(i).toString().split(";")[0] + "')]/parent::tr/td/div/input[contains(@id, 'txtStatic')]");
                     findElement(propertyTextValue).clear();
                     findElement(propertyTextValue).sendKeys(jsonArrProp.get(i).toString().split(";")[1]);
-                } catch (ElementNotFoundException e) {
+                } catch (PageObject.ElementNotFoundException e) {
                     By propertyDropdownValue = By.xpath("//td[contains(@class, 'DataGridItemBorderLeft')][(text()='" + jsonArrProp.get(i).toString().split(";")[0] + "')]/parent::tr/td/div/select[contains(@id, 'ddlDynamic')]");
                     findElement(propertyDropdownValue).sendKeys(jsonArrProp.get(i).toString().split(";")[1]);
                 }
@@ -119,8 +92,7 @@ public class PressReleaseDetails extends AbstractPageObject{
             e.printStackTrace();
         }
 
-
-        return "For Approval";
+        return null;
     }
 
     private String getModuleUrl(JSONObject obj, String moduleName) {
