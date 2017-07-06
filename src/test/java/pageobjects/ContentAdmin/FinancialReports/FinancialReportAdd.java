@@ -363,7 +363,7 @@ public class FinancialReportAdd extends AbstractPageObject {
             file.write(jsonMain.toJSONString().replace("\\", ""));
             file.flush();
 
-            System.out.println(name+ ": "+PAGE_NAME+" has been sumbitted");
+            System.out.println(name+ ": related document "+docTitle+" has been sumbitted");
             return findElement(workflowStateSpan).getText();
         } catch (IOException e) {
             e.printStackTrace();
@@ -533,6 +533,179 @@ public class FinancialReportAdd extends AbstractPageObject {
 
             System.out.println(name+ ": New "+PAGE_NAME+" has been checked");
             return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public String publishFinancialReport(JSONObject data, String name) throws InterruptedException {
+        JSONObject jsonMain = new JSONObject();
+        JSONObject jsonObj = new JSONObject();
+
+        try {
+            try {
+                FileReader readFile = new FileReader(sPathToFile + sFileJson);
+                jsonMain = (JSONObject) parser.parse(readFile);
+                jsonObj = (JSONObject) jsonMain.get(name);
+            } catch (ParseException e) {
+            }
+
+            String pageUrl = getPageUrl(jsonMain, name);
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+
+            waitForElement(publishBtn);
+            findElement(publishBtn).click();
+            Thread.sleep(DEFAULT_PAUSE*2);
+
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE*2);
+            driver.navigate().refresh();
+            Thread.sleep(DEFAULT_PAUSE);
+
+            jsonObj.put("workflow_state", WorkflowState.LIVE.state());
+            jsonObj.put("deleted", "false");
+
+            jsonMain.put(name, jsonObj);
+
+            FileWriter file = new FileWriter(sPathToFile + sFileJson);
+            file.write(jsonMain.toJSONString().replace("\\", ""));
+            file.flush();
+
+            Thread.sleep(DEFAULT_PAUSE*2);
+            driver.navigate().refresh();
+
+            System.out.println(name+ ": New "+PAGE_NAME+" has been published");
+            return findElement(workflowStateSpan).getText();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public String publishRelatedDocument(JSONObject data, String name) throws InterruptedException {
+        JSONObject jsonMain = new JSONObject();
+        JSONObject jsonMainDoc = new JSONObject();
+        JSONObject jsonRelatedDoc = (JSONObject) data.get(RELATED_DOC);
+        String docTitle = jsonRelatedDoc.get("document_title").toString();
+
+        try {
+            waitForElement(moduleTitle);
+
+            try {
+                FileReader readFile = new FileReader(sPathToFile + sFileJson);
+                jsonMain = (JSONObject) parser.parse(readFile);
+                jsonMainDoc = (JSONObject) jsonMain.get(name);
+            } catch (ParseException e) {
+            }
+
+            String pageUrl = getPageDocUrl(jsonMainDoc, RELATED_DOC);
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+            waitForElement(commentsTxt);
+
+            findElement(publishBtn).click();
+            Thread.sleep(DEFAULT_PAUSE*2);
+
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE*2);
+            driver.navigate().refresh();
+            Thread.sleep(DEFAULT_PAUSE);
+
+            JSONObject jsonObjDoc = (JSONObject) jsonMainDoc.get(RELATED_DOC);
+
+            jsonObjDoc.put("workflow_state", WorkflowState.LIVE.state());
+            jsonObjDoc.put("deleted", "false");
+
+            jsonMainDoc.put(RELATED_DOC, jsonObjDoc);
+
+            FileWriter file = new FileWriter(sPathToFile + sFileJson);
+            file.write(jsonMain.toJSONString().replace("\\", ""));
+            file.flush();
+
+            Thread.sleep(DEFAULT_PAUSE*2);
+            driver.navigate().refresh();
+
+            System.out.println(name+ ": New related document "+docTitle+" has been published");
+            return findElement(workflowStateSpan).getText();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public String changeAndSubmitFinancialReport(JSONObject data, String name) throws InterruptedException {
+        JSONObject jsonMain = new JSONObject();
+        JSONObject jsonObj = new JSONObject();
+
+        try {
+            try {
+                FileReader readFile = new FileReader(sPathToFile + sFileJson);
+                jsonMain = (JSONObject) parser.parse(readFile);
+                jsonObj = (JSONObject) jsonMain.get(name);
+            } catch (ParseException e) {
+            }
+
+            String pageUrl = getPageUrl(jsonMain, name);
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+            waitForElement(saveAndSubmitBtn);
+
+            try {
+                if (!data.get("report_type_ch").toString().isEmpty()) {
+                    findElement(reportTypeSelect).sendKeys(data.get("report_type_ch").toString());
+                    jsonObj.put("report_type", data.get("report_type_ch").toString());
+                }
+            } catch (NullPointerException e) {
+            }
+
+            jsonObj.put("active", Boolean.parseBoolean(data.get("active").toString()));
+            try {
+                // Save Active checkbox
+                if (Boolean.parseBoolean(data.get("active_ch").toString())) {
+                    if (!Boolean.parseBoolean(findElement(activeChk).getAttribute("checked"))) {
+                        findElement(activeChk).click();
+                        jsonObj.put("active", true);
+                    } else {
+                    }
+                } else {
+                    if (!Boolean.parseBoolean(findElement(activeChk).getAttribute("checked"))) {
+                    } else {
+                        findElement(activeChk).click();
+                        jsonObj.put("active", false);
+                    }
+                }
+            } catch (NullPointerException e) {
+            }
+
+            try {
+                findElement(commentsTxt).clear();
+                findElement(commentsTxt).sendKeys(data.get("comment_ch").toString());
+            } catch (NullPointerException e) {
+            }
+
+            findElement(saveAndSubmitBtn).click();
+            Thread.sleep(DEFAULT_PAUSE);
+
+            jsonObj.put("workflow_state", WorkflowState.FOR_APPROVAL.state());
+            jsonObj.put("deleted", "false");
+
+            jsonMain.put(name, jsonObj);
+
+            FileWriter file = new FileWriter(sPathToFile + sFileJson);
+            file.write(jsonMain.toJSONString().replace("\\", ""));
+            file.flush();
+
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+            waitForElement(workflowStateSpan);
+
+            System.out.println(name+ ": New "+PAGE_NAME+" changes have been submitted");
+            return findElement(workflowStateSpan).getText();
         } catch (IOException e) {
             e.printStackTrace();
         }

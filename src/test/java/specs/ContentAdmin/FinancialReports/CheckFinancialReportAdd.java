@@ -74,10 +74,35 @@ public class CheckFinancialReportAdd extends AbstractSpec {
     @Test(dataProvider=DATA, priority=3)
     public void saveAndSubmitFinancialReport(JSONObject data) throws InterruptedException {
         getFinancialReportTitle(data);
-        //Assert.assertEquals(financialReportAdd.saveAndSubmitFinancialReport(data, sFinancialReportTitle), WorkflowState.FOR_APPROVAL.state(), "New " + PAGE_NAME + " doesn't submit properly (after Save And Submit)");
-        //Assert.assertEquals(financialReportAdd.saveAndSubmitRelatedDocument(data, sFinancialReportTitle), WorkflowState.FOR_APPROVAL.state(), "New " + PAGE_NAME + " Related Document doesn't submit properly (after Save And Submit)");
-        //Assert.assertTrue(financialReportAdd.checkFinancialReport(data, sFinancialReportTitle), "Submitted New "+ PAGE_NAME +" data doesn't fit well to entry data (after Save and Submit)");
+        Assert.assertEquals(financialReportAdd.saveAndSubmitFinancialReport(data, sFinancialReportTitle), WorkflowState.FOR_APPROVAL.state(), "New " + PAGE_NAME + " doesn't submit properly (after Save And Submit)");
+        Assert.assertTrue(financialReportAdd.checkFinancialReport(data, sFinancialReportTitle), "Submitted New "+ PAGE_NAME +" data doesn't fit well to entry data (after Save and Submit)");
+    }
+
+    @Test(dataProvider=DATA, priority=4)
+    public void saveAndSubmitRelatedDocument(JSONObject data) throws InterruptedException {
+        getFinancialReportTitle(data);
+        Assert.assertEquals(financialReportAdd.saveAndSubmitRelatedDocument(data, sFinancialReportTitle), WorkflowState.FOR_APPROVAL.state(), "New " + PAGE_NAME + " Related Document doesn't submit properly (after Save And Submit)");
         Assert.assertTrue(financialReportAdd.checkRelatedDocument(data, sFinancialReportTitle), "Submitted New "+ PAGE_NAME +" Related Document data doesn't fit well to entry data (after Save and Submit)");
+    }
+
+    @Test(dataProvider=DATA, priority=5)
+    public void publishFinancialReport(JSONObject data) throws InterruptedException {
+        getFinancialReportTitle(data);
+        Assert.assertEquals(financialReportAdd.publishFinancialReport(data, sFinancialReportTitle), WorkflowState.LIVE.state(), "New "+ PAGE_NAME +" doesn't publish properly (after Publish)");
+    }
+
+    @Test(dataProvider=DATA, priority=6)
+    public void publishRelatedDocument(JSONObject data) throws InterruptedException {
+        getFinancialReportTitle(data);
+        Assert.assertEquals(financialReportAdd.publishRelatedDocument(data, sFinancialReportTitle), WorkflowState.LIVE.state(), "New "+ PAGE_NAME +" doesn't publish properly (after Publish)");
+    }
+
+    @Test(dataProvider=DATA, priority=7)
+    public void revertFinancialReport(JSONObject data) throws InterruptedException {
+        getFinancialReportTitle(data);
+        Assert.assertEquals(financialReportAdd.changeAndSubmitFinancialReport(data, sFinancialReportTitle), WorkflowState.FOR_APPROVAL.state(), "Some fields of New "+ PAGE_NAME +" didn't change properly (after Save and Submit)");
+        //Assert.assertEquals(financialReportAdd.revertToLiveFinancialReport(sFinancialReportTitle), WorkflowState.LIVE.state(), "Couldn't revert to Live changes for New "+ PAGE_NAME);
+        //Assert.assertTrue(financialReportAdd.checkFinancialReport(data, sFinancialReportTitle), "Submitted New "+ PAGE_NAME +" data doesn't fit well to entry data (after Revert To Live)");
     }
 
     public void getFinancialReportTitle(JSONObject data) {
