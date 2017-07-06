@@ -24,6 +24,7 @@ import static specs.AbstractSpec.desktopUrl;
 /**
  * Created by philipsushkov on 2017-06-12.
  */
+
 public class PressRelease extends AbstractPageObject {
     private static By addNewModuleBtn, backBtn, moduleTitleInput, moduleDefinitionSelect, includeLegacyModulesChk;
     private static By publishBtn, saveBtn, workflowStateSpan, currentContentSpan, propertiesHref, previewLnk;
@@ -65,89 +66,6 @@ public class PressRelease extends AbstractPageObject {
         parser = new JSONParser();
     }
 
-    public String saveModule(JSONObject modulesDataObj, String moduleName) throws InterruptedException {
-        String module_title, module_definition, region_name;
-
-        try {
-
-            JSONObject jsonObj = (JSONObject) parser.parse(new FileReader(sPathToPageFile + sFilePageJson));
-
-            String pageUrl = getPageUrl(jsonObj, moduleName);
-            driver.get(pageUrl);
-            Thread.sleep(DEFAULT_PAUSE);
-
-            waitForElement(commentsTxt);
-
-            findElement(addNewModuleBtn).click();
-            Thread.sleep(DEFAULT_PAUSE);
-            waitForElement(includeLegacyModulesChk);
-
-            findElement(includeLegacyModulesChk).click();
-            Thread.sleep(DEFAULT_PAUSE);
-            waitForElement(moduleTitleInput);
-
-            JSONObject module = new JSONObject();
-
-            module_title = modulesDataObj.get("module_title").toString();
-            findElement(moduleTitleInput).sendKeys(module_title);
-            module.put("module_title", module_title);
-
-            module_definition = modulesDataObj.get("module_definition").toString();
-            findElement(moduleDefinitionSelect).sendKeys(module_definition);
-            module.put("module_definition", module_definition);
-
-            region_name = modulesDataObj.get("region_name").toString();
-            findElement(regionNameSelect).sendKeys(region_name);
-            module.put("region_name", region_name);
-
-            Thread.sleep(DEFAULT_PAUSE);
-
-            findElement(saveBtn).click();
-            Thread.sleep(DEFAULT_PAUSE);
-            waitForElement(deleteBtn);
-
-
-            module.put("workflow_state", WorkflowState.IN_PROGRESS.state());
-            module.put("active", "true");
-
-            URL pageURL = new URL(getUrl());
-            String[] params = pageURL.getQuery().split("&");
-            JSONObject jsonURLQuery = new JSONObject();
-            for (String param:params) {
-                jsonURLQuery.put(param.split("=")[0], param.split("=")[1]);
-            }
-            module.put("url_query", jsonURLQuery);
-
-            JSONObject jsonObjSave;
-            try {
-                jsonObjSave = (JSONObject) parser.parse(new FileReader(sPathToModuleFile + sFileModuleJson));
-            } catch (ParseException e) {
-                jsonObjSave = (JSONObject) parser.parse("{}");
-            }
-
-            jsonObjSave.put(module_title, module);
-
-            try {
-                FileWriter file = new FileWriter(sPathToModuleFile + sFileModuleJson);
-                file.write(jsonObjSave.toJSONString().replace("\\", ""));
-                file.flush();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            System.out.println("New "+moduleName+" has been created");
-            return findElement(workflowStateSpan).getText();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
 
     public String saveAndSubmitModule(JSONObject modulesDataObj, String moduleName) throws InterruptedException {
 
@@ -202,6 +120,7 @@ public class PressRelease extends AbstractPageObject {
         }
 
 
+<<<<<<< HEAD
         return null;
     }
 
@@ -325,6 +244,8 @@ public class PressRelease extends AbstractPageObject {
             e.printStackTrace();
         }
 
+=======
+>>>>>>> origin/SeleniumModuleTesting
         return null;
     }
 

@@ -120,7 +120,7 @@ public class PressReleaseDetails extends AbstractPageObject{
         }
 
 
-        return "For Approval";
+        return null;
     }
 
     private String getModuleUrl(JSONObject obj, String moduleName) {

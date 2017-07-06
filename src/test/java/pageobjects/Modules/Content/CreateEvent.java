@@ -1,11 +1,16 @@
 package pageobjects.Modules.Content;
 
 import com.jayway.jsonpath.JsonPath;
+import gherkin.lexer.Ca;
+import org.apache.xpath.operations.Bool;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.Select;
 import pageobjects.AbstractPageObject;
 import pageobjects.PageAdmin.WorkflowState;
 
@@ -14,6 +19,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import static specs.AbstractSpec.desktopUrl;
 import static specs.AbstractSpec.propUIContentAdmin;
@@ -25,6 +33,10 @@ import static specs.AbstractSpec.propUIModules;
 public class CreateEvent extends AbstractPageObject {
     private static By startDateInput, endDateInput, startTimeHHSelect, startTimeMMSelect, startTimeAMSelect;
     private static By endTimeHHSelect, endTimeMMSelect, endTimeAMSelect, tagsInput, titleInput, textArea, commentsInput;
+    private static By isWebcast, excludeFromLatest;
+    private static By relatedPressRelease, relatedFinancialReport, financialQuarter, financialYear, relatedPresentation, relatedWebcast;
+    private static By addNewSpeakerLink, speakerNameInput, speakerPositionInput, speakerSubmitBtn;
+    private static By addNewAttachmentLink, attachmentTitleInput, attachmentTypeSelect, attachmentTypeOnlineChk, attachmentPathInput, attachmentSubmitBtn;
     private static By switchToHtml, saveButton, saveAndSubmitButton, publishBtn, deleteBtn, workflowStateSpan, currentContentSpan, yourPageUrl;
 
     private static String sPathToFile, sFilePageJson;
@@ -46,7 +58,28 @@ public class CreateEvent extends AbstractPageObject {
         endTimeMMSelect = By.xpath(propUIContentAdmin.getProperty("select_EndTimeMM"));
         endTimeAMSelect = By.xpath(propUIContentAdmin.getProperty("select_EndTimeAM"));
         tagsInput = By.xpath(propUIContentAdmin.getProperty("input_Tags"));
+        relatedPressRelease = By.xpath(propUIContentAdmin.getProperty("select_RelatedPressRelease"));
+        relatedFinancialReport = By.xpath(propUIContentAdmin.getProperty("select_RelatedFinancialReport"));
+        financialQuarter = By.xpath(propUIContentAdmin.getProperty("select_FinancialPeriodQ"));
+        financialYear = By.xpath(propUIContentAdmin.getProperty("select_FinancialPeriodY"));
+        relatedPresentation = By.xpath(propUIContentAdmin.getProperty("select_RelatedPresentations"));
+        relatedWebcast = By.xpath(propUIContentAdmin.getProperty("input_RelatedWebcast"));
+
+        addNewSpeakerLink = By.xpath(propUIContentAdmin.getProperty("href_AddNewSpeakers"));
+        speakerNameInput = By.xpath(propUIContentAdmin.getProperty("input_SpeakerName"));
+        speakerPositionInput = By.xpath(propUIContentAdmin.getProperty("input_SpeakerPosition"));
+        speakerSubmitBtn = By.xpath(propUIContentAdmin.getProperty("btn_SpeakerOK"));
+        addNewAttachmentLink = By.xpath(propUIContentAdmin.getProperty("href_AddNewAttachments"));
+        attachmentTitleInput = By.xpath(propUIContentAdmin.getProperty("input_AttachmentTitle"));
+        attachmentTypeSelect = By.xpath(propUIContentAdmin.getProperty("select_AttachmentTypeList"));
+        attachmentTypeOnlineChk = By.xpath(propUIContentAdmin.getProperty("chk_AttachmentDocumentTypeOnline"));
+        attachmentPathInput = By.xpath(propUIContentAdmin.getProperty("input_AttachmentPathOnline"));
+        attachmentSubmitBtn = By.xpath(propUIContentAdmin.getProperty("btn_AttachmentOK"));
+
         textArea = By.tagName(propUIContentAdmin.getProperty("frame_Textarea"));
+        isWebcast = By.xpath(propUIContentAdmin.getProperty("chk_IsWebcast"));
+        excludeFromLatest = By.xpath(propUIContentAdmin.getProperty("chk_ExcludeFromLatest"));
+
         switchToHtml = By.className(propUIContentAdmin.getProperty("html_SwitchTo"));
 
         commentsInput = By.xpath(propUIContentAdmin.getProperty("txtarea_UpdateComments"));
@@ -70,11 +103,21 @@ public class CreateEvent extends AbstractPageObject {
 
         waitForElement(saveAndSubmitButton);
 
-        findElement(startDateInput).sendKeys(data.get("start_date").toString());
+        if (data.get("date").toString().equals("future")) {
+            // set date to one year in the future
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
+            Calendar date = Calendar.getInstance();
+            date.add(Calendar.YEAR, 1);
+            String futureDate = dateFormat.format(date.getTime());
+            findElement(startDateInput).sendKeys(futureDate);
+            findElement(endDateInput).sendKeys(futureDate);
+        } else {
+            findElement(startDateInput).sendKeys(data.get("date").toString());
+            findElement(endDateInput).sendKeys(data.get("date").toString());
+        }
         findElement(startTimeHHSelect).sendKeys(data.get("start_hour").toString());
         findElement(startTimeMMSelect).sendKeys(data.get("start_minute").toString());
         findElement(startTimeAMSelect).sendKeys(data.get("start_AMPM").toString());
-        findElement(endDateInput).sendKeys(data.get("end_date").toString());
         findElement(endTimeHHSelect).sendKeys(data.get("end_hour").toString());
         findElement(endTimeMMSelect).sendKeys(data.get("end_minute").toString());
         findElement(endTimeAMSelect).sendKeys(data.get("end_AMPM").toString());
@@ -85,6 +128,13 @@ public class CreateEvent extends AbstractPageObject {
         findElement(textArea).sendKeys(data.get("body").toString());
         driver.switchTo().defaultContent();
         pause(1000L);
+
+        if (Boolean.valueOf(data.get("is_webcast").toString())) {
+            findElement(isWebcast).click();
+        }
+        if (Boolean.valueOf(data.get("exclude_latest").toString())) {
+            findElement(excludeFromLatest).click();
+        }
 
         findElement(saveButton).click();
 
@@ -145,6 +195,32 @@ public class CreateEvent extends AbstractPageObject {
 
             findElement(tagsInput).sendKeys(data.get("tags").toString());
             findElement(commentsInput).sendKeys(data.get("comment").toString());
+            new Select(findElement(relatedPressRelease)).selectByIndex(1);
+            new Select(findElement(relatedFinancialReport)).selectByIndex(1);
+            new Select(findElement(financialQuarter)).selectByIndex(1);
+            new Select(findElement(financialYear)).selectByIndex(1);
+            new Select(findElement(relatedPresentation)).selectByIndex(1);
+            findElement(relatedWebcast).sendKeys(data.get("related_webcast").toString());
+
+            findElement(addNewSpeakerLink).click();
+            findElement(speakerNameInput).sendKeys(data.get("speaker").toString());
+            findElement(speakerPositionInput).sendKeys(data.get("speaker_position").toString());
+            findElement(speakerSubmitBtn).click();
+
+            findElement(addNewAttachmentLink).click();
+            findElement(attachmentTitleInput).sendKeys(data.get("attachment_title").toString());
+            new Select(findElement(attachmentTypeSelect)).selectByIndex(0);
+            findElement(attachmentTypeOnlineChk).click();
+
+            findElement(attachmentPathInput).sendKeys(data.get("attachment_path").toString());
+
+            try {
+                Thread.sleep(5000L);
+            } catch (Exception e) {
+            }
+
+            findElement(attachmentSubmitBtn).click();
+
             findElement(saveAndSubmitButton).click();
             Thread.sleep(DEFAULT_PAUSE);
 

@@ -1,5 +1,6 @@
 package specs.Modules.PressRelease;
 
+import com.jayway.jsonpath.JsonPath;
 import com.mongodb.util.JSON;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -29,7 +30,7 @@ import java.util.ArrayList;
  * Created by dannyl on 2017-06-23.
  */
 public class CheckPressReleaseDetails extends AbstractSpec{
-    private static By pageAdminMenuButton;
+    private static By pageAdminMenuButton, siteAdminMenuButton, linkToPageMenuItem;
     private static LoginPage loginPage;
     private static Dashboard dashboard;
     private static PageForModules pageForModules;
@@ -38,10 +39,11 @@ public class CheckPressReleaseDetails extends AbstractSpec{
     private static PressReleaseEdit pressReleaseEdit;
     private static JSONObject pressReleaseEditDetails;
     private static JSONArray pressReleasePreviewPageURL;
-    private static String baseUrl, pressReleaseId, sectionId, languageId;
+    private static String baseUrl, pressReleaseId, sectionId, languageId, title, moduleTitle;
 
     private static String sPathToFile, sDataFileJson, sPathToModuleFile, sFileModuleJson;
     private static JSONParser parser = new JSONParser();
+
 
     private final String PAGE_DATA="pageData", PAGE_NAME="press_release_modules", MODULE_DATA="moduleData", MODULE_NAME="press_release_details", PRESS_RELEASE_DETAILS = "press_release_creation_details";
 
@@ -59,21 +61,9 @@ public class CheckPressReleaseDetails extends AbstractSpec{
         sDataFileJson = propUIModulesPressRelease.getProperty("json_pressReleaseDetailsData");
         sPathToModuleFile = System.getProperty("user.dir") + propUIModulesPressRelease.getProperty("dataPath_PressRelease");
         sFileModuleJson = propUIModulesPressRelease.getProperty("json_pressReleaseDetailsProp");
-        try
-        {
-            Object obj = parser.parse(new FileReader("/Users/dannyl/Documents/QA-WebCMS-Test/src/test/java/pageobjects/Modules/PressRelease/json/pressReleaseDetailsData.json"));
-            JSONObject jsonObject = (JSONObject) obj;
-            pressReleasePreviewPageURL = (JSONArray) jsonObject.get("url_query");
-           JSONObject pressReleasePreviewPageURLDetails = (JSONObject) pressReleasePreviewPageURL.get(0);
-            baseUrl = pressReleasePreviewPageURLDetails.get("BaseUrl").toString();
-            sectionId = pressReleasePreviewPageURLDetails.get("SectionID").toString();
-            languageId = pressReleasePreviewPageURLDetails.get("LanguageID").toString();
-            pressReleaseId = pressReleasePreviewPageURLDetails.get("ItemID").toString();
-        }
-        catch (Exception e)
-        {
-            System.out.println("Failed to read data.");
-        }
+
+        siteAdminMenuButton = By.xpath(propUISiteAdmin.getProperty("btnMenu_SiteAdmin"));
+        linkToPageMenuItem= By.xpath(propUISiteAdmin.getProperty("itemMenu_LinkToPageList"));
 
         moduleBase = new ModuleBase(driver, sPathToModuleFile, sFileModuleJson);
 
@@ -89,13 +79,17 @@ public class CheckPressReleaseDetails extends AbstractSpec{
     }
 
     @Test(dataProvider=PAGE_DATA, priority=1, enabled=false)
-    public void createPressReleaseDetailsPage(JSONObject page) throws InterruptedException {
+    public void createPressReleaseDetailsPage(JSONObject page) throws Exception {
         Assert.assertEquals(pageForModules.savePage(page, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+MODULE_NAME+" Page didn't save properly");
         Assert.assertEquals(pageForModules.saveAndSubmitPage(page, MODULE_NAME), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New "+MODULE_NAME+" Page properly");
         Assert.assertEquals(pageForModules.publishPage(MODULE_NAME), WorkflowState.LIVE.state(), "Couldn't publish New "+MODULE_NAME+" Page properly");
+        dashboard.openPageFromMenu(siteAdminMenuButton, linkToPageMenuItem);
+        Assert.assertEquals(moduleBase.linkToPageEdit("- press_release_details", "LinkToPressReleaseDetails"), WorkflowState.LIVE.state(), "Couldn't publish New "+MODULE_NAME+" Page properly");
+
+
     }
 
-    @Test(dataProvider=MODULE_DATA, priority=2, enabled=false)
+    @Test(dataProvider=MODULE_DATA, priority=2, enabled=true)
     public void createPressReleaseDetailsModule(JSONObject module) throws InterruptedException {
         String sModuleNameSet = module.get("module_title").toString();
         Assert.assertEquals(moduleBase.saveModule(module, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+sModuleNameSet+" Module didn't save properly");
@@ -105,7 +99,29 @@ public class CheckPressReleaseDetails extends AbstractSpec{
 
     @Test(dataProvider=MODULE_DATA, priority=3, enabled=true)
     public void checkPressReleaseDetailsPreview(JSONObject module) throws InterruptedException {
-    String url = "https://" + baseUrl + "PressReleaseId=" + pressReleaseId + "&LanguageId=" + languageId + "&SectionId=" + sectionId;
+        // Creates the url for the pressReleaseDetails page that contains the Press Release we want
+        try
+        {   Object obj = parser.parse(new FileReader("/Users/dannyl/Documents/QA-WebCMS-Test/src/test/java/pageobjects/Modules/Content/json/contentData.json"));
+            JSONObject jsonObject = (JSONObject) obj;
+            JSONArray jsonArray = (JSONArray) jsonObject.get("press_release");
+            jsonObject = (JSONObject) jsonArray.get(1);
+            title = (String) jsonObject.get("headline");
+
+            obj = parser.parse(new FileReader(sPathToFile + sFileModuleJson));
+            String sectionIdPath = "$['"+module.get("module_title").toString() +"'].url_query.ItemWorkflowId";
+            sectionId = JsonPath.read(obj, sectionIdPath);
+            String otherpath = "/Users/dannyl/Documents/QA-WebCMS-Test"+ propUIModules.getProperty("dataPath_Content")+propUIModules.getProperty("json_ContentProp");
+            obj = parser.parse(new FileReader(otherpath));
+            pressReleaseId = JsonPath.read(obj, "$['press_release'].['" + title + "'].url_query.ItemID");
+            languageId = JsonPath.read(obj, "$['press_release'].['" + title + "'].url_query.LangugageId");
+        }
+        catch (Exception e)
+        {
+            System.out.println("Failed to read data.");
+        }
+        String baseUrl = desktopUrl.toString();
+        baseUrl = baseUrl.replaceAll("/admin/", "");
+    String url = baseUrl + "/preview/preview.aspx?PressReleaseId=" + pressReleaseId + "&LanguageId=" + languageId + "&SectionId=" + sectionId;
         ((JavascriptExecutor)driver).executeScript("window.open();");
 
         ArrayList<String> tabs = new ArrayList<> (driver.getWindowHandles());
@@ -128,9 +144,36 @@ public class CheckPressReleaseDetails extends AbstractSpec{
 
     @Test(dataProvider=MODULE_DATA, priority=4, enabled=true)
     public void checkPressReleaseDetailsLive(JSONObject module) throws InterruptedException {
+        // Creates the url for the pressReleaseDetails page that contains the Press Release we want
+       String url = "";
+        try
+        {   Object obj = parser.parse(new FileReader("/Users/dannyl/Documents/QA-WebCMS-Test/src/test/java/pageobjects/Modules/Content/json/contentData.json"));
+            JSONObject jsonObject = (JSONObject) obj;
+            JSONArray jsonArray = (JSONArray) jsonObject.get("press_release");
+            jsonObject = (JSONObject) jsonArray.get(1);
+            title = (String) jsonObject.get("headline");
+            String contentPath = "/Users/dannyl/Documents/QA-WebCMS-Test"+ propUIModules.getProperty("dataPath_Content")+propUIModules.getProperty("json_ContentProp");
+            obj = parser.parse(new FileReader(contentPath));
+            url = JsonPath.read(obj, "$['press_release'].['" + title + "'].your_page_url");
+        }
+        catch (Exception e)
+        {
+            System.out.println("Failed to read data.");
+        }
+        try
+        {
+        ((JavascriptExecutor)driver).executeScript("window.open();");
+
+        ArrayList<String> tabs = new ArrayList<> (driver.getWindowHandles());
+        driver.switchTo().window(tabs.get(1));
+        driver.get(url);
+        }
+        catch (Exception e){
+            System.out.println("No page found.");
+        }
+
 
         try {
-            Assert.assertTrue(moduleBase.openModuleLiveSite(MODULE_NAME).contains(MODULE_NAME),"Did not open correct page");
 
             JSONArray expectedResults = (JSONArray) module.get("expected");
             for (Object expected : expectedResults) {
@@ -150,7 +193,7 @@ public class CheckPressReleaseDetails extends AbstractSpec{
         Assert.assertEquals(moduleBase.removeModule(module, sModuleNameSet), WorkflowState.NEW_ITEM.state(), "Couldn't remove "+sModuleNameSet+" Module. Something went wrong.");
     }
 
-    @Test(dataProvider=PAGE_DATA, priority=6, enabled=false)
+    @Test(dataProvider=PAGE_DATA, priority=6, enabled=true)
     public void removePressReleaseDetailsPage(JSONObject page) throws Exception {
         Assert.assertEquals(pageForModules.setupAsDeletedPage(MODULE_NAME), WorkflowState.DELETE_PENDING.state(), "New "+MODULE_NAME+" Page didn't setup as Deleted properly");
         Assert.assertEquals(pageForModules.removePage(page, MODULE_NAME), WorkflowState.NEW_ITEM.state(), "Couldn't remove "+MODULE_NAME+" Page. Something went wrong.");

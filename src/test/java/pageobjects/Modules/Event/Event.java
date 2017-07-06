@@ -95,6 +95,18 @@ public class Event extends AbstractPageObject {
         return null;
     }
 
+    public String goToModuleEditPage(String moduleName) {
+        try {
+            JSONObject jsonObj = (JSONObject) parser.parse(new FileReader(sPathToModuleFile + sFileModuleJson));
+            driver.get(getModuleUrl(jsonObj, moduleName));
+            findElement(propertiesHref).click();
+            return findElement(workflowStateSpan).getText();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     private String getModuleUrl(JSONObject obj, String moduleName) {
         String  sItemID = JsonPath.read(obj, "$.['"+moduleName+"'].url_query.ItemId");
         String  sLanguageId = JsonPath.read(obj, "$.['"+moduleName+"'].url_query.LanguageId");

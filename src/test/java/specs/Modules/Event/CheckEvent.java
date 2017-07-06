@@ -13,6 +13,7 @@ import pageobjects.Modules.ModuleBase;
 import pageobjects.Modules.PageForModules;
 import pageobjects.Modules.Event.Event;
 import pageobjects.PageAdmin.WorkflowState;
+import pageobjects.PageObject;
 import specs.AbstractSpec;
 import specs.Modules.util.ModuleFunctions;
 
@@ -20,19 +21,17 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.NoSuchElementException;
 
 /**
  * Created by zacharyk on 2017-06-30.
  */
 public class CheckEvent extends AbstractSpec {
+
     // NOTE: THIS TEST DEPENDS ON PRE-EXISTING CONTENT ON THE TESTING SITE - USE CreateContent.java TO SET UP CONTENT
 
-    // REQUIREMENTS:
-
-        // At least 3 events exist on testing site
-        // At least 2 events have the tag SELENIUM_EVENT_TAG
-
-    // NOTE: THIS MODULE HAS THE FOLLOWING JIRA ISSUES:
+    // NOTE: THIS TEST CAN BE IMPROVED. CURRENTLY IT DOES NOT FULLY TEST: EventBuffer, ShowEvents, SortOrder, SortOrderYears, LinkToDetailsPage
 
     private static By pageAdminMenuButton;
     private static LoginPage loginPage;
@@ -82,7 +81,7 @@ public class CheckEvent extends AbstractSpec {
         Assert.assertEquals(pageForModules.publishPage(MODULE_NAME), WorkflowState.LIVE.state(), "Couldn't publish New "+MODULE_NAME+" Page properly");
     }
 
-    @Test(dataProvider=MODULE_DATA, priority=2, enabled=true)
+    @Test(dataProvider=MODULE_DATA, priority=2, enabled=false)
     public void createEventModule(JSONObject module) throws InterruptedException {
         String sModuleNameSet = module.get("module_title").toString();
         Assert.assertEquals(moduleBase.saveModule(module, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+sModuleNameSet+" Module didn't save properly");
@@ -90,7 +89,26 @@ public class CheckEvent extends AbstractSpec {
         Assert.assertEquals(moduleBase.publishModule(sModuleNameSet), WorkflowState.LIVE.state(), "Couldn't publish New "+sModuleNameSet+" Module properly");
     }
 
-    @Test(dataProvider=MODULE_DATA, priority=3, enabled=true)
+    @Test(dataProvider=MODULE_DATA, priority=3, enabled=false)
+    public void checkProperties(JSONObject module) throws InterruptedException {
+        // Checks that all input properties were saved correctly
+        Assert.assertEquals(event.goToModuleEditPage(module.get("module_title").toString()), WorkflowState.LIVE.state());
+        JSONArray JSONArrProp = (JSONArray) module.get("properties");
+        for (Object property : JSONArrProp) {
+            String sProperty = property.toString();
+            By propertyTextValue = By.xpath("//td[contains(@class, 'DataGridItemBorderLeft')][(text()='"+sProperty.split(";")[0]+"')]/parent::tr/td/div/input[contains(@id, 'txtStatic')]");
+            By propertySelectValue = By.xpath("//td[contains(@class, 'DataGridItemBorderLeft')][(text()='" + sProperty.split(";")[0] + "')]/parent::tr/td/div/select[contains(@id, 'ddlDynamic')]/option[@selected]");
+            if (!driver.findElements(propertyTextValue).isEmpty()) {
+                Assert.assertEquals(driver.findElement(propertyTextValue).getAttribute("value"), sProperty.split(";")[1],
+                        sProperty.split(";")[0] + " property did not save correctly");
+            } else if (!driver.findElements(propertySelectValue).isEmpty()) {
+                Assert.assertEquals(driver.findElement(propertySelectValue).getText(), sProperty.split(";")[1],
+                        sProperty.split(";")[0] + " property did not save correctly");
+            }
+        }
+    }
+
+    @Test(dataProvider=MODULE_DATA, priority=4, enabled=true)
     public void checkEventPreview(JSONObject module) throws InterruptedException {
 
         try {
@@ -106,9 +124,11 @@ public class CheckEvent extends AbstractSpec {
         } finally {
             moduleBase.closeWindow();
         }
+
+        Date test = new Date();
     }
 
-    @Test(dataProvider=MODULE_DATA, priority=4, enabled=true)
+    @Test(dataProvider=MODULE_DATA, priority=5, enabled=true)
     public void checkEventLive(JSONObject module) throws InterruptedException {
 
         try {
@@ -125,14 +145,14 @@ public class CheckEvent extends AbstractSpec {
         }
     }
 
-    @Test(dataProvider=MODULE_DATA, priority=5, enabled=true)
+    @Test(dataProvider=MODULE_DATA, priority=6, enabled=false)
     public void removeEventModule(JSONObject module) throws Exception {
         String sModuleNameSet = module.get("module_title").toString();
         Assert.assertEquals(moduleBase.setupAsDeletedModule(sModuleNameSet), WorkflowState.DELETE_PENDING.state(), "New "+sModuleNameSet+" Module didn't setup as Deleted properly");
         Assert.assertEquals(moduleBase.removeModule(module, sModuleNameSet), WorkflowState.NEW_ITEM.state(), "Couldn't remove "+sModuleNameSet+" Module. Something went wrong.");
     }
 
-    @Test(dataProvider=PAGE_DATA, priority=6, enabled=true)
+    @Test(dataProvider=PAGE_DATA, priority=7, enabled=false)
     public void removeEventPage(JSONObject module) throws Exception {
         Assert.assertEquals(pageForModules.setupAsDeletedPage(MODULE_NAME), WorkflowState.DELETE_PENDING.state(), "New "+MODULE_NAME+" Page didn't setup as Deleted properly");
         Assert.assertEquals(pageForModules.removePage(module, MODULE_NAME), WorkflowState.NEW_ITEM.state(), "Couldn't remove "+MODULE_NAME+" Page. Something went wrong.");
@@ -185,3 +205,5 @@ public class CheckEvent extends AbstractSpec {
         //driver.quit();
     }
 }
+
+//td[contains(@class, 'DataGridItemBorderLeft')][(text()='ShowDateLink')]/parent::tr/td/div/select[contains(@id, 'ddlDynamic')]/option[@selected]

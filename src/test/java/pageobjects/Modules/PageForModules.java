@@ -311,8 +311,8 @@ public class PageForModules extends AbstractPageObject {
                 Thread.sleep(DEFAULT_PAUSE);
                 driver.get(pageUrl);
             }
-
-            findElement(currentContentSpan).click();
+            scrollToElementAndClick(currentContentSpan);
+            findVisibleElement(currentContentSpan).click();
             Thread.sleep(DEFAULT_PAUSE);
 
             JSONObject pageObj = (JSONObject) jsonObj.get(pageName);
