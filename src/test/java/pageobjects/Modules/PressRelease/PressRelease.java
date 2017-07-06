@@ -24,6 +24,7 @@ import static specs.AbstractSpec.desktopUrl;
 /**
  * Created by philipsushkov on 2017-06-12.
  */
+
 public class PressRelease extends AbstractPageObject {
     private static By addNewModuleBtn, backBtn, moduleTitleInput, moduleDefinitionSelect, includeLegacyModulesChk;
     private static By publishBtn, saveBtn, workflowStateSpan, currentContentSpan, propertiesHref, previewLnk;
@@ -84,9 +85,6 @@ public class PressRelease extends AbstractPageObject {
             Thread.sleep(DEFAULT_PAUSE);
 
             for (int i=0; i<jsonArrProp.size(); i++) {
-                //System.out.println(jsonArrProp.get(i).toString());
-                //String prop[] = jsonArrProp.get(i).toString().split(";");
-                //System.out.println(prop[0]);
                 try {
                     By propertyTextValue = By.xpath("//td[contains(@class, 'DataGridItemBorderLeft')][(text()='" + jsonArrProp.get(i).toString().split(";")[0] + "')]/parent::tr/td/div/input[contains(@id, 'txtStatic')]");
                     findElement(propertyTextValue).clear();
