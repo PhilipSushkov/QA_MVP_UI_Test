@@ -167,9 +167,6 @@ public class PressRelease extends AbstractPageObject {
             Thread.sleep(DEFAULT_PAUSE);
 
             for (int i=0; i<jsonArrProp.size(); i++) {
-                //System.out.println(jsonArrProp.get(i).toString());
-                //String prop[] = jsonArrProp.get(i).toString().split(";");
-                //System.out.println(prop[0]);
                 try {
                     By propertyTextValue = By.xpath("//td[contains(@class, 'DataGridItemBorderLeft')][(text()='" + jsonArrProp.get(i).toString().split(";")[0] + "')]/parent::tr/td/div/input[contains(@id, 'txtStatic')]");
                     findElement(propertyTextValue).clear();
@@ -205,7 +202,7 @@ public class PressRelease extends AbstractPageObject {
         }
 
 
-        return "For Approval";
+        return null;
     }
 
     public String publishModule(String moduleName) throws InterruptedException {
