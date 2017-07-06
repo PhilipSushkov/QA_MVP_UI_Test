@@ -9,6 +9,7 @@ import org.testng.Assert;
 import org.testng.annotations.*;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.LoginPage.LoginPage;
+import pageobjects.Modules.ModuleBase;
 import pageobjects.Modules.PageForModules;
 import pageobjects.Modules.PressRelease.PressRelease;
 import pageobjects.PageAdmin.WorkflowState;
@@ -30,6 +31,7 @@ public class CheckPressRelease extends AbstractSpec {
     private static Dashboard dashboard;
     private static PageForModules pageForModules;
     private static PressRelease pressRelease;
+    private static ModuleBase moduleBase;
 
     private static String sPathToFile, sDataFileJson, sPathToModuleFile, sFileModuleJson;
     private static JSONParser parser;
@@ -50,6 +52,8 @@ public class CheckPressRelease extends AbstractSpec {
         sPathToModuleFile = System.getProperty("user.dir") + propUIModulesPressRelease.getProperty("dataPath_PressRelease");
         sFileModuleJson = propUIModulesPressRelease.getProperty("json_PressReleaseProp");
 
+        moduleBase = new ModuleBase(driver, sPathToModuleFile, sFileModuleJson);
+
         parser = new JSONParser();
 
         loginPage.loginUser();
@@ -61,7 +65,7 @@ public class CheckPressRelease extends AbstractSpec {
         dashboard.openPageFromCommonTasks(pageAdminMenuButton);
     }
 
-    @Test(dataProvider=PAGE_DATA, priority=1, enabled=false)
+    @Test(dataProvider=PAGE_DATA, priority=1, enabled=true)
     public void createPressReleasePage(JSONObject page) throws InterruptedException {
         Assert.assertEquals(pageForModules.savePage(page, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+MODULE_NAME+" Page didn't save properly");
         Assert.assertEquals(pageForModules.saveAndSubmitPage(page, MODULE_NAME), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New "+MODULE_NAME+" Page properly");
@@ -71,9 +75,9 @@ public class CheckPressRelease extends AbstractSpec {
     @Test(dataProvider=MODULE_DATA, priority=2, enabled=true)
     public void createPressReleaseModule(JSONObject module) throws InterruptedException {
         String sModuleNameSet = module.get("module_title").toString();
-        Assert.assertEquals(pressRelease.saveModule(module, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+sModuleNameSet+" Module didn't save properly");
+        Assert.assertEquals(moduleBase.saveModule(module, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+sModuleNameSet+" Module didn't save properly");
         Assert.assertEquals(pressRelease.saveAndSubmitModule(module, sModuleNameSet), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New "+sModuleNameSet+" Module properly");
-        Assert.assertEquals(pressRelease.publishModule(sModuleNameSet), WorkflowState.LIVE.state(), "Couldn't publish New "+sModuleNameSet+" Module properly");
+        Assert.assertEquals(moduleBase.publishModule(sModuleNameSet), WorkflowState.LIVE.state(), "Couldn't publish New "+sModuleNameSet+" Module properly");
     }
 
     @Test(dataProvider=MODULE_DATA, priority=3, enabled=true)
@@ -114,11 +118,11 @@ public class CheckPressRelease extends AbstractSpec {
     @Test(dataProvider=MODULE_DATA, priority=5, enabled=true)
     public void removePressReleaseModule(JSONObject module) throws Exception {
         String sModuleNameSet = module.get("module_title").toString();
-        Assert.assertEquals(pressRelease.setupAsDeletedModule(sModuleNameSet), WorkflowState.DELETE_PENDING.state(), "New "+sModuleNameSet+" Module didn't setup as Deleted properly");
-        Assert.assertEquals(pressRelease.removeModule(module, sModuleNameSet), WorkflowState.NEW_ITEM.state(), "Couldn't remove "+sModuleNameSet+" Module. Something went wrong.");
+        Assert.assertEquals(moduleBase.setupAsDeletedModule(sModuleNameSet), WorkflowState.DELETE_PENDING.state(), "New "+sModuleNameSet+" Module didn't setup as Deleted properly");
+        Assert.assertEquals(moduleBase.removeModule(module, sModuleNameSet), WorkflowState.NEW_ITEM.state(), "Couldn't remove "+sModuleNameSet+" Module. Something went wrong.");
     }
 
-    @Test(dataProvider=PAGE_DATA, priority=6, enabled=false)
+    @Test(dataProvider=PAGE_DATA, priority=6, enabled=true)
     public void removePressReleasePage(JSONObject page) throws Exception {
         Assert.assertEquals(pageForModules.setupAsDeletedPage(MODULE_NAME), WorkflowState.DELETE_PENDING.state(), "New "+MODULE_NAME+" Page didn't setup as Deleted properly");
         Assert.assertEquals(pageForModules.removePage(page, MODULE_NAME), WorkflowState.NEW_ITEM.state(), "Couldn't remove "+MODULE_NAME+" Page. Something went wrong.");

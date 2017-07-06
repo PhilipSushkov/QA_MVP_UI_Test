@@ -29,7 +29,7 @@
     },
 
     {
-      "do_assertions": true,
+      "do_assertions": false,
       "section_title": "Presentation Modules",
       "page_type": "Internal",
       "page_template": "Blank Template",

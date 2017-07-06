@@ -107,7 +107,7 @@ public class CreateContent extends AbstractSpec {
         Assert.assertEquals(createEvent.publishEvent(data.get("headline").toString()), WorkflowState.LIVE.state());
     }
 
-    @Test(dataProvider=EVENT_DATA, priority=6, enabled=false)
+    @Test(dataProvider=EVENT_DATA, priority=6, enabled=true)
     public void removeEvents(JSONObject data) throws Exception {
         Assert.assertEquals(createEvent.setupAsDeletedEvent(data.get("headline").toString()), WorkflowState.DELETE_PENDING.state());
         Assert.assertEquals(createEvent.removeEvent(data.get("headline").toString()), WorkflowState.NEW_ITEM.state());
