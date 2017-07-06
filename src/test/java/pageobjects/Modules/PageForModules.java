@@ -130,7 +130,14 @@ public class PageForModules extends AbstractPageObject {
 
             Thread.sleep(DEFAULT_PAUSE);
 
-            findElement(saveBtn).click();
+            scrollToElementAndClick(saveBtn);
+            try {
+                waitForElement(deleteBtn);
+
+            }
+            catch (Exception e){
+                findElement(saveBtn).click();
+            }
             waitForElement(deleteBtn);
 
             Thread.sleep(DEFAULT_PAUSE);
