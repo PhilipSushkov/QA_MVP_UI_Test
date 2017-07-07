@@ -130,7 +130,14 @@ public class PageForModules extends AbstractPageObject {
 
             Thread.sleep(DEFAULT_PAUSE);
 
-            findElement(saveBtn).click();
+            scrollToElementAndClick(saveBtn);
+            try {
+                waitForElement(deleteBtn);
+
+            }
+            catch (Exception e){
+                findElement(saveBtn).click();
+            }
             waitForElement(deleteBtn);
 
             Thread.sleep(DEFAULT_PAUSE);
@@ -311,8 +318,8 @@ public class PageForModules extends AbstractPageObject {
                 Thread.sleep(DEFAULT_PAUSE);
                 driver.get(pageUrl);
             }
-
-            findElement(currentContentSpan).click();
+            scrollToElementAndClick(currentContentSpan);
+            findVisibleElement(currentContentSpan).click();
             Thread.sleep(DEFAULT_PAUSE);
 
             JSONObject pageObj = (JSONObject) jsonObj.get(pageName);

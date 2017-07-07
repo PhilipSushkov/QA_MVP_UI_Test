@@ -30,7 +30,7 @@ public class PressReleaseDetails extends AbstractPageObject{
     private static By publishBtn, saveBtn, workflowStateSpan, currentContentSpan, propertiesHref, previewLnk;
     private static By livePageTitle, liveModuleTitleSpan, livePressReleaseModulePageMenuBtn;
     private static By commentsTxt, deleteBtn, saveAndSubmitBtn, regionNameSelect;
-    private static String sPathToPageFile, sFilePageJson, sPathToModuleFile, sFileModuleJson;
+    private static String sPathToPageFile, sFilePageJson, sPathToModuleFile, sFileModuleJson, sPathToFile;
     private static JSONParser parser;
 
     private static final long DEFAULT_PAUSE = 2500;
@@ -119,9 +119,49 @@ public class PressReleaseDetails extends AbstractPageObject{
             e.printStackTrace();
         }
 
-
-        return "For Approval";
+        return null;
     }
+
+    public String openModulePreviewForPressReleases(String moduleName, String moduleTitle) {
+        // Creates the url for the pressReleaseDetails page that contains the Press Release we want
+        String sectionId = "";
+        String title = "";
+        String pressReleaseId = "";
+        String languageId = "";
+        sPathToFile = System.getProperty("user.dir") + propUIModulesPressRelease.getProperty("dataPath_PressRelease");
+        String contentDataPath = System.getProperty("user.dir") + propUIModules.getProperty("dataPath_Content")+ propUIModules.getProperty("json_ContentData");
+        String contentPath = System.getProperty("user.dir") + propUIModules.getProperty("dataPath_Content")+ propUIModules.getProperty("json_ContentProp");
+        try
+        {   Object obj = parser.parse(new FileReader(contentDataPath));
+            JSONObject jsonObject = (JSONObject) obj;
+            JSONArray jsonArray = (JSONArray) jsonObject.get(moduleName);
+            jsonObject = (JSONObject) jsonArray.get(1);
+            title = (String) jsonObject.get("headline");
+
+            obj = parser.parse(new FileReader(sPathToFile + sFileModuleJson));
+            String sectionIdPath = "$['"+ moduleTitle +"'].url_query.ItemWorkflowId";
+            sectionId = JsonPath.read(obj, sectionIdPath);
+
+            obj = parser.parse(new FileReader(contentPath));
+            pressReleaseId = JsonPath.read(obj, "$['press_release'].['" + title + "'].url_query.ItemID");
+            languageId = JsonPath.read(obj, "$['press_release'].['" + title + "'].url_query.LangugageId");
+        }
+        catch (Exception e)
+        {
+            System.out.println("Failed to read data.");
+        }
+        String baseUrl = desktopUrl.toString();
+        baseUrl = baseUrl.replaceAll("/admin/", "");
+        String url = baseUrl + "/preview/preview.aspx?PressReleaseId=" + pressReleaseId + "&LanguageId=" + languageId + "&SectionId=" + sectionId;
+        ((JavascriptExecutor)driver).executeScript("window.open();");
+
+        ArrayList<String> tabs = new ArrayList<> (driver.getWindowHandles());
+        driver.switchTo().window(tabs.get(1));
+        driver.get(url);
+
+        return driver.getTitle();
+    }
+
 
     private String getPageUrl(JSONObject obj, String moduleName) {
         String  sItemID = JsonPath.read(obj, "$.['"+moduleName+"'].url_query.ItemID");

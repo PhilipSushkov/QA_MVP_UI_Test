@@ -107,13 +107,13 @@ public class CreateContent extends AbstractSpec {
         Assert.assertEquals(createEvent.publishEvent(data.get("headline").toString()), WorkflowState.LIVE.state());
     }
 
-    @Test(dataProvider=EVENT_DATA, priority=6, enabled=false)
+    @Test(dataProvider=EVENT_DATA, priority=6, enabled=true)
     public void removeEvents(JSONObject data) throws Exception {
         Assert.assertEquals(createEvent.setupAsDeletedEvent(data.get("headline").toString()), WorkflowState.DELETE_PENDING.state());
         Assert.assertEquals(createEvent.removeEvent(data.get("headline").toString()), WorkflowState.NEW_ITEM.state());
     }
 
-    @Test(dataProvider=LOOKUP_DATA)
+    @Test(dataProvider=LOOKUP_DATA, priority=7, enabled = true)
     public void createLookups(JSONObject data) throws Exception {
         dashboard.openPageFromMenu(siteAdminMenuButton, lookupListMenuItem);
         Assert.assertEquals(createLookup.saveLookup(data), WorkflowState.IN_PROGRESS.state());
@@ -121,7 +121,7 @@ public class CreateContent extends AbstractSpec {
         Assert.assertEquals(createLookup.publishLookup(data.get("lookup_text").toString()), WorkflowState.LIVE.state());
     }
 
-    @Test(dataProvider=LOOKUP_DATA)
+    @Test(dataProvider=LOOKUP_DATA, priority = 8, enabled = false)
     public void removeLookups(JSONObject data) throws Exception {
         Assert.assertEquals(createLookup.setupAsDeletedLookup(data.get("lookup_text").toString()), WorkflowState.DELETE_PENDING.state());
         Assert.assertEquals(createLookup.removeLookup(data.get("lookup_text").toString()), WorkflowState.NEW_ITEM.state());

@@ -1,4 +1,4 @@
-package pageobjects.Modules.Event;
+package pageobjects.Modules.Feed;
 
 import com.jayway.jsonpath.JsonPath;
 import org.json.simple.JSONArray;
@@ -6,38 +6,52 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import pageobjects.AbstractPageObject;
+import pageobjects.LoginPage.LoginPage;
 import pageobjects.PageAdmin.WorkflowState;
 import pageobjects.PageObject;
+import pageobjects.Modules.ModuleBase;
+import sun.security.pkcs11.Secmod;
 
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import static specs.AbstractSpec.*;
+import static specs.AbstractSpec.desktopUrl;
 
 /**
- * Created by zacharyk on 2017-06-30.
+ * Created by zacharyk on 2017-06-26.
  */
-public class Event extends AbstractPageObject {
-    private static By workflowStateSpan, propertiesHref, commentsTxt, saveAndSubmitBtn;
-    private static String sPathToModuleFile, sFileModuleJson;
+public class SECFilingDetails extends AbstractPageObject {
+    private static By workflowStateSpan, propertiesHref, commentsTxt, saveAndSubmitBtn, SECFilingLink, moduleTitle;
+    private static String sPathToModuleFile, sFileModuleJson, sPathToFile;
     private static JSONParser parser;
     private static final long DEFAULT_PAUSE = 2500;
+    private static ModuleBase moduleBase;
 
-    public Event(WebDriver driver) {
+    public SECFilingDetails(WebDriver driver) {
         super(driver);
 
         workflowStateSpan = By.xpath(propUIPageAdmin.getProperty("select_WorkflowState"));
         commentsTxt = By.xpath(propUIPageAdmin.getProperty("txtarea_Comments"));
         propertiesHref = By.xpath(propUIModules.getProperty("href_Properties"));
+        SECFilingLink = By.xpath(propUIModulesFeed.getProperty("div_DetailsLink"));
+        moduleTitle = By.xpath(propUIModulesFeed.getProperty("span_ModuleTitle"));
+
         saveAndSubmitBtn = By.xpath(propUIPageAdmin.getProperty("btn_SaveAndSubmit"));
 
-        sPathToModuleFile = System.getProperty("user.dir") + propUIModulesEvent.getProperty("dataPath_Event");
-        sFileModuleJson = propUIModulesEvent.getProperty("json_EventProp");
+        sPathToModuleFile = System.getProperty("user.dir") + propUIModulesFeed.getProperty("dataPath_Feed");
+        sFileModuleJson = propUIModulesFeed.getProperty("json_SECFilingDetailsProp");
 
         parser = new JSONParser();
+
+        moduleBase = new ModuleBase(driver, sPathToModuleFile, sFileModuleJson);
     }
 
     public String saveAndSubmitModule(JSONObject modulesDataObj, String moduleName) throws InterruptedException {
@@ -94,17 +108,47 @@ public class Event extends AbstractPageObject {
 
         return null;
     }
+    // Must use this method instead of the one in ModuleBase class because in order to open the SECFilingDetails Module you have to click an SEC filing
+    public String openModulePreviewForSECFiling(String moduleTitle) throws InterruptedException{
+        // Creates the url for the pressReleaseDetails page that contains the Press Release we want
+        String sectionId = "";
+        String languageId = "";
+        sPathToFile = System.getProperty("user.dir") + propUIModulesFeed.getProperty("dataPath_Feed");
+        String contentDataPath = sPathToFile + propUIModulesFeed.getProperty("json_SECFilingProp");
 
-    public String goToModuleEditPage(String moduleName) {
-        try {
-            JSONObject jsonObj = (JSONObject) parser.parse(new FileReader(sPathToModuleFile + sFileModuleJson));
-            driver.get(getModuleUrl(jsonObj, moduleName));
-            findElement(propertiesHref).click();
-            return findElement(workflowStateSpan).getText();
-        } catch (Exception e) {
-            e.printStackTrace();
+        try
+        {   Object obj = parser.parse(new FileReader(contentDataPath));
+            String sectionIdPath = "$['"+ moduleTitle +"'].url_query.ItemWorkflowId";
+            sectionId = JsonPath.read(obj, sectionIdPath);
+            String languageIdPath = "$['"+ moduleTitle +"'].url_query.LanguageId";
+            languageId = JsonPath.read(obj, languageIdPath);
         }
-        return null;
+        catch (Exception e)
+        {
+            System.out.println("Failed to read data.");
+        }
+        String baseUrl = desktopUrl.toString();
+        baseUrl = baseUrl.replaceAll("/admin/", "");
+        String url = baseUrl + "/preview/preview.aspx?SectionId=" + sectionId + "&LanguageId=" + languageId;
+        ((JavascriptExecutor)driver).executeScript("window.open();");
+
+        ArrayList<String> tabs = new ArrayList<> (driver.getWindowHandles());
+        driver.switchTo().window(tabs.get(1));
+        driver.get(url);
+
+        driver.findElement(SECFilingLink).click();
+        Thread.sleep(DEFAULT_PAUSE);
+        String title = driver.findElement(this.moduleTitle).getText();
+        return title;
+    }
+    // Must use this method instead of the one in ModuleBase class because in order to open the SECFilingDetails Module you have to click an SEC filing
+    public String openModuleLiveSite(String moduleName) throws InterruptedException{
+        moduleBase.openModuleLiveSite("sec_filing");
+        // Clicking the first SEC filing.
+        driver.findElement(SECFilingLink).click();
+        Thread.sleep(DEFAULT_PAUSE);
+        String title = driver.findElement(this.moduleTitle).getText();
+        return title;
     }
 
     private String getModuleUrl(JSONObject obj, String moduleName) {

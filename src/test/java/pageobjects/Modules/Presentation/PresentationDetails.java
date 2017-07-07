@@ -1,4 +1,4 @@
-package pageobjects.Modules.Event;
+package pageobjects.Modules.Presentation;
 
 import com.jayway.jsonpath.JsonPath;
 import org.json.simple.JSONArray;
@@ -18,15 +18,16 @@ import java.io.IOException;
 import static specs.AbstractSpec.*;
 
 /**
- * Created by zacharyk on 2017-06-30.
+ * Created by andyp on 2017-07-05.
  */
-public class Event extends AbstractPageObject {
+
+public class PresentationDetails extends AbstractPageObject {
     private static By workflowStateSpan, propertiesHref, commentsTxt, saveAndSubmitBtn;
     private static String sPathToModuleFile, sFileModuleJson;
     private static JSONParser parser;
     private static final long DEFAULT_PAUSE = 2500;
 
-    public Event(WebDriver driver) {
+    public PresentationDetails(WebDriver driver) {
         super(driver);
 
         workflowStateSpan = By.xpath(propUIPageAdmin.getProperty("select_WorkflowState"));
@@ -34,12 +35,11 @@ public class Event extends AbstractPageObject {
         propertiesHref = By.xpath(propUIModules.getProperty("href_Properties"));
         saveAndSubmitBtn = By.xpath(propUIPageAdmin.getProperty("btn_SaveAndSubmit"));
 
-        sPathToModuleFile = System.getProperty("user.dir") + propUIModulesEvent.getProperty("dataPath_Event");
-        sFileModuleJson = propUIModulesEvent.getProperty("json_EventProp");
+        sPathToModuleFile = System.getProperty("user.dir") + propUIModulesPresentation.getProperty("dataPath_Presentation");
+        sFileModuleJson = propUIModulesPresentation.getProperty("json_PresentationDetailsProp");
 
         parser = new JSONParser();
     }
-
     public String saveAndSubmitModule(JSONObject modulesDataObj, String moduleName) throws InterruptedException {
 
         try {
@@ -92,18 +92,6 @@ public class Event extends AbstractPageObject {
             e.printStackTrace();
         }
 
-        return null;
-    }
-
-    public String goToModuleEditPage(String moduleName) {
-        try {
-            JSONObject jsonObj = (JSONObject) parser.parse(new FileReader(sPathToModuleFile + sFileModuleJson));
-            driver.get(getModuleUrl(jsonObj, moduleName));
-            findElement(propertiesHref).click();
-            return findElement(workflowStateSpan).getText();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         return null;
     }
 

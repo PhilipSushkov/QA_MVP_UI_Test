@@ -30,7 +30,8 @@ public class ModuleBase extends AbstractPageObject {
     private static By addNewModuleBtn, moduleTitleInput, moduleDefinitionSelect, includeLagacyModulesChk;
     private static By publishBtn, saveBtn, workflowStateSpan, currentContentSpan, propertiesHref;
     private static By commentsTxt, deleteBtn, saveAndSubmitBtn, regionNameSelect, previewLnk, sectionTitle;
-    private static String sPathToPageFile, sFilePageJson, sPathToModuleFile, sFileModuleJson;
+    private static By siteAdminBtn, linkToPageBtn, otherPageBtn, pageDropdown, commentsArea;
+    private static String sPathToPageFile, sFilePageJson, sPathToModuleFile, sFileModuleJson, sPathToFile;
     private static JSONParser parser;
 
     private static final long DEFAULT_PAUSE = 2500;
@@ -57,6 +58,12 @@ public class ModuleBase extends AbstractPageObject {
         publishBtn = By.xpath(propUIPageAdmin.getProperty("btn_Publish"));
         saveAndSubmitBtn = By.xpath(propUIPageAdmin.getProperty("btn_SaveAndSubmit"));
 
+        siteAdminBtn = By.xpath(propUIPageAdmin.getProperty("span_SiteAdmin"));
+        linkToPageBtn = By.xpath(propUIPageAdmin.getProperty("li_LinkToPage"));
+        otherPageBtn = By.xpath(propUIPageAdmin.getProperty("other_PageBtn"));
+        pageDropdown = By.xpath(propUIPageAdmin.getProperty("page_Dropdown"));
+        commentsArea = By.xpath(propUIPageAdmin.getProperty("txtarea_Comments"));
+
         sPathToPageFile = System.getProperty("user.dir") + propUIModules.getProperty("dataPath_Modules");
         sFilePageJson = propUIModules.getProperty("json_PagesProp");
 
@@ -77,7 +84,7 @@ public class ModuleBase extends AbstractPageObject {
             waitForElement(commentsTxt);
 
             waitForElementToAppear(addNewModuleBtn);
-            findElement(addNewModuleBtn).click();
+            scrollToElementAndClick(addNewModuleBtn);
             Thread.sleep(DEFAULT_PAUSE);
             try
             {
@@ -239,7 +246,7 @@ public class ModuleBase extends AbstractPageObject {
             Thread.sleep(DEFAULT_PAUSE);
 
             waitForElementToAppear(publishBtn);
-            findElement(publishBtn).click();
+            scrollToElementAndClick(publishBtn);
             Thread.sleep(DEFAULT_PAUSE*2);
             try{
                 String test = findElement(addNewModuleBtn).getText();
@@ -286,7 +293,14 @@ public class ModuleBase extends AbstractPageObject {
 
             waitForElement(commentsTxt);
             findElement(commentsTxt).sendKeys("Removing the module");
-            findElement(deleteBtn).click();
+            scrollToElementAndClick(deleteBtn);
+            // This try statement makes sure that if the deletebtn wasn't clicked the first time it is clicked the second time
+            try{
+                waitForElement(moduleDefinitionSelect);
+                findVisibleElement(deleteBtn).click();
+            }
+            catch (Exception e){
+            }
 
             try {
                 Thread.sleep(DEFAULT_PAUSE*2);
@@ -334,17 +348,24 @@ public class ModuleBase extends AbstractPageObject {
 
                 waitForElement(commentsTxt);
                 findElement(commentsTxt).sendKeys("Approving the module removal");
-                findElement(publishBtn).click();
+                scrollToElementAndClick(publishBtn);
 
-                Thread.sleep(DEFAULT_PAUSE*2);
+                // This try statement makes sure that if the deletebtn wasn't clicked the first time it is clicked the second time
+                try{
+                    waitForElement(moduleDefinitionSelect);
+                    findVisibleElement(publishBtn).click();
+                }
+                catch (Exception e){
+                }
+
                 try {
-                    findElement(publishBtn).click();
+                    Thread.sleep(DEFAULT_PAUSE*2);
+                    driver.get(moduleUrl);
+                } catch (UnhandledAlertException e) {
+                    driver.switchTo().alert().accept();
+                    Thread.sleep(DEFAULT_PAUSE*2);
+                    driver.get(moduleUrl);
                 }
-                catch(Exception e){
-                }
-
-                driver.get(moduleUrl);
-                Thread.sleep(DEFAULT_PAUSE);
 
                 jsonObj.remove(moduleName);
 
@@ -396,6 +417,38 @@ public class ModuleBase extends AbstractPageObject {
         return driver.getTitle();
     }
 
+    public String openModuleLiveForDetailsPages(String moduleName){
+        String url = "";
+        String contentDataPath = System.getProperty("user.dir") + propUIModules.getProperty("dataPath_Content")+ propUIModules.getProperty("json_ContentData");
+        String contentPath = System.getProperty("user.dir") + propUIModules.getProperty("dataPath_Content")+ propUIModules.getProperty("json_ContentProp");
+        try
+        {   Object obj = parser.parse(new FileReader(contentDataPath));
+            JSONObject jsonObject = (JSONObject) obj;
+            JSONArray jsonArray = (JSONArray) jsonObject.get(moduleName);
+            jsonObject = (JSONObject) jsonArray.get(0);
+            String title = (String) jsonObject.get("headline");
+            obj = parser.parse(new FileReader(contentPath));
+            url = JsonPath.read(obj, "$['"+ moduleName + "'].['" + title + "'].your_page_url");
+        }
+        catch (Exception e)
+        {
+            System.out.println("Failed to read data.");
+        }
+        try
+        {
+            ((JavascriptExecutor)driver).executeScript("window.open();");
+
+            ArrayList<String> tabs = new ArrayList<> (driver.getWindowHandles());
+            driver.switchTo().window(tabs.get(1));
+            driver.get(url);
+        }
+        catch (Exception e){
+            System.out.println("No page found.");
+        }
+
+        return driver.getTitle();
+    }
+
     public String openModuleLiveSite(String moduleName) {
         try {
             ((JavascriptExecutor)driver).executeScript("window.open();");
@@ -431,6 +484,70 @@ public class ModuleBase extends AbstractPageObject {
 
         return driver.getTitle();
     }
+
+    // linkToPage must be one of the Key names on the Link to Page List
+   public String linkToPageEdit(String pageTitle, String linkToPage){
+        String comment = "This is a test comment.";
+        waitForElementToAppear(otherPageBtn);
+        By page = By.xpath("//td[text()= '" + linkToPage + "']/../td/input");
+        // These two try catches looks for the page you want to link
+        try{
+            driver.findElement(page).click();
+        }
+        catch (Exception e)
+        {
+            driver.findElement(otherPageBtn).click();
+        }
+       try{
+           driver.findElement(page).click();
+       }
+       catch (Exception e)
+       {
+           System.out.println("Page not found.");
+       }
+       waitForElementToAppear(pageDropdown);
+        driver.findElement(pageDropdown).sendKeys(pageTitle);
+        driver.findElement(By.xpath("//option[text()= '" + pageTitle + "']")).click();
+        driver.findElement(commentsArea).sendKeys(comment);
+        driver.findElement(saveAndSubmitBtn).click();
+       waitForElementToAppear(otherPageBtn);
+
+       // These two try catches looks for the page you want to link
+       try{
+           driver.findElement(page).click();
+       }
+       catch (Exception e)
+       {
+           driver.findElement(otherPageBtn).click();
+       }
+       try{
+           driver.findElement(page).click();
+       }
+       catch (Exception e)
+       {
+           System.out.println("Page not found.");
+       }
+       waitForElementToAppear(publishBtn);
+       driver.findElement(publishBtn).click();
+
+       // These two try catches looks for the page you want to link
+       try{
+           driver.findElement(page).click();
+       }
+       catch (Exception e)
+       {
+           driver.findElement(otherPageBtn).click();
+       }
+       try{
+           driver.findElement(page).click();
+       }
+       catch (Exception e)
+       {
+           System.out.println("Page not found.");
+       }
+       return findElement(workflowStateSpan).getText();
+
+   }
 
     public void closeWindow() {
         try {
