@@ -92,7 +92,7 @@
       "comment": "Adding event for Selenium module testing"
     },
     {
-      "do_assertions": false,
+      "do_assertions": true,
       "headline": "Selenium Module Test Event 2",
       "date": "07/01/16",
       "start_hour": "2",
@@ -113,7 +113,7 @@
       "comment": "Adding event for Selenium module testing"
     },
     {
-      "do_assertions": false,
+      "do_assertions": true,
       "headline": "Selenium Module Test Event 3",
       "date": "08/01/18",
       "start_hour": "12",
@@ -134,7 +134,7 @@
       "comment": "Adding event for Selenium module testing"
     },
     {
-      "do_assertions": false,
+      "do_assertions": true,
       "headline": "Selenium Module Test Event 4",
       "date": "09/01/18",
       "start_hour": "1",
@@ -155,7 +155,7 @@
       "comment": "Adding event for Selenium module testing"
     },
     {
-      "do_assertions": false,
+      "do_assertions": true,
       "headline": "Selenium Module Test Event 5",
       "date": "10/01/18",
       "start_hour": "2",

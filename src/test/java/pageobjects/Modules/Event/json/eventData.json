@@ -32,7 +32,6 @@
         "element;div_FuturePastNavigator;false",
         "element;div_ModuleHeader;false",
         "element;div_EventSpeakers;false",
-        "element;div_WebcastLink;true",
         "element;ul_Attachments;false",
         "element;div_RelatedPresentation;false",
         "element;div_RelatedFinancialReport;false",
@@ -43,7 +42,7 @@
     },
 
     {
-      "do_assertions": false,
+      "do_assertions": true,
       "module_title": "Event/4_2_2/Event.aspx_02",
       "module_definition": "Event/4_2_2/Event.ascx",
       "source_file": "~/Modules/IRPortal.Modules.Event/4_2_2/Event.ascx",
@@ -152,7 +151,6 @@
         "element;div_FuturePastNavigator;false",
         "element;div_ModuleHeader;false",
         "element;div_EventSpeakers;false",
-        "element;div_WebcastLink;true",
         "element;ul_Attachments;false",
         "element;div_RelatedPresentation;false",
         "element;div_RelatedFinancialReport;false",
@@ -163,7 +161,7 @@
     },
 
     {
-      "do_assertions": false,
+      "do_assertions": true,
       "module_title": "Event/4_0_7/Event.aspx_02",
       "module_definition": "Event/4_0_7/Event.ascx",
       "source_file": "~/Modules/IRPortal.Modules.Event/4_0_7/Event.ascx",
@@ -268,7 +266,6 @@
         "element;div_FuturePastNavigator;false",
         "element;div_ModuleHeader;false",
         "element;div_EventSpeakers;false",
-        "element;div_WebcastLink;true",
         "element;ul_Attachments;false",
         "element;div_RelatedPresentation;false",
         "element;div_RelatedFinancialReport;false",
@@ -279,7 +276,7 @@
     },
 
     {
-      "do_assertions": false,
+      "do_assertions": true,
       "module_title": "Event/3_9_1/Event.aspx_02",
       "module_definition": "Event/3_9_1/Event.ascx",
       "source_file": "~/Modules/IRPortal.Modules.Event/3_9_1/Event.ascx",
@@ -382,7 +379,7 @@
     },
 
     {
-      "do_assertions": false,
+      "do_assertions": true,
       "module_title": "Event/3_5_9/Event.aspx_02",
       "module_definition": "Event/3_5_9/Event.ascx",
       "source_file": "~/Modules/IRPortal.Modules.Event/3_5_9/Event.ascx",
