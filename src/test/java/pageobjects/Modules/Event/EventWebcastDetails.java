@@ -1,4 +1,4 @@
-package pageobjects.Modules.PressRelease;
+package pageobjects.Modules.Event;
 
 import com.jayway.jsonpath.JsonPath;
 import org.json.simple.JSONArray;
@@ -10,32 +10,29 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import pageobjects.AbstractPageObject;
 import pageobjects.PageAdmin.WorkflowState;
-import pageobjects.PageObject;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 
 import static specs.AbstractSpec.*;
 import static specs.AbstractSpec.desktopUrl;
 
 /**
- * Created by dannyl on 2017-06-23.
+ * Created by dannyl on 2017-07-07.
  */
-public class PressReleaseDetails extends AbstractPageObject{
+public class EventWebcastDetails extends AbstractPageObject {
     private static By addNewModuleBtn, backBtn, moduleTitleInput, moduleDefinitionSelect, includeLegacyModulesChk;
     private static By publishBtn, saveBtn, workflowStateSpan, currentContentSpan, propertiesHref, previewLnk;
-    private static By livePageTitle, liveModuleTitleSpan, livePressReleaseModulePageMenuBtn;
+    private static By livePageTitle, liveModuleTitleSpan, liveEventModulePageMenuBtn;
     private static By commentsTxt, deleteBtn, saveAndSubmitBtn, regionNameSelect;
     private static String sPathToPageFile, sFilePageJson, sPathToModuleFile, sFileModuleJson, sPathToFile;
     private static JSONParser parser;
 
     private static final long DEFAULT_PAUSE = 2500;
 
-    public PressReleaseDetails(WebDriver driver) {
+    public EventWebcastDetails(WebDriver driver) {
         super(driver);
 
         addNewModuleBtn = By.xpath(propUIModules.getProperty("btn_AddNewModule"));
@@ -57,12 +54,11 @@ public class PressReleaseDetails extends AbstractPageObject{
 
         livePageTitle = By.xpath(propUIModules.getProperty("page_Title"));
         liveModuleTitleSpan = By.xpath(propUIModules.getProperty("span_LiveModuleTitle"));
-        livePressReleaseModulePageMenuBtn = By.xpath(propUIModules.getProperty("btnMenu_LivePressReleaseModulePage"));
 
         sPathToPageFile = System.getProperty("user.dir") + propUIModules.getProperty("dataPath_Modules");
         sFilePageJson = propUIModules.getProperty("json_PagesProp");
-        sPathToModuleFile = System.getProperty("user.dir") + propUIModulesPressRelease.getProperty("dataPath_PressRelease");
-        sFileModuleJson = propUIModulesPressRelease.getProperty("json_pressReleaseDetailsProp");
+        sPathToModuleFile = System.getProperty("user.dir") + propUIModulesEvent.getProperty("dataPath_Event");
+        sFileModuleJson = propUIModulesEvent.getProperty("json_EventWebcastDetailsProp");
 
         parser = new JSONParser();
     }
@@ -119,23 +115,25 @@ public class PressReleaseDetails extends AbstractPageObject{
             e.printStackTrace();
         }
 
-        return null;
+
+        return "For Approval";
     }
 
-    public String openModulePreviewForPressReleases(String moduleName, String moduleTitle) {
-        // Creates the url for the pressReleaseDetails page that contains the Press Release we want
+    public String openModulePreviewForEvents(String moduleName, String moduleTitle) {
+        // Creates the url for the eventWebcastDetails page that contains the Press Release we want
         String sectionId = "";
         String title = "";
         String pressReleaseId = "";
         String languageId = "";
-        sPathToFile = System.getProperty("user.dir") + propUIModulesPressRelease.getProperty("dataPath_PressRelease");
+        sPathToFile = System.getProperty("user.dir") + propUIModulesEvent.getProperty("dataPath_Event");
         String contentDataPath = System.getProperty("user.dir") + propUIModules.getProperty("dataPath_Content")+ propUIModules.getProperty("json_ContentData");
         String contentPath = System.getProperty("user.dir") + propUIModules.getProperty("dataPath_Content")+ propUIModules.getProperty("json_ContentProp");
         try
         {   Object obj = parser.parse(new FileReader(contentDataPath));
             JSONObject jsonObject = (JSONObject) obj;
             JSONArray jsonArray = (JSONArray) jsonObject.get(moduleName);
-            jsonObject = (JSONObject) jsonArray.get(1);
+            // Must select an event that has reminders set as true in its properties
+            jsonObject = (JSONObject) jsonArray.get(4);
             title = (String) jsonObject.get("headline");
 
             obj = parser.parse(new FileReader(sPathToFile + sFileModuleJson));
@@ -143,8 +141,8 @@ public class PressReleaseDetails extends AbstractPageObject{
             sectionId = JsonPath.read(obj, sectionIdPath);
 
             obj = parser.parse(new FileReader(contentPath));
-            pressReleaseId = JsonPath.read(obj, "$['press_release'].['" + title + "'].url_query.ItemID");
-            languageId = JsonPath.read(obj, "$['press_release'].['" + title + "'].url_query.LangugageId");
+            pressReleaseId = JsonPath.read(obj, "$['" + moduleName + "'].['" + title + "'].url_query.ItemID");
+            languageId = JsonPath.read(obj, "$['" + moduleName + "'].['" + title + "'].url_query.LangugageId");
         }
         catch (Exception e)
         {
@@ -152,7 +150,7 @@ public class PressReleaseDetails extends AbstractPageObject{
         }
         String baseUrl = desktopUrl.toString();
         baseUrl = baseUrl.replaceAll("/admin/", "");
-        String url = baseUrl + "/preview/preview.aspx?PressReleaseId=" + pressReleaseId + "&LanguageId=" + languageId + "&SectionId=" + sectionId;
+        String url = baseUrl + "/preview/preview.aspx?EventId=" + pressReleaseId + "&LanguageId=" + languageId + "&SectionId=" + sectionId;
         ((JavascriptExecutor)driver).executeScript("window.open();");
 
         ArrayList<String> tabs = new ArrayList<> (driver.getWindowHandles());
@@ -160,14 +158,6 @@ public class PressReleaseDetails extends AbstractPageObject{
         driver.get(url);
 
         return driver.getTitle();
-    }
-
-
-    private String getPageUrl(JSONObject obj, String moduleName) {
-        String  sItemID = JsonPath.read(obj, "$.['"+moduleName+"'].url_query.ItemID");
-        String  sLanguageId = JsonPath.read(obj, "$.['"+moduleName+"'].url_query.LanguageId");
-        String  sSectionId = JsonPath.read(obj, "$.['"+moduleName+"'].url_query.SectionId");
-        return desktopUrl.toString()+"default.aspx?ItemID="+sItemID+"&LanguageId="+sLanguageId+"&SectionId="+sSectionId;
     }
 
     private String getModuleUrl(JSONObject obj, String moduleName) {

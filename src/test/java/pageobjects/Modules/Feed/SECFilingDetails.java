@@ -1,4 +1,4 @@
-package pageobjects.Modules.PressRelease;
+package pageobjects.Modules.Feed;
 
 import com.jayway.jsonpath.JsonPath;
 import org.json.simple.JSONArray;
@@ -7,64 +7,51 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import pageobjects.AbstractPageObject;
+import pageobjects.LoginPage.LoginPage;
 import pageobjects.PageAdmin.WorkflowState;
 import pageobjects.PageObject;
+import pageobjects.Modules.ModuleBase;
+import sun.security.pkcs11.Secmod;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 
 import static specs.AbstractSpec.*;
 import static specs.AbstractSpec.desktopUrl;
 
 /**
- * Created by dannyl on 2017-06-23.
+ * Created by zacharyk on 2017-06-26.
  */
-public class PressReleaseDetails extends AbstractPageObject{
-    private static By addNewModuleBtn, backBtn, moduleTitleInput, moduleDefinitionSelect, includeLegacyModulesChk;
-    private static By publishBtn, saveBtn, workflowStateSpan, currentContentSpan, propertiesHref, previewLnk;
-    private static By livePageTitle, liveModuleTitleSpan, livePressReleaseModulePageMenuBtn;
-    private static By commentsTxt, deleteBtn, saveAndSubmitBtn, regionNameSelect;
-    private static String sPathToPageFile, sFilePageJson, sPathToModuleFile, sFileModuleJson, sPathToFile;
+public class SECFilingDetails extends AbstractPageObject {
+    private static By workflowStateSpan, propertiesHref, commentsTxt, saveAndSubmitBtn, SECFilingLink, moduleTitle;
+    private static String sPathToModuleFile, sFileModuleJson, sPathToFile;
     private static JSONParser parser;
-
     private static final long DEFAULT_PAUSE = 2500;
+    private static ModuleBase moduleBase;
 
-    public PressReleaseDetails(WebDriver driver) {
+    public SECFilingDetails(WebDriver driver) {
         super(driver);
 
-        addNewModuleBtn = By.xpath(propUIModules.getProperty("btn_AddNewModule"));
-        moduleTitleInput = By.xpath(propUIModules.getProperty("input_ModuleTitle"));
-        moduleDefinitionSelect = By.xpath(propUIModules.getProperty("select_ModuleDefinition"));
-        includeLegacyModulesChk = By.xpath(propUIModules.getProperty("chk_IncludeLagacyModules"));
-        regionNameSelect = By.xpath(propUIModules.getProperty("select_RegionName"));
         workflowStateSpan = By.xpath(propUIPageAdmin.getProperty("select_WorkflowState"));
         commentsTxt = By.xpath(propUIPageAdmin.getProperty("txtarea_Comments"));
-        currentContentSpan = By.xpath(propUIPageAdmin.getProperty("span_CurrentContent"));
         propertiesHref = By.xpath(propUIModules.getProperty("href_Properties"));
-        previewLnk = By.xpath(propUIModules.getProperty("lnk_Preview"));
+        SECFilingLink = By.xpath(propUIModulesFeed.getProperty("div_DetailsLink"));
+        moduleTitle = By.xpath(propUIModulesFeed.getProperty("span_ModuleTitle"));
 
-        saveBtn = By.xpath(propUIPageAdmin.getProperty("btn_Save"));
-        deleteBtn = By.xpath(propUIPageAdmin.getProperty("btn_Delete"));
-        publishBtn = By.xpath(propUIPageAdmin.getProperty("btn_Publish"));
-        backBtn = By.xpath(propUIPageAdmin.getProperty("btn_Back"));
         saveAndSubmitBtn = By.xpath(propUIPageAdmin.getProperty("btn_SaveAndSubmit"));
 
-        livePageTitle = By.xpath(propUIModules.getProperty("page_Title"));
-        liveModuleTitleSpan = By.xpath(propUIModules.getProperty("span_LiveModuleTitle"));
-        livePressReleaseModulePageMenuBtn = By.xpath(propUIModules.getProperty("btnMenu_LivePressReleaseModulePage"));
-
-        sPathToPageFile = System.getProperty("user.dir") + propUIModules.getProperty("dataPath_Modules");
-        sFilePageJson = propUIModules.getProperty("json_PagesProp");
-        sPathToModuleFile = System.getProperty("user.dir") + propUIModulesPressRelease.getProperty("dataPath_PressRelease");
-        sFileModuleJson = propUIModulesPressRelease.getProperty("json_pressReleaseDetailsProp");
+        sPathToModuleFile = System.getProperty("user.dir") + propUIModulesFeed.getProperty("dataPath_Feed");
+        sFileModuleJson = propUIModulesFeed.getProperty("json_SECFilingDetailsProp");
 
         parser = new JSONParser();
+
+        moduleBase = new ModuleBase(driver, sPathToModuleFile, sFileModuleJson);
     }
 
     public String saveAndSubmitModule(JSONObject modulesDataObj, String moduleName) throws InterruptedException {
@@ -89,7 +76,7 @@ public class PressReleaseDetails extends AbstractPageObject{
                     By propertyTextValue = By.xpath("//td[contains(@class, 'DataGridItemBorderLeft')][(text()='" + jsonArrProp.get(i).toString().split(";")[0] + "')]/parent::tr/td/div/input[contains(@id, 'txtStatic')]");
                     findElement(propertyTextValue).clear();
                     findElement(propertyTextValue).sendKeys(jsonArrProp.get(i).toString().split(";")[1]);
-                } catch (ElementNotFoundException e) {
+                } catch (PageObject.ElementNotFoundException e) {
                     By propertyDropdownValue = By.xpath("//td[contains(@class, 'DataGridItemBorderLeft')][(text()='" + jsonArrProp.get(i).toString().split(";")[0] + "')]/parent::tr/td/div/select[contains(@id, 'ddlDynamic')]");
                     findElement(propertyDropdownValue).sendKeys(jsonArrProp.get(i).toString().split(";")[1]);
                 }
@@ -121,30 +108,20 @@ public class PressReleaseDetails extends AbstractPageObject{
 
         return null;
     }
-
-    public String openModulePreviewForPressReleases(String moduleName, String moduleTitle) {
+    // Must use this method instead of the one in ModuleBase class because in order to open the SECFilingDetails Module you have to click an SEC filing
+    public String openModulePreviewForSECFiling(String moduleTitle) throws InterruptedException{
         // Creates the url for the pressReleaseDetails page that contains the Press Release we want
         String sectionId = "";
-        String title = "";
-        String pressReleaseId = "";
         String languageId = "";
-        sPathToFile = System.getProperty("user.dir") + propUIModulesPressRelease.getProperty("dataPath_PressRelease");
-        String contentDataPath = System.getProperty("user.dir") + propUIModules.getProperty("dataPath_Content")+ propUIModules.getProperty("json_ContentData");
-        String contentPath = System.getProperty("user.dir") + propUIModules.getProperty("dataPath_Content")+ propUIModules.getProperty("json_ContentProp");
+        sPathToFile = System.getProperty("user.dir") + propUIModulesFeed.getProperty("dataPath_Feed");
+        String contentDataPath = sPathToFile + propUIModulesFeed.getProperty("json_SECFilingProp");
+
         try
         {   Object obj = parser.parse(new FileReader(contentDataPath));
-            JSONObject jsonObject = (JSONObject) obj;
-            JSONArray jsonArray = (JSONArray) jsonObject.get(moduleName);
-            jsonObject = (JSONObject) jsonArray.get(1);
-            title = (String) jsonObject.get("headline");
-
-            obj = parser.parse(new FileReader(sPathToFile + sFileModuleJson));
             String sectionIdPath = "$['"+ moduleTitle +"'].url_query.ItemWorkflowId";
             sectionId = JsonPath.read(obj, sectionIdPath);
-
-            obj = parser.parse(new FileReader(contentPath));
-            pressReleaseId = JsonPath.read(obj, "$['press_release'].['" + title + "'].url_query.ItemID");
-            languageId = JsonPath.read(obj, "$['press_release'].['" + title + "'].url_query.LangugageId");
+            String languageIdPath = "$['"+ moduleTitle +"'].url_query.LanguageId";
+            languageId = JsonPath.read(obj, languageIdPath);
         }
         catch (Exception e)
         {
@@ -152,22 +129,26 @@ public class PressReleaseDetails extends AbstractPageObject{
         }
         String baseUrl = desktopUrl.toString();
         baseUrl = baseUrl.replaceAll("/admin/", "");
-        String url = baseUrl + "/preview/preview.aspx?PressReleaseId=" + pressReleaseId + "&LanguageId=" + languageId + "&SectionId=" + sectionId;
+        String url = baseUrl + "/preview/preview.aspx?SectionId=" + sectionId + "&LanguageId=" + languageId;
         ((JavascriptExecutor)driver).executeScript("window.open();");
 
         ArrayList<String> tabs = new ArrayList<> (driver.getWindowHandles());
         driver.switchTo().window(tabs.get(1));
         driver.get(url);
 
-        return driver.getTitle();
+        driver.findElement(SECFilingLink).click();
+        Thread.sleep(DEFAULT_PAUSE);
+        String title = driver.findElement(this.moduleTitle).getText();
+        return title;
     }
-
-
-    private String getPageUrl(JSONObject obj, String moduleName) {
-        String  sItemID = JsonPath.read(obj, "$.['"+moduleName+"'].url_query.ItemID");
-        String  sLanguageId = JsonPath.read(obj, "$.['"+moduleName+"'].url_query.LanguageId");
-        String  sSectionId = JsonPath.read(obj, "$.['"+moduleName+"'].url_query.SectionId");
-        return desktopUrl.toString()+"default.aspx?ItemID="+sItemID+"&LanguageId="+sLanguageId+"&SectionId="+sSectionId;
+    // Must use this method instead of the one in ModuleBase class because in order to open the SECFilingDetails Module you have to click an SEC filing
+    public String openModuleLiveSite(String moduleName) throws InterruptedException{
+        moduleBase.openModuleLiveSite("sec_filing");
+        // Clicking the first SEC filing.
+        driver.findElement(SECFilingLink).click();
+        Thread.sleep(DEFAULT_PAUSE);
+        String title = driver.findElement(this.moduleTitle).getText();
+        return title;
     }
 
     private String getModuleUrl(JSONObject obj, String moduleName) {

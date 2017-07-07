@@ -31,7 +31,7 @@ public class ModuleBase extends AbstractPageObject {
     private static By publishBtn, saveBtn, workflowStateSpan, currentContentSpan, propertiesHref;
     private static By commentsTxt, deleteBtn, saveAndSubmitBtn, regionNameSelect, previewLnk, sectionTitle;
     private static By siteAdminBtn, linkToPageBtn, otherPageBtn, pageDropdown, commentsArea;
-    private static String sPathToPageFile, sFilePageJson, sPathToModuleFile, sFileModuleJson;
+    private static String sPathToPageFile, sFilePageJson, sPathToModuleFile, sFileModuleJson, sPathToFile;
     private static JSONParser parser;
 
     private static final long DEFAULT_PAUSE = 2500;
@@ -84,7 +84,7 @@ public class ModuleBase extends AbstractPageObject {
             waitForElement(commentsTxt);
 
             waitForElementToAppear(addNewModuleBtn);
-            findElement(addNewModuleBtn).click();
+            scrollToElementAndClick(addNewModuleBtn);
             Thread.sleep(DEFAULT_PAUSE);
             try
             {
@@ -302,8 +302,6 @@ public class ModuleBase extends AbstractPageObject {
             catch (Exception e){
             }
 
-
-
             try {
                 Thread.sleep(DEFAULT_PAUSE*2);
                 driver.get(moduleUrl);
@@ -360,11 +358,14 @@ public class ModuleBase extends AbstractPageObject {
                 catch (Exception e){
                 }
 
-
-                Thread.sleep(DEFAULT_PAUSE*2);
-
-                driver.get(moduleUrl);
-                Thread.sleep(DEFAULT_PAUSE);
+                try {
+                    Thread.sleep(DEFAULT_PAUSE*2);
+                    driver.get(moduleUrl);
+                } catch (UnhandledAlertException e) {
+                    driver.switchTo().alert().accept();
+                    Thread.sleep(DEFAULT_PAUSE*2);
+                    driver.get(moduleUrl);
+                }
 
                 jsonObj.remove(moduleName);
 
@@ -411,6 +412,38 @@ public class ModuleBase extends AbstractPageObject {
             e.printStackTrace();
         } catch (ParseException e) {
             e.printStackTrace();
+        }
+
+        return driver.getTitle();
+    }
+
+    public String openModuleLiveForDetailsPages(String moduleName){
+        String url = "";
+        String contentDataPath = System.getProperty("user.dir") + propUIModules.getProperty("dataPath_Content")+ propUIModules.getProperty("json_ContentData");
+        String contentPath = System.getProperty("user.dir") + propUIModules.getProperty("dataPath_Content")+ propUIModules.getProperty("json_ContentProp");
+        try
+        {   Object obj = parser.parse(new FileReader(contentDataPath));
+            JSONObject jsonObject = (JSONObject) obj;
+            JSONArray jsonArray = (JSONArray) jsonObject.get(moduleName);
+            jsonObject = (JSONObject) jsonArray.get(0);
+            String title = (String) jsonObject.get("headline");
+            obj = parser.parse(new FileReader(contentPath));
+            url = JsonPath.read(obj, "$['"+ moduleName + "'].['" + title + "'].your_page_url");
+        }
+        catch (Exception e)
+        {
+            System.out.println("Failed to read data.");
+        }
+        try
+        {
+            ((JavascriptExecutor)driver).executeScript("window.open();");
+
+            ArrayList<String> tabs = new ArrayList<> (driver.getWindowHandles());
+            driver.switchTo().window(tabs.get(1));
+            driver.get(url);
+        }
+        catch (Exception e){
+            System.out.println("No page found.");
         }
 
         return driver.getTitle();

@@ -119,6 +119,128 @@ public class PressRelease extends AbstractPageObject {
             e.printStackTrace();
         }
 
+        return null;
+    }
+
+    public String publishModule(String moduleName) throws InterruptedException {
+        try {
+            JSONObject jsonObj = (JSONObject) parser.parse(new FileReader(sPathToModuleFile + sFileModuleJson));
+
+            String moduleUrl = getModuleUrl(jsonObj, moduleName);
+            driver.get(moduleUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+
+            waitForElement(publishBtn);
+            findElement(publishBtn).click();
+            Thread.sleep(DEFAULT_PAUSE*2);
+
+            driver.get(moduleUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+
+            JSONObject moduleObj = (JSONObject) jsonObj.get(moduleName);
+
+            moduleObj.put("workflow_state", WorkflowState.LIVE.state());
+
+            jsonObj.put(moduleName, moduleObj);
+
+            FileWriter file = new FileWriter(sPathToModuleFile + sFileModuleJson);
+            file.write(jsonObj.toJSONString().replace("\\", ""));
+            file.flush();
+
+
+            Thread.sleep(DEFAULT_PAUSE*2);
+            driver.navigate().refresh();
+
+            System.out.println("New "+moduleName+" has been published");
+            return findElement(workflowStateSpan).getText();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public String setupAsDeletedModule(String moduleName) throws InterruptedException {
+        try {
+            JSONObject jsonObj = (JSONObject) parser.parse(new FileReader(sPathToModuleFile + sFileModuleJson));
+
+            String moduleUrl = getModuleUrl(jsonObj, moduleName);
+            driver.get(moduleUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+
+            waitForElement(commentsTxt);
+            findElement(commentsTxt).sendKeys("Removing the module");
+            findElement(deleteBtn).click();
+
+            Thread.sleep(DEFAULT_PAUSE);
+
+            driver.get(moduleUrl);
+            waitForElement(currentContentSpan);
+
+            JSONObject moduleObj = (JSONObject) jsonObj.get(moduleName);
+
+            moduleObj.put("workflow_state", WorkflowState.FOR_APPROVAL.state());
+
+            jsonObj.put(moduleName, moduleObj);
+
+            FileWriter file = new FileWriter(sPathToModuleFile + sFileModuleJson);
+            file.write(jsonObj.toJSONString().replace("\\", ""));
+            file.flush();
+
+            System.out.println(moduleName+ ": Module set up as deleted");
+            return findElement(currentContentSpan).getText();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public String removeModule(JSONObject modulesDataObj, String moduleName) throws InterruptedException {
+        try {
+            JSONObject jsonObj = (JSONObject) parser.parse(new FileReader(sPathToModuleFile + sFileModuleJson));
+
+            String moduleUrl = getModuleUrl(jsonObj, moduleName);
+            driver.get(moduleUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+
+            if (findElement(currentContentSpan).getText().equals(WorkflowState.DELETE_PENDING.state())) {
+
+                waitForElement(commentsTxt);
+                findElement(commentsTxt).sendKeys("Approving the module removal");
+                findElement(publishBtn).click();
+
+                Thread.sleep(DEFAULT_PAUSE*2);
+
+                driver.get(moduleUrl);
+                Thread.sleep(DEFAULT_PAUSE);
+
+                jsonObj.remove(moduleName);
+
+                FileWriter file = new FileWriter(sPathToModuleFile + sFileModuleJson);
+                file.write(jsonObj.toJSONString().replace("\\", ""));
+                file.flush();
+
+                Thread.sleep(DEFAULT_PAUSE*2);
+                driver.navigate().refresh();
+
+                System.out.println(moduleName+ ": Module has been removed");
+                return findElement(workflowStateSpan).getText();
+            }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         return null;
     }

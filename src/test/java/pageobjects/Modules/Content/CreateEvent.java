@@ -1,15 +1,11 @@
 package pageobjects.Modules.Content;
 
 import com.jayway.jsonpath.JsonPath;
-import gherkin.lexer.Ca;
-import org.apache.xpath.operations.Bool;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import pageobjects.AbstractPageObject;
 import pageobjects.PageAdmin.WorkflowState;
@@ -21,7 +17,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 import static specs.AbstractSpec.desktopUrl;
 import static specs.AbstractSpec.propUIContentAdmin;
@@ -30,6 +25,7 @@ import static specs.AbstractSpec.propUIModules;
 /**
  * Created by zacharyk on 2017-06-27.
  */
+
 public class CreateEvent extends AbstractPageObject {
     private static By startDateInput, endDateInput, startTimeHHSelect, startTimeMMSelect, startTimeAMSelect;
     private static By endTimeHHSelect, endTimeMMSelect, endTimeAMSelect, tagsInput, titleInput, textArea, commentsInput;
