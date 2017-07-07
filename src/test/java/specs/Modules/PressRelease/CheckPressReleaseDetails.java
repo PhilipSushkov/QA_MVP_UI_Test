@@ -1,13 +1,10 @@
 package specs.Modules.PressRelease;
 
-import com.jayway.jsonpath.JsonPath;
-import com.mongodb.util.JSON;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.testng.Assert;
 import org.testng.annotations.*;
 import pageobjects.ContentAdmin.PressReleases.PressReleaseEdit;
@@ -19,7 +16,6 @@ import pageobjects.Modules.PageForModules;
 import pageobjects.PageAdmin.WorkflowState;
 import specs.AbstractSpec;
 import specs.Modules.util.ModuleFunctions;
-import org.openqa.selenium.Keys;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -42,7 +38,7 @@ public class CheckPressReleaseDetails extends AbstractSpec{
     private static JSONParser parser = new JSONParser();
 
 
-    private final String PAGE_DATA="pageData", PAGE_NAME="press_release_modules", MODULE_DATA="moduleData", MODULE_NAME="press_release_details", PRESS_RELEASE_DETAILS = "press_release_creation_details";
+    private final String PAGE_DATA="pageData", PAGE_NAME="press_release_modules", MODULE_DATA="moduleData", MODULE_NAME="press_release_details", PRESS_RELEASE_DETAILS = "press_release_creation_details", LINK_TO_PAGE = "- press_release_details", KEY_NAME = "LinkToPressReleaseDetails";
 
     @BeforeTest
     public void setUp() throws Exception {
@@ -75,15 +71,13 @@ public class CheckPressReleaseDetails extends AbstractSpec{
         dashboard.openPageFromCommonTasks(pageAdminMenuButton);
     }
 
-    @Test(dataProvider=PAGE_DATA, priority=1, enabled=false)
+    @Test(dataProvider=PAGE_DATA, priority=1, enabled=true)
     public void createPressReleaseDetailsPage(JSONObject page) throws Exception {
         Assert.assertEquals(pageForModules.savePage(page, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+MODULE_NAME+" Page didn't save properly");
         Assert.assertEquals(pageForModules.saveAndSubmitPage(page, MODULE_NAME), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New "+MODULE_NAME+" Page properly");
         Assert.assertEquals(pageForModules.publishPage(MODULE_NAME), WorkflowState.LIVE.state(), "Couldn't publish New "+MODULE_NAME+" Page properly");
         dashboard.openPageFromMenu(siteAdminMenuButton, linkToPageMenuItem);
-        Assert.assertEquals(moduleBase.linkToPageEdit("- press_release_details", "LinkToPressReleaseDetails"), WorkflowState.LIVE.state(), "Couldn't publish New "+MODULE_NAME+" Page properly");
-
-
+        Assert.assertEquals(moduleBase.linkToPageEdit(LINK_TO_PAGE, KEY_NAME), WorkflowState.LIVE.state(), "Couldn't link new "+MODULE_NAME+" properly");
     }
 
     @Test(dataProvider=MODULE_DATA, priority=2, enabled=true)

@@ -302,8 +302,6 @@ public class ModuleBase extends AbstractPageObject {
             catch (Exception e){
             }
 
-
-
             try {
                 Thread.sleep(DEFAULT_PAUSE*2);
                 driver.get(moduleUrl);
@@ -360,11 +358,14 @@ public class ModuleBase extends AbstractPageObject {
                 catch (Exception e){
                 }
 
-
-                Thread.sleep(DEFAULT_PAUSE*2);
-
-                driver.get(moduleUrl);
-                Thread.sleep(DEFAULT_PAUSE);
+                try {
+                    Thread.sleep(DEFAULT_PAUSE*2);
+                    driver.get(moduleUrl);
+                } catch (UnhandledAlertException e) {
+                    driver.switchTo().alert().accept();
+                    Thread.sleep(DEFAULT_PAUSE*2);
+                    driver.get(moduleUrl);
+                }
 
                 jsonObj.remove(moduleName);
 
