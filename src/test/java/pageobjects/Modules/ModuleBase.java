@@ -424,7 +424,7 @@ public class ModuleBase extends AbstractPageObject {
         {   Object obj = parser.parse(new FileReader(contentDataPath));
             JSONObject jsonObject = (JSONObject) obj;
             JSONArray jsonArray = (JSONArray) jsonObject.get(moduleName);
-            jsonObject = (JSONObject) jsonArray.get(1);
+            jsonObject = (JSONObject) jsonArray.get(0);
             String title = (String) jsonObject.get("headline");
             obj = parser.parse(new FileReader(contentPath));
             url = JsonPath.read(obj, "$['"+ moduleName + "'].['" + title + "'].your_page_url");
