@@ -129,7 +129,7 @@ public class CheckPressReleaseDetails extends AbstractSpec{
         }
     }
 
-    @Test(dataProvider=MODULE_DATA, priority=5, enabled=false)
+    @Test(dataProvider=MODULE_DATA, priority=5, enabled=true)
     public void removePressReleaseDetailsModule(JSONObject module) throws Exception {
         String sModuleNameSet = module.get("module_title").toString();
         Assert.assertEquals(moduleBase.setupAsDeletedModule(sModuleNameSet), WorkflowState.DELETE_PENDING.state(), "New "+sModuleNameSet+" Module didn't setup as Deleted properly");

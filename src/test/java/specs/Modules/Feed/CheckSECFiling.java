@@ -54,7 +54,7 @@ public class CheckSECFiling extends AbstractSpec {
     private static String sDataFileJsonDetails, sFileModuleJsonDetails;
     private static JSONParser parser;
 
-    private final String PAGE_DATA="pageData", PAGE_NAME="feed_modules", MODULE_DATA="moduleData", MODULE_NAME="sec_filing", MODULE_NAME_FOR_DETAILS="sec_filing_details", MODULE_DATA_FOR_DETAILS="moduleDataForDetails";
+    private final String PAGE_DATA="pageData", PAGE_NAME="feed_modules", MODULE_DATA="moduleData", MODULE_NAME="sec_filing", MODULE_NAME_FOR_DETAILS="sec_filing_details", MODULE_DATA_FOR_DETAILS="moduleDataForDetails", LINK_TO_PAGE="- sec_filing_details", KEY_NAME=" LinkToSECFilingDetails";
 
 
 
@@ -149,7 +149,7 @@ public class CheckSECFiling extends AbstractSpec {
         Assert.assertEquals(pageForModules.saveAndSubmitPage(module, MODULE_NAME_FOR_DETAILS), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New "+MODULE_NAME_FOR_DETAILS+" Page properly");
         Assert.assertEquals(pageForModules.publishPage(MODULE_NAME_FOR_DETAILS), WorkflowState.LIVE.state(), "Couldn't publish New "+MODULE_NAME_FOR_DETAILS+" Page properly");
         dashboard.openPageFromMenu(siteAdminMenuButton, linkToPageMenuItem);
-        Assert.assertEquals(moduleBaseForDetails.linkToPageEdit("- sec_filing_details", "LinkToSECFilingDetails"), WorkflowState.LIVE.state(), "Couldn't publish New "+MODULE_NAME_FOR_DETAILS+" Page properly");
+        Assert.assertEquals(moduleBaseForDetails.linkToPageEdit(LINK_TO_PAGE, KEY_NAME), WorkflowState.LIVE.state(), "Couldn't link New "+MODULE_NAME_FOR_DETAILS+" properly");
     }
 
     @Test(dataProvider=MODULE_DATA_FOR_DETAILS, priority=6, enabled=true)
