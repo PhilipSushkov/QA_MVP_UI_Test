@@ -119,8 +119,7 @@ public class PressReleaseDetails extends AbstractPageObject{
             e.printStackTrace();
         }
 
-
-        return "For Approval";
+        return null;
     }
 
     public String openModulePreviewForPressReleases(String moduleName, String moduleTitle) {
