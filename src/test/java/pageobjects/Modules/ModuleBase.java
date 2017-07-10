@@ -27,11 +27,11 @@ import static specs.AbstractSpec.desktopUrl;
  */
 
 public class ModuleBase extends AbstractPageObject {
-    private static By addNewModuleBtn, moduleTitleInput, moduleDefinitionSelect, includeLagacyModulesChk;
-    private static By publishBtn, saveBtn, workflowStateSpan, currentContentSpan, propertiesHref;
-    private static By commentsTxt, deleteBtn, saveAndSubmitBtn, regionNameSelect, previewLnk, sectionTitle;
-    private static By siteAdminBtn, linkToPageBtn, otherPageBtn, pageDropdown, commentsArea;
-    private static String sPathToPageFile, sFilePageJson, sPathToModuleFile, sFileModuleJson, sPathToFile;
+    private By addNewModuleBtn, moduleTitleInput, moduleDefinitionSelect, includeLagacyModulesChk;
+    private By publishBtn, saveBtn, workflowStateSpan, currentContentSpan, propertiesHref;
+    private By commentsTxt, deleteBtn, saveAndSubmitBtn, regionNameSelect, previewLnk, sectionTitle;
+    private By siteAdminBtn, linkToPageBtn, otherPageBtn, pageDropdown, commentsArea;
+    private String sPathToPageFile, sFilePageJson, sPathToModuleFile, sFileModuleJson, sPathToFile;
     private static JSONParser parser;
 
     private static final long DEFAULT_PAUSE = 2500;
