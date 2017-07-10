@@ -213,5 +213,28 @@
       "lookup_info": "Created by Q4Web CMS Selenium Test Suite. DO NOT EDIT OR REMOVE.",
       "comment": "Adding lookup for Selenium module testing"
     }
+  ],
+
+  "glossary": [
+    {
+      "do_assertions": true,
+      "glossary_title": "AAA",
+      "glossary_text": "This is glossary entry #01 for testing glossary functionality. DO NOT EDIT OR REMOVE.",
+      "comment": "Adding glossary for Selenium module testing"
+    },
+
+    {
+      "do_assertions": true,
+      "glossary_title": "DEF",
+      "glossary_text": "This is glossary entry #02 for testing glossary functionality. DO NOT EDIT OR REMOVE.",
+      "comment": "Adding glossary for Selenium module testing"
+    },
+
+    {
+      "do_assertions": true,
+      "glossary_title": "XYZ",
+      "glossary_text": "This is glossary entry #03 for testing glossary functionality. DO NOT EDIT OR REMOVE.",
+      "comment": "Adding glossary for Selenium module testing"
+    }
   ]
 }

@@ -11,10 +11,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.LoginPage.LoginPage;
-import pageobjects.Modules.Content.CreateEvent;
-import pageobjects.Modules.Content.CreateLookup;
-import pageobjects.Modules.Content.CreatePresentation;
-import pageobjects.Modules.Content.CreatePressRelease;
+import pageobjects.Modules.Content.*;
 
 import pageobjects.PageAdmin.WorkflowState;
 import specs.AbstractSpec;
@@ -33,19 +30,21 @@ public class CreateContent extends AbstractSpec {
     // DESIGN CONTENT-DEPENDENT TESTS TO CONTINUE WORKING IF NEW CONTENT IS ADDED \\
 
     private static By addNewPresentationButton, addNewPressReleaseButton, addNewEventButton, siteAdminMenuButton, lookupListMenuItem;
+    private static By contentAdminMenuButton, glossaryListMenuItem;
     private static LoginPage loginPage;
     private static Dashboard dashboard;
     private static CreatePresentation createPresentation;
     private static CreatePressRelease createPressRelease;
     private static CreateEvent createEvent;
     private static CreateLookup createLookup;
+    private static CreateGlossary createGlossary;
 
     private static String sPathToFile, sDataFileJson;
     private static JSONParser parser;
 
 
-    private final String PRESENTATION_DATA = "presentationData", PRESS_RELEASE_DATA = "pressReleaseData", EVENT_DATA = "eventData", LOOKUP_DATA = "lookupData";
-    private final String PRESENTATION_NAME = "presentation", PRESS_RELEASE_NAME = "press_release", EVENT_NAME = "event", LOOKUP_NAME = "lookup";
+    private final String PRESENTATION_DATA = "presentationData", PRESS_RELEASE_DATA = "pressReleaseData", EVENT_DATA = "eventData", LOOKUP_DATA = "lookupData", GLOSSARY_DATA = "glossaryData";
+    private final String PRESENTATION_NAME = "presentation", PRESS_RELEASE_NAME = "press_release", EVENT_NAME = "event", LOOKUP_NAME = "lookup", GLOSSARY_NAME = "glossary";
 
     @BeforeTest
     public void setUp() throws Exception {
@@ -56,12 +55,15 @@ public class CreateContent extends AbstractSpec {
         createPressRelease = new CreatePressRelease(driver);
         createEvent = new CreateEvent(driver);
         createLookup = new CreateLookup(driver);
+        createGlossary = new CreateGlossary(driver);
 
         addNewPresentationButton = By.xpath(propUICommon.getProperty("btn_AddPresentation"));
         addNewPressReleaseButton = By.xpath(propUICommon.getProperty("btn_AddPressRelease"));
         addNewEventButton = By.xpath(propUICommon.getProperty("btn_AddEvent"));
         siteAdminMenuButton = By.xpath(propUISiteAdmin.getProperty("btnMenu_SiteAdmin"));
         lookupListMenuItem = By.xpath(propUISiteAdmin.getProperty("itemMenu_LookupList"));
+        contentAdminMenuButton = By.xpath(propUIContentAdmin.getProperty("btnMenu_ContentAdmin"));
+        glossaryListMenuItem = By.xpath(propUIContentAdmin.getProperty("btnMenu_Glossary"));
 
         sPathToFile = System.getProperty("user.dir") + propUIModules.getProperty("dataPath_Content");
         sDataFileJson = propUIModules.getProperty("json_ContentData");
@@ -121,10 +123,24 @@ public class CreateContent extends AbstractSpec {
         Assert.assertEquals(createLookup.publishLookup(data.get("lookup_text").toString()), WorkflowState.LIVE.state());
     }
 
-    @Test(dataProvider=LOOKUP_DATA, priority = 8, enabled = false)
+    @Test(dataProvider=LOOKUP_DATA, priority=8, enabled = false)
     public void removeLookups(JSONObject data) throws Exception {
         Assert.assertEquals(createLookup.setupAsDeletedLookup(data.get("lookup_text").toString()), WorkflowState.DELETE_PENDING.state());
         Assert.assertEquals(createLookup.removeLookup(data.get("lookup_text").toString()), WorkflowState.NEW_ITEM.state());
+    }
+    
+    @Test(dataProvider=GLOSSARY_DATA, priority=9, enabled=true)
+    public void createGlossaries(JSONObject data) throws Exception {
+        dashboard.openPageFromMenu(contentAdminMenuButton, glossaryListMenuItem);
+        Assert.assertEquals(createGlossary.saveGlossary(data), WorkflowState.IN_PROGRESS.state());
+        Assert.assertEquals(createGlossary.saveAndSubmitGlossary(data), WorkflowState.FOR_APPROVAL.state());
+        Assert.assertEquals(createGlossary.publishGlossary(data.get("glossary_title").toString()), WorkflowState.LIVE.state());
+    }
+
+    @Test(dataProvider=GLOSSARY_DATA, priority=10, enabled=true)
+    public void removeGlossaries(JSONObject data) throws Exception {
+        Assert.assertEquals(createGlossary.setupAsDeletedGlossary(data.get("glossary_title").toString()), WorkflowState.DELETE_PENDING.state());
+        Assert.assertEquals(createGlossary.removeGlossary(data.get("glossary_title").toString()), WorkflowState.NEW_ITEM.state());
     }
 
     private Object[][] genericProvider(String type) {
@@ -175,4 +191,7 @@ public class CreateContent extends AbstractSpec {
     
     @DataProvider
     public Object[][] lookupData() { return genericProvider(LOOKUP_NAME); }
+    
+    @DataProvider
+    public Object[][] glossaryData() { return genericProvider(GLOSSARY_NAME); }
 }
