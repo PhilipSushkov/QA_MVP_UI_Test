@@ -115,8 +115,7 @@ public class EventWebcastDetails extends AbstractPageObject {
             e.printStackTrace();
         }
 
-
-        return "For Approval";
+        return null;
     }
 
     public String openModulePreviewForEvents(String moduleName, String moduleTitle) {
