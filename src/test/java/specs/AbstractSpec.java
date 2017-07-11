@@ -33,9 +33,9 @@ public abstract class AbstractSpec extends util.Functions {
 // IMPORTANT:
 // Determines which environment the test suite will run on but can be overridden by command line
 //------------------------------------------------------------------------------
-    //private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.DEVELOP;
+    private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.DEVELOP;
     //private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.BETA;
-    private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.PRODUCTION;
+    //private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.PRODUCTION;
 //------------------------------------------------------------------------------
 
     private static final EnvironmentType activeEnvironment = setupEnvironment();
@@ -81,6 +81,8 @@ public abstract class AbstractSpec extends util.Functions {
     public static Properties propUIModulesEvent;
     private static final String PATHTO_MODULESFAQ_PROP = "Modules/Faq/Faq.properties";
     public static Properties propUIModulesFaq;
+    private static final String PATHTO_MODULESREPORT_PROP = "Modules/Report/Report.properties";
+    public static Properties propUIModulesReport;
     private static final String PATHTO_API_PROP = "api/ApiMap.properties";
     public static Properties propAPI;
 
@@ -269,6 +271,7 @@ public abstract class AbstractSpec extends util.Functions {
         propUIModulesPresentation = ConnectToPropUI(PATHTO_MODULESPRESENTATION_PROP);
         propUIModulesEvent = ConnectToPropUI(PATHTO_MODULESEVENT_PROP);
         propUIModulesFaq = ConnectToPropUI(PATHTO_MODULESFAQ_PROP);
+        propUIModulesReport = ConnectToPropUI(PATHTO_MODULESREPORT_PROP);
         propAPI = ConnectToPropUI(PATHTO_API_PROP);
     }
 

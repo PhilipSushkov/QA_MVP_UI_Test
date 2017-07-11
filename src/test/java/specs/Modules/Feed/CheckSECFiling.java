@@ -54,7 +54,7 @@ public class CheckSECFiling extends AbstractSpec {
     private static String sDataFileJsonDetails, sFileModuleJsonDetails;
     private static JSONParser parser;
 
-    private final String PAGE_DATA="pageData", PAGE_NAME="feed_modules", MODULE_DATA="moduleData", MODULE_NAME="sec_filing", MODULE_NAME_FOR_DETAILS="sec_filing_details", MODULE_DATA_FOR_DETAILS="moduleDataForDetails", LINK_TO_PAGE="- sec_filing_details", KEY_NAME=" LinkToSECFilingDetails";
+    private final String PAGE_DATA="pageData", PAGE_NAME="feed_modules", MODULE_DATA="moduleData", MODULE_NAME="sec_filing", MODULE_NAME_FOR_DETAILS="sec_filing_details", MODULE_DATA_FOR_DETAILS="moduleDataForDetails", LINK_TO_PAGE="- sec_filing_details", KEY_NAME="LinkToSECFilingDetails";
 
 
 
