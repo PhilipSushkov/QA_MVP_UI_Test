@@ -24,6 +24,7 @@ import java.util.ArrayList;
 /**
  * Created by dannyl on 2017-07-10.
  */
+
 public class CheckAnnualQuarterlyReport extends AbstractSpec {
     private static By pageAdminMenuButton;
     private static LoginPage loginPage;
@@ -64,7 +65,7 @@ public class CheckAnnualQuarterlyReport extends AbstractSpec {
         dashboard.openPageFromCommonTasks(pageAdminMenuButton);
     }
 
-    @Test(dataProvider=PAGE_DATA, priority=1, enabled=false)
+    @Test(dataProvider=PAGE_DATA, priority=1, enabled=true)
     public void createAnnualQuarterlyReportPage(JSONObject page) throws InterruptedException {
         Assert.assertEquals(pageForModules.savePage(page, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+MODULE_NAME+" Page didn't save properly");
         Assert.assertEquals(pageForModules.saveAndSubmitPage(page, MODULE_NAME), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New "+MODULE_NAME+" Page properly");
@@ -121,7 +122,7 @@ public class CheckAnnualQuarterlyReport extends AbstractSpec {
         Assert.assertEquals(moduleBase.removeModule(module, sModuleNameSet), WorkflowState.NEW_ITEM.state(), "Couldn't remove "+sModuleNameSet+" Module. Something went wrong.");
     }
 
-    @Test(dataProvider=PAGE_DATA, priority=6, enabled=false)
+    @Test(dataProvider=PAGE_DATA, priority=6, enabled=true)
     public void removeAnnualQuarterlyReportPage(JSONObject page) throws Exception {
         Assert.assertEquals(pageForModules.setupAsDeletedPage(MODULE_NAME), WorkflowState.DELETE_PENDING.state(), "New "+MODULE_NAME+" Page didn't setup as Deleted properly");
         Assert.assertEquals(pageForModules.removePage(page, MODULE_NAME), WorkflowState.NEW_ITEM.state(), "Couldn't remove "+MODULE_NAME+" Page. Something went wrong.");
