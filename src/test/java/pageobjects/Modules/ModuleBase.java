@@ -86,9 +86,10 @@ public class ModuleBase extends AbstractPageObject {
             waitForElementToAppear(addNewModuleBtn);
             scrollToElementAndClick(addNewModuleBtn);
             Thread.sleep(DEFAULT_PAUSE);
+
             try
             {
-            String pageTitle = findElement(sectionTitle).getText();
+                String pageTitle = findElement(sectionTitle).getText();
             }
             catch (Exception e){
                 findElement(addNewModuleBtn).click();
