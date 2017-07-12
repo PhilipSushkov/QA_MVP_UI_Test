@@ -11,10 +11,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.LoginPage.LoginPage;
-import pageobjects.Modules.Content.CreateEvent;
-import pageobjects.Modules.Content.CreateLookup;
-import pageobjects.Modules.Content.CreatePresentation;
-import pageobjects.Modules.Content.CreatePressRelease;
+import pageobjects.Modules.Content.*;
 
 import pageobjects.PageAdmin.WorkflowState;
 import specs.AbstractSpec;
@@ -46,6 +43,7 @@ public class CreateContent extends AbstractSpec {
 
     private final String PRESENTATION_DATA = "presentationData", PRESS_RELEASE_DATA = "pressReleaseData", EVENT_DATA = "eventData", LOOKUP_DATA = "lookupData";
     private final String PRESENTATION_NAME = "presentation", PRESS_RELEASE_NAME = "press_release", EVENT_NAME = "event", LOOKUP_NAME = "lookup";
+    private final String FINANCIAL_REPORT_NAME = "financial_report", FINANCIAL_REPORT_DATA="financialReportData";
 
     @BeforeTest
     public void setUp() throws Exception {
@@ -175,4 +173,10 @@ public class CreateContent extends AbstractSpec {
     
     @DataProvider
     public Object[][] lookupData() { return genericProvider(LOOKUP_NAME); }
+
+    @DataProvider
+    public Object[][] financialReportData() {
+        return genericProvider(FINANCIAL_REPORT_NAME);
+    }
+
 }

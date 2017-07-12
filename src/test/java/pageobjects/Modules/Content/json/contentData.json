@@ -213,5 +213,13 @@
       "lookup_info": "Created by Q4Web CMS Selenium Test Suite. DO NOT EDIT OR REMOVE.",
       "comment": "Adding lookup for Selenium module testing"
     }
+  ],
+  "financial_report": [
+    {
+      "do_assertions": true,
+      "date": "07/01/17",
+      "tags": "SELENIUM_REPORT_TAG",
+      "comment": "Adding event for Selenium module testing"
+    }
   ]
 }
