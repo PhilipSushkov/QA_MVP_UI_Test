@@ -30,7 +30,7 @@ public class CreateContent extends AbstractSpec {
     // DESIGN CONTENT-DEPENDENT TESTS TO CONTINUE WORKING IF NEW CONTENT IS ADDED \\
 
     private static By addNewPresentationButton, addNewPressReleaseButton, addNewEventButton, siteAdminMenuButton, lookupListMenuItem;
-    private static By contentAdminMenuButton, glossaryListMenuItem;
+    private static By contentAdminMenuButton, glossaryListMenuItem, quickLinkListMenuItem;
     private static LoginPage loginPage;
     private static Dashboard dashboard;
     private static CreatePresentation createPresentation;
@@ -38,14 +38,17 @@ public class CreateContent extends AbstractSpec {
     private static CreateEvent createEvent;
     private static CreateLookup createLookup;
     private static CreateGlossary createGlossary;
+    private static CreateQuickLink createQuickLink;
 
     private static String sPathToFile, sDataFileJson;
     private static JSONParser parser;
 
 
-    private final String PRESENTATION_DATA = "presentationData", PRESS_RELEASE_DATA = "pressReleaseData", EVENT_DATA = "eventData", LOOKUP_DATA = "lookupData", GLOSSARY_DATA = "glossaryData";
-    private final String PRESENTATION_NAME = "presentation", PRESS_RELEASE_NAME = "press_release", EVENT_NAME = "event", LOOKUP_NAME = "lookup", GLOSSARY_NAME = "glossary";
-
+    private final String PRESENTATION_DATA = "presentationData", PRESS_RELEASE_DATA = "pressReleaseData", EVENT_DATA = "eventData";
+    private final String LOOKUP_DATA = "lookupData", GLOSSARY_DATA = "glossaryData", QUICKLINK_DATA = "quickLinkData";
+    private final String PRESENTATION_NAME = "presentation", PRESS_RELEASE_NAME = "press_release", EVENT_NAME = "event";
+    private final String LOOKUP_NAME = "lookup", GLOSSARY_NAME = "glossary", QUICKLINK_NAME = "quicklink";
+    
     @BeforeTest
     public void setUp() throws Exception {
 
@@ -56,7 +59,8 @@ public class CreateContent extends AbstractSpec {
         createEvent = new CreateEvent(driver);
         createLookup = new CreateLookup(driver);
         createGlossary = new CreateGlossary(driver);
-
+        createQuickLink = new CreateQuickLink(driver);
+ 
         addNewPresentationButton = By.xpath(propUICommon.getProperty("btn_AddPresentation"));
         addNewPressReleaseButton = By.xpath(propUICommon.getProperty("btn_AddPressRelease"));
         addNewEventButton = By.xpath(propUICommon.getProperty("btn_AddEvent"));
@@ -64,6 +68,7 @@ public class CreateContent extends AbstractSpec {
         lookupListMenuItem = By.xpath(propUISiteAdmin.getProperty("itemMenu_LookupList"));
         contentAdminMenuButton = By.xpath(propUIContentAdmin.getProperty("btnMenu_ContentAdmin"));
         glossaryListMenuItem = By.xpath(propUIContentAdmin.getProperty("btnMenu_Glossary"));
+        quickLinkListMenuItem = By.xpath(propUIContentAdmin.getProperty("btnMenu_QuickLinks"));
 
         sPathToFile = System.getProperty("user.dir") + propUIModules.getProperty("dataPath_Content");
         sDataFileJson = propUIModules.getProperty("json_ContentData");
@@ -143,6 +148,20 @@ public class CreateContent extends AbstractSpec {
         Assert.assertEquals(createGlossary.removeGlossary(data.get("glossary_title").toString()), WorkflowState.NEW_ITEM.state());
     }
 
+    @Test(dataProvider=QUICKLINK_DATA, priority=9, enabled=true)
+    public void createQuickLinks(JSONObject data) throws Exception {
+        dashboard.openPageFromMenu(contentAdminMenuButton, quickLinkListMenuItem);
+        Assert.assertEquals(createQuickLink.saveQuickLink(data), WorkflowState.IN_PROGRESS.state());
+        Assert.assertEquals(createQuickLink.saveAndSubmitQuickLink(data), WorkflowState.FOR_APPROVAL.state());
+        Assert.assertEquals(createQuickLink.publishQuickLink(data.get("quickLink_title").toString()), WorkflowState.LIVE.state());
+    }
+
+    @Test(dataProvider=QUICKLINK_DATA, priority=10, enabled=true)
+    public void removeQuickLinks(JSONObject data) throws Exception {
+        Assert.assertEquals(createQuickLink.setupAsDeletedQuickLink(data.get("quicklink_title").toString()), WorkflowState.DELETE_PENDING.state());
+        Assert.assertEquals(createQuickLink.removeQuickLink(data.get("quicklink_title").toString()), WorkflowState.NEW_ITEM.state());
+    }
+
     private Object[][] genericProvider(String type) {
         try {
             JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFileJson));
@@ -194,4 +213,7 @@ public class CreateContent extends AbstractSpec {
     
     @DataProvider
     public Object[][] glossaryData() { return genericProvider(GLOSSARY_NAME); }
+    
+    @DataProvider
+    public Object[][] quickLinkData() { return genericProvider(QUICKLINK_NAME); }
 }
