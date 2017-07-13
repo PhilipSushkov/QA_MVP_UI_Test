@@ -36,8 +36,6 @@ public class FinancialReport extends AbstractPageObject {
     public FinancialReport(WebDriver driver) {
         super(driver);
 
-
-
         addNewModuleBtn = By.xpath(propUIModules.getProperty("btn_AddNewModule"));
         moduleTitleInput = By.xpath(propUIModules.getProperty("input_ModuleTitle"));
         moduleDefinitionSelect = By.xpath(propUIModules.getProperty("select_ModuleDefinition"));

@@ -40,6 +40,7 @@ public class CheckFinancialReport extends AbstractSpec{
     /*
     In order to use this test there must be existing financial reports on the testing page. To check this go to the admin site of the testing site and select financial reports under the Content Admin dropdown.
      */
+
     @BeforeTest
     public void setUp() throws Exception {
         pageAdminMenuButton = By.xpath(propUIModulesReport.getProperty("btnMenu_PageAdmin"));
