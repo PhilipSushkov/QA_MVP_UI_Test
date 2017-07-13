@@ -272,12 +272,9 @@ public abstract class AbstractSpec extends util.Functions {
         propUIModulesPressRelease = ConnectToPropUI(PATHTO_MODULESPRESSRELEASE_PROP);
         propUIModulesPresentation = ConnectToPropUI(PATHTO_MODULESPRESENTATION_PROP);
         propUIModulesEvent = ConnectToPropUI(PATHTO_MODULESEVENT_PROP);
-<<<<<<< HEAD
         propUIModulesCore = ConnectToPropUI(PATHTO_MODULESCORE_PROP);
-=======
         propUIModulesFaq = ConnectToPropUI(PATHTO_MODULESFAQ_PROP);
         propUIModulesReport = ConnectToPropUI(PATHTO_MODULESREPORT_PROP);
->>>>>>> origin/SeleniumModuleTesting
         propAPI = ConnectToPropUI(PATHTO_API_PROP);
     }
 
