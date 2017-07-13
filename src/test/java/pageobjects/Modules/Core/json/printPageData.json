@@ -6,7 +6,7 @@
       "module_definition": "Core/PrintPage.ascx",
       "source_file": "~/Modules/IRPortal.Modules.Core/PrintPage.ascx",
       "region_name": "Content Pane",
-      "module_path": "//span[div/h1/span[text()='Core/PrintPage.aspx_01']]",
+      "module_path": "//span[contains(@class, 'ContentPaneDiv1')]",
       "properties": [
         "CustomCss;PRINT_PAGE_CUSTOM_CSS"
       ],
