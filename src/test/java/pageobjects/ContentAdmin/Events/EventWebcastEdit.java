@@ -71,7 +71,7 @@ public class EventWebcastEdit extends AbstractPageObject {
         addNewAttachmentsLink = By.xpath(propUIContentAdmin.getProperty("href_AddNewAttachments"));
         attachmentTitleInput = By.xpath(propUIContentAdmin.getProperty("input_AttachmentTitle"));
         attachmentTypeListSelect = By.xpath(propUIContentAdmin.getProperty("select_AttachmentTypeList"));
-        attachmentPathInput = By.xpath(propUIContentAdmin.getProperty("input_AttachmentPath"));
+        attachmentPathInput = By.xpath(propUIContentAdmin.getProperty("input_AttachmentPathFile"));
         cancelAttachmentButton = By.xpath(propUIContentAdmin.getProperty("btn_AttachmentCancel"));
 
         saveAndSubmitButton = By.xpath(propUIContentAdmin.getProperty("btn_SaveAndSubmit"));

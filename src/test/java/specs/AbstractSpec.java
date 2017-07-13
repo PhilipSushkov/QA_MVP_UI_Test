@@ -81,6 +81,10 @@ public abstract class AbstractSpec extends util.Functions {
     public static Properties propUIModulesEvent;
     private static final String PATHTO_MODULESCORE_PROP = "Modules/Core/Core.properties";
     public static Properties propUIModulesCore;
+    private static final String PATHTO_MODULESFAQ_PROP = "Modules/Faq/Faq.properties";
+    public static Properties propUIModulesFaq;
+    private static final String PATHTO_MODULESREPORT_PROP = "Modules/Report/Report.properties";
+    public static Properties propUIModulesReport;
     private static final String PATHTO_API_PROP = "api/ApiMap.properties";
     public static Properties propAPI;
 
@@ -268,7 +272,12 @@ public abstract class AbstractSpec extends util.Functions {
         propUIModulesPressRelease = ConnectToPropUI(PATHTO_MODULESPRESSRELEASE_PROP);
         propUIModulesPresentation = ConnectToPropUI(PATHTO_MODULESPRESENTATION_PROP);
         propUIModulesEvent = ConnectToPropUI(PATHTO_MODULESEVENT_PROP);
+<<<<<<< HEAD
         propUIModulesCore = ConnectToPropUI(PATHTO_MODULESCORE_PROP);
+=======
+        propUIModulesFaq = ConnectToPropUI(PATHTO_MODULESFAQ_PROP);
+        propUIModulesReport = ConnectToPropUI(PATHTO_MODULESREPORT_PROP);
+>>>>>>> origin/SeleniumModuleTesting
         propAPI = ConnectToPropUI(PATHTO_API_PROP);
     }
 

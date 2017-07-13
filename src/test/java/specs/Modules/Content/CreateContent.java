@@ -48,7 +48,8 @@ public class CreateContent extends AbstractSpec {
     private final String LOOKUP_DATA = "lookupData", GLOSSARY_DATA = "glossaryData", QUICKLINK_DATA = "quickLinkData";
     private final String PRESENTATION_NAME = "presentation", PRESS_RELEASE_NAME = "press_release", EVENT_NAME = "event";
     private final String LOOKUP_NAME = "lookup", GLOSSARY_NAME = "glossary", QUICKLINK_NAME = "quicklink";
-    
+    private final String FINANCIAL_REPORT_NAME = "financial_report", FINANCIAL_REPORT_DATA="financialReportData";
+
     @BeforeTest
     public void setUp() throws Exception {
 
@@ -216,4 +217,9 @@ public class CreateContent extends AbstractSpec {
     
     @DataProvider
     public Object[][] quickLinkData() { return genericProvider(QUICKLINK_NAME); }
+
+    @DataProvider
+    public Object[][] financialReportData() {
+        return genericProvider(FINANCIAL_REPORT_NAME);
+    }
 }

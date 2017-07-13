@@ -1,4 +1,4 @@
-package pageobjects.Modules.Event;
+package pageobjects.Modules.Report;
 
 import com.jayway.jsonpath.JsonPath;
 import org.json.simple.JSONArray;
@@ -6,34 +6,37 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import pageobjects.AbstractPageObject;
+import pageobjects.Dashboard.Dashboard;
 import pageobjects.PageAdmin.WorkflowState;
+import pageobjects.PageObject;
+import specs.AbstractSpec;
 
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import static specs.AbstractSpec.*;
-import static specs.AbstractSpec.desktopUrl;
 
 /**
- * Created by dannyl on 2017-07-07.
+ * Created by dannyl on 2017-07-11.
  */
-public class EventWebcastDetails extends AbstractPageObject {
-    private static By addNewModuleBtn, backBtn, moduleTitleInput, moduleDefinitionSelect, includeLegacyModulesChk;
+public class FinancialReport extends AbstractPageObject {
+    private static By addNewModuleBtn, backBtn, moduleTitleInput, moduleDefinitionSelect, includeLegacyModulesChk, addNewFinancialReportButton, contentAdminMenuButton;
     private static By publishBtn, saveBtn, workflowStateSpan, currentContentSpan, propertiesHref, previewLnk;
-    private static By livePageTitle, liveModuleTitleSpan, liveEventModulePageMenuBtn;
     private static By commentsTxt, deleteBtn, saveAndSubmitBtn, regionNameSelect;
-    private static String sPathToPageFile, sFilePageJson, sPathToModuleFile, sFileModuleJson, sPathToFile;
+    private static String sPathToPageFile, sFilePageJson, sPathToModuleFile, sFileModuleJson;
     private static JSONParser parser;
+    private static Dashboard dashboard;
+    private static By quarterlyReportEditButton, annualReportEditButton, addTagsSection;
 
     private static final long DEFAULT_PAUSE = 2500;
 
-    public EventWebcastDetails(WebDriver driver) {
+    public FinancialReport(WebDriver driver) {
         super(driver);
+
+
 
         addNewModuleBtn = By.xpath(propUIModules.getProperty("btn_AddNewModule"));
         moduleTitleInput = By.xpath(propUIModules.getProperty("input_ModuleTitle"));
@@ -51,17 +54,20 @@ public class EventWebcastDetails extends AbstractPageObject {
         publishBtn = By.xpath(propUIPageAdmin.getProperty("btn_Publish"));
         backBtn = By.xpath(propUIPageAdmin.getProperty("btn_Back"));
         saveAndSubmitBtn = By.xpath(propUIPageAdmin.getProperty("btn_SaveAndSubmit"));
-
-        livePageTitle = By.xpath(propUIModules.getProperty("page_Title"));
-        liveModuleTitleSpan = By.xpath(propUIModules.getProperty("span_LiveModuleTitle"));
+        contentAdminMenuButton = By.xpath(propUIContentAdmin.getProperty("btnMenu_ContentAdmin"));
+        addNewFinancialReportButton = By.xpath(propUIContentAdmin.getProperty("btnMenu_FinancialReports"));
+        quarterlyReportEditButton = By.xpath("//td[contains(text(), 'Quarter')]/preceding::td[2]/input");
+        annualReportEditButton = By.xpath("//td[contains(text(), 'Annual')]/preceding::td[2]/input");
+        addTagsSection = By.xpath(propUIContentAdmin.getProperty("input_Tags"));
 
         sPathToPageFile = System.getProperty("user.dir") + propUIModules.getProperty("dataPath_Modules");
         sFilePageJson = propUIModules.getProperty("json_PagesProp");
-        sPathToModuleFile = System.getProperty("user.dir") + propUIModulesEvent.getProperty("dataPath_Event");
-        sFileModuleJson = propUIModulesEvent.getProperty("json_EventWebcastDetailsProp");
-
+        sPathToModuleFile = System.getProperty("user.dir") + propUIModulesReport.getProperty("dataPath_Report");
+        sFileModuleJson = propUIModulesReport.getProperty("json_FinancialReportProp");
+        dashboard = new Dashboard(driver);
         parser = new JSONParser();
     }
+
 
     public String saveAndSubmitModule(JSONObject modulesDataObj, String moduleName) throws InterruptedException {
 
@@ -80,12 +86,12 @@ public class EventWebcastDetails extends AbstractPageObject {
             findElement(propertiesHref).click();
             Thread.sleep(DEFAULT_PAUSE);
 
-            for (int i=0; i<jsonArrProp.size(); i++) {
+            for (int i = 0; i < jsonArrProp.size(); i++) {
                 try {
                     By propertyTextValue = By.xpath("//td[contains(@class, 'DataGridItemBorderLeft')][(text()='" + jsonArrProp.get(i).toString().split(";")[0] + "')]/parent::tr/td/div/input[contains(@id, 'txtStatic')]");
                     findElement(propertyTextValue).clear();
                     findElement(propertyTextValue).sendKeys(jsonArrProp.get(i).toString().split(";")[1]);
-                } catch (ElementNotFoundException e) {
+                } catch (PageObject.ElementNotFoundException e) {
                     By propertyDropdownValue = By.xpath("//td[contains(@class, 'DataGridItemBorderLeft')][(text()='" + jsonArrProp.get(i).toString().split(";")[0] + "')]/parent::tr/td/div/select[contains(@id, 'ddlDynamic')]");
                     findElement(propertyDropdownValue).sendKeys(jsonArrProp.get(i).toString().split(";")[1]);
                 }
@@ -94,6 +100,12 @@ public class EventWebcastDetails extends AbstractPageObject {
             findElement(commentsTxt).sendKeys(modulesDataObj.get("comment").toString());
             findElement(saveAndSubmitBtn).click();
             Thread.sleep(DEFAULT_PAUSE);
+            try{
+                findElement(saveAndSubmitBtn).click();
+            }
+            catch(Exception e){
+
+            }
 
             driver.get(moduleUrl);
             Thread.sleep(DEFAULT_PAUSE);
@@ -107,7 +119,7 @@ public class EventWebcastDetails extends AbstractPageObject {
             file.write(jsonObj.toJSONString().replace("\\", ""));
             file.flush();
 
-            System.out.println(moduleName+ ": New "+moduleName+" has been submitted");
+            System.out.println(moduleName + ": New " + moduleName + " has been submitted");
             return findElement(workflowStateSpan).getText();
         } catch (IOException e) {
             e.printStackTrace();
@@ -115,54 +127,61 @@ public class EventWebcastDetails extends AbstractPageObject {
             e.printStackTrace();
         }
 
+
         return null;
     }
 
-    public String openModulePreviewForEvents(String moduleName, String moduleTitle) {
-        // Creates the url for the eventWebcastDetails page that contains the Press Release we want
-        String sectionId = "";
-        String title = "";
-        String pressReleaseId = "";
-        String languageId = "";
-        sPathToFile = System.getProperty("user.dir") + propUIModulesEvent.getProperty("dataPath_Event");
-        String contentDataPath = System.getProperty("user.dir") + propUIModules.getProperty("dataPath_Content")+ propUIModules.getProperty("json_ContentData");
-        String contentPath = System.getProperty("user.dir") + propUIModules.getProperty("dataPath_Content")+ propUIModules.getProperty("json_ContentProp");
-        try
-        {   Object obj = parser.parse(new FileReader(contentDataPath));
-            JSONObject jsonObject = (JSONObject) obj;
-            JSONArray jsonArray = (JSONArray) jsonObject.get(moduleName);
-            // Must select an event that has reminders set as true in its properties
-            jsonObject = (JSONObject) jsonArray.get(4);
-            title = (String) jsonObject.get("headline");
+    public String addTagToAnnualReport (String tagName) throws Exception{
+        dashboard.openPageFromMenu(contentAdminMenuButton, addNewFinancialReportButton);
+        findElement(annualReportEditButton).click();
+        Thread.sleep(DEFAULT_PAUSE);
+        findElement(addTagsSection).sendKeys(tagName);
+        findElement(commentsTxt).sendKeys("Adding tags to Annual Report.");
+        findElement(saveAndSubmitBtn).click();
+        Thread.sleep(DEFAULT_PAUSE);
 
-            obj = parser.parse(new FileReader(sPathToFile + sFileModuleJson));
-            String sectionIdPath = "$['"+ moduleTitle +"'].url_query.ItemWorkflowId";
-            sectionId = JsonPath.read(obj, sectionIdPath);
-
-            obj = parser.parse(new FileReader(contentPath));
-            pressReleaseId = JsonPath.read(obj, "$['" + moduleName + "'].['" + title + "'].url_query.ItemID");
-            languageId = JsonPath.read(obj, "$['" + moduleName + "'].['" + title + "'].url_query.LangugageId");
+        try{
+            findElement(saveAndSubmitBtn).click();
         }
-        catch (Exception e)
-        {
-            System.out.println("Failed to read data.");
+        catch(Exception e){
+
         }
-        String baseUrl = desktopUrl.toString();
-        baseUrl = baseUrl.replaceAll("/admin/", "");
-        String url = baseUrl + "/preview/preview.aspx?EventId=" + pressReleaseId + "&LanguageId=" + languageId + "&SectionId=" + sectionId;
-        ((JavascriptExecutor)driver).executeScript("window.open();");
+        findElement(annualReportEditButton).click();
+        Thread.sleep(DEFAULT_PAUSE);
+        findElement(publishBtn).click();
+        findElement(annualReportEditButton).click();
 
-        ArrayList<String> tabs = new ArrayList<> (driver.getWindowHandles());
-        driver.switchTo().window(tabs.get(1));
-        driver.get(url);
+        return findElement(workflowStateSpan).getText();
+    }
 
-        return driver.getTitle();
+    public String addTagToQuarterReport (String tagName) throws Exception{
+        dashboard.openPageFromMenu(contentAdminMenuButton, addNewFinancialReportButton);
+        findElement(quarterlyReportEditButton).click();
+        Thread.sleep(DEFAULT_PAUSE);
+        findElement(addTagsSection).sendKeys(tagName);
+        findElement(commentsTxt).sendKeys("Adding tags to Quarterly Report.");
+        findElement(saveAndSubmitBtn).click();
+        Thread.sleep(DEFAULT_PAUSE);
+
+        try{
+            findElement(saveAndSubmitBtn).click();
+        }
+        catch(Exception e){
+
+        }
+        findElement(quarterlyReportEditButton).click();
+        Thread.sleep(DEFAULT_PAUSE);
+        findElement(publishBtn).click();
+        findElement(quarterlyReportEditButton).click();
+
+        return findElement(workflowStateSpan).getText();
     }
 
     private String getModuleUrl(JSONObject obj, String moduleName) {
-        String  sItemID = JsonPath.read(obj, "$.['"+moduleName+"'].url_query.ItemId");
-        String  sLanguageId = JsonPath.read(obj, "$.['"+moduleName+"'].url_query.LanguageId");
-        String  sSectionId = JsonPath.read(obj, "$.['"+moduleName+"'].url_query.SectionId");
-        return desktopUrl.toString()+"default.aspx?ItemID="+sItemID+"&LanguageId="+sLanguageId+"&SectionId="+sSectionId;
+        String sItemID = JsonPath.read(obj, "$.['" + moduleName + "'].url_query.ItemId");
+        String sLanguageId = JsonPath.read(obj, "$.['" + moduleName + "'].url_query.LanguageId");
+        String sSectionId = JsonPath.read(obj, "$.['" + moduleName + "'].url_query.SectionId");
+        return desktopUrl.toString() + "default.aspx?ItemID=" + sItemID + "&LanguageId=" + sLanguageId + "&SectionId=" + sSectionId;
     }
 }
+
