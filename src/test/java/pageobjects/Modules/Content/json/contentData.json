@@ -44,7 +44,6 @@
     "tags": "SELENIUM_PRESS_RELEASE_TAG",
     "comment": "Adding press release for Selenium module testing"
   },
-
     {
       "do_assertions": true,
       "headline": "Selenium Module Test Press Release 2",
@@ -68,29 +67,27 @@
       "comment": "Adding press release for Selenium module testing"
     }
   ],
-  
-  "event": [
-    {
-      "do_assertions": true,
-      "headline": "Selenium Module Test Event 1",
-      "date": "future",
-      "start_hour": "1",
-      "start_minute": "00",
-      "start_AMPM": "AM",
-      "end_hour": "1",
-      "end_minute": "00",
-      "end_AMPM": "PM",
-      "body": "This is event #01 for testing event module functionality. DO NOT EDIT OR REMOVE.",
-      "tags": "SELENIUM_EVENT_TAG",
-      "is_webcast": "true",
-      "exclude_latest": "false",
-      "related_webcast": "RELATED_WEBCAST_1",
-      "speaker": "SPEAKER_1",
-      "speaker_position": "TEST",
-      "attachment_title": "TEST_ATTACHMENT_2",
-      "attachment_path": "files/test/attachment1",
-      "comment": "Adding event for Selenium module testing"
-    },
+  "event": [{
+    "do_assertions": true,
+    "headline": "Selenium Module Test Event 1",
+    "date": "future",
+    "start_hour": "1",
+    "start_minute": "00",
+    "start_AMPM": "AM",
+    "end_hour": "1",
+    "end_minute": "00",
+    "end_AMPM": "PM",
+    "body": "This is event #01 for testing event module functionality. DO NOT EDIT OR REMOVE.",
+    "tags": "SELENIUM_EVENT_TAG",
+    "is_webcast": "true",
+    "exclude_latest": "false",
+    "related_webcast": "RELATED_WEBCAST_1",
+    "speaker": "SPEAKER_1",
+    "speaker_position": "TEST",
+    "attachment_title": "TEST_ATTACHMENT_2",
+    "attachment_path": "files/test/attachment1",
+    "comment": "Adding event for Selenium module testing"
+  },
     {
       "do_assertions": true,
       "headline": "Selenium Module Test Event 2",
@@ -176,17 +173,14 @@
       "comment": "Adding event for Selenium module testing"
     }
   ],
-
-  "lookup": [
-    {
-      "do_assertions": true,
-      "lookup_type": "SECindices",
-      "lookup_text": "SECindices",
-      "lookup_value": "CIK:0001326801",
-      "lookup_info": "Created by Q4Web CMS Selenium Test Suite. DO NOT EDIT OR REMOVE.",
-      "comment": "Adding lookup for Selenium module testing"
-    },
-
+  "lookup": [{
+    "do_assertions": true,
+    "lookup_type": "SECindices",
+    "lookup_text": "SECindices",
+    "lookup_value": "CIK:0001326801",
+    "lookup_info": "Created by Q4Web CMS Selenium Test Suite. DO NOT EDIT OR REMOVE.",
+    "comment": "Adding lookup for Selenium module testing"
+  },
     {
       "do_assertions": true,
       "lookup_type": "indices",
@@ -195,7 +189,6 @@
       "lookup_info": "Created by Q4Web CMS Selenium Test Suite. DO NOT EDIT OR REMOVE.",
       "comment": "Adding lookup for Selenium module testing"
     },
-
     {
       "do_assertions": true,
       "lookup_type": "indices",
@@ -214,34 +207,29 @@
       "comment": "Adding lookup for Selenium module testing"
     }
   ],
-
-  "glossary": [
-    {
-      "do_assertions": true,
-      "glossary_title": "AAA",
-      "glossary_text": "This is glossary entry #01 for testing glossary functionality. DO NOT EDIT OR REMOVE.",
-      "comment": "Adding glossary for Selenium module testing"
-    },
-
+  "glossary": [{
+    "do_assertions": true,
+    "glossary_title": "AAA",
+    "glossary_text": "This is glossary entry #01 for testing glossary functionality. DO NOT EDIT OR REMOVE.",
+    "comment": "Adding glossary item for Selenium module testing"
+  },
     {
       "do_assertions": true,
       "glossary_title": "DEF",
       "glossary_text": "This is glossary entry #02 for testing glossary functionality. DO NOT EDIT OR REMOVE.",
-      "comment": "Adding glossary for Selenium module testing"
+      "comment": "Adding glossary item for Selenium module testing"
     },
     {
       "do_assertions": true,
       "glossary_title": "XYZ",
       "glossary_text": "This is glossary entry #03 for testing glossary functionality. DO NOT EDIT OR REMOVE.",
-      "comment": "Adding glossary for Selenium module testing"
+      "comment": "Adding glossary item for Selenium module testing"
     }
   ],
-  "financial_report": [
-    {
-      "do_assertions": true,
-      "date": "07/01/17",
-      "tags": "SELENIUM_REPORT_TAG",
-      "comment": "Adding event for Selenium module testing"
-    }
-  ]
+  "financial_report": [{
+    "do_assertions": true,
+    "date": "07/01/17",
+    "tags": "SELENIUM_REPORT_TAG",
+    "comment": "Adding Financial Report for Selenium module testing"
+  }]
 }
