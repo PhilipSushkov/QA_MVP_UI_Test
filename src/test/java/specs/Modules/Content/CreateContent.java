@@ -154,13 +154,13 @@ public class CreateContent extends AbstractSpec {
         dashboard.openPageFromMenu(contentAdminMenuButton, quickLinkListMenuItem);
         Assert.assertEquals(createQuickLink.saveQuickLink(data), WorkflowState.IN_PROGRESS.state());
         Assert.assertEquals(createQuickLink.saveAndSubmitQuickLink(data), WorkflowState.FOR_APPROVAL.state());
-        Assert.assertEquals(createQuickLink.publishQuickLink(data.get("quickLink_title").toString()), WorkflowState.LIVE.state());
+        Assert.assertEquals(createQuickLink.publishQuickLink(data.get("quicklink_description").toString()), WorkflowState.LIVE.state());
     }
 
     @Test(dataProvider=QUICKLINK_DATA, priority=10, enabled=true)
     public void removeQuickLinks(JSONObject data) throws Exception {
-        Assert.assertEquals(createQuickLink.setupAsDeletedQuickLink(data.get("quicklink_title").toString()), WorkflowState.DELETE_PENDING.state());
-        Assert.assertEquals(createQuickLink.removeQuickLink(data.get("quicklink_title").toString()), WorkflowState.NEW_ITEM.state());
+        Assert.assertEquals(createQuickLink.setupAsDeletedQuickLink(data.get("quicklink_description").toString()), WorkflowState.DELETE_PENDING.state());
+        Assert.assertEquals(createQuickLink.removeQuickLink(data.get("quicklink_description").toString()), WorkflowState.NEW_ITEM.state());
     }
 
     private Object[][] genericProvider(String type) {

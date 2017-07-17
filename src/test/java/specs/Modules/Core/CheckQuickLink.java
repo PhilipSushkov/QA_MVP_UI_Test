@@ -26,6 +26,9 @@ import java.util.Date;
  * Created by zacharyk on 2017-07-10.
  */
 public class CheckQuickLink extends AbstractSpec {
+
+    // NOTE: THIS MODULE HAS UNFIXED ISSUES DOCUMENTED AT WEB-12815. IF THESE HAVE BEEN RESOLVED, THE TEST SHOULD BE UPDATED
+
     private static By pageAdminMenuButton;
     private static LoginPage loginPage;
     private static Dashboard dashboard;
@@ -74,7 +77,7 @@ public class CheckQuickLink extends AbstractSpec {
         Assert.assertEquals(pageForModules.publishPage(MODULE_NAME), WorkflowState.LIVE.state(), "Couldn't publish New "+MODULE_NAME+" Page properly");
     }
 
-    @Test(dataProvider=MODULE_DATA, priority=2, enabled=false)
+    @Test(dataProvider=MODULE_DATA, priority=2, enabled=true)
     public void createQuickLinkModule(JSONObject module) throws InterruptedException {
         String sModuleNameSet = module.get("module_title").toString();
         Assert.assertEquals(moduleBase.saveModule(module, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+sModuleNameSet+" Module didn't save properly");
@@ -82,7 +85,7 @@ public class CheckQuickLink extends AbstractSpec {
         Assert.assertEquals(moduleBase.publishModule(sModuleNameSet), WorkflowState.LIVE.state(), "Couldn't publish New "+sModuleNameSet+" Module properly");
     }
 
-    @Test(dataProvider=MODULE_DATA, priority=3, enabled=false)
+    @Test(dataProvider=MODULE_DATA, priority=3, enabled=true)
     public void checkProperties(JSONObject module) throws InterruptedException {
         // Checks that all input properties were saved correctly
         Assert.assertEquals(quickLink.goToModuleEditPage(module.get("module_title").toString()), WorkflowState.LIVE.state());
@@ -138,7 +141,7 @@ public class CheckQuickLink extends AbstractSpec {
         }
     }
 
-    @Test(dataProvider=MODULE_DATA, priority=6, enabled=true)
+    @Test(dataProvider=MODULE_DATA, priority=6, enabled=false)
     public void removeQuickLinkModule(JSONObject module) throws Exception {
         String sModuleNameSet = module.get("module_title").toString();
         Assert.assertEquals(moduleBase.setupAsDeletedModule(sModuleNameSet), WorkflowState.DELETE_PENDING.state(), "New "+sModuleNameSet+" Module didn't setup as Deleted properly");

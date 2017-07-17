@@ -4,6 +4,7 @@ import org.apache.xpath.operations.Bool;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -42,6 +43,12 @@ public class ModuleFunctions {
                 attribute  = data[2];
                 expectedValue = data[3];
                 return checkAttribute(driver, element, attribute, expectedValue);
+
+            case "problematic_attribute":
+
+                attribute  = data[2];
+                expectedValue = data[3];
+                return checkProblematicAttribute(driver, element, attribute, expectedValue);
 
             case "attribute_exists":
 
@@ -86,6 +93,12 @@ public class ModuleFunctions {
 
     private static Boolean checkAttribute(WebDriver driver, By element, String attribute, String expected) {
         return driver.findElement(element).getAttribute(attribute).contains(expected);
+    }
+
+    private static Boolean checkProblematicAttribute(WebDriver driver, By element, String attribute, String expected) {
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        String found = js.executeScript("return arguments[0].getAttribute('" + attribute + "')", driver.findElement(element)).toString();
+        return found.contains(expected);
     }
 
     private static Boolean checkAttributeExists(WebDriver driver, By element, String attribute, Boolean expectAttribute) {
