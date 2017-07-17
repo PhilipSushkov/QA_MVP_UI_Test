@@ -7,7 +7,6 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import pageobjects.AbstractPageObject;
 import pageobjects.PageAdmin.WorkflowState;
 import pageobjects.PageObject;
@@ -15,41 +14,30 @@ import pageobjects.PageObject;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.List;
 
 import static specs.AbstractSpec.*;
 
 /**
- * Created by zacharyk on 2017-07-10.
+ * Created by dannyl on 2017-07-17.
  */
-public class QuickLink extends AbstractPageObject {
-    private static By workflowStateSpan, propertiesHref, commentsTxt, saveAndSubmitBtn;
-    private static By quickLinkSectionSpan, moduleInstanceSectionSpan, addNewQuickLinkInput, quickLinkDropDown, quickLinkComments, quickLinkSelectChk, quickLinkPublishBtn;
-    private static String sPathToModuleFile, sFileModuleJson, sPathToContentFile, sFileContentJson;
+public class Html extends AbstractPageObject {
+    private static By workflowStateSpan, propertiesHref, commentsTxt, saveAndSubmitBtn, htmlContentDropdown, htmlDetailsText;
+    private static String sPathToModuleFile, sFileModuleJson;
     private static JSONParser parser;
     private static final long DEFAULT_PAUSE = 2500;
-    private static final String CONTENT_TYPE = "quicklink";
 
-    public QuickLink(WebDriver driver) {
+    public Html(WebDriver driver) {
         super(driver);
 
         workflowStateSpan = By.xpath(propUIPageAdmin.getProperty("select_WorkflowState"));
         commentsTxt = By.xpath(propUIPageAdmin.getProperty("txtarea_Comments"));
         propertiesHref = By.xpath(propUIModules.getProperty("href_Properties"));
+        htmlContentDropdown = By.xpath(propUIModulesCore.getProperty("html_ContentDropdown"));
+        htmlDetailsText = By.xpath(propUIModulesCore.getProperty("html_Details"));
         saveAndSubmitBtn = By.xpath(propUIPageAdmin.getProperty("btn_SaveAndSubmit"));
 
-        quickLinkSectionSpan = By.xpath(propUIModulesCore.getProperty("span_QuickLinkModuleHeader"));
-        moduleInstanceSectionSpan = By.xpath(propUIModulesCore.getProperty("span_ModuleInstanceHeader"));
-        addNewQuickLinkInput = By.xpath(propUIModulesCore.getProperty("input_AddNewQuickLink"));
-        quickLinkDropDown = By.xpath(propUIModulesCore.getProperty("select_QuickLinkDropDown"));
-        quickLinkComments = By.xpath(propUIModulesCore.getProperty("txtarea_QuickLinkComments"));
-        quickLinkSelectChk = By.xpath(propUIModulesCore.getProperty("chk_QuickLinkSelect"));
-        quickLinkPublishBtn = By.xpath(propUIModulesCore.getProperty("btn_PublishQuickLinks"));
-
         sPathToModuleFile = System.getProperty("user.dir") + propUIModulesCore.getProperty("dataPath_Core");
-        sFileModuleJson = propUIModulesCore.getProperty("json_QuickLinkProp");
-        sPathToContentFile = System.getProperty("user.dir") + propUIModules.getProperty("dataPath_Content");
-        sFileContentJson = propUIModules.getProperty("json_ContentData");
+        sFileModuleJson = propUIModulesCore.getProperty("json_HtmlProp");
 
         parser = new JSONParser();
     }
@@ -66,36 +54,6 @@ public class QuickLink extends AbstractPageObject {
 
             waitForElement(commentsTxt);
 
-            // add quicklinks to the module
-            findElement(quickLinkSectionSpan).click();
-
-            JSONObject contentObj = (JSONObject) parser.parse(new FileReader(sPathToContentFile + sFileContentJson));
-            JSONArray quicklinks = (JSONArray) contentObj.get(CONTENT_TYPE);
-            JSONObject quicklinkObj;
-            for (Object quicklink : quicklinks) {
-
-                quicklinkObj = (JSONObject) quicklink;
-
-                findElement(addNewQuickLinkInput).click();
-                waitForElement(saveAndSubmitBtn);
-
-                findElement(quickLinkDropDown).sendKeys(quicklinkObj.get("quicklink_description").toString());
-                findElement(quickLinkComments).sendKeys("Adding quicklink to module for Selenium Testing");
-
-                findElement(saveAndSubmitBtn).click();
-                waitForElement(addNewQuickLinkInput);
-            }
-
-            List<WebElement> quicklinkSelectChks = findElements(quickLinkSelectChk);
-            for (WebElement chkBox : quicklinkSelectChks) {
-                chkBox.click();
-            }
-
-            Thread.sleep(DEFAULT_PAUSE);
-            findElement(quickLinkPublishBtn).click();
-            Thread.sleep(DEFAULT_PAUSE);
-            findElement(moduleInstanceSectionSpan).click();
-
             JSONObject module = (JSONObject) jsonObj.get(moduleName);
 
             findElement(propertiesHref).click();
@@ -111,6 +69,8 @@ public class QuickLink extends AbstractPageObject {
                     findElement(propertyDropdownValue).sendKeys(jsonArrProp.get(i).toString().split(";")[1]);
                 }
             }
+
+            findVisibleElement(htmlDetailsText).sendKeys(modulesDataObj.get("html_details").toString());
 
             findElement(commentsTxt).sendKeys(modulesDataObj.get("comment").toString());
             findElement(saveAndSubmitBtn).click();

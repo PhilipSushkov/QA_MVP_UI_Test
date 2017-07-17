@@ -306,10 +306,16 @@ public class ModuleBase extends AbstractPageObject {
             try {
                 Thread.sleep(DEFAULT_PAUSE*2);
                 driver.get(moduleUrl);
-            } catch (UnhandledAlertException e) {
+            } catch (UnhandledAlertException e1) {
                 driver.switchTo().alert().accept();
                 Thread.sleep(DEFAULT_PAUSE*2);
-                driver.get(moduleUrl);
+                try {
+                    driver.get(moduleUrl);
+                } catch (UnhandledAlertException e2) {
+                    driver.switchTo().alert().accept();
+                    Thread.sleep(DEFAULT_PAUSE*2);
+                    driver.get(moduleUrl);
+                }
             }
 
             waitForElement(currentContentSpan);
@@ -365,7 +371,13 @@ public class ModuleBase extends AbstractPageObject {
                 } catch (UnhandledAlertException e) {
                     driver.switchTo().alert().accept();
                     Thread.sleep(DEFAULT_PAUSE*2);
-                    driver.get(moduleUrl);
+                    try {
+                        driver.get(moduleUrl);
+                    } catch (UnhandledAlertException e2) {
+                        driver.switchTo().alert().accept();
+                        Thread.sleep(DEFAULT_PAUSE*2);
+                        driver.get(moduleUrl);
+                    }
                 }
 
                 jsonObj.remove(moduleName);

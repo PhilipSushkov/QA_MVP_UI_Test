@@ -43,7 +43,7 @@ public class CreateQuickLink extends AbstractPageObject {
         commentsInput = By.xpath(propUIContentAdmin.getProperty("txtarea_Comments"));
         saveButton = By.xpath(propUIContentAdmin.getProperty("btn_Save"));
         saveAndSubmitButton = By.xpath(propUIContentAdmin.getProperty("btn_SaveAndSubmit"));
-        publishBtn = By.xpath(propUIContentAdmin.getProperty("btn_Publish"));
+        publishBtn = By.xpath(propUIContentAdmin.getProperty("btn_QuickLinkPublish"));
         deleteBtn = By.xpath(propUIContentAdmin.getProperty("btn_Delete"));
         workflowStateSpan = By.xpath(propUIContentAdmin.getProperty("select_WorkflowState"));
         currentContentSpan = By.xpath(propUIContentAdmin.getProperty("span_CurrentContent"));
@@ -62,7 +62,7 @@ public class CreateQuickLink extends AbstractPageObject {
 
         findElement(descriptionInput).sendKeys(data.get("quicklink_description").toString());
         findElement(urlInput).sendKeys(data.get("quicklink_url").toString());
-        findElement(textInput).sendKeys(data.get("quicklink_description").toString());
+        findElement(textInput).sendKeys(data.get("quicklink_text").toString());
         findElement(tagsInput).sendKeys(data.get("quicklink_tags").toString());
 
         findElement(saveButton).click();
