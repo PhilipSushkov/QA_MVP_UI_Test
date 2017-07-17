@@ -85,7 +85,7 @@ public class CheckPressRelease extends AbstractSpec {
 
         try {
             String sModuleNameSet = module.get("module_title").toString();
-            Assert.assertTrue(pressRelease.openModulePreview(sModuleNameSet).contains(MODULE_NAME),"Did not open correct page");
+            Assert.assertTrue(moduleBase.openModulePreview(sModuleNameSet).contains(MODULE_NAME),"Did not open correct page");
 
             JSONArray expectedResults = (JSONArray) module.get("expected");
             for (Object expected : expectedResults) {
@@ -102,7 +102,7 @@ public class CheckPressRelease extends AbstractSpec {
     public void checkPressReleaseLive(JSONObject module) throws InterruptedException {
 
         try {
-            Assert.assertTrue(pressRelease.openModuleLiveSite(MODULE_NAME).contains(MODULE_NAME),"Did not open correct page");
+            Assert.assertTrue(moduleBase.openModuleLiveSite(MODULE_NAME).contains(MODULE_NAME),"Did not open correct page");
 
             JSONArray expectedResults = (JSONArray) module.get("expected");
             for (Object expected : expectedResults) {

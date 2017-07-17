@@ -2,7 +2,7 @@
   "module_definition": [
     {
       "do_assertions": true,
-      "friendly_name": "Event 4.3.0 01",
+      "friendly_name": "Event 4.3.0 05",
       "source_file": "~/Modules/IRPortal.Modules.PressRelease/4_2_2/PressRelease.ascx",
       "source_file_ch": "~/Modules/IRPortal.Modules.Event/4_2_2/Event.ascx",
       "qualified_path": "IRPortal.Data.EntityClasses.ModuleInstanceEntity",
@@ -20,7 +20,7 @@
     },
     {
       "do_assertions": true,
-      "friendly_name": "Press Release 4.3.0 02",
+      "friendly_name": "Press Release 4.3.0 06",
       "source_file": "~/Modules/IRPortal.Modules.PressRelease/4_2_2/PressRelease.ascx",
       "qualified_path": "IRPortal.Data.EntityClasses.ModuleInstanceEntity",
       "content_type": "",

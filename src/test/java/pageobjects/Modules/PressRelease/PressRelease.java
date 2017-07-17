@@ -119,8 +119,6 @@ public class PressRelease extends AbstractPageObject {
             e.printStackTrace();
         }
 
-
-<<<<<<< HEAD
         return null;
     }
 
@@ -244,8 +242,6 @@ public class PressRelease extends AbstractPageObject {
             e.printStackTrace();
         }
 
-=======
->>>>>>> origin/SeleniumModuleTesting
         return null;
     }
 
