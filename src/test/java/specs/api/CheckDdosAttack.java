@@ -1,11 +1,13 @@
 package specs.api;
 
-import com.aventstack.extentreports.ExtentReports;
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
+import pageobjects.api.DdosAttack;
 import specs.ApiAbstractSpec;
 
 import java.io.FileNotFoundException;
@@ -20,11 +22,9 @@ import java.util.ArrayList;
 
 public class CheckDdosAttack extends ApiAbstractSpec {
 
-    private static String sPathToFileDdos, sDataFileDdosJson;
-    private static JSONParser parser;
-    private final int threadPoolSize = 15;
-
-    private ExtentReports extent;
+    private String sPathToFileDdos, sDataFileDdosJson;
+    private JSONParser parser;
+    private final int threadPoolSize = 1, iterations = 1;
 
     @BeforeTest
     public void setUp() throws IOException {
@@ -33,7 +33,7 @@ public class CheckDdosAttack extends ApiAbstractSpec {
     }
 
     @DataProvider(parallel = true)
-    public Object[][] NewsData(Method method) {
+    public Object[][] DdosAtackData(Method method) {
 
         parser = new JSONParser();
         System.out.println(sPathToFileDdos);
@@ -63,6 +63,14 @@ public class CheckDdosAttack extends ApiAbstractSpec {
         }
 
         return null;
+    }
+
+    @Test(dataProvider = "DdosAtackData", threadPoolSize = threadPoolSize)
+    public void CheckDdosAttack(JSONObject data) throws IOException {
+        String sUrl = data.get("url").toString();
+        for (int i=0; i<iterations; i++) {
+            new DdosAttack().DdosAttackRequest(sUrl);
+        }
     }
 
 }

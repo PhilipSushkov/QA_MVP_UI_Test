@@ -1,8 +1,26 @@
 [
   {
-    "url": "http://facebookrelease.q4web.release/home/default.aspx"
+    "url": "/go.php?url="
   },
   {
-    "url": "http://facebookrelease.q4web.release/stock-information/default.aspx"
+    "url": "/search?q="
+  },
+  {
+    "url": "/gotoURL.asp?url="
+  },
+  {
+    "url": "/index.php?go="
+  },
+  {
+    "url": "/?q="
+  },
+  {
+    "url": "/redirect.php?page="
+  },
+  {
+    "url": "/redirect.php?url="
+  },
+  {
+    "url": "/site_br_aspx?query="
   }
 ]
