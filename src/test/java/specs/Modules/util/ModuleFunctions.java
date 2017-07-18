@@ -22,6 +22,7 @@ public class ModuleFunctions {
     public static Boolean checkExpectedValue(WebDriver driver, String expected, JSONObject module, String jsonModulePath, Properties propUIFile) {
 
         String type, elementPath, expectedValue, attribute, valueName, moduleCompare;
+        String inputText;
 
         String modulePath = module.get("module_path").toString();
         String moduleName = module.get("module_title").toString();

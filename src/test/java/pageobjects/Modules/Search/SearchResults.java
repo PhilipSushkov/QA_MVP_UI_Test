@@ -27,7 +27,7 @@ public class SearchResults extends AbstractPageObject{
     private static JSONParser parser;
     private static final long DEFAULT_PAUSE = 2500;
 
-    public Search(WebDriver driver) {
+    public SearchResults(WebDriver driver) {
         super(driver);
 
         workflowStateSpan = By.xpath(propUIPageAdmin.getProperty("select_WorkflowState"));

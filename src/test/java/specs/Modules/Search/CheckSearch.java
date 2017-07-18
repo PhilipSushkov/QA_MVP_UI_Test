@@ -9,7 +9,6 @@ import org.testng.Assert;
 import org.testng.annotations.*;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.LoginPage.LoginPage;
-import pageobjects.Modules.Event.Event;
 import pageobjects.Modules.ModuleBase;
 import pageobjects.Modules.PageForModules;
 import pageobjects.Modules.Search.Search;
@@ -27,6 +26,10 @@ import java.util.Date;
  * Created by andyp on 2017-07-18.
  */
 public class CheckSearch extends AbstractSpec{
+    /*
+    This test requires an image file to be in the file explorer. As of right now, there is no way to do this automatically.
+    QAQ-502 is the related ticket for the file explorer automation
+     */
     private static By pageAdminMenuButton;
     private static LoginPage loginPage;
     private static Dashboard dashboard;
@@ -39,21 +42,19 @@ public class CheckSearch extends AbstractSpec{
 
     private final String MODULE_DATA="moduleData", MODULE_NAME="search", PAGE_DATA = "pageData", PAGE_NAME = "search_modules";
 
-
-
     @BeforeTest
     public void setUp() throws Exception {
-        pageAdminMenuButton = By.xpath(propUIModulesEvent.getProperty("btnMenu_PageAdmin"));
+        pageAdminMenuButton = By.xpath(propUIModulesSearch.getProperty("btnMenu_PageAdmin"));
 
         loginPage = new LoginPage(driver);
         dashboard = new Dashboard(driver);
         pageForModules = new PageForModules(driver);
         search = new Search(driver);
 
-        sPathToFile = System.getProperty("user.dir") + propUIModulesEvent.getProperty("dataPath_Search");
-        sDataFileJson = propUIModulesEvent.getProperty("json_SearchData");
-        sPathToModuleFile = System.getProperty("user.dir") + propUIModulesEvent.getProperty("dataPath_Search");
-        sFileModuleJson = propUIModulesEvent.getProperty("json_SearchProp");
+        sPathToFile = System.getProperty("user.dir") + propUIModulesSearch.getProperty("dataPath_Search");
+        sDataFileJson = propUIModulesSearch.getProperty("json_SearchData");
+        sPathToModuleFile = System.getProperty("user.dir") + propUIModulesSearch.getProperty("dataPath_Search");
+        sFileModuleJson = propUIModulesSearch.getProperty("json_SearchProp");
 
         moduleBase = new ModuleBase(driver, sPathToModuleFile, sFileModuleJson);
 
@@ -69,14 +70,14 @@ public class CheckSearch extends AbstractSpec{
     }
 
     @Test(dataProvider=PAGE_DATA, priority=1, enabled=true)
-    public void createEventPage(JSONObject module) throws InterruptedException {
+    public void createSearchPage(JSONObject module) throws InterruptedException {
         Assert.assertEquals(pageForModules.savePage(module, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+MODULE_NAME+" Page didn't save properly");
         Assert.assertEquals(pageForModules.saveAndSubmitPage(module, MODULE_NAME), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New "+MODULE_NAME+" Page properly");
         Assert.assertEquals(pageForModules.publishPage(MODULE_NAME), WorkflowState.LIVE.state(), "Couldn't publish New "+MODULE_NAME+" Page properly");
     }
 
     @Test(dataProvider=MODULE_DATA, priority=2, enabled=true)
-    public void createEventModule(JSONObject module) throws InterruptedException {
+    public void createSearchModule(JSONObject module) throws InterruptedException {
         String sModuleNameSet = module.get("module_title").toString();
         Assert.assertEquals(moduleBase.saveModule(module, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+sModuleNameSet+" Module didn't save properly");
         Assert.assertEquals(search.saveAndSubmitModule(module, sModuleNameSet), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New "+sModuleNameSet+" Module properly");
@@ -103,7 +104,7 @@ public class CheckSearch extends AbstractSpec{
     }
 
     @Test(dataProvider=MODULE_DATA, priority=4, enabled=true)
-    public void checkEventPreview(JSONObject module) throws InterruptedException {
+    public void checkSearchPreview(JSONObject module) throws InterruptedException {
 
         try {
             String sModuleNameSet = module.get("module_title").toString();
@@ -112,7 +113,7 @@ public class CheckSearch extends AbstractSpec{
             JSONArray expectedResults = (JSONArray) module.get("expected");
             for (Object expected : expectedResults) {
                 String sExpected = expected.toString();
-                Assert.assertTrue(ModuleFunctions.checkExpectedValue(driver, sExpected, module, sPathToModuleFile + sFileModuleJson, propUIModulesEvent),
+                Assert.assertTrue(ModuleFunctions.checkExpectedValue(driver, sExpected, module, sPathToModuleFile + sFileModuleJson, propUIModulesSearch),
                         "Did not find correct " + sExpected.split(";")[0] + " at item " + sExpected.split(";")[1]);
             }
         } finally {
@@ -123,7 +124,7 @@ public class CheckSearch extends AbstractSpec{
     }
 
     @Test(dataProvider=MODULE_DATA, priority=5, enabled=true)
-    public void checkEventLive(JSONObject module) throws InterruptedException {
+    public void checkSearchLive(JSONObject module) throws InterruptedException {
 
         try {
             Assert.assertTrue(moduleBase.openModuleLiveSite(MODULE_NAME).contains(MODULE_NAME),"Did not open correct page");
@@ -131,7 +132,7 @@ public class CheckSearch extends AbstractSpec{
             JSONArray expectedResults = (JSONArray) module.get("expected");
             for (Object expected : expectedResults) {
                 String sExpected = expected.toString();
-                Assert.assertTrue(ModuleFunctions.checkExpectedValue(driver, sExpected, module, sPathToModuleFile + sFileModuleJson, propUIModulesEvent),
+                Assert.assertTrue(ModuleFunctions.checkExpectedValue(driver, sExpected, module, sPathToModuleFile + sFileModuleJson, propUIModulesSearch),
                         "Did not find correct " + sExpected.split(";")[0] + " at item " + sExpected.split(";")[1]);
             }
         } finally {
@@ -140,14 +141,14 @@ public class CheckSearch extends AbstractSpec{
     }
 
     @Test(dataProvider=MODULE_DATA, priority=6, enabled=true)
-    public void removeEventModule(JSONObject module) throws Exception {
+    public void removeSearchModule(JSONObject module) throws Exception {
         String sModuleNameSet = module.get("module_title").toString();
         Assert.assertEquals(moduleBase.setupAsDeletedModule(sModuleNameSet), WorkflowState.DELETE_PENDING.state(), "New "+sModuleNameSet+" Module didn't setup as Deleted properly");
         Assert.assertEquals(moduleBase.removeModule(module, sModuleNameSet), WorkflowState.NEW_ITEM.state(), "Couldn't remove "+sModuleNameSet+" Module. Something went wrong.");
     }
 
     @Test(dataProvider=PAGE_DATA, priority=7, enabled=true)
-    public void removeEventPage(JSONObject module) throws Exception {
+    public void removeSearchPage(JSONObject module) throws Exception {
         Assert.assertEquals(pageForModules.setupAsDeletedPage(MODULE_NAME), WorkflowState.DELETE_PENDING.state(), "New "+MODULE_NAME+" Page didn't setup as Deleted properly");
         Assert.assertEquals(pageForModules.removePage(module, MODULE_NAME), WorkflowState.NEW_ITEM.state(), "Couldn't remove "+MODULE_NAME+" Page. Something went wrong.");
     }

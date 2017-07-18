@@ -34,8 +34,8 @@ public class Search extends AbstractPageObject{
         propertiesHref = By.xpath(propUIModules.getProperty("href_Properties"));
         saveAndSubmitBtn = By.xpath(propUIPageAdmin.getProperty("btn_SaveAndSubmit"));
 
-        sPathToModuleFile = System.getProperty("user.dir") + propUIModulesEvent.getProperty("dataPath_Search");
-        sFileModuleJson = propUIModulesEvent.getProperty("json_SearchProp");
+        sPathToModuleFile = System.getProperty("user.dir") + propUIModulesSearch.getProperty("dataPath_Search");
+        sFileModuleJson = propUIModulesSearch.getProperty("json_SearchProp");
 
         parser = new JSONParser();
     }
