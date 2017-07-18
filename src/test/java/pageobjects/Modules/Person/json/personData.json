@@ -7,7 +7,6 @@
     "region_name": "Content Pane",
     "module_path": "//span[contains(@class, 'ContentPaneDiv1')]",
     "properties": [
-      "Department;Board of Directors"
     ],
     "expected": [
       "element;check_ShowLink;true",

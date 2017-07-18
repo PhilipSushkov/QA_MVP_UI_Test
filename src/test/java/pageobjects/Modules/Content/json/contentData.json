@@ -227,13 +227,6 @@
     }
   ],
 
-  "financial_report": [{
-    "do_assertions": true,
-    "date": "07/01/17",
-    "tags": "SELENIUM_REPORT_TAG",
-    "comment": "Adding Financial Report for Selenium module testing"
-  }],
-
   "quicklink": [
     {
       "do_assertions": true,
@@ -258,6 +251,25 @@
       "quicklink_text": "Q4 - DO NOT EDIT OR REMOVE",
       "quicklink_tags": "",
       "comment": "Adding quicklink for Selenium module testing"
+    }
+  ],
+
+  "person": [
+    {
+      "do_assertions": true,
+      "first_name": "Lonzo",
+      "last_name": "Ball",
+      "department":"Management",
+      "person_text":"Person 1",
+      "comment": "Adding person for Selenium module testing"
+    },
+    {
+      "do_assertions": false,
+      "first_name": "Lavar",
+      "last_name": "Ball",
+      "department":"Board of directors",
+      "person_text":"Person 2",
+      "comment": "Adding person for Selenium module testing"
     }
   ]
 }
