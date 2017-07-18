@@ -26,7 +26,7 @@ public class EventDetails extends AbstractPageObject {
     private static JSONParser parser;
     private static final long DEFAULT_PAUSE = 2500;
 
-    public Event(WebDriver driver) {
+    public EventDetails(WebDriver driver) {
         super(driver);
 
         workflowStateSpan = By.xpath(propUIPageAdmin.getProperty("select_WorkflowState"));
@@ -34,7 +34,7 @@ public class EventDetails extends AbstractPageObject {
         propertiesHref = By.xpath(propUIModules.getProperty("href_Properties"));
         saveAndSubmitBtn = By.xpath(propUIPageAdmin.getProperty("btn_SaveAndSubmit"));
 
-        sPathToModuleFile = System.getProperty("user.dir") + propUIModulesEvent.getProperty("dataPath_EventDetails");
+        sPathToModuleFile = System.getProperty("user.dir") + propUIModulesEvent.getProperty("dataPath_Event");
         sFileModuleJson = propUIModulesEvent.getProperty("json_EventDetailsProp");
 
         parser = new JSONParser();

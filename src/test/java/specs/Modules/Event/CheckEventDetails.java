@@ -37,7 +37,7 @@ public class CheckEventDetails extends AbstractSpec {
     private static String sPathToFile, sDataFileJson, sPathToModuleFile, sFileModuleJson;
     private static JSONParser parser;
 
-    private final String MODULE_DATA="moduleData", MODULE_NAME="event", PAGE_DATA = "pageData", PAGE_NAME = "event_modules";
+    private final String MODULE_DATA="moduleData", MODULE_NAME="event_details", PAGE_DATA = "pageData", PAGE_NAME = "event_modules";
 
 
 
@@ -51,9 +51,9 @@ public class CheckEventDetails extends AbstractSpec {
         eventDetails = new EventDetails(driver);
 
         sPathToFile = System.getProperty("user.dir") + propUIModulesEvent.getProperty("dataPath_Event");
-        sDataFileJson = propUIModulesEvent.getProperty("json_EventData");
+        sDataFileJson = propUIModulesEvent.getProperty("json_EventDetailsData");
         sPathToModuleFile = System.getProperty("user.dir") + propUIModulesEvent.getProperty("dataPath_Event");
-        sFileModuleJson = propUIModulesEvent.getProperty("json_EventProp");
+        sFileModuleJson = propUIModulesEvent.getProperty("json_EventDetailsProp");
 
         moduleBase = new ModuleBase(driver, sPathToModuleFile, sFileModuleJson);
 
@@ -69,21 +69,21 @@ public class CheckEventDetails extends AbstractSpec {
     }
 
     @Test(dataProvider=PAGE_DATA, priority=1, enabled=false)
-    public void createEventPage(JSONObject module) throws InterruptedException {
+    public void createEventDetailsPage(JSONObject module) throws InterruptedException {
         Assert.assertEquals(pageForModules.savePage(module, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+MODULE_NAME+" Page didn't save properly");
         Assert.assertEquals(pageForModules.saveAndSubmitPage(module, MODULE_NAME), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New "+MODULE_NAME+" Page properly");
         Assert.assertEquals(pageForModules.publishPage(MODULE_NAME), WorkflowState.LIVE.state(), "Couldn't publish New "+MODULE_NAME+" Page properly");
     }
 
-    @Test(dataProvider=MODULE_DATA, priority=2, enabled=false)
-    public void createEventModule(JSONObject module) throws InterruptedException {
+    @Test(dataProvider=MODULE_DATA, priority=2, enabled=true)
+    public void createEventDetailsModule(JSONObject module) throws InterruptedException {
         String sModuleNameSet = module.get("module_title").toString();
         Assert.assertEquals(moduleBase.saveModule(module, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+sModuleNameSet+" Module didn't save properly");
         Assert.assertEquals(eventDetails.saveAndSubmitModule(module, sModuleNameSet), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New "+sModuleNameSet+" Module properly");
         Assert.assertEquals(moduleBase.publishModule(sModuleNameSet), WorkflowState.LIVE.state(), "Couldn't publish New "+sModuleNameSet+" Module properly");
     }
 
-    @Test(dataProvider=MODULE_DATA, priority=3, enabled=false)
+    @Test(dataProvider=MODULE_DATA, priority=3, enabled=true)
     public void checkProperties(JSONObject module) throws InterruptedException {
         // Checks that all input properties were saved correctly
         Assert.assertEquals(eventDetails.goToModuleEditPage(module.get("module_title").toString()), WorkflowState.LIVE.state());
@@ -103,7 +103,7 @@ public class CheckEventDetails extends AbstractSpec {
     }
 
     @Test(dataProvider=MODULE_DATA, priority=4, enabled=true)
-    public void checkEventPreview(JSONObject module) throws InterruptedException {
+    public void checkEventDetailsPreview(JSONObject module) throws InterruptedException {
 
         try {
             String sModuleNameSet = module.get("module_title").toString();
@@ -123,7 +123,7 @@ public class CheckEventDetails extends AbstractSpec {
     }
 
     @Test(dataProvider=MODULE_DATA, priority=5, enabled=true)
-    public void checkEventLive(JSONObject module) throws InterruptedException {
+    public void checkEventDetailsLive(JSONObject module) throws InterruptedException {
 
         try {
             Assert.assertTrue(moduleBase.openModuleLiveSite(MODULE_NAME).contains(MODULE_NAME),"Did not open correct page");
