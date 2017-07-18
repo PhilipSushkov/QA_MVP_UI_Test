@@ -27,7 +27,7 @@ public class CheckDdosAttack extends ApiAbstractSpec {
 
     private String sPathToFileDdos, sDataFileDdosJson;
     private JSONParser parser;
-    private final int threadPoolSize = 1, iterations = 1;
+    private final int threadPoolSize = 15, iterations = 1000000000;
     private FileWriter writer;
 
     @BeforeTest
@@ -43,6 +43,8 @@ public class CheckDdosAttack extends ApiAbstractSpec {
         writer.append("Referral");
         writer.append(',');
         writer.append("Response code");
+        writer.append(',');
+        writer.append("DateTime");
         writer.append('\n');
     }
 
