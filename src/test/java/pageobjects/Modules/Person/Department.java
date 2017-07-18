@@ -1,4 +1,4 @@
-package pageobjects.Modules.Event;
+package pageobjects.Modules.Person;
 
 import com.jayway.jsonpath.JsonPath;
 import org.json.simple.JSONArray;
@@ -18,15 +18,15 @@ import java.io.IOException;
 import static specs.AbstractSpec.*;
 
 /**
- * Created by andyp on 2017-07-06.
+ * Created by dannyl on 2017-07-17.
  */
-public class EventDetails extends AbstractPageObject {
+public class Department extends AbstractPageObject {
     private static By workflowStateSpan, propertiesHref, commentsTxt, saveAndSubmitBtn;
     private static String sPathToModuleFile, sFileModuleJson;
     private static JSONParser parser;
     private static final long DEFAULT_PAUSE = 2500;
 
-    public EventDetails(WebDriver driver) {
+    public Department(WebDriver driver) {
         super(driver);
 
         workflowStateSpan = By.xpath(propUIPageAdmin.getProperty("select_WorkflowState"));
@@ -34,8 +34,8 @@ public class EventDetails extends AbstractPageObject {
         propertiesHref = By.xpath(propUIModules.getProperty("href_Properties"));
         saveAndSubmitBtn = By.xpath(propUIPageAdmin.getProperty("btn_SaveAndSubmit"));
 
-        sPathToModuleFile = System.getProperty("user.dir") + propUIModulesEvent.getProperty("dataPath_EventDetails");
-        sFileModuleJson = propUIModulesEvent.getProperty("json_EventDetailsProp");
+        sPathToModuleFile = System.getProperty("user.dir") + propUIModulesPerson.getProperty("dataPath_Person");
+        sFileModuleJson = propUIModulesPerson.getProperty("json_DepartmentProp");
 
         parser = new JSONParser();
     }
