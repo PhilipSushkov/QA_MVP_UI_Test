@@ -1,26 +1,34 @@
 [
   {
-    "url": "/go.php?url="
+    "url": "/go.php?url=",
+    "sites": ["www.alopa.com", "thatware.org", "www.aliancaandroid.com", "www.deutsche-krieger.de", "1300dating.com.au"]
   },
   {
-    "url": "/search?q="
+    "url": "/search?q=",
+    "sites": ["search.aol.com/aol", "careers.carolinashealthcare.org", "jobs.rbs.com/jobs", "www.bestbuytheater.com/events", "www.shodanhq.com"]
   },
   {
-    "url": "/gotoURL.asp?url="
+    "url": "/gotoURL.asp?url=",
+    "sites": ["resuite.upg.it", "www.the-cure.eu", "www.dgtale.it", "www.idealdieta.it", "www.unicyclist.it"]
   },
   {
-    "url": "/index.php?go="
+    "url": "/index.php?go=",
+    "sites": ["www.gotm.net", "www.thrombosis2016.org", "www.gotm.net", "fresno.steinwaydealer.com", "www.karplaw.com"]
   },
   {
-    "url": "/?q="
+    "url": "/?q=",
+    "sites": ["www.google.com", "api.duckduckgo.com/html", "www.pinterest.com/search", "www.google.com", "www.pinterest.com/search"]
   },
   {
-    "url": "/redirect.php?page="
+    "url": "/redirect.php?page=",
+    "sites": ["www.pia.org/IRC/qs", "purificato.org/rawlab", "rawlab.mindcreations.com", "rawlab.mindcreations.com", "www.tandem-club.org.uk/files/public_html"]
   },
   {
-    "url": "/redirect.php?url="
+    "url": "/redirect.php?url=",
+    "sites": ["ruforum.mt5.com", "www.websites-canada.com", "blog.eduzones.com", "palinstravels.co.uk", "www.sadsong.net"]
   },
   {
-    "url": "/site_br_aspx?query="
+    "url": "/site_br_aspx?query=",
+    "sites": ["boorow.com/Pages", "boorow.com/Pages", "boorow.com/Pages", "boorow.com/Pages", "boorow.com/Pages"]
   }
 ]
