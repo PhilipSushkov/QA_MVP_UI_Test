@@ -89,6 +89,11 @@
             <class name="specs.ContentAdmin.Glossary.CheckGlossaryAdd" />
         </classes>
     </test>
+    <test name="CheckFinancialReportAdd">
+        <classes>
+            <class name="specs.ContentAdmin.FinancialReports.CheckFinancialReportAdd" />
+        </classes>
+    </test>
     <test name="CheckPersonAdd">
         <classes>
             <class name="specs.ContentAdmin.PersonList.CheckPersonAdd" />
@@ -104,7 +109,6 @@
             <class name="specs.ContentAdmin.FaqList.CheckFaqAdd" />
         </classes>
     </test>
-
 
     <test name="CreateNewUser">
         <classes>
