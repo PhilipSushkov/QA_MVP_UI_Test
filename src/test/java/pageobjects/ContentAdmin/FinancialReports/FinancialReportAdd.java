@@ -546,6 +546,118 @@ public class FinancialReportAdd extends AbstractPageObject {
         return null;
     }
 
+    public String setupAsDeletedFinancialReport(String name) throws InterruptedException {
+        JSONObject jsonMain = new JSONObject();
+        JSONObject jsonObj = new JSONObject();
+
+        try {
+            try {
+                FileReader readFile = new FileReader(sPathToFile + sFileJson);
+                jsonMain = (JSONObject) parser.parse(readFile);
+                jsonObj = (JSONObject) jsonMain.get(name);
+            } catch (ParseException e) {
+            }
+
+            String pageUrl = getPageUrl(jsonMain, name);
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+
+            waitForElement(commentsTxt);
+            findElement(commentsTxt).sendKeys("Removing "+PAGE_NAME);
+            findElement(deleteBtn).click();
+            Thread.sleep(DEFAULT_PAUSE);
+
+            try {
+                Thread.sleep(DEFAULT_PAUSE*2);
+                driver.get(pageUrl);
+            } catch (UnhandledAlertException e) {
+                driver.switchTo().alert().accept();
+                Thread.sleep(DEFAULT_PAUSE*2);
+                try {
+                    driver.get(pageUrl);
+                } catch (UnhandledAlertException e2) {
+                    driver.switchTo().alert().accept();
+                    Thread.sleep(DEFAULT_PAUSE*2);
+                    driver.get(pageUrl);
+                }
+            }
+
+            waitForElement(currentContentSpan);
+
+            jsonObj.put("workflow_state", WorkflowState.FOR_APPROVAL.state());
+            jsonObj.put("deleted", "true");
+
+            jsonMain.put(name, jsonObj);
+
+            FileWriter file = new FileWriter(sPathToFile + sFileJson);
+            file.write(jsonMain.toJSONString().replace("\\", ""));
+            file.flush();
+
+            System.out.println(name+ ": "+PAGE_NAME+" set up as deleted");
+            return findElement(currentContentSpan).getText();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public String removeFinancialReport(JSONObject data, String name) throws InterruptedException {
+        JSONObject jsonMain = new JSONObject();
+
+        try {
+            try {
+                FileReader readFile = new FileReader(sPathToFile + sFileJson);
+                jsonMain = (JSONObject) parser.parse(readFile);
+            } catch (ParseException e) {
+            }
+
+            String pageUrl = getPageUrl(jsonMain, name);
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+
+            if (findElement(currentContentSpan).getText().equals(WorkflowState.DELETE_PENDING.state())) {
+
+                waitForElement(commentsTxt);
+                findElement(commentsTxt).sendKeys("Approving "+PAGE_NAME+" removal");
+                findElement(publishBtn).click();
+
+                Thread.sleep(DEFAULT_PAUSE*2);
+
+                try {
+                    Thread.sleep(DEFAULT_PAUSE*2);
+                    driver.get(pageUrl);
+                } catch (UnhandledAlertException e) {
+                    driver.switchTo().alert().accept();
+                    Thread.sleep(DEFAULT_PAUSE*2);
+                    try {
+                        driver.get(pageUrl);
+                    } catch (UnhandledAlertException e2) {
+                        driver.switchTo().alert().accept();
+                        Thread.sleep(DEFAULT_PAUSE*2);
+                        driver.get(pageUrl);
+                    }
+                }
+
+                jsonMain.remove(name);
+
+                FileWriter file = new FileWriter(sPathToFile + sFileJson);
+                file.write(jsonMain.toJSONString().replace("\\", ""));
+                file.flush();
+
+                Thread.sleep(DEFAULT_PAUSE*2);
+                driver.navigate().refresh();
+
+                System.out.println(name+ ": New "+PAGE_NAME+" has been removed");
+                return findElement(workflowStateSpan).getText();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
     public String getPageUrl(JSONObject obj, String name) {
         String sItemID = JsonPath.read(obj, "$.['"+name+"'].url_query.ItemID");
         String sLanguageId = JsonPath.read(obj, "$.['"+name+"'].url_query.LanguageId");

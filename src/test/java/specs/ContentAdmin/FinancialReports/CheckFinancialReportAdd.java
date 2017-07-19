@@ -154,6 +154,18 @@ public class CheckFinancialReportAdd extends AbstractSpec {
         Assert.assertEquals(relatedDocumentAdd.removeRelatedDocument(data, sFinancialReportTitle), WorkflowState.NEW_ITEM.state(), "Couldn't remove New "+ PAGE_NAME +". Something went wrong.");
     }
 
+    @Test(dataProvider=DATA, priority=15)
+    public void deleteFinancialReport(JSONObject data) throws Exception {
+        getFinancialReportTitle(data);
+        Assert.assertEquals(financialReportAdd.setupAsDeletedFinancialReport(sFinancialReportTitle), WorkflowState.DELETE_PENDING.state(), "New "+ PAGE_NAME +" didn't setup as Deleted properly");
+    }
+
+    @Test(dataProvider=DATA, priority=16)
+    public void removeFinancialReport(JSONObject data) throws Exception {
+        getFinancialReportTitle(data);
+        Assert.assertEquals(financialReportAdd.removeFinancialReport(data, sFinancialReportTitle), WorkflowState.NEW_ITEM.state(), "Couldn't remove New "+ PAGE_NAME +". Something went wrong.");
+    }
+
     public void getFinancialReportTitle(JSONObject data) {
         sFinancialReportYear = data.get(FINANCIAL_REPORT_YEAR).toString();
         sFinancialReportType = data.get(FINANCIAL_REPORT_TYPE).toString();
