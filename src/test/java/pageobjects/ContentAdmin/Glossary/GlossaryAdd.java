@@ -22,7 +22,7 @@ import static specs.AbstractSpec.propUIContentAdmin;
  * Created by andyp on 2017-06-13.
  */
 public class GlossaryAdd extends AbstractPageObject{
-    private static By moduleTitle, titleInput, textArea, saveAndSubmitButton;
+    private static By moduleTitle, titleInput, textArea;
     private static By activeChk, saveBtn, revertBtn, cancelBtn, deleteBtn, addNewLink, publishBtn;
     private static By switchToHtml, workflowStateSpan, commentsTxt, successMsg, saveAndSubmitBtn, currentContentSpan;
     private static By radEditor, radEditorContent;
@@ -36,7 +36,6 @@ public class GlossaryAdd extends AbstractPageObject{
         moduleTitle = By.xpath(propUIContentAdmin.getProperty("spanModule_Title"));
         titleInput = By.xpath(propUIContentAdmin.getProperty("input_Title"));
         activeChk = By.xpath(propUIContentAdmin.getProperty("chk_Active"));
-        saveAndSubmitButton = By.xpath(propUIContentAdmin.getProperty("btn_SaveAndSubmit"));
 
         switchToHtml = By.className(propUIContentAdmin.getProperty("html_SwitchTo"));
         moduleTitle = By.xpath(propUIContentAdmin.getProperty("spanModule_Title"));

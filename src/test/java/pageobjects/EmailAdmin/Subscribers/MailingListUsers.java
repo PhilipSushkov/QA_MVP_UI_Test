@@ -18,7 +18,7 @@ import static specs.AbstractSpec.propUIEmailAdmin;
 
 public class MailingListUsers extends AbstractPageObject {
     private static By moduleTitle, grid, gridEmailAddress, dataGridPager, inputKeyword, selectAllLists, selectAllCategories;
-    private static By buttonSearch, linkExportList, linkSendToList, linkImportList, linkBulkDelete, linkLetterList, firstUserConfirmed;
+    private static By buttonSearch, linkExportList, linkSendToList, linkImportList, linkBulkDelete, linkLetterList, firstUserConfirmed, firstUserEdit, deleteButton;
     private final Integer columnsNumber = 5;
 
     public MailingListUsers(WebDriver driver) {
@@ -37,6 +37,8 @@ public class MailingListUsers extends AbstractPageObject {
         linkBulkDelete = By.xpath(propUIEmailAdmin.getProperty("link_BulkDelete"));
         linkLetterList = By.xpath(propUIEmailAdmin.getProperty("link_LetterList"));
         firstUserConfirmed = By.xpath(propUIEmailAdmin.getProperty("first_UserConfirmed"));
+        firstUserEdit = By.xpath(propUIEmailAdmin.getProperty("first_UserEdit"));
+        deleteButton = By.xpath(propUIEmailAdmin.getProperty("btn_Delete"));
     }
 
 
@@ -211,5 +213,23 @@ public class MailingListUsers extends AbstractPageObject {
         }
 
         return false;
+    }
+
+    public void deleteUser(String email){
+        //Assumes user exists already
+        getKeywordField().sendKeys(email);
+        getSearchButton().click();
+        try {
+            findElement(firstUserEdit).click();
+            waitForElement(deleteButton);
+            findElement(deleteButton).click();
+
+        } catch (ElementNotVisibleException e) {
+        e.printStackTrace();
+        } catch (ElementNotFoundException e) {
+        e.printStackTrace();
+    }
+
+
     }
 }

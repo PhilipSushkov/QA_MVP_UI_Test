@@ -15,3 +15,13 @@ Background: I am logged into Admin site / have valid session cookie
        Then Domain column contains at least 2 items
        When I find the link to Public Site Edit page
        Then the link Public Site Edit page should exist
+
+    Scenario: Check that Domain can be saved without alternative domain
+        Given: Domain List page is opened
+        When I click "Add New"
+        And I enter a valid domain name
+        And I enter a valid landing page
+        And I click "Save" button
+        Then I should see
+
+    Scenario: Check that alternative domains can be added

@@ -32,13 +32,11 @@
             <class name="specs.PreviewSite.CheckPresentationPr" />
         </classes>
     </test>
-    <!--
     <test name="CheckEmailAlertsPage">
         <classes>
-            <class name="specs.PreviewSite.CheckEmailAlertPr
+            <class name="specs.PreviewSite.CheckEmailAlertPr" />
         </classes>
     </test>
-    -->
     <test name="CheckFAQPr">
         <classes>
             <class name="specs.PreviewSite.CheckFAQPr" />

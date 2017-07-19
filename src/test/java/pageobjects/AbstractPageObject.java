@@ -138,4 +138,12 @@ public class AbstractPageObject implements PageObject {
         }
     }
 
+    public void scrollToElementAndClick(By locator){
+        WebElement element = driver.findElement(locator);
+        Actions actions = new Actions(driver);
+        actions.moveToElement(element);
+        actions.click().perform();
+    }
+
+
 }

@@ -31,13 +31,11 @@
             <class name="specs.PublicSite.CheckPresentationsPage" />
         </classes>
     </test>
-    <!--
     <test name="CheckEmailAlertsPage">
         <classes>
             <class name="specs.PublicSite.CheckEmailAlertPage" />
         </classes>
     </test>
-    -->
     <test name="CheckFAQPage">
         <classes>
             <class name="specs.PublicSite.CheckFAQPage" />

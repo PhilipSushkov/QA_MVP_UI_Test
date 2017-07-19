@@ -40,7 +40,6 @@ public class CheckGlossaryAdd extends AbstractSpec {
     public void setUp() throws Exception {
         contentAdminMenuButton = By.xpath(propUIContentAdmin.getProperty("btnMenu_ContentAdmin"));
         glossaryListMenuItem = By.xpath(propUIContentAdmin.getProperty("btnMenu_Glossary"));
-        //addNewLink = By.xpath(propUIContentAdmin.getProperty("input_AddNew"));
 
         loginPage = new LoginPage(driver);
         dashboard = new Dashboard(driver);

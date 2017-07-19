@@ -43,7 +43,7 @@ public class EventWebcastEdit extends AbstractPageObject {
         endTimeAMSelect = By.xpath(propUIContentAdmin.getProperty("select_EndTimeAM"));
 
         titleInput = By.xpath(propUIContentAdmin.getProperty("input_Title"));
-        yourPageUrlLabel = By.id(propUIContentAdmin.getProperty("label_YourPageUrl"));
+        yourPageUrlLabel = By.xpath(propUIContentAdmin.getProperty("span_YourPageUrl"));
         changeUrlLink = By.xpath(propUIContentAdmin.getProperty("href_ChangeUrl"));
         tagsInput = By.xpath(propUIContentAdmin.getProperty("input_Tags"));
         locationInput = By.xpath(propUIContentAdmin.getProperty("input_Location"));
@@ -71,13 +71,13 @@ public class EventWebcastEdit extends AbstractPageObject {
         addNewAttachmentsLink = By.xpath(propUIContentAdmin.getProperty("href_AddNewAttachments"));
         attachmentTitleInput = By.xpath(propUIContentAdmin.getProperty("input_AttachmentTitle"));
         attachmentTypeListSelect = By.xpath(propUIContentAdmin.getProperty("select_AttachmentTypeList"));
-        attachmentPathInput = By.xpath(propUIContentAdmin.getProperty("input_AttachmentPath"));
+        attachmentPathInput = By.xpath(propUIContentAdmin.getProperty("input_AttachmentPathFile"));
         cancelAttachmentButton = By.xpath(propUIContentAdmin.getProperty("btn_AttachmentCancel"));
 
         saveAndSubmitButton = By.xpath(propUIContentAdmin.getProperty("btn_SaveAndSubmit"));
 
         textArea = By.tagName(propUIContentAdmin.getProperty("frame_Textarea"));
-        seoNameLiteral = By.id(propUIContentAdmin.getProperty("span_seoNameLiteral"));
+        seoNameLiteral = By.xpath(propUIContentAdmin.getProperty("span_seoNameLiteral"));
         workflowState = By.xpath(propUIContentAdmin.getProperty("span_WorkflowState"));
         updateComments = By.xpath(propUIContentAdmin.getProperty("txtarea_UpdateComments"));
         deleteButton = By.xpath(propUIContentAdmin.getProperty("btn_Delete"));
@@ -135,13 +135,13 @@ public class EventWebcastEdit extends AbstractPageObject {
 
         try {
             waitForElement(startTimeHHSelect);
-            findElements(startTimeHHSelect).get(0);
+            findElement(startTimeHHSelect);
 
             waitForElement(startTimeMMSelect);
-            findElements(startTimeMMSelect).get(0);
+            findElement(startTimeMMSelect);
 
             waitForElement(startTimeAMSelect);
-            findElements(startTimeAMSelect).get(0);
+            findElement(startTimeAMSelect);
 
             waitForElement(startTimeZoneSelect);
             findElement(startTimeZoneSelect);
@@ -174,13 +174,13 @@ public class EventWebcastEdit extends AbstractPageObject {
 
         try {
             waitForElement(endTimeHHSelect);
-            findElements(endTimeHHSelect).get(1);
+            findElement(endTimeHHSelect);
 
             waitForElement(endTimeMMSelect);
-            findElements(endTimeMMSelect).get(1);
+            findElement(endTimeMMSelect);
 
             waitForElement(endTimeAMSelect);
-            findElements(endTimeAMSelect).get(1);
+            findElement(endTimeAMSelect);
 
             timeSet = true;
         } catch (ElementNotFoundException e1) {
@@ -427,16 +427,15 @@ public class EventWebcastEdit extends AbstractPageObject {
         //wait.until(ExpectedConditions.visibilityOf(findElement(yourPageUrlLabel)));
         waitForElement(yourPageUrlLabel);
 
-
         findElement(startDateInput).sendKeys(date);
         findElement(endDateInput).sendKeys(tomorrow);
-        findElements(startTimeHHSelect).get(0).sendKeys(hour);
-        findElements(endTimeHHSelect).get(1).sendKeys(hour);
-        findElements(startTimeMMSelect).get(0).sendKeys(minute);
-        findElements(endTimeMMSelect).get(1).sendKeys(minute);
+        findElement(startTimeHHSelect).sendKeys(hour);
+        findElement(endTimeHHSelect).sendKeys(hour);
+        findElement(startTimeMMSelect).sendKeys(minute);
+        findElement(endTimeMMSelect).sendKeys(minute);
         findElement(startTimeZoneSelect).sendKeys(timeZone);
-        findElements(startTimeAMSelect).get(0).sendKeys(AMPM);
-        findElements(endTimeAMSelect).get(1).sendKeys(AMPM);
+        findElement(startTimeAMSelect).sendKeys(AMPM);
+        findElement(endTimeAMSelect).sendKeys(AMPM);
         findElement(titleInput).sendKeys(headline);
         findElement(tagsInput).sendKeys(tags);
         findElement(locationInput).sendKeys(location);

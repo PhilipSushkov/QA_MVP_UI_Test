@@ -33,9 +33,9 @@ public abstract class AbstractSpec extends util.Functions {
 // IMPORTANT:
 // Determines which environment the test suite will run on but can be overridden by command line
 //------------------------------------------------------------------------------
-    //private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.DEVELOP;
+    private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.DEVELOP;
     //private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.BETA;
-    private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.PRODUCTION;
+    //private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.PRODUCTION;
 //------------------------------------------------------------------------------
 
     private static final EnvironmentType activeEnvironment = setupEnvironment();
@@ -75,6 +75,16 @@ public abstract class AbstractSpec extends util.Functions {
     public static Properties propUIModulesFeed;
     private static final String PATHTO_MODULESPRESSRELEASE_PROP = "Modules/PressRelease/PressRelease.properties";
     public static Properties propUIModulesPressRelease;
+    private static final String PATHTO_MODULESPRESENTATION_PROP = "Modules/Presentation/Presentation.properties";
+    public static Properties propUIModulesPresentation;
+    private static final String PATHTO_MODULESEVENT_PROP = "Modules/Event/Event.properties";
+    public static Properties propUIModulesEvent;
+    private static final String PATHTO_MODULESCORE_PROP = "Modules/Core/Core.properties";
+    public static Properties propUIModulesCore;
+    private static final String PATHTO_MODULESFAQ_PROP = "Modules/Faq/Faq.properties";
+    public static Properties propUIModulesFaq;
+    private static final String PATHTO_MODULESREPORT_PROP = "Modules/Report/Report.properties";
+    public static Properties propUIModulesReport;
     private static final String PATHTO_API_PROP = "api/ApiMap.properties";
     public static Properties propAPI;
 
@@ -144,7 +154,7 @@ public abstract class AbstractSpec extends util.Functions {
         driver = new ChromeDriver(capabilities);
 
         driver.manage().timeouts().implicitlyWait(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
-        driver.manage().timeouts().pageLoadTimeout(50, TimeUnit.SECONDS); //Increased to 20 to perhaps reduce timeouts?
+        driver.manage().timeouts().pageLoadTimeout(180, TimeUnit.SECONDS); //Increased to 20 to perhaps reduce timeouts?
         //driver.manage().window().setSize(new Dimension(1400, 1400));
         driver.get(desktopUrl.toString());
 
@@ -155,6 +165,7 @@ public abstract class AbstractSpec extends util.Functions {
             if (!driver.getCurrentUrl().contains(desktopUrl.toString())) {
                 System.out.println("Home site page didn't download yet: "+desktopUrl.toString());
                 //System.out.println(driver.getCurrentUrl());
+                driver.navigate().refresh();
                 driver.get(desktopUrl.toString());
                 Thread.sleep(DEFAULT_PAUSE);
             } else {
@@ -259,6 +270,11 @@ public abstract class AbstractSpec extends util.Functions {
         propUIModules = ConnectToPropUI(PATHTO_MODULES_PROP);
         propUIModulesFeed = ConnectToPropUI(PATHTO_MODULESFEED_PROP);
         propUIModulesPressRelease = ConnectToPropUI(PATHTO_MODULESPRESSRELEASE_PROP);
+        propUIModulesPresentation = ConnectToPropUI(PATHTO_MODULESPRESENTATION_PROP);
+        propUIModulesEvent = ConnectToPropUI(PATHTO_MODULESEVENT_PROP);
+        propUIModulesCore = ConnectToPropUI(PATHTO_MODULESCORE_PROP);
+        propUIModulesFaq = ConnectToPropUI(PATHTO_MODULESFAQ_PROP);
+        propUIModulesReport = ConnectToPropUI(PATHTO_MODULESREPORT_PROP);
         propAPI = ConnectToPropUI(PATHTO_API_PROP);
     }
 
