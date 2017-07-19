@@ -10,7 +10,7 @@ import org.testng.Assert;
 import org.openqa.selenium.By;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.LoginPage.LoginPage;
-import pageobjects.Modules.Feed.StockHistorical2_375;
+import pageobjects.Modules.Feed.StockHistorical;
 import pageobjects.Modules.PageForModules;
 import pageobjects.PageAdmin.WorkflowState;
 import specs.AbstractSpec;
@@ -29,7 +29,7 @@ public class CheckStockHistorical2_375 extends AbstractSpec {
     private static LoginPage loginPage;
     private static Dashboard dashboard;
     private static PageForModules pageForModules;
-    private static StockHistorical2_375 stockHistorical2_375;
+    private static StockHistorical stockHistorical2_375;
 
     private static String sPathToFile, sDataFileJson;
     private static JSONParser parser;
@@ -43,7 +43,7 @@ public class CheckStockHistorical2_375 extends AbstractSpec {
         loginPage = new LoginPage(driver);
         dashboard = new Dashboard(driver);
         pageForModules = new PageForModules(driver);
-        stockHistorical2_375 = new StockHistorical2_375(driver);
+        stockHistorical2_375 = new StockHistorical(driver);
 
         sPathToFile = System.getProperty("user.dir") + propUIModulesFeed.getProperty("dataPath_Feed");
         sDataFileJson = propUIModulesFeed.getProperty("json_StockHistorical2_375Data");

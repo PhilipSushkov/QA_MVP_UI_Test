@@ -26,7 +26,7 @@ import static specs.AbstractSpec.*;
  * Created by philipsushkov on 2017-06-12.
  */
 
-public class StockHistorical2_375 extends AbstractPageObject {
+public class StockHistorical extends AbstractPageObject {
     private static By addNewModuleBtn, backBtn, moduleTitleInput, moduleDefinitionSelect, includeLagacyModulesChk;
     private static By publishBtn, saveBtn, workflowStateSpan, currentContentSpan, propertiesHref;
     private static By commentsTxt, deleteBtn, saveAndSubmitBtn, regionNameSelect;
@@ -34,7 +34,7 @@ public class StockHistorical2_375 extends AbstractPageObject {
     private static JSONParser parser;
     private static final long DEFAULT_PAUSE = 2500;
 
-    public StockHistorical2_375(WebDriver driver) {
+    public StockHistorical(WebDriver driver) {
         super(driver);
 
         addNewModuleBtn = By.xpath(propUIModules.getProperty("btn_AddNewModule"));
