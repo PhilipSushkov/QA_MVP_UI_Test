@@ -8,45 +8,47 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import pageobjects.AbstractPageObject;
 import pageobjects.PageAdmin.WorkflowState;
-
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 
-import static specs.AbstractSpec.*;
+import static specs.AbstractSpec.desktopUrl;
+import static specs.AbstractSpec.propUIContentAdmin;
+import static specs.AbstractSpec.propUIModules;
 
 /**
- * Created by zacharyk on 2017-07-10.
+ * Created by dannyl on 2017-07-18.
  */
-public class CreateQuickLink extends AbstractPageObject {
-    private static By addNewLink, descriptionInput, urlInput, textInput, tagsInput, commentsInput;
-    private static By saveButton, saveAndSubmitButton, publishBtn, deleteBtn, workflowStateSpan, currentContentSpan;
-
+public class CreatePerson extends AbstractPageObject {
+    private static By saveButton, saveAndSubmitButton, publishBtn, deleteBtn, addNewBtn, workflowStateSpan, commentsInput, currentContentSpan, yourPageUrl;
+    private static By firstNameInput, lastNameInput, inputDepartment;
     private static String sPathToFile, sFilePageJson;
 
     private static JSONParser parser;
 
     private static final long DEFAULT_PAUSE = 2500;
-    private final String CONTENT_TYPE = "quicklink";
+    private final String CONTENT_TYPE = "person";
 
-    public CreateQuickLink(WebDriver driver) {
+    public CreatePerson(WebDriver driver) {
         super(driver);
 
-        addNewLink = By.xpath(propUIContentAdmin.getProperty("input_AddNew"));
-        descriptionInput = By.xpath(propUIContentAdmin.getProperty("input_Description"));
-        urlInput = By.xpath(propUIContentAdmin.getProperty("input_Url"));
-        textInput = By.xpath(propUIContentAdmin.getProperty("input_Text"));
-        tagsInput = By.xpath(propUIContentAdmin.getProperty("input_Tags"));
 
-        commentsInput = By.xpath(propUIContentAdmin.getProperty("txtarea_Comments"));
+
+        commentsInput = By.xpath(propUIContentAdmin.getProperty("txtarea_UpdateComments"));
         saveButton = By.xpath(propUIContentAdmin.getProperty("btn_Save"));
         saveAndSubmitButton = By.xpath(propUIContentAdmin.getProperty("btn_SaveAndSubmit"));
-        publishBtn = By.xpath(propUIContentAdmin.getProperty("btn_QuickLinkPublish"));
+        publishBtn = By.xpath(propUIContentAdmin.getProperty("btn_Publish"));
         deleteBtn = By.xpath(propUIContentAdmin.getProperty("btn_Delete"));
-        workflowStateSpan = By.xpath(propUIContentAdmin.getProperty("select_WorkflowState"));
+        addNewBtn = By.xpath(propUIContentAdmin.getProperty("input_AddNew"));
+        workflowStateSpan = By.xpath(propUIContentAdmin.getProperty("span_WorkflowState"));
         currentContentSpan = By.xpath(propUIContentAdmin.getProperty("span_CurrentContent"));
+        yourPageUrl = By.xpath(propUIContentAdmin.getProperty("span_YourPageUrl"));
+
+        firstNameInput = By.xpath(propUIContentAdmin.getProperty("input_FirstName"));
+        lastNameInput = By.xpath(propUIContentAdmin.getProperty("input_LastName"));
+        inputDepartment = By.xpath(propUIContentAdmin.getProperty("input_Department"));
 
         sPathToFile = System.getProperty("user.dir") + propUIModules.getProperty("dataPath_Content");
         sFilePageJson = propUIModules.getProperty("json_ContentProp");
@@ -54,16 +56,14 @@ public class CreateQuickLink extends AbstractPageObject {
         parser = new JSONParser();
     }
 
-    public String saveQuickLink(JSONObject data) {
-
-        findElement(addNewLink).click();
-
+    public String savePerson(JSONObject data) {
+        waitForElement(addNewBtn);
+        findElement(addNewBtn).click();
         waitForElement(saveAndSubmitButton);
 
-        findElement(descriptionInput).sendKeys(data.get("quicklink_description").toString());
-        findElement(urlInput).sendKeys(data.get("quicklink_url").toString());
-        findElement(textInput).sendKeys(data.get("quicklink_text").toString());
-        findElement(tagsInput).sendKeys(data.get("quicklink_tags").toString());
+        findElement(firstNameInput).sendKeys(data.get("first_name").toString());
+        findElement(lastNameInput).sendKeys(data.get("last_name").toString());
+        findElement(inputDepartment).sendKeys(data.get("department").toString());
 
         findElement(saveButton).click();
 
@@ -73,23 +73,23 @@ public class CreateQuickLink extends AbstractPageObject {
             Thread.sleep(DEFAULT_PAUSE);
 
             JSONObject jsonObj = (JSONObject) parser.parse(new FileReader(sPathToFile + sFilePageJson));
-            JSONObject quicklinksObj = (JSONObject) jsonObj.get(CONTENT_TYPE);
+            JSONObject personObj = (JSONObject) jsonObj.get(CONTENT_TYPE);
 
-            if (quicklinksObj == null) {
-                quicklinksObj = new JSONObject();
+            if (personObj == null) {
+                personObj = new JSONObject();
             }
 
-            JSONObject quicklink = new JSONObject();
-            quicklink.put("workflow_state", WorkflowState.IN_PROGRESS.state());
+            JSONObject person = new JSONObject();
+            person.put("workflow_state", WorkflowState.IN_PROGRESS.state());
             URL pageURL = new URL(getUrl());
             String[] params = pageURL.getQuery().split("&");
             JSONObject jsonURLQuery = new JSONObject();
             for (String param:params) {
                 jsonURLQuery.put(param.split("=")[0], param.split("=")[1]);
             }
-            quicklink.put("url_query", jsonURLQuery);
-            quicklinksObj.put(data.get("quicklink_description").toString(), quicklink);
-            jsonObj.put(CONTENT_TYPE, quicklinksObj);
+            person.put("url_query", jsonURLQuery);
+            personObj.put(data.get("person_text").toString(), person);
+            jsonObj.put(CONTENT_TYPE, personObj);
 
             try {
                 FileWriter file = new FileWriter(sPathToFile + sFilePageJson);
@@ -108,38 +108,39 @@ public class CreateQuickLink extends AbstractPageObject {
         }
 
         return null;
+
     }
 
-    public String saveAndSubmitQuickLink(JSONObject data) {
+    public String saveAndSubmitPerson(JSONObject data) {
         try {
 
             JSONObject jsonObj = (JSONObject) parser.parse(new FileReader(sPathToFile + sFilePageJson));
-            String quicklinkUrl = getContentUrl(jsonObj, CONTENT_TYPE, data.get("quicklink_description").toString());
+            String personUrl = getContentUrl(jsonObj, CONTENT_TYPE, data.get("person_text").toString());
 
-            driver.get(quicklinkUrl);
+            driver.get(personUrl);
             waitForElement(saveAndSubmitButton);
 
+            // ADD here
             findElement(commentsInput).sendKeys(data.get("comment").toString());
             findElement(saveAndSubmitButton).click();
             Thread.sleep(DEFAULT_PAUSE);
 
-            driver.get(quicklinkUrl);
+            driver.get(personUrl);
             waitForElement(workflowStateSpan);
 
-            JSONObject quicklinksObj = (JSONObject) jsonObj.get(CONTENT_TYPE);
-            JSONObject quicklink = (JSONObject) quicklinksObj.get(data.get("quicklink_description").toString());
+            JSONObject personObj = (JSONObject) jsonObj.get(CONTENT_TYPE);
+            JSONObject person = (JSONObject) personObj.get(data.get("person_text").toString());
+            person.put("workflow_state", WorkflowState.FOR_APPROVAL.state());
+            person.put("deleted", "false");
 
-            quicklink.put("workflow_state", WorkflowState.FOR_APPROVAL.state());
-            quicklink.put("deleted", "false");
-
-            quicklinksObj.put(data.get("quicklink_description").toString(), quicklink);
-            jsonObj.put(CONTENT_TYPE, quicklinksObj);
+            personObj.put(data.get("person_text").toString(), person);
+            jsonObj.put(CONTENT_TYPE, personObj);
 
             FileWriter file = new FileWriter(sPathToFile + sFilePageJson);
             file.write(jsonObj.toJSONString().replace("\\", ""));
             file.flush();
 
-            System.out.println("New "+CONTENT_TYPE+" has been submitted: " + data.get("quicklink_description").toString());
+            System.out.println("New "+CONTENT_TYPE+" has been submitted: " + data.get("person_text").toString());
             return  findElement(workflowStateSpan).getText();
 
         } catch (IOException e) {
@@ -153,27 +154,27 @@ public class CreateQuickLink extends AbstractPageObject {
         return null;
     }
 
-    public String publishQuickLink(String quicklinkText) {
+    public String publishPerson(String person_text) {
         try {
             JSONObject jsonObj = (JSONObject) parser.parse(new FileReader(sPathToFile + sFilePageJson));
-            String quicklinkUrl = getContentUrl(jsonObj, CONTENT_TYPE, quicklinkText);
+            String personUrl = getContentUrl(jsonObj, CONTENT_TYPE, person_text);
 
-            driver.get(quicklinkUrl);
+            driver.get(personUrl);
             waitForElement(publishBtn);
             findElement(publishBtn).click();
             Thread.sleep(DEFAULT_PAUSE);
 
-            driver.get(quicklinkUrl);
+            driver.get(personUrl);
             waitForElement(workflowStateSpan);
 
-            JSONObject quicklinksObj = (JSONObject) jsonObj.get(CONTENT_TYPE);
-            JSONObject quicklink = (JSONObject) quicklinksObj.get(quicklinkText);
+            JSONObject personObj = (JSONObject) jsonObj.get(CONTENT_TYPE);
+            JSONObject person = (JSONObject) personObj.get(person_text);
 
-            quicklink.put("workflow_state", WorkflowState.LIVE.state());
-            quicklink.put("deleted", "false");
+            person.put("workflow_state", WorkflowState.LIVE.state());
+            person.put("deleted", "false");
 
-            quicklinksObj.put(quicklinkText, quicklink);
-            jsonObj.put(CONTENT_TYPE, quicklinksObj);
+            personObj.put(person_text, person);
+            jsonObj.put(CONTENT_TYPE, personObj);
 
             FileWriter file = new FileWriter(sPathToFile + sFilePageJson);
             file.write(jsonObj.toJSONString().replace("\\", ""));
@@ -182,7 +183,7 @@ public class CreateQuickLink extends AbstractPageObject {
             Thread.sleep(DEFAULT_PAUSE*2);
             driver.navigate().refresh();
 
-            System.out.println("New "+CONTENT_TYPE+" has been published: " + quicklinkText);
+            System.out.println("New "+CONTENT_TYPE+" has been published: " + person_text);
             return  findElement(workflowStateSpan).getText();
 
         } catch (IOException e) {
@@ -197,33 +198,33 @@ public class CreateQuickLink extends AbstractPageObject {
 
     }
 
-    public String setupAsDeletedQuickLink(String quicklinkText) {
+    public String setupAsDeletedPerson(String person_text) {
         try {
             JSONObject jsonObj = (JSONObject) parser.parse(new FileReader(sPathToFile + sFilePageJson));
-            String quicklinkUrl = getContentUrl(jsonObj, CONTENT_TYPE, quicklinkText);
+            String personUrl = getContentUrl(jsonObj, CONTENT_TYPE, person_text);
 
-            driver.get(quicklinkUrl);
+            driver.get(personUrl);
             waitForElement(commentsInput);
             findElement(commentsInput).sendKeys("Removing the "+CONTENT_TYPE);
 
             findElement(deleteBtn).click();
             Thread.sleep(DEFAULT_PAUSE);
-            driver.get(quicklinkUrl);
+            driver.get(personUrl);
 
-            JSONObject quicklinksObj = (JSONObject) jsonObj.get(CONTENT_TYPE);
-            JSONObject quicklink = (JSONObject) quicklinksObj.get(quicklinkText);
+            JSONObject personObj = (JSONObject) jsonObj.get(CONTENT_TYPE);
+            JSONObject person = (JSONObject) personObj.get(person_text);
 
-            quicklink.put("workflow_state", WorkflowState.FOR_APPROVAL.state());
-            quicklink.put("deleted", "true");
+            person.put("workflow_state", WorkflowState.FOR_APPROVAL.state());
+            person.put("deleted", "true");
 
-            quicklinksObj.put(quicklinkText, quicklink);
-            jsonObj.put(CONTENT_TYPE, quicklinksObj);
+            personObj.put(person_text, person);
+            jsonObj.put(CONTENT_TYPE, personObj);
 
             FileWriter file = new FileWriter(sPathToFile + sFilePageJson);
             file.write(jsonObj.toJSONString().replace("\\", ""));
             file.flush();
 
-            System.out.println(CONTENT_TYPE+" has been set up as deleted: " + quicklinkText);
+            System.out.println(CONTENT_TYPE+" has been set up as deleted: " + person_text);
             return  findElement(currentContentSpan).getText();
 
         } catch (IOException e) {
@@ -237,12 +238,12 @@ public class CreateQuickLink extends AbstractPageObject {
         return null;
     }
 
-    public String removeQuickLink(String quicklinkText) {
+    public String removePerson(String person_text) {
         try {
             JSONObject jsonObj = (JSONObject) parser.parse(new FileReader(sPathToFile + sFilePageJson));
-            String quicklinkUrl = getContentUrl(jsonObj, CONTENT_TYPE, quicklinkText);
+            String personUrl = getContentUrl(jsonObj, CONTENT_TYPE, person_text);
 
-            driver.get(quicklinkUrl);
+            driver.get(personUrl);
             waitForElement(commentsInput);
 
             if (findElement(currentContentSpan).getText().equals(WorkflowState.DELETE_PENDING.state())) {
@@ -250,18 +251,18 @@ public class CreateQuickLink extends AbstractPageObject {
                 findElement(commentsInput).sendKeys("Approving the " + CONTENT_TYPE + " removal");
                 findElement(publishBtn).click();
 
-                JSONObject quicklinksObj = (JSONObject) jsonObj.get(CONTENT_TYPE);
-                quicklinksObj.remove(quicklinkText);
-                jsonObj.put(CONTENT_TYPE, quicklinksObj);
+                JSONObject personObj = (JSONObject) jsonObj.get(CONTENT_TYPE);
+                personObj.remove(person_text);
+                jsonObj.put(CONTENT_TYPE, personObj);
 
                 FileWriter file = new FileWriter(sPathToFile + sFilePageJson);
                 file.write(jsonObj.toJSONString().replace("\\", ""));
                 file.flush();
 
                 Thread.sleep(DEFAULT_PAUSE * 2);
-                driver.get(quicklinkUrl);
+                driver.get(personUrl);
 
-                System.out.println(quicklinkText + ": " + CONTENT_TYPE + " has been removed");
+                System.out.println(person_text + ": " + CONTENT_TYPE + " has been removed");
                 return findElement(workflowStateSpan).getText();
             }
         } catch (IOException e) {
