@@ -264,12 +264,24 @@
       "comment": "Adding person for Selenium module testing"
     },
     {
-      "do_assertions": false,
+      "do_assertions": true,
       "first_name": "Lavar",
       "last_name": "Ball",
       "department":"Board of directors",
       "person_text":"Person 2",
       "comment": "Adding person for Selenium module testing"
+    }
+  ],
+  "fast_fact": [
+    {
+      "do_assertions": true,
+      "description":"Test Fast Fact 1",
+      "comment": "Adding Fast Fact for Selenium module testing"
+    },
+    {
+      "do_assertions": true,
+      "description":"Test Fast Fact 2",
+      "comment": "Adding Fast Fact for Selenium module testing"
     }
   ]
 }
