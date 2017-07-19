@@ -27,7 +27,7 @@ public class CheckDdosAttack extends ApiAbstractSpec {
 
     private String sPathToFileDdos, sDataFileDdosJson;
     private JSONParser parser;
-    private final int threadPoolSize = 15, iterations = 1000000000;
+    private final int threadPoolSize = 1, iterations = 1;
     private FileWriter writer;
 
     @BeforeTest
