@@ -83,6 +83,8 @@ public abstract class AbstractSpec extends util.Functions {
     public static Properties propUIModulesCore;
     private static final String PATHTO_MODULESFAQ_PROP = "Modules/Faq/Faq.properties";
     public static Properties propUIModulesFaq;
+    private static final String PATHTO_MODULESPERSON_PROP = "Modules/Person/Person.properties";
+    public static Properties propUIModulesPerson;
     private static final String PATHTO_MODULESREPORT_PROP = "Modules/Report/Report.properties";
     public static Properties propUIModulesReport;
     private static final String PATHTO_API_PROP = "api/ApiMap.properties";
@@ -276,6 +278,7 @@ public abstract class AbstractSpec extends util.Functions {
         propUIModulesCore = ConnectToPropUI(PATHTO_MODULESCORE_PROP);
         propUIModulesFaq = ConnectToPropUI(PATHTO_MODULESFAQ_PROP);
         propUIModulesReport = ConnectToPropUI(PATHTO_MODULESREPORT_PROP);
+        propUIModulesPerson = ConnectToPropUI(PATHTO_MODULESPERSON_PROP);
         propAPI = ConnectToPropUI(PATHTO_API_PROP);
         propUIModulesSearch = ConnectToPropUI(PATHTO_MODULESSEARCH_PROP);
     }

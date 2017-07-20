@@ -30,7 +30,7 @@ public class CreateContent extends AbstractSpec {
     // DESIGN CONTENT-DEPENDENT TESTS TO CONTINUE WORKING IF NEW CONTENT IS ADDED \\
 
     private static By addNewPresentationButton, addNewPressReleaseButton, addNewEventButton, siteAdminMenuButton, lookupListMenuItem;
-    private static By contentAdminMenuButton, glossaryListMenuItem, quickLinkListMenuItem;
+    private static By contentAdminMenuButton, glossaryListMenuItem, quickLinkListMenuItem, personMenuItem, fastFactMenuItem;
     private static LoginPage loginPage;
     private static Dashboard dashboard;
     private static CreatePresentation createPresentation;
@@ -39,6 +39,8 @@ public class CreateContent extends AbstractSpec {
     private static CreateLookup createLookup;
     private static CreateGlossary createGlossary;
     private static CreateQuickLink createQuickLink;
+    private static CreatePerson createPerson;
+    private static CreateFastFact createFastFact;
 
     private static String sPathToFile, sDataFileJson;
     private static JSONParser parser;
@@ -48,7 +50,8 @@ public class CreateContent extends AbstractSpec {
     private final String LOOKUP_DATA = "lookupData", GLOSSARY_DATA = "glossaryData", QUICKLINK_DATA = "quickLinkData";
     private final String PRESENTATION_NAME = "presentation", PRESS_RELEASE_NAME = "press_release", EVENT_NAME = "event";
     private final String LOOKUP_NAME = "lookup", GLOSSARY_NAME = "glossary", QUICKLINK_NAME = "quicklink";
-    private final String FINANCIAL_REPORT_NAME = "financial_report", FINANCIAL_REPORT_DATA="financialReportData";
+    private final String PERSON_DATA ="personData", FAST_FACT_DATA="fastFactData";
+    private final String PERSON_NAME ="person", FAST_FACT_NAME = "fast_fact";
 
     @BeforeTest
     public void setUp() throws Exception {
@@ -61,6 +64,8 @@ public class CreateContent extends AbstractSpec {
         createLookup = new CreateLookup(driver);
         createGlossary = new CreateGlossary(driver);
         createQuickLink = new CreateQuickLink(driver);
+        createPerson = new CreatePerson(driver);
+        createFastFact = new CreateFastFact(driver);
  
         addNewPresentationButton = By.xpath(propUICommon.getProperty("btn_AddPresentation"));
         addNewPressReleaseButton = By.xpath(propUICommon.getProperty("btn_AddPressRelease"));
@@ -70,6 +75,8 @@ public class CreateContent extends AbstractSpec {
         contentAdminMenuButton = By.xpath(propUIContentAdmin.getProperty("btnMenu_ContentAdmin"));
         glossaryListMenuItem = By.xpath(propUIContentAdmin.getProperty("btnMenu_Glossary"));
         quickLinkListMenuItem = By.xpath(propUIContentAdmin.getProperty("btnMenu_QuickLinks"));
+        personMenuItem = By.xpath(propUIContentAdmin.getProperty("btnMenu_PersonList"));
+        fastFactMenuItem = By.xpath(propUIContentAdmin.getProperty("btnMenu_FastFact"));
 
         sPathToFile = System.getProperty("user.dir") + propUIModules.getProperty("dataPath_Content");
         sDataFileJson = propUIModules.getProperty("json_ContentData");
@@ -163,6 +170,34 @@ public class CreateContent extends AbstractSpec {
         Assert.assertEquals(createQuickLink.removeQuickLink(data.get("quicklink_description").toString()), WorkflowState.NEW_ITEM.state());
     }
 
+    @Test(dataProvider=PERSON_DATA, priority=11, enabled=true)
+    public void createPerson(JSONObject data) throws Exception {
+        dashboard.openPageFromMenu(contentAdminMenuButton, personMenuItem);
+        Assert.assertEquals(createPerson.savePerson(data), WorkflowState.IN_PROGRESS.state());
+        Assert.assertEquals(createPerson.saveAndSubmitPerson(data), WorkflowState.FOR_APPROVAL.state());
+        Assert.assertEquals(createPerson.publishPerson(data.get("person_text").toString()), WorkflowState.LIVE.state());
+    }
+
+    @Test(dataProvider=PERSON_DATA, priority=12, enabled=true)
+    public void removePerson(JSONObject data) throws Exception {
+        Assert.assertEquals(createPerson.setupAsDeletedPerson(data.get("person_text").toString()), WorkflowState.DELETE_PENDING.state());
+        Assert.assertEquals(createPerson.removePerson(data.get("person_text").toString()), WorkflowState.NEW_ITEM.state());
+    }
+
+    @Test(dataProvider=FAST_FACT_DATA, priority=3, enabled=true)
+    public void createFastFact(JSONObject data) throws Exception {
+        dashboard.openPageFromMenu(contentAdminMenuButton, fastFactMenuItem);
+        Assert.assertEquals(createFastFact.saveFastFact(data), WorkflowState.IN_PROGRESS.state());
+        Assert.assertEquals(createFastFact.saveAndSubmitFastFact(data), WorkflowState.FOR_APPROVAL.state());
+        Assert.assertEquals(createFastFact.publishFastFact(data.get("description").toString()), WorkflowState.LIVE.state());
+    }
+
+    @Test(dataProvider=FAST_FACT_DATA, priority=14, enabled=true)
+    public void removeFastFact(JSONObject data) throws Exception {
+        Assert.assertEquals(createFastFact.setupAsDeletedFastFact(data.get("description").toString()), WorkflowState.DELETE_PENDING.state());
+        Assert.assertEquals(createFastFact.removeFastFact(data.get("description").toString()), WorkflowState.NEW_ITEM.state());
+    }
+
     private Object[][] genericProvider(String type) {
         try {
             JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFileJson));
@@ -219,7 +254,12 @@ public class CreateContent extends AbstractSpec {
     public Object[][] quickLinkData() { return genericProvider(QUICKLINK_NAME); }
 
     @DataProvider
-    public Object[][] financialReportData() {
-        return genericProvider(FINANCIAL_REPORT_NAME);
+    public Object[][] personData() {
+        return genericProvider(PERSON_NAME);
+    }
+
+    @DataProvider
+    public Object[][] fastFactData() {
+        return genericProvider(FAST_FACT_NAME);
     }
 }
