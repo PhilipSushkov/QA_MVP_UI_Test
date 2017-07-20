@@ -1,6 +1,7 @@
 package pageobjects.Modules.Search;
 
 import com.jayway.jsonpath.JsonPath;
+import org.apache.xpath.operations.Bool;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -112,6 +113,24 @@ public class Search extends AbstractPageObject{
         String  sLanguageId = JsonPath.read(obj, "$.['"+moduleName+"'].url_query.LanguageId");
         String  sSectionId = JsonPath.read(obj, "$.['"+moduleName+"'].url_query.SectionId");
         return desktopUrl.toString()+"default.aspx?ItemID="+sItemID+"&LanguageId="+sLanguageId+"&SectionId="+sSectionId;
+    }
+
+    public void searchItem(JSONObject module, String searchTerm){
+        //This will search
+        waitForElement(By.xpath(module.get("module_path").toString() + propUIModulesSearch.getProperty("input_SearchButton")));
+        findElement(By.xpath(module.get("module_path").toString() + propUIModulesSearch.getProperty("input_SearchField"))).sendKeys(searchTerm);
+        findElement(By.xpath(module.get("module_path").toString() + propUIModulesSearch.getProperty("input_SearchButton"))).click();
+    }
+
+    public Boolean checkResults(){
+        By summaryResults = By.xpath("//span[div/div/h2/span[text()='Search Result']]" + propUIModulesSearch.getProperty("lbl_SearchSummaryContent"));
+
+        waitForElement(summaryResults);
+        if (!findElement(summaryResults).getText().equals("No results found")){
+            return true;
+        }
+
+        return false;
     }
 }
 

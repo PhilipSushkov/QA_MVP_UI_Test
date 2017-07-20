@@ -35,8 +35,8 @@ public class SearchResults extends AbstractPageObject{
         propertiesHref = By.xpath(propUIModules.getProperty("href_Properties"));
         saveAndSubmitBtn = By.xpath(propUIPageAdmin.getProperty("btn_SaveAndSubmit"));
 
-        sPathToModuleFile = System.getProperty("user.dir") + propUIModulesEvent.getProperty("dataPath_Search");
-        sFileModuleJson = propUIModulesEvent.getProperty("json_SearchResultsProp");
+        sPathToModuleFile = System.getProperty("user.dir") + propUIModulesSearch.getProperty("dataPath_Search");
+        sFileModuleJson = propUIModulesSearch.getProperty("json_SearchResultsProp");
 
         parser = new JSONParser();
     }
@@ -113,5 +113,12 @@ public class SearchResults extends AbstractPageObject{
         String  sLanguageId = JsonPath.read(obj, "$.['"+moduleName+"'].url_query.LanguageId");
         String  sSectionId = JsonPath.read(obj, "$.['"+moduleName+"'].url_query.SectionId");
         return desktopUrl.toString()+"default.aspx?ItemID="+sItemID+"&LanguageId="+sLanguageId+"&SectionId="+sSectionId;
+    }
+
+    public void searchItem(String searchTerm){
+        //This will search
+        waitForElement(By.xpath(propUIModulesSearch.getProperty("input_SearchButton")));
+        findElement(By.xpath(propUIModulesSearch.getProperty("input_SearchField"))).sendKeys(searchTerm);
+        findElement(By.xpath(propUIModulesSearch.getProperty("input_SearchButton"))).click();
     }
 }
