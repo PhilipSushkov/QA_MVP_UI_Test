@@ -1,4 +1,4 @@
-package pageobjects.Modules.Event;
+package pageobjects.Modules.Search;
 
 import com.jayway.jsonpath.JsonPath;
 import org.json.simple.JSONArray;
@@ -18,15 +18,16 @@ import java.io.IOException;
 import static specs.AbstractSpec.*;
 
 /**
- * Created by andyp on 2017-07-06.
+ * Created by andyp on 2017-07-18.
  */
-public class EventDetails extends AbstractPageObject {
+public class SearchResults extends AbstractPageObject{
+
     private static By workflowStateSpan, propertiesHref, commentsTxt, saveAndSubmitBtn;
     private static String sPathToModuleFile, sFileModuleJson;
     private static JSONParser parser;
     private static final long DEFAULT_PAUSE = 2500;
 
-    public EventDetails(WebDriver driver) {
+    public SearchResults(WebDriver driver) {
         super(driver);
 
         workflowStateSpan = By.xpath(propUIPageAdmin.getProperty("select_WorkflowState"));
@@ -34,8 +35,8 @@ public class EventDetails extends AbstractPageObject {
         propertiesHref = By.xpath(propUIModules.getProperty("href_Properties"));
         saveAndSubmitBtn = By.xpath(propUIPageAdmin.getProperty("btn_SaveAndSubmit"));
 
-        sPathToModuleFile = System.getProperty("user.dir") + propUIModulesEvent.getProperty("dataPath_Event");
-        sFileModuleJson = propUIModulesEvent.getProperty("json_EventDetailsProp");
+        sPathToModuleFile = System.getProperty("user.dir") + propUIModulesSearch.getProperty("dataPath_Search");
+        sFileModuleJson = propUIModulesSearch.getProperty("json_SearchResultsProp");
 
         parser = new JSONParser();
     }
@@ -112,5 +113,12 @@ public class EventDetails extends AbstractPageObject {
         String  sLanguageId = JsonPath.read(obj, "$.['"+moduleName+"'].url_query.LanguageId");
         String  sSectionId = JsonPath.read(obj, "$.['"+moduleName+"'].url_query.SectionId");
         return desktopUrl.toString()+"default.aspx?ItemID="+sItemID+"&LanguageId="+sLanguageId+"&SectionId="+sSectionId;
+    }
+
+    public void searchItem(String searchTerm){
+        //This will search
+        waitForElement(By.xpath(propUIModulesSearch.getProperty("input_SearchButton")));
+        findElement(By.xpath(propUIModulesSearch.getProperty("input_SearchField"))).sendKeys(searchTerm);
+        findElement(By.xpath(propUIModulesSearch.getProperty("input_SearchButton"))).click();
     }
 }

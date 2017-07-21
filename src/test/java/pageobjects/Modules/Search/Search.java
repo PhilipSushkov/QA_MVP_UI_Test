@@ -1,6 +1,7 @@
-package pageobjects.Modules.Event;
+package pageobjects.Modules.Search;
 
 import com.jayway.jsonpath.JsonPath;
+import org.apache.xpath.operations.Bool;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -18,15 +19,15 @@ import java.io.IOException;
 import static specs.AbstractSpec.*;
 
 /**
- * Created by andyp on 2017-07-06.
+ * Created by andyp on 2017-07-18.
  */
-public class EventDetails extends AbstractPageObject {
+public class Search extends AbstractPageObject{
     private static By workflowStateSpan, propertiesHref, commentsTxt, saveAndSubmitBtn;
     private static String sPathToModuleFile, sFileModuleJson;
     private static JSONParser parser;
     private static final long DEFAULT_PAUSE = 2500;
 
-    public EventDetails(WebDriver driver) {
+    public Search(WebDriver driver) {
         super(driver);
 
         workflowStateSpan = By.xpath(propUIPageAdmin.getProperty("select_WorkflowState"));
@@ -34,8 +35,8 @@ public class EventDetails extends AbstractPageObject {
         propertiesHref = By.xpath(propUIModules.getProperty("href_Properties"));
         saveAndSubmitBtn = By.xpath(propUIPageAdmin.getProperty("btn_SaveAndSubmit"));
 
-        sPathToModuleFile = System.getProperty("user.dir") + propUIModulesEvent.getProperty("dataPath_Event");
-        sFileModuleJson = propUIModulesEvent.getProperty("json_EventDetailsProp");
+        sPathToModuleFile = System.getProperty("user.dir") + propUIModulesSearch.getProperty("dataPath_Search");
+        sFileModuleJson = propUIModulesSearch.getProperty("json_SearchProp");
 
         parser = new JSONParser();
     }
@@ -113,4 +114,23 @@ public class EventDetails extends AbstractPageObject {
         String  sSectionId = JsonPath.read(obj, "$.['"+moduleName+"'].url_query.SectionId");
         return desktopUrl.toString()+"default.aspx?ItemID="+sItemID+"&LanguageId="+sLanguageId+"&SectionId="+sSectionId;
     }
+
+    public void searchItem(JSONObject module, String searchTerm){
+        //This will search
+        waitForElement(By.xpath(module.get("module_path").toString() + propUIModulesSearch.getProperty("input_SearchButton")));
+        findElement(By.xpath(module.get("module_path").toString() + propUIModulesSearch.getProperty("input_SearchField"))).sendKeys(searchTerm);
+        findElement(By.xpath(module.get("module_path").toString() + propUIModulesSearch.getProperty("input_SearchButton"))).click();
+    }
+
+    public Boolean checkResults(){
+        By summaryResults = By.xpath("//span[div/div/h2/span[text()='Search Result']]" + propUIModulesSearch.getProperty("lbl_SearchSummaryContent"));
+
+        waitForElement(summaryResults);
+        if (!findElement(summaryResults).getText().equals("No results found")){
+            return true;
+        }
+
+        return false;
+    }
 }
+
