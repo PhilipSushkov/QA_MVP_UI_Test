@@ -9,7 +9,6 @@ import org.testng.Assert;
 import org.testng.annotations.*;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.LoginPage.LoginPage;
-import pageobjects.Modules.HR.JobPostingAdvanced;
 import pageobjects.Modules.HR.JobPostingDetailsAdvanced;
 import pageobjects.Modules.ModuleBase;
 import pageobjects.Modules.PageForModules;
@@ -28,7 +27,9 @@ import java.util.Date;
  */
 public class CheckJobPostingDetailsAdvanced extends AbstractSpec {
     /*
- This test will need a job posting - create using CreateContent.class. It also assumes that the job posting is first one on the list
+ This test will need a job posting - create using CreateContent.class.
+ This module will show the first job posting on the list, so ensure that there were no previous postings
+
   */
     private static By pageAdminMenuButton;
     private static LoginPage loginPage;
