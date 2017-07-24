@@ -1,6 +1,7 @@
 package specs;
 
 import org.testng.ITestResult;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeTest;
 
 import java.io.IOException;
@@ -13,8 +14,6 @@ import java.util.Properties;
 public abstract class ApiAbstractSpec extends util.Functions {
     private static final String PATHTO_API_PROP = "api/ApiMap.properties";
     public static Properties propAPI;
-    private static final String PATHTO_EUROAPI_PROP = "euroApi/EuroApiMap.properties";
-    public static Properties propEuroAPI;
 
     @BeforeTest
     public void init() throws IOException {
@@ -23,9 +22,9 @@ public abstract class ApiAbstractSpec extends util.Functions {
 
     public static void setupPropUI() throws IOException {
         propAPI = ConnectToPropUI(PATHTO_API_PROP);
-        propEuroAPI = ConnectToPropUI(PATHTO_EUROAPI_PROP);
     }
 
+    @AfterMethod
     public void afterMethod(ITestResult result) {
 
         switch (result.getStatus()) {
