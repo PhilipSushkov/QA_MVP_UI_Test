@@ -112,6 +112,39 @@ public class AbstractPageObject implements PageObject {
             } catch (TimeoutException e3) {
                 System.out.println("Attempt #" + i);
             }
+
+        }
+    }
+
+    // Purpose: openContentPageFromMenu takes into account the case when the content page might not be added to the Content Admin by adding it.
+    // Contract: "title" must be one of the titles from Content Admin Edit page, e.g "Glossary"
+    public void openContentPageFromMenu(By menuButton, By menuItem, String title, By siteAdmin, By siteAdminItem) throws Exception {
+        By selectedContent = By.xpath("//span[contains(text(), '" + title + "')]/../..//input[contains(@type, 'checkbox')]");
+        By saveButton = By.xpath("//img[contains(@alt, 'Save Order')]");
+        Actions action = new Actions(driver);
+        wait.until(ExpectedConditions.visibilityOf(findElement(menuButton)));
+
+        for (int i=0; i<ATTEMPTS; i++) {
+            try {
+                action.moveToElement(findElement(menuButton)).perform();
+                wait.until(ExpectedConditions.visibilityOf(findElement(menuItem)));
+                Thread.sleep(DEFAULT_PAUSE);
+                findElement(menuItem).click();
+                break;
+            } catch (ElementNotVisibleException e1){
+                System.out.println("Attempt #" + i);
+            } catch (ElementNotFoundException e2) {
+                System.out.println("Attempt #" + i);
+            } catch (TimeoutException e3) {
+                System.out.println("Attempt #" + i);
+            }
+            if (i == 4) {
+                openPageFromMenu(siteAdmin, siteAdminItem);
+                findElement(selectedContent).click();
+                findElement(saveButton).click();
+                Thread.sleep(DEFAULT_PAUSE);
+                openPageFromMenu(menuButton, menuItem);
+            }
         }
     }
 

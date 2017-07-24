@@ -34,7 +34,7 @@ public class EventDetails extends AbstractPageObject {
         propertiesHref = By.xpath(propUIModules.getProperty("href_Properties"));
         saveAndSubmitBtn = By.xpath(propUIPageAdmin.getProperty("btn_SaveAndSubmit"));
 
-        sPathToModuleFile = System.getProperty("user.dir") + propUIModulesEvent.getProperty("dataPath_EventDetails");
+        sPathToModuleFile = System.getProperty("user.dir") + propUIModulesEvent.getProperty("dataPath_Event");
         sFileModuleJson = propUIModulesEvent.getProperty("json_EventDetailsProp");
 
         parser = new JSONParser();

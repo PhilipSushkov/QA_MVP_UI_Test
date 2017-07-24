@@ -87,13 +87,6 @@ public class ModuleBase extends AbstractPageObject {
             scrollToElementAndClick(addNewModuleBtn);
             Thread.sleep(DEFAULT_PAUSE);
 
-            try
-            {
-                String pageTitle = findElement(sectionTitle).getText();
-            }
-            catch (Exception e){
-                findElement(addNewModuleBtn).click();
-            }
             waitForElement(includeLagacyModulesChk);
 
             findElement(includeLagacyModulesChk).click();
@@ -574,7 +567,7 @@ public class ModuleBase extends AbstractPageObject {
         }
     }
 
-    private String getPageUrl(JSONObject obj, String moduleName) {
+    public String getPageUrl(JSONObject obj, String moduleName) {
         String  sItemID = JsonPath.read(obj, "$.['"+moduleName+"'].url_query.ItemID");
         String  sLanguageId = JsonPath.read(obj, "$.['"+moduleName+"'].url_query.LanguageId");
         String  sSectionId = JsonPath.read(obj, "$.['"+moduleName+"'].url_query.SectionId");
@@ -588,7 +581,7 @@ public class ModuleBase extends AbstractPageObject {
         return desktopUrl.toString()+"default.aspx?ItemID="+sItemID+"&LanguageId="+sLanguageId+"&SectionId="+sSectionId;
     }
 
-    private boolean checkModuleDefinitionExists(String sModuleDefinition) {
+    public boolean checkModuleDefinitionExists(String sModuleDefinition) {
         Select select = new Select(findElement(moduleDefinitionSelect));
         for (int i=0; i < select.getOptions().size(); i++) {
             //System.out.println(select.getOptions().get(i).getAttribute("text").toString() + " - " + sModuleDefinition);
@@ -600,7 +593,7 @@ public class ModuleBase extends AbstractPageObject {
         return false;
     }
 
-    private String addModuleDefinition(String friendly_name, String source_file) throws Exception {
+    public String addModuleDefinition(String friendly_name, String source_file) throws Exception {
         ((JavascriptExecutor)driver).executeScript("window.open();");
         Thread.sleep(DEFAULT_PAUSE);
 

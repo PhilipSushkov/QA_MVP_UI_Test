@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Web CMS Suite Modules" parallel="tests" thread-count="1">
+
+    <!-- Create Pages-->
+    <test name="CreatePages">
+        <classes>
+            <class name="specs.Modules.CreatePages" />
+        </classes>
+    </test>
+
+    <!-- Create Content-->
+    <test name="CreateContent">
+        <classes>
+            <class name="specs.Modules.Content.CreateContent" />
+        </classes>
+    </test>
+
+</suite>

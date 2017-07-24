@@ -1,5 +1,6 @@
 package specs.Modules.Content;
 
+import com.sun.xml.internal.bind.v2.TODO;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -29,7 +30,7 @@ public class CreateContent extends AbstractSpec {
 
     // DESIGN CONTENT-DEPENDENT TESTS TO CONTINUE WORKING IF NEW CONTENT IS ADDED \\
 
-    private static By addNewPresentationButton, addNewPressReleaseButton, addNewEventButton, siteAdminMenuButton, lookupListMenuItem;
+    private static By addNewPresentationButton, addNewPressReleaseButton, addNewEventButton, siteAdminMenuButton, lookupListMenuItem, contentAdminEditItem;
     private static By contentAdminMenuButton, glossaryListMenuItem, quickLinkListMenuItem, personMenuItem, fastFactMenuItem;
     private static LoginPage loginPage;
     private static Dashboard dashboard;
@@ -73,6 +74,7 @@ public class CreateContent extends AbstractSpec {
         siteAdminMenuButton = By.xpath(propUISiteAdmin.getProperty("btnMenu_SiteAdmin"));
         lookupListMenuItem = By.xpath(propUISiteAdmin.getProperty("itemMenu_LookupList"));
         contentAdminMenuButton = By.xpath(propUIContentAdmin.getProperty("btnMenu_ContentAdmin"));
+        contentAdminEditItem = By.xpath(propUISiteAdmin.getProperty("itemMenu_ContentAdminEdit"));
         glossaryListMenuItem = By.xpath(propUIContentAdmin.getProperty("btnMenu_Glossary"));
         quickLinkListMenuItem = By.xpath(propUIContentAdmin.getProperty("btnMenu_QuickLinks"));
         personMenuItem = By.xpath(propUIContentAdmin.getProperty("btnMenu_PersonList"));
@@ -86,7 +88,7 @@ public class CreateContent extends AbstractSpec {
         loginPage.loginUser();
     }
 
-    @Test(dataProvider=PRESENTATION_DATA, priority=1, enabled=true)
+    @Test(dataProvider=PRESENTATION_DATA, priority=1, enabled=false)
     public void createPresentations(JSONObject data) throws Exception {
         dashboard.openPageFromCommonTasks(addNewPresentationButton);
         Assert.assertEquals(createPresentation.savePresentation(data), WorkflowState.IN_PROGRESS.state());
@@ -100,7 +102,7 @@ public class CreateContent extends AbstractSpec {
         Assert.assertEquals(createPresentation.removePresentation(data.get("headline").toString()), WorkflowState.NEW_ITEM.state());
     }
 
-    @Test(dataProvider=PRESS_RELEASE_DATA, priority=3, enabled=true)
+    @Test(dataProvider=PRESS_RELEASE_DATA, priority=3, enabled=false)
     public void createPressRelease(JSONObject data) throws Exception {
         dashboard.openPageFromCommonTasks(addNewPressReleaseButton);
         Assert.assertEquals(createPressRelease.savePressRelease(data), WorkflowState.IN_PROGRESS.state());
@@ -114,7 +116,7 @@ public class CreateContent extends AbstractSpec {
         Assert.assertEquals(createPressRelease.removePressRelease(data.get("headline").toString()), WorkflowState.NEW_ITEM.state());
     }
 
-    @Test(dataProvider=EVENT_DATA, priority=5, enabled=true)
+    @Test(dataProvider=EVENT_DATA, priority=5, enabled=false)
     public void createEvents(JSONObject data) throws Exception {
         dashboard.openPageFromCommonTasks(addNewEventButton);
         Assert.assertEquals(createEvent.saveEvent(data), WorkflowState.IN_PROGRESS.state());
@@ -122,13 +124,13 @@ public class CreateContent extends AbstractSpec {
         Assert.assertEquals(createEvent.publishEvent(data.get("headline").toString()), WorkflowState.LIVE.state());
     }
 
-    @Test(dataProvider=EVENT_DATA, priority=6, enabled=true)
+    @Test(dataProvider=EVENT_DATA, priority=6, enabled=false)
     public void removeEvents(JSONObject data) throws Exception {
         Assert.assertEquals(createEvent.setupAsDeletedEvent(data.get("headline").toString()), WorkflowState.DELETE_PENDING.state());
         Assert.assertEquals(createEvent.removeEvent(data.get("headline").toString()), WorkflowState.NEW_ITEM.state());
     }
 
-    @Test(dataProvider=LOOKUP_DATA, priority=7, enabled = true)
+    @Test(dataProvider=LOOKUP_DATA, priority=7, enabled = false)
     public void createLookups(JSONObject data) throws Exception {
         dashboard.openPageFromMenu(siteAdminMenuButton, lookupListMenuItem);
         Assert.assertEquals(createLookup.saveLookup(data), WorkflowState.IN_PROGRESS.state());
@@ -141,16 +143,17 @@ public class CreateContent extends AbstractSpec {
         Assert.assertEquals(createLookup.setupAsDeletedLookup(data.get("lookup_text").toString()), WorkflowState.DELETE_PENDING.state());
         Assert.assertEquals(createLookup.removeLookup(data.get("lookup_text").toString()), WorkflowState.NEW_ITEM.state());
     }
-    
+
+    // MUST WRITE METHOD TO ADD GLOSSARIES TO CONTENT LIST BECAUSE THEY AREN'T ADDED BY DEFAULT
     @Test(dataProvider=GLOSSARY_DATA, priority=9, enabled=true)
     public void createGlossaries(JSONObject data) throws Exception {
-        dashboard.openPageFromMenu(contentAdminMenuButton, glossaryListMenuItem);
+        dashboard.openContentPageFromMenu(contentAdminMenuButton, glossaryListMenuItem, "Glossary", siteAdminMenuButton, contentAdminEditItem);
         Assert.assertEquals(createGlossary.saveGlossary(data), WorkflowState.IN_PROGRESS.state());
         Assert.assertEquals(createGlossary.saveAndSubmitGlossary(data), WorkflowState.FOR_APPROVAL.state());
         Assert.assertEquals(createGlossary.publishGlossary(data.get("glossary_title").toString()), WorkflowState.LIVE.state());
     }
 
-    @Test(dataProvider=GLOSSARY_DATA, priority=10, enabled=true)
+    @Test(dataProvider=GLOSSARY_DATA, priority=10, enabled=false)
     public void removeGlossaries(JSONObject data) throws Exception {
         Assert.assertEquals(createGlossary.setupAsDeletedGlossary(data.get("glossary_title").toString()), WorkflowState.DELETE_PENDING.state());
         Assert.assertEquals(createGlossary.removeGlossary(data.get("glossary_title").toString()), WorkflowState.NEW_ITEM.state());
@@ -158,13 +161,13 @@ public class CreateContent extends AbstractSpec {
 
     @Test(dataProvider=QUICKLINK_DATA, priority=9, enabled=true)
     public void createQuickLinks(JSONObject data) throws Exception {
-        dashboard.openPageFromMenu(contentAdminMenuButton, quickLinkListMenuItem);
+        dashboard.openContentPageFromMenu(contentAdminMenuButton, quickLinkListMenuItem, "Quick Links", siteAdminMenuButton, contentAdminEditItem);
         Assert.assertEquals(createQuickLink.saveQuickLink(data), WorkflowState.IN_PROGRESS.state());
         Assert.assertEquals(createQuickLink.saveAndSubmitQuickLink(data), WorkflowState.FOR_APPROVAL.state());
         Assert.assertEquals(createQuickLink.publishQuickLink(data.get("quicklink_description").toString()), WorkflowState.LIVE.state());
     }
 
-    @Test(dataProvider=QUICKLINK_DATA, priority=10, enabled=true)
+    @Test(dataProvider=QUICKLINK_DATA, priority=10, enabled=false)
     public void removeQuickLinks(JSONObject data) throws Exception {
         Assert.assertEquals(createQuickLink.setupAsDeletedQuickLink(data.get("quicklink_description").toString()), WorkflowState.DELETE_PENDING.state());
         Assert.assertEquals(createQuickLink.removeQuickLink(data.get("quicklink_description").toString()), WorkflowState.NEW_ITEM.state());
@@ -172,13 +175,13 @@ public class CreateContent extends AbstractSpec {
 
     @Test(dataProvider=PERSON_DATA, priority=11, enabled=true)
     public void createPerson(JSONObject data) throws Exception {
-        dashboard.openPageFromMenu(contentAdminMenuButton, personMenuItem);
+        dashboard.openContentPageFromMenu(contentAdminMenuButton, personMenuItem, "Person List", siteAdminMenuButton, contentAdminEditItem);
         Assert.assertEquals(createPerson.savePerson(data), WorkflowState.IN_PROGRESS.state());
         Assert.assertEquals(createPerson.saveAndSubmitPerson(data), WorkflowState.FOR_APPROVAL.state());
         Assert.assertEquals(createPerson.publishPerson(data.get("person_text").toString()), WorkflowState.LIVE.state());
     }
 
-    @Test(dataProvider=PERSON_DATA, priority=12, enabled=true)
+    @Test(dataProvider=PERSON_DATA, priority=12, enabled=false)
     public void removePerson(JSONObject data) throws Exception {
         Assert.assertEquals(createPerson.setupAsDeletedPerson(data.get("person_text").toString()), WorkflowState.DELETE_PENDING.state());
         Assert.assertEquals(createPerson.removePerson(data.get("person_text").toString()), WorkflowState.NEW_ITEM.state());
@@ -186,13 +189,13 @@ public class CreateContent extends AbstractSpec {
 
     @Test(dataProvider=FAST_FACT_DATA, priority=3, enabled=true)
     public void createFastFact(JSONObject data) throws Exception {
-        dashboard.openPageFromMenu(contentAdminMenuButton, fastFactMenuItem);
+        dashboard.openContentPageFromMenu(contentAdminMenuButton, fastFactMenuItem, "Fast Facts", siteAdminMenuButton, contentAdminEditItem);
         Assert.assertEquals(createFastFact.saveFastFact(data), WorkflowState.IN_PROGRESS.state());
         Assert.assertEquals(createFastFact.saveAndSubmitFastFact(data), WorkflowState.FOR_APPROVAL.state());
         Assert.assertEquals(createFastFact.publishFastFact(data.get("description").toString()), WorkflowState.LIVE.state());
     }
 
-    @Test(dataProvider=FAST_FACT_DATA, priority=14, enabled=true)
+    @Test(dataProvider=FAST_FACT_DATA, priority=14, enabled=false)
     public void removeFastFact(JSONObject data) throws Exception {
         Assert.assertEquals(createFastFact.setupAsDeletedFastFact(data.get("description").toString()), WorkflowState.DELETE_PENDING.state());
         Assert.assertEquals(createFastFact.removeFastFact(data.get("description").toString()), WorkflowState.NEW_ITEM.state());

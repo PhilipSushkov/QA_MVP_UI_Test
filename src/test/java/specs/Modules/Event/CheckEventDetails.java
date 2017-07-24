@@ -51,9 +51,9 @@ public class CheckEventDetails extends AbstractSpec {
         eventDetails = new EventDetails(driver);
 
         sPathToFile = System.getProperty("user.dir") + propUIModulesEvent.getProperty("dataPath_Event");
-        sDataFileJson = propUIModulesEvent.getProperty("json_EventData");
+        sDataFileJson = propUIModulesEvent.getProperty("json_EventDetailsData");
         sPathToModuleFile = System.getProperty("user.dir") + propUIModulesEvent.getProperty("dataPath_Event");
-        sFileModuleJson = propUIModulesEvent.getProperty("json_EventProp");
+        sFileModuleJson = propUIModulesEvent.getProperty("json_EventDetailsProp");
 
         moduleBase = new ModuleBase(driver, sPathToModuleFile, sFileModuleJson);
 
@@ -68,14 +68,14 @@ public class CheckEventDetails extends AbstractSpec {
         dashboard.openPageFromCommonTasks(pageAdminMenuButton);
     }
 
-    @Test(dataProvider=PAGE_DATA, priority=1, enabled=false)
+    @Test(dataProvider=PAGE_DATA, priority=1, enabled=true)
     public void createEventPage(JSONObject module) throws InterruptedException {
         Assert.assertEquals(pageForModules.savePage(module, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+MODULE_NAME+" Page didn't save properly");
         Assert.assertEquals(pageForModules.saveAndSubmitPage(module, MODULE_NAME), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New "+MODULE_NAME+" Page properly");
         Assert.assertEquals(pageForModules.publishPage(MODULE_NAME), WorkflowState.LIVE.state(), "Couldn't publish New "+MODULE_NAME+" Page properly");
     }
 
-    @Test(dataProvider=MODULE_DATA, priority=2, enabled=false)
+    @Test(dataProvider=MODULE_DATA, priority=2, enabled=true)
     public void createEventModule(JSONObject module) throws InterruptedException {
         String sModuleNameSet = module.get("module_title").toString();
         Assert.assertEquals(moduleBase.saveModule(module, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+sModuleNameSet+" Module didn't save properly");
@@ -83,7 +83,7 @@ public class CheckEventDetails extends AbstractSpec {
         Assert.assertEquals(moduleBase.publishModule(sModuleNameSet), WorkflowState.LIVE.state(), "Couldn't publish New "+sModuleNameSet+" Module properly");
     }
 
-    @Test(dataProvider=MODULE_DATA, priority=3, enabled=false)
+    @Test(dataProvider=MODULE_DATA, priority=3, enabled=true)
     public void checkProperties(JSONObject module) throws InterruptedException {
         // Checks that all input properties were saved correctly
         Assert.assertEquals(eventDetails.goToModuleEditPage(module.get("module_title").toString()), WorkflowState.LIVE.state());
@@ -139,14 +139,14 @@ public class CheckEventDetails extends AbstractSpec {
         }
     }
 
-    @Test(dataProvider=MODULE_DATA, priority=6, enabled=false)
+    @Test(dataProvider=MODULE_DATA, priority=6, enabled=true)
     public void removeEventModule(JSONObject module) throws Exception {
         String sModuleNameSet = module.get("module_title").toString();
         Assert.assertEquals(moduleBase.setupAsDeletedModule(sModuleNameSet), WorkflowState.DELETE_PENDING.state(), "New "+sModuleNameSet+" Module didn't setup as Deleted properly");
         Assert.assertEquals(moduleBase.removeModule(module, sModuleNameSet), WorkflowState.NEW_ITEM.state(), "Couldn't remove "+sModuleNameSet+" Module. Something went wrong.");
     }
 
-    @Test(dataProvider=PAGE_DATA, priority=7, enabled=false)
+    @Test(dataProvider=PAGE_DATA, priority=7, enabled=true)
     public void removeEventPage(JSONObject module) throws Exception {
         Assert.assertEquals(pageForModules.setupAsDeletedPage(MODULE_NAME), WorkflowState.DELETE_PENDING.state(), "New "+MODULE_NAME+" Page didn't setup as Deleted properly");
         Assert.assertEquals(pageForModules.removePage(module, MODULE_NAME), WorkflowState.NEW_ITEM.state(), "Couldn't remove "+MODULE_NAME+" Page. Something went wrong.");

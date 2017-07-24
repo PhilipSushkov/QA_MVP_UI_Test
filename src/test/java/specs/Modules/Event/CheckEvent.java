@@ -74,7 +74,7 @@ public class CheckEvent extends AbstractSpec {
         dashboard.openPageFromCommonTasks(pageAdminMenuButton);
     }
 
-    @Test(dataProvider=PAGE_DATA, priority=1, enabled=true)
+    @Test(dataProvider=PAGE_DATA, priority=1, enabled=false)
     public void createEventPage(JSONObject module) throws InterruptedException {
         Assert.assertEquals(pageForModules.savePage(module, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+MODULE_NAME+" Page didn't save properly");
         Assert.assertEquals(pageForModules.saveAndSubmitPage(module, MODULE_NAME), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New "+MODULE_NAME+" Page properly");
@@ -89,7 +89,7 @@ public class CheckEvent extends AbstractSpec {
         Assert.assertEquals(moduleBase.publishModule(sModuleNameSet), WorkflowState.LIVE.state(), "Couldn't publish New "+sModuleNameSet+" Module properly");
     }
 
-    @Test(dataProvider=MODULE_DATA, priority=3, enabled=true)
+    @Test(dataProvider=MODULE_DATA, priority=3, enabled=false)
     public void checkProperties(JSONObject module) throws InterruptedException {
         // Checks that all input properties were saved correctly
         Assert.assertEquals(event.goToModuleEditPage(module.get("module_title").toString()), WorkflowState.LIVE.state());
