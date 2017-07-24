@@ -3,6 +3,7 @@ package specs;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeTest;
+import util.EnvironmentType;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -14,6 +15,16 @@ import java.util.Properties;
 public abstract class ApiAbstractSpec extends util.Functions {
     private static final String PATHTO_API_PROP = "api/ApiMap.properties";
     public static Properties propAPI;
+
+    // IMPORTANT:
+// Determines which environment the test suite will run on but can be overridden by command line
+//------------------------------------------------------------------------------
+    private static final EnvironmentType DEFAULT_API_ENV = EnvironmentType.API_DEVELOP;
+    //private static final EnvironmentType DEFAULT_API_ENV = EnvironmentType.BETA;
+    //private static final EnvironmentType DEFAULT_API_ENV = EnvironmentType.PRODUCTION;
+//------------------------------------------------------------------------------
+
+    private static final EnvironmentType activeEnvironment = setupEnvironment();
 
     @BeforeTest
     public void init() throws IOException {
@@ -44,5 +55,24 @@ public abstract class ApiAbstractSpec extends util.Functions {
                 throw new RuntimeException(result.getTestName() + "Invalid status");
         }
     }
+
+    public static EnvironmentType getActiveEnvironment() {
+        return activeEnvironment;
+    }
+
+    private static EnvironmentType setupEnvironment () {
+
+        String overrideEnvironment = System.getProperty("environment");
+        if (overrideEnvironment != null) {
+            if ((overrideEnvironment.equals("API_PROD")) || (overrideEnvironment.equals("API_BETA")) || (overrideEnvironment.equals("API_DEV"))) {
+                return EnvironmentType.valueOf(overrideEnvironment);
+            } else {
+                return DEFAULT_API_ENV;
+            }
+        } else {
+            return DEFAULT_API_ENV;
+        }
+    }
+
 }
 
