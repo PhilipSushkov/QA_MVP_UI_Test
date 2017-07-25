@@ -4,24 +4,24 @@ import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import pageobjects.api.AdminWeb.Auth;
+import specs.ApiAbstractSpec;
 import util.LocalDriverManager;
 
-import java.io.IOException;
 
 /**
  * Created by philipsushkov on 2017-07-24.
  */
 
-public class CheckClients {
+public class CheckClients extends ApiAbstractSpec {
 
     @BeforeTest
     public void setUp() throws InterruptedException {
-        new Auth(LocalDriverManager.getDriver()).getGoogleAuthPage();
+
     }
 
     @Test
-    public void checkOAuth() throws IOException {
-
+    public void checkOAuth() throws InterruptedException {
+        new Auth(LocalDriverManager.getDriver(), adminWebUrl).getGoogleAuthPage();
     }
 
     @AfterTest

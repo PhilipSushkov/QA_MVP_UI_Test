@@ -5,18 +5,22 @@ import org.openqa.selenium.WebDriver;
 import pageobjects.AbstractPageObject;
 import specs.ApiAbstractSpec;
 
+import java.net.URL;
+
 import static specs.ApiAbstractSpec.propAPI;
 
 /**
  * Created by philipsushkov on 2017-07-25.
  */
 
-public class Auth extends ApiAbstractSpec {
+public class Auth extends util.Functions {
     private WebDriver phDriver;
+    private URL adminWebUrl;
     private static final long DEFAULT_PAUSE = 2000;
 
-    public Auth(WebDriver phDriver) {
+    public Auth(WebDriver phDriver, URL adminWebUrl) {
         this.phDriver = phDriver;
+        this.adminWebUrl = adminWebUrl;
     }
 
     public void getGoogleAuthPage() throws InterruptedException {

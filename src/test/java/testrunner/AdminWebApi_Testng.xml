@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="Euro Widget Comparison" parallel="instances" data-provider-thread-count="10">
+<suite name="Admin Web API Testing" parallel="instances">
     <listeners>
         <listener class-name="util.WebDriverListener"></listener>
     </listeners>
     <test name="CheckClients">
+        <parameter name="browserName" value="chrome"></parameter>
         <classes>
             <class name="specs.api.AdminWeb.CheckClients" />
         </classes>
