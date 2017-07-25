@@ -6,7 +6,9 @@ import org.testng.annotations.BeforeTest;
 import util.EnvironmentType;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 /**
  * Created by philipsushkov on 2017-03-08.
@@ -20,14 +22,23 @@ public abstract class ApiAbstractSpec extends util.Functions {
 // Determines which environment the test suite will run on but can be overridden by command line
 //------------------------------------------------------------------------------
     private static final EnvironmentType DEFAULT_API_ENV = EnvironmentType.API_DEVELOP;
-    //private static final EnvironmentType DEFAULT_API_ENV = EnvironmentType.BETA;
-    //private static final EnvironmentType DEFAULT_API_ENV = EnvironmentType.PRODUCTION;
+    //private static final EnvironmentType DEFAULT_API_ENV = EnvironmentType.API_BETA;
+    //private static final EnvironmentType DEFAULT_API_ENV = EnvironmentType.API_PRODUCTION;
 //------------------------------------------------------------------------------
 
     private static final EnvironmentType activeEnvironment = setupEnvironment();
+    private static final Logger LOG = Logger.getLogger(AbstractSpec.class.getName());
+    private static boolean setupIsDone = false;
+    public static URL adminWebUrl;
 
     @BeforeTest
     public void init() throws IOException {
+        if (!setupIsDone) {
+            setupEnvironment();
+            adminWebUrl = new URL(activeEnvironment.getProtocol() + activeEnvironment.getHost());
+            LOG.info("ENV URL: " + adminWebUrl);
+            setupIsDone = true;
+        }
         setupPropUI();
     }
 
