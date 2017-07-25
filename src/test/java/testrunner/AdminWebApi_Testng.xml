@@ -7,7 +7,7 @@
     <test name="CheckClients">
         <parameter name="browserName" value="chrome"></parameter>
         <classes>
-            <class name="specs.api.AdminWeb.CheckClients" />
+            <class name="specs.api.AdminWeb.CheckAuth" />
         </classes>
     </test>
 </suite>

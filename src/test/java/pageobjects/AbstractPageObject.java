@@ -145,5 +145,17 @@ public class AbstractPageObject implements PageObject {
         actions.click().perform();
     }
 
+    public boolean windowDidLoad (String title) {
+        for (int i = 0; i < 10; i++) {
+            for (String winHandle : driver.getWindowHandles()) {
+
+                if (driver.switchTo().window(winHandle).getTitle().equals(title)) {
+                    return true;
+                }
+            }
+            pause(1000L);
+        }
+        return false;
+    }
 
 }
