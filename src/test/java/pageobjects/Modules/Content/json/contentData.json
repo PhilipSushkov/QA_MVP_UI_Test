@@ -281,5 +281,23 @@
       "description":"Test Fast Fact 2",
       "comment": "Adding Fast Fact for Selenium module testing"
     }
+  ],
+  "job_posting": [
+    {
+      "do_assertions": true,
+      "region": "General",
+      "country": "Canada",
+      "location": "TestLocation",
+      "division": "General",
+      "job_title": "THIS IS A TEST POSTING DO NOT REMOVE",
+      "job_type": "General",
+      "job_function": "Testing",
+      "ref_no": "24601",
+      "manager_email": "test@q4websystems.com",
+      "opening_date": "01/01/2000",
+      "closing_date": "12/31/2999",
+      "summary": " This is a test",
+      "comment": "Adding Job Posting for Selenium module testing"
+    }
   ]
 }
