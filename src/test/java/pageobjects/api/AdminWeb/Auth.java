@@ -17,7 +17,7 @@ import static specs.ApiAbstractSpec.propAPI;
 public class Auth extends AbstractPageObject {
     private static By loginUsingGoogleBtn, loginWithGoogleBtn, googleEmailInp, googlePasswordInp;
     private static By googleIdNextBtn, googlePsNextBtn;
-    private static String sEmail, sPassword;
+    private static String sEmail, sPassword, sProductWeb;
     private URL adminWebUrl;
     private static final long DEFAULT_PAUSE = 2000;
 
@@ -27,6 +27,8 @@ public class Auth extends AbstractPageObject {
 
         sEmail = propAPI.getProperty("login");
         sPassword = propAPI.getProperty("password");
+
+        sProductWeb = propAPI.getProperty("productItemWeb");
 
         loginUsingGoogleBtn = By.xpath(propAPI.getProperty("btnLoginUsingGoogle"));
         loginWithGoogleBtn = By.xpath(propAPI.getProperty("btnLoginWithGoogle"));
@@ -73,6 +75,10 @@ public class Auth extends AbstractPageObject {
 
         return driver.getTitle();
 
+    }
+
+    public String getWebSection() throws InterruptedException {
+        return new ProductMenu(driver).changeMenuItem(sProductWeb);
     }
 
 }
