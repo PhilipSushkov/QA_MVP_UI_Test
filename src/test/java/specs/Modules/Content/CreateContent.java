@@ -30,13 +30,9 @@ public class CreateContent extends AbstractSpec {
 
     // DESIGN CONTENT-DEPENDENT TESTS TO CONTINUE WORKING IF NEW CONTENT IS ADDED \\
 
-<<<<<<< HEAD
     private static By addNewPresentationButton, addNewPressReleaseButton, addNewEventButton, siteAdminMenuButton, lookupListMenuItem, contentAdminEditItem;
-    private static By contentAdminMenuButton, glossaryListMenuItem, quickLinkListMenuItem, personMenuItem, fastFactMenuItem;
-=======
-    private static By addNewPresentationButton, addNewPressReleaseButton, addNewEventButton, siteAdminMenuButton, lookupListMenuItem;
-    private static By contentAdminMenuButton, glossaryListMenuItem, quickLinkListMenuItem, personMenuItem, fastFactMenuItem, jobPostingMenuItem;
->>>>>>> master
+    private static By contentAdminMenuButton, glossaryListMenuItem, quickLinkListMenuItem, personMenuItem, fastFactMenuItem, jobPostingMenuItem, faqMenuItem;
+
     private static LoginPage loginPage;
     private static Dashboard dashboard;
     private static CreatePresentation createPresentation;
@@ -48,6 +44,7 @@ public class CreateContent extends AbstractSpec {
     private static CreatePerson createPerson;
     private static CreateFastFact createFastFact;
     private static CreateJobPosting createJobPosting;
+    private static CreateFaq createFaq;
 
     private static String sPathToFile, sDataFileJson;
     private static JSONParser parser;
@@ -60,6 +57,7 @@ public class CreateContent extends AbstractSpec {
     private final String PERSON_DATA ="personData", FAST_FACT_DATA="fastFactData";
     private final String PERSON_NAME ="person", FAST_FACT_NAME = "fast_fact";
     private final String JOB_POSTING_DATA = "jobPostingData", JOB_POSTING_NAME = "job_posting";
+    private final String FAQ_DATA = "faqData", FAQ_NAME = "faq";
 
     @BeforeTest
     public void setUp() throws Exception {
@@ -75,6 +73,7 @@ public class CreateContent extends AbstractSpec {
         createPerson = new CreatePerson(driver);
         createFastFact = new CreateFastFact(driver);
         createJobPosting = new CreateJobPosting(driver);
+        createFaq = new CreateFaq(driver);
  
         addNewPresentationButton = By.xpath(propUICommon.getProperty("btn_AddPresentation"));
         addNewPressReleaseButton = By.xpath(propUICommon.getProperty("btn_AddPressRelease"));
@@ -88,6 +87,7 @@ public class CreateContent extends AbstractSpec {
         personMenuItem = By.xpath(propUIContentAdmin.getProperty("btnMenu_PersonList"));
         fastFactMenuItem = By.xpath(propUIContentAdmin.getProperty("btnMenu_FastFact"));
         jobPostingMenuItem = By.xpath(propUIContentAdmin.getProperty("btnMenu_JobPosting"));
+        faqMenuItem = By.xpath(propUIContentAdmin.getProperty("btnMenu_FaqList"));
 
         sPathToFile = System.getProperty("user.dir") + propUIModules.getProperty("dataPath_Content");
         sDataFileJson = propUIModules.getProperty("json_ContentData");
@@ -220,8 +220,23 @@ public class CreateContent extends AbstractSpec {
 
     @Test(dataProvider=JOB_POSTING_DATA, priority=16, enabled=true)
     public void removeJobPosting(JSONObject data) throws Exception {
-        Assert.assertEquals(createFastFact.setupAsDeletedFastFact(data.get("description").toString()), WorkflowState.DELETE_PENDING.state());
-        Assert.assertEquals(createFastFact.removeFastFact(data.get("description").toString()), WorkflowState.NEW_ITEM.state());
+        Assert.assertEquals(createJobPosting.setupAsDeletedJobPosting(data.get("description").toString()), WorkflowState.DELETE_PENDING.state());
+        Assert.assertEquals(createJobPosting.removeJobPosting(data.get("description").toString()), WorkflowState.NEW_ITEM.state());
+    }
+    
+    @Test(dataProvider=FAQ_DATA, priority=17, enabled=true)
+    public void createFaq(JSONObject data) throws Exception {
+        dashboard.openPageFromMenu(contentAdminMenuButton, faqMenuItem);
+        Assert.assertEquals(createFaq.saveFaq(data), WorkflowState.IN_PROGRESS.state());
+        Assert.assertTrue(createFaq.saveQuestion(data), "Questions did not save properly");
+        Assert.assertEquals(createFaq.saveAndSubmitFaq(data), WorkflowState.FOR_APPROVAL.state());
+        Assert.assertEquals(createFaq.publishFaq(data.get("name_EN").toString()), WorkflowState.LIVE.state());
+    }
+
+    @Test(dataProvider=FAQ_DATA, priority=18, enabled=true)
+    public void removeFaq(JSONObject data) throws Exception {
+        Assert.assertEquals(createFaq.setupAsDeletedFaq(data.get("name_EN").toString()), WorkflowState.DELETE_PENDING.state());
+        Assert.assertEquals(createFaq.removeFaq(data.get("name_EN").toString()), WorkflowState.NEW_ITEM.state());
     }
 
     private Object[][] genericProvider(String type) {
@@ -287,4 +302,7 @@ public class CreateContent extends AbstractSpec {
 
     @DataProvider
     public Object[][] jobPostingData() { return genericProvider(JOB_POSTING_NAME); }
+
+    @DataProvider
+    public Object[][] faqData() { return genericProvider(FAQ_NAME); }
 }

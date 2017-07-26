@@ -299,5 +299,23 @@
       "summary": " This is a test",
       "comment": "Adding Job Posting for Selenium module testing"
     }
+  ],
+  "faq": [
+    {
+      "do_assertions": true,
+      "name_EN": "Faq",
+      "active": true,
+      "question":"Whats my name",
+      "answer": "Rihanna",
+      "comment": "Submitting Faq"
+    },
+    {
+      "do_assertions": true,
+      "name_EN": "Audit",
+      "active": true,
+      "question":"What is my purpose?",
+      "answer": "To pass butter",
+      "comment": "Submitting Audit"
+    }
   ]
 }
