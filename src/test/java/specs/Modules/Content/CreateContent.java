@@ -31,7 +31,7 @@ public class CreateContent extends AbstractSpec {
     // DESIGN CONTENT-DEPENDENT TESTS TO CONTINUE WORKING IF NEW CONTENT IS ADDED \\
 
     private static By addNewPresentationButton, addNewPressReleaseButton, addNewEventButton, siteAdminMenuButton, lookupListMenuItem, contentAdminEditItem;
-    private static By contentAdminMenuButton, glossaryListMenuItem, quickLinkListMenuItem, personMenuItem, fastFactMenuItem;
+    private static By contentAdminMenuButton, glossaryListMenuItem, quickLinkListMenuItem, personMenuItem, fastFactMenuItem, stockSplitMenuItem;
     private static LoginPage loginPage;
     private static Dashboard dashboard;
     private static CreatePresentation createPresentation;
@@ -42,6 +42,7 @@ public class CreateContent extends AbstractSpec {
     private static CreateQuickLink createQuickLink;
     private static CreatePerson createPerson;
     private static CreateFastFact createFastFact;
+    private static CreateStockSplit createStockSplit;
 
     private static String sPathToFile, sDataFileJson;
     private static JSONParser parser;
@@ -53,6 +54,7 @@ public class CreateContent extends AbstractSpec {
     private final String LOOKUP_NAME = "lookup", GLOSSARY_NAME = "glossary", QUICKLINK_NAME = "quicklink";
     private final String PERSON_DATA ="personData", FAST_FACT_DATA="fastFactData";
     private final String PERSON_NAME ="person", FAST_FACT_NAME = "fast_fact";
+    private final String STOCK_SPLIT_DATA = "stockSplitData", STOCK_SPLIT_NAME = "stock_split";
 
     @BeforeTest
     public void setUp() throws Exception {
@@ -67,6 +69,7 @@ public class CreateContent extends AbstractSpec {
         createQuickLink = new CreateQuickLink(driver);
         createPerson = new CreatePerson(driver);
         createFastFact = new CreateFastFact(driver);
+        createStockSplit = new CreateStockSplit(driver);
  
         addNewPresentationButton = By.xpath(propUICommon.getProperty("btn_AddPresentation"));
         addNewPressReleaseButton = By.xpath(propUICommon.getProperty("btn_AddPressRelease"));
@@ -79,6 +82,7 @@ public class CreateContent extends AbstractSpec {
         quickLinkListMenuItem = By.xpath(propUIContentAdmin.getProperty("btnMenu_QuickLinks"));
         personMenuItem = By.xpath(propUIContentAdmin.getProperty("btnMenu_PersonList"));
         fastFactMenuItem = By.xpath(propUIContentAdmin.getProperty("btnMenu_FastFact"));
+        stockSplitMenuItem = By.xpath(propUIContentAdmin.getProperty("btnMenu_SplitList"));
 
         sPathToFile = System.getProperty("user.dir") + propUIModules.getProperty("dataPath_Content");
         sDataFileJson = propUIModules.getProperty("json_ContentData");
@@ -201,6 +205,20 @@ public class CreateContent extends AbstractSpec {
         Assert.assertEquals(createFastFact.removeFastFact(data.get("description").toString()), WorkflowState.NEW_ITEM.state());
     }
 
+    @Test(dataProvider=STOCK_SPLIT_DATA, priority=3, enabled=false)
+    public void createStockSplit(JSONObject data) throws Exception {
+        dashboard.openContentPageFromMenu(contentAdminMenuButton, stockSplitMenuItem, "Div Split List", siteAdminMenuButton, contentAdminEditItem);
+        Assert.assertEquals(createStockSplit.saveStockSplit(data), WorkflowState.IN_PROGRESS.state());
+        Assert.assertEquals(createStockSplit.saveAndSubmitStockSplit(data), WorkflowState.FOR_APPROVAL.state());
+        Assert.assertEquals(createStockSplit.publishStockSplit(data.get("description").toString()), WorkflowState.LIVE.state());
+    }
+
+    @Test(dataProvider=STOCK_SPLIT_DATA, priority=14, enabled=false)
+    public void removeStockSplit(JSONObject data) throws Exception {
+        Assert.assertEquals(createStockSplit.setupAsDeletedStockSplit(data.get("description").toString()), WorkflowState.DELETE_PENDING.state());
+        Assert.assertEquals(createStockSplit.removeStockSplit(data.get("description").toString()), WorkflowState.NEW_ITEM.state());
+    }
+
     private Object[][] genericProvider(String type) {
         try {
             JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFileJson));
@@ -264,5 +282,9 @@ public class CreateContent extends AbstractSpec {
     @DataProvider
     public Object[][] fastFactData() {
         return genericProvider(FAST_FACT_NAME);
+    }
+    @DataProvider
+    public Object[][] stockSplitData(){
+        return genericProvider(STOCK_SPLIT_NAME);
     }
 }

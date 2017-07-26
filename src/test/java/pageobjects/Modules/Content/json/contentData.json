@@ -270,6 +270,7 @@
       "comment": "Adding person for Selenium module testing"
     }
   ],
+
   "fast_fact": [
     {
       "do_assertions": true,

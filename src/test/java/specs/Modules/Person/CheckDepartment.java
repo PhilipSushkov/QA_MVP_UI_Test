@@ -38,6 +38,7 @@ public class CheckDepartment extends AbstractSpec {
 
     private final String MODULE_DATA="moduleData", MODULE_NAME="department", PAGE_DATA = "pageData", PAGE_NAME = "department_modules";
 
+    // There are two datasets, one for ensco site and one for facebook. Ensco datasets have ensco in the module title.
     // WEB-12819 (Fix for ShowCredentials property) must be fixed before completing the test.
 
     @BeforeTest

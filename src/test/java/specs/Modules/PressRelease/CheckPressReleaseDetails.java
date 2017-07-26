@@ -109,7 +109,7 @@ public class CheckPressReleaseDetails extends AbstractSpec{
     @Test(dataProvider=MODULE_DATA, priority=4, enabled=true)
     public void checkPressReleaseDetailsLive(JSONObject module) throws InterruptedException {
         // Creates the url for the pressReleaseDetails page that contains the Press Release we want
-        Assert.assertTrue(moduleBase.openModuleLiveForDetailsPages("press_release").contains("Press Release"));
+       Assert.assertTrue(moduleBase.openModuleLiveForDetailsPages("press_release").contains("Press Release"));
 
         try {
             JSONArray expectedResults = (JSONArray) module.get("expected");
