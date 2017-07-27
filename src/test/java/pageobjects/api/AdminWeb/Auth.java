@@ -1,9 +1,19 @@
 package pageobjects.api.AdminWeb;
 
+import net.lightbody.bmp.BrowserMobProxy;
+import net.lightbody.bmp.BrowserMobProxyServer;
+import net.lightbody.bmp.core.har.Har;
+import net.lightbody.bmp.core.har.HarEntry;
+import net.lightbody.bmp.core.har.HarRequest;
+import net.lightbody.bmp.core.har.HarResponse;
+import net.lightbody.bmp.proxy.CaptureType;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Proxy;
 import org.openqa.selenium.WebDriver;
 import pageobjects.AbstractPageObject;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import static io.github.seleniumquery.SeleniumQuery.$;
 
@@ -18,11 +28,13 @@ public class Auth extends AbstractPageObject {
     private static By googleIdNextBtn, googlePsNextBtn;
     private static String sEmail, sPassword, sProductWeb;
     private URL adminWebUrl;
+    private BrowserMobProxy proxy = new BrowserMobProxyServer();
     private static final long DEFAULT_PAUSE = 2000;
 
-    public Auth(WebDriver driver, URL adminWebUrl) {
+    public Auth(WebDriver driver, URL adminWebUrl, BrowserMobProxy selProxy) {
         super(driver);
         this.adminWebUrl = adminWebUrl;
+        this.proxy = selProxy;
 
         sEmail = propAPI.getProperty("login");
         sPassword = propAPI.getProperty("password");
@@ -105,6 +117,29 @@ public class Auth extends AbstractPageObject {
 
     public void getBrowserMobResponse() throws InterruptedException {
 
+        //proxy.newHar("Har-EuroNews");
+        proxy.newPage("Page-EuroNews");
+        proxy.enableHarCaptureTypes(CaptureType.REQUEST_HEADERS, CaptureType.REQUEST_CONTENT, CaptureType.RESPONSE_HEADERS, CaptureType.RESPONSE_CONTENT);
+
+        driver.get("https://admin-dev.q4inc.com/#/euroNews");
+        Har har = proxy.getHar();
+        Thread.sleep(DEFAULT_PAUSE*6);
+
+        for (HarEntry entry : har.getLog().getEntries()) {
+            HarRequest request = entry.getRequest();
+            HarResponse response = entry.getResponse();
+
+            System.out.println(request.getUrl() + " " + response.getStatus());
+        }
+
+        // Write HAR Data in a File
+        File harFile = new File("euroNews");
+        try {
+            har.writeTo(harFile);
+        } catch (IOException ex) {
+            System.out.println (ex.toString());
+            System.out.println("Could not find file: euroNews");
+        }
 
     }
 }
