@@ -4,12 +4,23 @@ import net.lightbody.bmp.BrowserMobProxy;
 import net.lightbody.bmp.BrowserMobProxyServer;
 import net.lightbody.bmp.core.har.*;
 import net.lightbody.bmp.proxy.CaptureType;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Proxy;
 import org.openqa.selenium.WebDriver;
 import pageobjects.AbstractPageObject;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
@@ -115,6 +126,10 @@ public class Auth extends AbstractPageObject {
     }
 
     public void getBrowserMobResponse() throws InterruptedException {
+        JSONParser parser;
+        HttpClient client;
+        String reguestUrl = null;
+        int i = 0;
 
         proxy.enableHarCaptureTypes(CaptureType.REQUEST_HEADERS, CaptureType.RESPONSE_HEADERS);
 
@@ -136,17 +151,46 @@ public class Auth extends AbstractPageObject {
             List<HarNameValuePair> harList = request.getHeaders();
 
             if (harList.get(0).getValue().equals("euroadmin-dev.q4api.com") && request.getMethod().equals("GET")) {
+                reguestUrl = request.getUrl();
                 System.out.println(request.getUrl() + " " + response.getStatus());
-            }
 
-            /*
-            if (request.getMethod().equals("GET")) {
+                parser = new JSONParser();
+                client = HttpClientBuilder.create().build();
+
+                HttpGet get = new HttpGet(reguestUrl);
                 List<HarNameValuePair> params = request.getHeaders();
                 for (HarNameValuePair param : params) {
-                    System.out.println(param.getName() + " = " + param.getValue());
+                    get.setHeader(param.getName(), param.getValue());
                 }
+
+                try {
+                    HttpResponse httpResponse = client.execute(get);
+                    HttpEntity httpEntity = httpResponse.getEntity();
+                    if (httpEntity != null) {
+                        String responseBody = EntityUtils.toString(httpEntity);
+                        JSONObject jsonResponse = (JSONObject) parser.parse(responseBody);
+
+                        FileWriter file = new FileWriter(i + "euroNewsData.json");
+                        i++;
+                        file.write(jsonResponse.toJSONString().replace("\\", ""));
+                        file.flush();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                /*
+                    if (request.getMethod().equals("GET")) {
+                    List<HarNameValuePair> params = request.getHeaders();
+                    for (HarNameValuePair param : params) {
+                        System.out.println(param.getName() + " = " + param.getValue());
+                    }
+                }
+                */
+
             }
-            */
 
         }
 
