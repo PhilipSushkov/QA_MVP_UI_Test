@@ -3,10 +3,9 @@ package pageobjects.api.AdminWeb;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import pageobjects.AbstractPageObject;
-import pageobjects.PageObject;
-import specs.ApiAbstractSpec;
 
 import java.net.URL;
+import static io.github.seleniumquery.SeleniumQuery.$;
 
 import static specs.ApiAbstractSpec.propAPI;
 
@@ -81,4 +80,31 @@ public class Auth extends AbstractPageObject {
         return new ProductMenu(driver).changeMenuItem(sProductWeb);
     }
 
+    public void getSecondPage() throws InterruptedException {
+        //driver.get("https://admin-dev.q4inc.com/#/euroNews");
+
+        // or use ("decorate") any previously existing driver
+        $.driver().use(driver);
+
+        // starts the driver (if not started already) and opens the URL
+        $.url("https://admin-dev.q4inc.com/#/euroNews");
+
+        // interact with the page
+        $(".search-input").val("4imprint"); // the keys are actually typed!
+        Thread.sleep(DEFAULT_PAUSE);
+        //$(":tr.ui-widget-content").click(); // simulates a real user click (not just the JS event)
+
+        // Besides the short syntax and the jQuery behavior you already know,
+        // other very useful function in seleniumQuery is .waitUntil(),
+        // handy for dealing with user-waiting actions (specially in Ajax enabled pages):
+        //$(".search-input").waitUntil().is(":visible");
+
+        //System.out.println(resultsText);
+        // should print something like: About 24,900,000 results (0.37 seconds)
+    }
+
+    public void getBrowserMobResponse() throws InterruptedException {
+
+
+    }
 }

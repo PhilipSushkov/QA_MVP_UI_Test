@@ -16,7 +16,7 @@
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-support</artifactId>
-            <version>2.53.0</version>
+            <version>3.4.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -27,7 +27,7 @@
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-remote-driver</artifactId>
-            <version>3.3.1</version>
+            <version>3.4.0</version>
         </dependency>
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
@@ -37,18 +37,18 @@
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-server</artifactId>
-            <version>2.53.0</version>
+            <version>3.4.0</version>
         </dependency>
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-firefox-driver</artifactId>
-            <version>2.53.0</version>
+            <version>3.4.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-chrome-driver</artifactId>
-            <version>2.53.0</version>
+            <version>3.4.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -191,6 +191,17 @@
             <groupId>com.github.scribejava</groupId>
             <artifactId>scribejava-core</artifactId>
             <version>4.1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.seleniumquery</groupId>
+            <artifactId>seleniumquery</artifactId>
+            <version>0.16.0</version>
+        </dependency>
+        <dependency>
+            <groupId>net.lightbody.bmp</groupId>
+            <artifactId>browsermob-core</artifactId>
+            <version>2.1.4</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
     <profiles>

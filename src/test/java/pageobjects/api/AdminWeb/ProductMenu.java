@@ -4,7 +4,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import pageobjects.AbstractPageObject;
-import pageobjects.EmailAdmin.SystemMessages.SystemMessageEdit;
 
 import static specs.ApiAbstractSpec.propAPI;
 
@@ -21,8 +20,8 @@ public class ProductMenu extends AbstractPageObject {
     public ProductMenu(WebDriver driver) {
         super(driver);
 
-        productDown = By.xpath(propAPI.getProperty("dropdown_Product"));
-        productWrapper = By.xpath(propAPI.getProperty("wrapper_Product"));
+        productDown = By.cssSelector(propAPI.getProperty("dropdown_Product"));
+        productWrapper = By.cssSelector(propAPI.getProperty("wrapper_Product"));
         productWebSpan = By.xpath(propAPI.getProperty("span_ProductWeb"));
         productDesktopSpan = By.xpath(propAPI.getProperty("span_ProductDesktop"));
         productSurveillanceSpan = By.xpath(propAPI.getProperty("span_ProductSurveillance"));
@@ -53,4 +52,11 @@ public class ProductMenu extends AbstractPageObject {
                 }
         return findElement(headerWeb).getCssValue("background-color").toString();
     }
+
+    public String changeMenuItemJS (String sMenuItem) throws InterruptedException {
+        waitForElement(productDown);
+
+        return findElement(headerWeb).getCssValue("background-color").toString();
+    }
+
 }

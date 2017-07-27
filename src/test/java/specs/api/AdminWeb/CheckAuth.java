@@ -29,6 +29,7 @@ public class CheckAuth extends ApiAbstractSpec {
                 "Actual page title doesn't match to expected. Probably not Q4 Admin.");
         Assert.assertEquals(new Auth(LocalDriverManager.getDriver(), adminWebUrl).getWebSection(), webBackgroundColor,
                 "Actual Background Colour doesn't match to expected. Probably not Q4 Admin Web section.");
+        new Auth(LocalDriverManager.getDriver(), adminWebUrl).getBrowserMobResponse();
     }
 
     @AfterTest
