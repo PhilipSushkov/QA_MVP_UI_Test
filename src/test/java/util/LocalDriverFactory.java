@@ -41,9 +41,9 @@ public class LocalDriverFactory {
                 capabilities.setCapability(CapabilityType.PROXY, selProxy);
                 capabilities.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
 
-                LoggingPreferences loggingprefs = new LoggingPreferences();
-                loggingprefs.enable(LogType.BROWSER, Level.ALL);
-                capabilities.setCapability(CapabilityType.LOGGING_PREFS, loggingprefs);
+                //LoggingPreferences loggingprefs = new LoggingPreferences();
+                //loggingprefs.enable(LogType.BROWSER, Level.ALL);
+                //capabilities.setCapability(CapabilityType.LOGGING_PREFS, loggingprefs);
 
                 driver = new ChromeDriver(capabilities);
 

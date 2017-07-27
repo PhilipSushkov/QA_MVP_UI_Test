@@ -2,10 +2,7 @@ package pageobjects.api.AdminWeb;
 
 import net.lightbody.bmp.BrowserMobProxy;
 import net.lightbody.bmp.BrowserMobProxyServer;
-import net.lightbody.bmp.core.har.Har;
-import net.lightbody.bmp.core.har.HarEntry;
-import net.lightbody.bmp.core.har.HarRequest;
-import net.lightbody.bmp.core.har.HarResponse;
+import net.lightbody.bmp.core.har.*;
 import net.lightbody.bmp.proxy.CaptureType;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Proxy;
@@ -15,6 +12,8 @@ import pageobjects.AbstractPageObject;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
+
 import static io.github.seleniumquery.SeleniumQuery.$;
 
 import static specs.ApiAbstractSpec.propAPI;
@@ -117,21 +116,41 @@ public class Auth extends AbstractPageObject {
 
     public void getBrowserMobResponse() throws InterruptedException {
 
-        //proxy.newHar("Har-EuroNews");
-        proxy.newPage("Page-EuroNews");
-        proxy.enableHarCaptureTypes(CaptureType.REQUEST_HEADERS, CaptureType.REQUEST_CONTENT, CaptureType.RESPONSE_HEADERS, CaptureType.RESPONSE_CONTENT);
+        proxy.enableHarCaptureTypes(CaptureType.REQUEST_HEADERS, CaptureType.RESPONSE_HEADERS);
+
+        proxy.newHar("admin-dev.q4inc.com/#/euroNews");
+        //proxy.newPage("Page-EuroNews");
 
         driver.get("https://admin-dev.q4inc.com/#/euroNews");
+        //driver.get("http://www.seleniumeasy.com/");
+        //driver.navigate().refresh();
+        Thread.sleep(DEFAULT_PAUSE);
+
         Har har = proxy.getHar();
-        Thread.sleep(DEFAULT_PAUSE*6);
+        Thread.sleep(DEFAULT_PAUSE);
 
         for (HarEntry entry : har.getLog().getEntries()) {
             HarRequest request = entry.getRequest();
             HarResponse response = entry.getResponse();
 
-            System.out.println(request.getUrl() + " " + response.getStatus());
+            List<HarNameValuePair> harList = request.getHeaders();
+
+            if (harList.get(0).getValue().equals("euroadmin-dev.q4api.com") && request.getMethod().equals("GET")) {
+                System.out.println(request.getUrl() + " " + response.getStatus());
+            }
+
+            /*
+            if (request.getMethod().equals("GET")) {
+                List<HarNameValuePair> params = request.getHeaders();
+                for (HarNameValuePair param : params) {
+                    System.out.println(param.getName() + " = " + param.getValue());
+                }
+            }
+            */
+
         }
 
+        /*
         // Write HAR Data in a File
         File harFile = new File("euroNews");
         try {
@@ -140,6 +159,7 @@ public class Auth extends AbstractPageObject {
             System.out.println (ex.toString());
             System.out.println("Could not find file: euroNews");
         }
+        */
 
     }
 }
