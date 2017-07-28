@@ -8,14 +8,12 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Proxy;
 import org.openqa.selenium.WebDriver;
 import pageobjects.AbstractPageObject;
 
@@ -128,28 +126,32 @@ public class Auth extends AbstractPageObject {
     public void getBrowserMobResponse() throws InterruptedException {
         JSONParser parser;
         HttpClient client;
-        String reguestUrl = null;
+        String reguestUrl;
         int i = 0;
 
+        //  enable more detailed HAR capture, if desired (see CaptureType for the complete list)
         proxy.enableHarCaptureTypes(CaptureType.REQUEST_HEADERS, CaptureType.RESPONSE_HEADERS);
 
+        // create a new HAR with the label "admin-dev.q4inc.com/#/euroNews"
         proxy.newHar("admin-dev.q4inc.com/#/euroNews");
         //proxy.newPage("Page-EuroNews");
 
+        // open https://admin-dev.q4inc.com/#/euroNews
         driver.get("https://admin-dev.q4inc.com/#/euroNews");
-        //driver.get("http://www.seleniumeasy.com/");
-        //driver.navigate().refresh();
         Thread.sleep(DEFAULT_PAUSE);
 
+        // get the HAR data
         Har har = proxy.getHar();
         Thread.sleep(DEFAULT_PAUSE);
 
+        // Get Request and Response headers data
         for (HarEntry entry : har.getLog().getEntries()) {
             HarRequest request = entry.getRequest();
             HarResponse response = entry.getResponse();
 
             List<HarNameValuePair> harList = request.getHeaders();
 
+            // Analyze request for euroadmin-dev.q4api.com domain only and GET methods only
             if (harList.get(0).getValue().equals("euroadmin-dev.q4api.com") && request.getMethod().equals("GET")) {
                 reguestUrl = request.getUrl();
                 System.out.println(request.getUrl() + " " + response.getStatus());
@@ -157,12 +159,14 @@ public class Auth extends AbstractPageObject {
                 parser = new JSONParser();
                 client = HttpClientBuilder.create().build();
 
+                // Send Http Api request for chosen upper URL
                 HttpGet get = new HttpGet(reguestUrl);
                 List<HarNameValuePair> params = request.getHeaders();
                 for (HarNameValuePair param : params) {
                     get.setHeader(param.getName(), param.getValue());
                 }
 
+                // Analyze Http Response and extract JSON-data
                 try {
                     HttpResponse httpResponse = client.execute(get);
                     HttpEntity httpEntity = httpResponse.getEntity();
@@ -170,7 +174,8 @@ public class Auth extends AbstractPageObject {
                         String responseBody = EntityUtils.toString(httpEntity);
                         JSONObject jsonResponse = (JSONObject) parser.parse(responseBody);
 
-                        FileWriter file = new FileWriter(i + "euroNewsData.json");
+                        // Write JSON-data to the file
+                        FileWriter file = new FileWriter(i + "_euroNewsData.json");
                         i++;
                         file.write(jsonResponse.toJSONString().replace("\\", ""));
                         file.flush();
@@ -180,15 +185,6 @@ public class Auth extends AbstractPageObject {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-
-                /*
-                    if (request.getMethod().equals("GET")) {
-                    List<HarNameValuePair> params = request.getHeaders();
-                    for (HarNameValuePair param : params) {
-                        System.out.println(param.getName() + " = " + param.getValue());
-                    }
-                }
-                */
 
             }
 
