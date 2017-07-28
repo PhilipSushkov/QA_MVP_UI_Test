@@ -75,7 +75,7 @@ public class CheckHtml extends AbstractSpec {
     @Test(dataProvider=MODULE_DATA, priority=2, enabled=true)
     public void createHtmlModule(JSONObject module) throws InterruptedException {
         String sModuleNameSet = module.get("module_title").toString();
-        Assert.assertEquals(moduleBase.saveModule(module, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+sModuleNameSet+" Module didn't save properly");
+        Assert.assertEquals(html.saveModule(module, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+sModuleNameSet+" Module didn't save properly");
         Assert.assertEquals(html.saveAndSubmitModule(module, sModuleNameSet), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New "+sModuleNameSet+" Module properly");
         Assert.assertEquals(moduleBase.publishModule(sModuleNameSet), WorkflowState.LIVE.state(), "Couldn't publish New "+sModuleNameSet+" Module properly");
     }

@@ -7,6 +7,7 @@
       "source_file": "~/Modules/IRPortal.Modules.Core/FastFact.ascx",
       "region_name": "Content Pane",
       "module_path": "//span[contains(@class, 'ContentPaneDiv1')]",
+      "path": "IRPortal.Data.EntityClasses.FastFactModuleInstanceEntity",
       "properties": [
         "CustomCss;FAST_FACT_CUSTOM_CSS",
         "DefaultCssOverride;false"
@@ -24,6 +25,7 @@
       "source_file": "~/Modules/IRPortal.Modules.Core/FastFact.ascx",
       "region_name": "Content Pane",
       "module_path": "//span[contains(@class, 'ContentPaneDiv2')]",
+      "path": "IRPortal.Data.EntityClasses.FastFactModuleInstanceEntity",
       "properties": [
         "CustomCss;FAST_FACT_CUSTOM_CSS",
         "DefaultCssOverride;true",

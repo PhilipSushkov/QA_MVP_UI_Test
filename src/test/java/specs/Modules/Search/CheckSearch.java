@@ -33,7 +33,7 @@ public class CheckSearch extends AbstractSpec{
     The SearchButtonImage property also breaks the search button for 3.9.11 and 4.2.2, related ticket can be found here: WEB-12825
     This issue is due to the fact custom sites will use custom JS along with custom search button.
 
-    NOTE: THIS TEST DEPENDS ON PRE-EXISTING CONTENT ON THE TESTING SITE - USE CreateContent.java TO SET UP CONTENT
+    NOTE: THIS TEST DEPENDS ON PRE-EXISTING PRESS RELEASE CONTENT ON THE TESTING SITE - USE CreateContent.java TO SET UP CONTENT
 
      */
 
