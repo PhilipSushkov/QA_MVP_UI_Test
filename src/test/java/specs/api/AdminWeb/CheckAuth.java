@@ -17,7 +17,6 @@ public class CheckAuth extends ApiAbstractSpec {
 
     @BeforeTest
     public void setUp() throws InterruptedException {
-
     }
 
     @Test
