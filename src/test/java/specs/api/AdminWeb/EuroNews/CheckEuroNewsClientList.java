@@ -1,6 +1,5 @@
 package specs.api.AdminWeb.EuroNews;
 
-import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
@@ -8,23 +7,23 @@ import org.testng.annotations.Test;
 import pageobjects.api.AdminWeb.Auth;
 import pageobjects.api.AdminWeb.LeftMainMenu;
 import specs.ApiAbstractSpec;
-import util.LocalDriverManager;
 
 /**
  * Created by philipsushkov on 2017-07-31.
  */
 
-public class EuroNewsClientList extends ApiAbstractSpec {
+public class CheckEuroNewsClientList extends ApiAbstractSpec {
     private static Auth auth;
     private static LeftMainMenu leftMainMenu;
-    private static WebDriver driver;
+    private static final String EURO_NEWS = "Euro News";
+    private static String sTitle;
 
     @BeforeTest
     public void setUp() throws InterruptedException {
-        driver = LocalDriverManager.getDriver();
-        auth = new Auth(driver, adminWebUrl, LocalDriverManager.getProxy());
+
+        auth = new Auth(driver);
         leftMainMenu = new LeftMainMenu(driver);
-;
+
         // Authorization
         auth.getGoogleAuthPage();
 
@@ -32,12 +31,13 @@ public class EuroNewsClientList extends ApiAbstractSpec {
         auth.getWebSection();
 
         // Open Euro News Client List page in Web Section
-        leftMainMenu.getEuroNewsClientListPage();
+        sTitle = leftMainMenu.getEuroNewsClientListPage(EURO_NEWS);
+
     }
 
     @Test
     public void checkEuroNewsClient() throws InterruptedException {
-
+        System.out.println(sTitle);
     }
 
     @AfterTest

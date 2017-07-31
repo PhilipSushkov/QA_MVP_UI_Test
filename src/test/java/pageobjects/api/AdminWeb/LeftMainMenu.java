@@ -12,14 +12,27 @@ import static specs.ApiAbstractSpec.propAPI;
  */
 
 public class LeftMainMenu extends AbstractPageObject {
+    private static By togglerBtn, titleH1;
     private static final long DEFAULT_PAUSE = 1000;
 
     public LeftMainMenu(WebDriver driver) {
         super(driver);
+
+        togglerBtn = By.cssSelector(propAPI.getProperty("toggler_button"));
+        titleH1 = By.xpath(propAPI.getProperty("h1_title"));
     }
 
-    public String getEuroNewsClientListPage() {
+    public String getEuroNewsClientListPage(String sMenuItem) {
+        waitForElement(togglerBtn);
+        findElement(togglerBtn).click();
 
-        return "";
+        By menuItem = By.xpath("//a[(@title='"+sMenuItem+"')]");
+        waitForElement(menuItem);
+        findElement(menuItem).click();
+
+        waitForElement(titleH1);
+        findElement(titleH1).click();
+
+        return findElement(titleH1).getText().trim();
     }
 }

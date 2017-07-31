@@ -21,7 +21,7 @@ public class WebDriverListener implements IInvokedMethodListener {
             WebDriver driver = null;
             String browserName = method.getTestMethod().getXmlTest().getLocalParameters().get("browserName");
 
-            proxy.start(9090);
+            proxy.start(0);
 
             try {
                 driver = LocalDriverFactory.createInstance(browserName, proxy);

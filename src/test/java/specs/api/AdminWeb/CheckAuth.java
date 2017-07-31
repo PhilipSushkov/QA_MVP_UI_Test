@@ -4,6 +4,7 @@ import org.testng.Assert;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
+import pageobjects.LoginPage.LoginPage;
 import pageobjects.api.AdminWeb.Auth;
 import specs.ApiAbstractSpec;
 import util.LocalDriverManager;
@@ -14,6 +15,7 @@ import util.LocalDriverManager;
  */
 
 public class CheckAuth extends ApiAbstractSpec {
+    private static Auth auth;
 
     @BeforeTest
     public void setUp() throws InterruptedException {
@@ -24,11 +26,9 @@ public class CheckAuth extends ApiAbstractSpec {
         final String expectedTitle = "Q4 Admin";
         final String webBackgroundColor = "rgba(26, 188, 156, 1)";
 
-        Assert.assertEquals(new Auth(LocalDriverManager.getDriver(), adminWebUrl, LocalDriverManager.getProxy()).getGoogleAuthPage(), expectedTitle,
-                "Actual page title doesn't match to expected. Probably not Q4 Admin.");
-        Assert.assertEquals(new Auth(LocalDriverManager.getDriver(), adminWebUrl, LocalDriverManager.getProxy()).getWebSection(), webBackgroundColor,
-                "Actual Background Colour doesn't match to expected. Probably not Q4 Admin Web section.");
-        new Auth(LocalDriverManager.getDriver(), adminWebUrl, LocalDriverManager.getProxy()).getBrowserMobResponse();
+        //Assert.assertEquals(new Auth(LocalDriverManager.getDriver(), adminWebUrl, LocalDriverManager.getProxy()).getGoogleAuthPage(), expectedTitle, "Actual page title doesn't match to expected. Probably not Q4 Admin.");
+        //Assert.assertEquals(new Auth(LocalDriverManager.getDriver(), adminWebUrl, LocalDriverManager.getProxy()).getWebSection(), webBackgroundColor, "Actual Background Colour doesn't match to expected. Probably not Q4 Admin Web section.");
+        //new Auth(LocalDriverManager.getDriver(), adminWebUrl, LocalDriverManager.getProxy()).getBrowserMobResponse();
     }
 
     @AfterTest

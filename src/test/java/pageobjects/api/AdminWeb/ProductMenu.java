@@ -38,18 +38,26 @@ public class ProductMenu extends AbstractPageObject {
 
         //Thread.sleep(DEFAULT_PAUSE);
 
+        // Choose the product
         waitForElement(productWrapper);
         WebElement elProductWrapper = findElement(productWrapper);
+        elProductWrapper.findElement(By.xpath("//span[contains(text(), '"+sMenuItem+"')]")).click();
 
+        /*
+        // Choose the product
         if (sMenuItem.equals(sWeb)) {
             elProductWrapper.findElement(productWebSpan).click();
-        } else
-            if (sMenuItem.equals(sDesktop)) {
-                elProductWrapper.findElement(productDesktopSpan).click();
-            } else
-                if (sMenuItem.equals(sSurveillance)) {
-                    elProductWrapper.findElement(productSurveillanceSpan).click();
-                }
+        }
+
+        if (sMenuItem.equals(sDesktop)) {
+            elProductWrapper.findElement(productDesktopSpan).click();
+        }
+
+        if (sMenuItem.equals(sSurveillance)) {
+            elProductWrapper.findElement(productSurveillanceSpan).click();
+        }
+        */
+
         return findElement(headerWeb).getCssValue("background-color").toString();
     }
 

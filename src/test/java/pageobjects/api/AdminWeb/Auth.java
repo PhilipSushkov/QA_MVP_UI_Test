@@ -33,14 +33,10 @@ public class Auth extends AbstractPageObject {
     private static By loginUsingGoogleBtn, loginWithGoogleBtn, googleEmailInp, googlePasswordInp;
     private static By googleIdNextBtn, googlePsNextBtn;
     private static String sEmail, sPassword, sProductWeb;
-    private URL adminWebUrl;
-    private BrowserMobProxy proxy = new BrowserMobProxyServer();
     private static final long DEFAULT_PAUSE = 2000;
 
-    public Auth(WebDriver driver, URL adminWebUrl, BrowserMobProxy selProxy) {
+    public Auth(WebDriver driver) {
         super(driver);
-        this.adminWebUrl = adminWebUrl;
-        this.proxy = selProxy;
 
         sEmail = propAPI.getProperty("login");
         sPassword = propAPI.getProperty("password");
@@ -57,8 +53,6 @@ public class Auth extends AbstractPageObject {
 
     public String getGoogleAuthPage() throws InterruptedException {
 
-        String sAdminWebUrl = adminWebUrl.toString();
-        driver.get(sAdminWebUrl);
         Thread.sleep(DEFAULT_PAUSE);
 
         String winHandleBefore = driver.getWindowHandle();
@@ -99,6 +93,7 @@ public class Auth extends AbstractPageObject {
     }
 
     public void getBrowserMobResponse() throws InterruptedException {
+        /*
         JSONParser parser;
         HttpClient client;
         String reguestUrl;
@@ -164,6 +159,7 @@ public class Auth extends AbstractPageObject {
             }
 
         }
+        */
 
         /*
         // Write HAR Data in a File
@@ -177,4 +173,5 @@ public class Auth extends AbstractPageObject {
         */
 
     }
+
 }
