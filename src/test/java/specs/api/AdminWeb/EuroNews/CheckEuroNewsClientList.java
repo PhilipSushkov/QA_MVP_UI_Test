@@ -18,7 +18,6 @@ public class CheckEuroNewsClientList extends ApiAbstractSpec {
     private static LeftMainMenu leftMainMenu;
     private static EuroNews euroNews;
     private static final String EURO_NEWS = "Euro News";
-    private static String sTitle;
 
     @BeforeTest
     public void setUp() throws InterruptedException {
@@ -33,7 +32,7 @@ public class CheckEuroNewsClientList extends ApiAbstractSpec {
         auth.getWebSection();
 
         // Open Euro News Client List page in Web Section
-        sTitle = leftMainMenu.getEuroNewsClientListPage(EURO_NEWS);
+        leftMainMenu.getEuroNewsClientListPage(EURO_NEWS);
     }
 
     @Test
@@ -43,6 +42,10 @@ public class CheckEuroNewsClientList extends ApiAbstractSpec {
         Assert.assertNotNull(euroNews.getUrl());
         Assert.assertEquals(euroNews.getTitle(), expectedTitle, "Actual Euro News Client List page Title doesn't match to expected");
         Assert.assertNotNull(euroNews.getSearchInput(), "Search field doesn't exist");
+        Assert.assertNotNull(euroNews.getClientsDataTable(), "Clients Data table doesn't exist");
+        Assert.assertNotNull(euroNews.getPage4Href(), "Page #4 link doesn't exist");
+        Assert.assertNotNull(euroNews.getWidgetContent(), "Widget Content doesn't exist");
+        Assert.assertNotNull(euroNews.getCellDataSpan(), "Cell Data spans don't exist");
     }
 
     @AfterTest

@@ -80,7 +80,12 @@ public abstract class ApiAbstractSpec extends util.Functions {
         options.addArguments("no-sandbox");
         capabilities.setCapability(ChromeOptions.CAPABILITY, options);
 
-        proxy.start(8080);
+        if (proxy.isStarted()) {
+            proxy.stop();
+        }
+
+        proxy.start();
+
         Proxy selProxy = ClientUtil.createSeleniumProxy(proxy);
         capabilities.setCapability(CapabilityType.PROXY, selProxy);
         capabilities.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
