@@ -30,9 +30,9 @@ public class CreateContent extends AbstractSpec {
 
     // DESIGN CONTENT-DEPENDENT TESTS TO CONTINUE WORKING IF NEW CONTENT IS ADDED \\
 
-    private static By addNewPresentationButton, addNewPressReleaseButton, addNewEventButton, siteAdminMenuButton, lookupListMenuItem, contentAdminEditItem;
-    private static By contentAdminMenuButton, glossaryListMenuItem, quickLinkListMenuItem, personMenuItem, fastFactMenuItem, stockSplitMenuItem;
-    private static By contentAdminMenuButton, glossaryListMenuItem, quickLinkListMenuItem, personMenuItem, fastFactMenuItem, jobPostingMenuItem, faqMenuItem;
+    private static By addNewPresentationButton, addNewPressReleaseButton, addNewEventButton, siteAdminMenuButton, lookupListMenuItem;
+    private static By stockSplitMenuItem, contentAdminEditItem, faqMenuItem;
+    private static By contentAdminMenuButton, glossaryListMenuItem, quickLinkListMenuItem, personMenuItem, fastFactMenuItem, jobPostingMenuItem;
 
     private static LoginPage loginPage;
     private static Dashboard dashboard;
