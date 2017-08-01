@@ -1,5 +1,9 @@
 package pageobjects.api.AdminWeb.EuroNews;
 
+import net.lightbody.bmp.BrowserMobProxy;
+import net.lightbody.bmp.BrowserMobProxyServer;
+import net.lightbody.bmp.core.har.Har;
+import net.lightbody.bmp.proxy.CaptureType;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
@@ -13,9 +17,13 @@ import static specs.ApiAbstractSpec.propAPI;
 
 public class EuroNews extends AbstractPageObject {
     private static By moduleTitle, searchInp, clientsDataTable, page4Href, widgetContent, cellDataSpan;
+    private static BrowserMobProxy proxyEuroNews = new BrowserMobProxyServer();
+    private static Har har;
+    private static final long DEFAULT_PAUSE = 2000;
 
-    public EuroNews(WebDriver driver) {
+    public EuroNews(WebDriver driver, BrowserMobProxy proxy) {
         super(driver);
+        this.proxyEuroNews = proxy;
 
         moduleTitle = By.xpath(propAPI.getProperty("h1_title"));
         searchInp = By.cssSelector(propAPI.getProperty("inp_Search"));
@@ -23,6 +31,9 @@ public class EuroNews extends AbstractPageObject {
         page4Href = By.xpath(propAPI.getProperty("href_Page4"));
         widgetContent = By.xpath(propAPI.getProperty("content_Widget"));
         cellDataSpan = By.xpath(propAPI.getProperty("span_CellData"));
+
+        proxyEuroNews.enableHarCaptureTypes(CaptureType.REQUEST_HEADERS, CaptureType.RESPONSE_HEADERS);
+        proxyEuroNews.newHar("euroNews");
     }
 
 
@@ -99,6 +110,12 @@ public class EuroNews extends AbstractPageObject {
         }
 
         return element;
+    }
+
+    public Har getHar() {
+        // get the HAR data
+        har = proxyEuroNews.getHar();
+        return har;
     }
 
 }

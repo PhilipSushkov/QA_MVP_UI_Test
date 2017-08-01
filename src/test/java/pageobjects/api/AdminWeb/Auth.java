@@ -14,6 +14,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import pageobjects.AbstractPageObject;
 
@@ -31,7 +32,7 @@ import static specs.ApiAbstractSpec.propAPI;
 
 public class Auth extends AbstractPageObject {
     private static By loginUsingGoogleBtn, loginWithGoogleBtn, googleEmailInp, googlePasswordInp;
-    private static By googleIdNextBtn, googlePsNextBtn;
+    private static By googleIdNextBtn, googlePsNextBtn, productDown;
     private static String sEmail, sPassword, sProductWeb;
     private static final long DEFAULT_PAUSE = 2000;
 
@@ -49,6 +50,7 @@ public class Auth extends AbstractPageObject {
         googlePasswordInp = By.xpath(propAPI.getProperty("inpGooglePassword"));
         googleIdNextBtn = By.xpath(propAPI.getProperty("btnGoogleIdNext"));
         googlePsNextBtn = By.xpath(propAPI.getProperty("btnGooglePsNext"));
+        productDown = By.cssSelector(propAPI.getProperty("dropdown_Product"));
     }
 
     public String getGoogleAuthPage() throws InterruptedException {
@@ -62,15 +64,24 @@ public class Auth extends AbstractPageObject {
 
         waitForElement(loginWithGoogleBtn);
         findElement(loginWithGoogleBtn).click();
+        Thread.sleep(DEFAULT_PAUSE);
 
         // Switch to new window opened
         windowDidLoad("Sign in - Google Accounts");
         for(String winHandle : driver.getWindowHandles()){
             driver.switchTo().window(winHandle);
         }
+        Thread.sleep(DEFAULT_PAUSE);
 
         // Perform the actions on new window
-        waitForElement(googleEmailInp);
+        try {
+            waitForElement(googleEmailInp);
+        } catch (TimeoutException e) {
+            driver.navigate().refresh();
+            Thread.sleep(DEFAULT_PAUSE);
+            waitForElement(googleEmailInp);
+        }
+
         findElement(googleEmailInp).sendKeys(sEmail);
         findElement(googleIdNextBtn).click();
 
@@ -83,6 +94,14 @@ public class Auth extends AbstractPageObject {
         Thread.sleep(DEFAULT_PAUSE);
 
         driver.switchTo().window(winHandleBefore);
+
+        try {
+            waitForElement(productDown);
+        } catch (TimeoutException e) {
+            driver.navigate().refresh();
+            Thread.sleep(DEFAULT_PAUSE);
+            waitForElement(productDown);
+        }
 
         return driver.getTitle();
 

@@ -1,0 +1,13 @@
+{
+  "requests": [
+    {
+      "do_assertions": true,
+      "domain": "euroadmin-dev.q4api.com",
+      "method": "GET"
+    },
+    {
+      "do_assertions": false,
+      "domain": "euroadmin-dev.q4api.com",
+      "method": "GET"
+    }]
+}

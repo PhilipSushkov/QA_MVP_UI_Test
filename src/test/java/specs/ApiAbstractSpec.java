@@ -47,7 +47,7 @@ public abstract class ApiAbstractSpec extends util.Functions {
     public static URL adminWebUrl;
     public static final long DEFAULT_TIMEOUT = 5L;
     protected WebDriver driver;
-    protected BrowserMobProxy proxy = new BrowserMobProxyServer();
+    protected static BrowserMobProxy proxy = new BrowserMobProxyServer();
 
     @BeforeTest
     public void init(final ITestContext testContext) throws Exception {
@@ -85,6 +85,7 @@ public abstract class ApiAbstractSpec extends util.Functions {
         }
 
         proxy.start();
+        System.out.println("Proxy port: "+ proxy.getPort());
 
         Proxy selProxy = ClientUtil.createSeleniumProxy(proxy);
         capabilities.setCapability(CapabilityType.PROXY, selProxy);
@@ -97,7 +98,7 @@ public abstract class ApiAbstractSpec extends util.Functions {
         driver = new ChromeDriver(capabilities);
 
         driver.manage().timeouts().implicitlyWait(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
-        driver.manage().timeouts().pageLoadTimeout(45, TimeUnit.SECONDS); //Increased to 20 to perhaps reduce timeouts?
+        driver.manage().timeouts().pageLoadTimeout(20, TimeUnit.SECONDS); //Increased to 20 to perhaps reduce timeouts?
 
         driver.get(adminWebUrl.toString());
     }
