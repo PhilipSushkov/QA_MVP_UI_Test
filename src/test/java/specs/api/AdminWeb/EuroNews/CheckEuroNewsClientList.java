@@ -32,7 +32,7 @@ public class CheckEuroNewsClientList extends ApiAbstractSpec {
     private static final String EURO_NEWS = "Euro News";
     private static String sPathToFile, sDataFileJson;
     private static JSONParser parser;
-    private final String DATA="getData", REQUESTS="requests";
+    private final String DATA="getDataJsonContent", REQUESTS="requests", JSON_CONTENT = "application/json";
 
     @BeforeTest
     public void setUp() throws InterruptedException {
@@ -82,7 +82,7 @@ public class CheckEuroNewsClientList extends ApiAbstractSpec {
     }
 
     @DataProvider
-    public Object[][] getData() {
+    public Object[][] getDataJsonContent() {
 
         try {
             JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFileJson));
@@ -91,7 +91,7 @@ public class CheckEuroNewsClientList extends ApiAbstractSpec {
 
             for (int i = 0; i < jsonArray.size(); i++) {
                 JSONObject pageObj = (JSONObject) jsonArray.get(i);
-                if (Boolean.parseBoolean(pageObj.get("do_assertions").toString())) {
+                if (Boolean.parseBoolean(pageObj.get("do_assertions").toString()) && pageObj.get("content_type").toString().equals(JSON_CONTENT)) {
                     zoom.add(jsonArray.get(i));
                 }
             }

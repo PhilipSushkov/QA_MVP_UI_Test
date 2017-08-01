@@ -1,11 +1,11 @@
 {
   "requests": [
     {
-      "do_assertions": false,
-      "api_request_name": "euro_news_page",
-      "domain": "admin-dev.q4inc.com",
+      "do_assertions": true,
+      "api_request_name": "user_auth",
+      "domain": "cdn.auth0.com",
       "method": "GET",
-      "url": "https://admin-dev.q4inc.com/",
+      "url": "https://cdn.auth0.com/client/",
       "content_type": "text/html"
     },
     {

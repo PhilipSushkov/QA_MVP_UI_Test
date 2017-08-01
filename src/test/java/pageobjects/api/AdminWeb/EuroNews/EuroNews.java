@@ -5,6 +5,7 @@ import net.lightbody.bmp.BrowserMobProxy;
 import net.lightbody.bmp.BrowserMobProxyServer;
 import net.lightbody.bmp.core.har.Har;
 import net.lightbody.bmp.proxy.CaptureType;
+import org.apache.bcel.generic.RETURN;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.openqa.selenium.*;
@@ -61,12 +62,16 @@ public class EuroNews extends AbstractPageObject {
         return getText(moduleTitle);
     }
 
-    public WebElement getSearchInput() {
+    public WebElement getSearchInput() throws InterruptedException {
         WebElement element = null;
 
         try {
             waitForElement(searchInp);
             element = findElement(searchInp);
+            //JavascriptExecutor js = (JavascriptExecutor) driver;
+            //js.executeScript("arguments[0].setAttribute(arguments[1], arguments[2]);", element, "value", "4imprint");
+            //element.sendKeys(Keys.RETURN);
+
         } catch (ElementNotFoundException e) {
         } catch (ElementNotVisibleException e) {
         } catch (TimeoutException e) {
@@ -176,7 +181,11 @@ public class EuroNews extends AbstractPageObject {
 
                 // Analyze Http Response and extract JSON-data
                 try {
+                    long start = System.currentTimeMillis();
                     HttpResponse httpResponse = client.execute(get);
+                    long end = System.currentTimeMillis();
+                    System.out.println("Response time = " + (end-start) + " millis");
+
                     HttpEntity httpEntity = httpResponse.getEntity();
                     if (httpEntity != null) {
                         String responseBody = EntityUtils.toString(httpEntity);
@@ -186,7 +195,6 @@ public class EuroNews extends AbstractPageObject {
                         FileWriter file = new FileWriter(sApiRequestName+".json");
                         file.write(jsonResponse.toJSONString().replace("\\", ""));
                         file.flush();
-
                     }
                 } catch (ParseException e) {
                     e.printStackTrace();
