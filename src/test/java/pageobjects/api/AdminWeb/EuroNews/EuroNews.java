@@ -12,10 +12,7 @@ import pageobjects.AbstractPageObject;
 
 import static specs.ApiAbstractSpec.propAPI;
 
-import net.lightbody.bmp.BrowserMobProxy;
-import net.lightbody.bmp.BrowserMobProxyServer;
 import net.lightbody.bmp.core.har.*;
-import net.lightbody.bmp.proxy.CaptureType;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -150,7 +147,7 @@ public class EuroNews extends AbstractPageObject {
         String sContentType = data.get("content_type").toString();
         String sApiRequestName =data.get("api_request_name").toString();
         String sUrlData = getUrl(data);
-        System.out.println(sDomain + ": " + sMethod);
+        //System.out.println(sDomain + ": " + sMethod);
 
         for (HarEntry entry : har.getLog().getEntries()) {
             HarRequest request = entry.getRequest();
@@ -186,8 +183,7 @@ public class EuroNews extends AbstractPageObject {
                         jsonResponse = (JSONObject) parser.parse(responseBody);
 
                         // Write JSON-data to the file
-                        FileWriter file = new FileWriter(sApiRequestName);
-                        i++;
+                        FileWriter file = new FileWriter(sApiRequestName+".json");
                         file.write(jsonResponse.toJSONString().replace("\\", ""));
                         file.flush();
 
@@ -221,11 +217,9 @@ public class EuroNews extends AbstractPageObject {
             sUrl = JsonPath.read(data, "$.url") + "?";
             for (int i=0; i<paramsArray.size(); i++) {
                 String[] params = paramsArray.get(i).toString().split(":");
-                //System.out.println(params[0] + ":" +params[1]);
                 sUrl = sUrl + params[0] + "=" + params[1] + "&";
             }
             sUrl = removeLastChar(sUrl);
-            //System.out.println(sUrl);
         } catch (NullPointerException e) {
             sUrl = JsonPath.read(data, "$.url");
         }

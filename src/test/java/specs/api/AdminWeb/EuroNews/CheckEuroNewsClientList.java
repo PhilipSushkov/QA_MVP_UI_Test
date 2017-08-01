@@ -78,7 +78,7 @@ public class CheckEuroNewsClientList extends ApiAbstractSpec {
     public void checkResponseData(JSONObject data) throws InterruptedException {
         Assert.assertNotNull(euroNews.getResponseData(data), "HAR file didn't create");
         String sDomain = JsonPath.read(data, "$.domain");
-        System.out.println(sDomain);
+        //System.out.println(sDomain);
     }
 
     @DataProvider
