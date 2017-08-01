@@ -1,6 +1,5 @@
 package specs.Modules.Content;
 
-import com.sun.xml.internal.bind.v2.TODO;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -30,8 +29,9 @@ public class CreateContent extends AbstractSpec {
 
     // DESIGN CONTENT-DEPENDENT TESTS TO CONTINUE WORKING IF NEW CONTENT IS ADDED \\
 
-    private static By addNewPresentationButton, addNewPressReleaseButton, addNewEventButton, siteAdminMenuButton, lookupListMenuItem, contentAdminEditItem;
-    private static By contentAdminMenuButton, glossaryListMenuItem, quickLinkListMenuItem, personMenuItem, fastFactMenuItem, jobPostingMenuItem, faqMenuItem;
+    private static By addNewPresentationButton, addNewPressReleaseButton, addNewEventButton, siteAdminMenuButton;
+    private static By stockSplitMenuItem, contentAdminEditItem, faqMenuItem, jobPostingMenuItem, lookupListMenuItem;
+    private static By contentAdminMenuButton, glossaryListMenuItem, quickLinkListMenuItem, personMenuItem, fastFactMenuItem;
 
     private static LoginPage loginPage;
     private static Dashboard dashboard;
@@ -43,6 +43,7 @@ public class CreateContent extends AbstractSpec {
     private static CreateQuickLink createQuickLink;
     private static CreatePerson createPerson;
     private static CreateFastFact createFastFact;
+    private static CreateStockSplit createStockSplit;
     private static CreateJobPosting createJobPosting;
     private static CreateFaq createFaq;
 
@@ -58,6 +59,7 @@ public class CreateContent extends AbstractSpec {
     private final String PERSON_NAME ="person", FAST_FACT_NAME = "fast_fact";
     private final String JOB_POSTING_DATA = "jobPostingData", JOB_POSTING_NAME = "job_posting";
     private final String FAQ_DATA = "faqData", FAQ_NAME = "faq";
+    private final String STOCK_SPLIT_DATA = "stockSplitData", STOCK_SPLIT_NAME = "stock_split";
 
     @BeforeTest
     public void setUp() throws Exception {
@@ -74,7 +76,8 @@ public class CreateContent extends AbstractSpec {
         createFastFact = new CreateFastFact(driver);
         createJobPosting = new CreateJobPosting(driver);
         createFaq = new CreateFaq(driver);
- 
+        createStockSplit = new CreateStockSplit(driver);
+
         addNewPresentationButton = By.xpath(propUICommon.getProperty("btn_AddPresentation"));
         addNewPressReleaseButton = By.xpath(propUICommon.getProperty("btn_AddPressRelease"));
         addNewEventButton = By.xpath(propUICommon.getProperty("btn_AddEvent"));
@@ -86,6 +89,7 @@ public class CreateContent extends AbstractSpec {
         quickLinkListMenuItem = By.xpath(propUIContentAdmin.getProperty("btnMenu_QuickLinks"));
         personMenuItem = By.xpath(propUIContentAdmin.getProperty("btnMenu_PersonList"));
         fastFactMenuItem = By.xpath(propUIContentAdmin.getProperty("btnMenu_FastFact"));
+        stockSplitMenuItem = By.xpath(propUIContentAdmin.getProperty("btnMenu_SplitList"));
         jobPostingMenuItem = By.xpath(propUIContentAdmin.getProperty("btnMenu_JobPosting"));
         faqMenuItem = By.xpath(propUIContentAdmin.getProperty("btnMenu_FaqList"));
 
@@ -223,7 +227,7 @@ public class CreateContent extends AbstractSpec {
         Assert.assertEquals(createJobPosting.setupAsDeletedJobPosting(data.get("description").toString()), WorkflowState.DELETE_PENDING.state());
         Assert.assertEquals(createJobPosting.removeJobPosting(data.get("description").toString()), WorkflowState.NEW_ITEM.state());
     }
-    
+
     @Test(dataProvider=FAQ_DATA, priority=17, enabled=true)
     public void createFaq(JSONObject data) throws Exception {
         dashboard.openPageFromMenu(contentAdminMenuButton, faqMenuItem);
@@ -237,6 +241,20 @@ public class CreateContent extends AbstractSpec {
     public void removeFaq(JSONObject data) throws Exception {
         Assert.assertEquals(createFaq.setupAsDeletedFaq(data.get("name_EN").toString()), WorkflowState.DELETE_PENDING.state());
         Assert.assertEquals(createFaq.removeFaq(data.get("name_EN").toString()), WorkflowState.NEW_ITEM.state());
+    }
+
+    @Test(dataProvider=STOCK_SPLIT_DATA, priority=3, enabled=false)
+    public void createStockSplit(JSONObject data) throws Exception {
+        dashboard.openContentPageFromMenu(contentAdminMenuButton, stockSplitMenuItem, "Div Split List", siteAdminMenuButton, contentAdminEditItem);
+        Assert.assertEquals(createStockSplit.saveStockSplit(data), WorkflowState.IN_PROGRESS.state());
+        Assert.assertEquals(createStockSplit.saveAndSubmitStockSplit(data), WorkflowState.FOR_APPROVAL.state());
+        Assert.assertEquals(createStockSplit.publishStockSplit(data.get("description").toString()), WorkflowState.LIVE.state());
+    }
+
+    @Test(dataProvider=STOCK_SPLIT_DATA, priority=14, enabled=false)
+    public void removeStockSplit(JSONObject data) throws Exception {
+        Assert.assertEquals(createStockSplit.setupAsDeletedStockSplit(data.get("description").toString()), WorkflowState.DELETE_PENDING.state());
+        Assert.assertEquals(createStockSplit.removeStockSplit(data.get("description").toString()), WorkflowState.NEW_ITEM.state());
     }
 
     private Object[][] genericProvider(String type) {
@@ -305,4 +323,9 @@ public class CreateContent extends AbstractSpec {
 
     @DataProvider
     public Object[][] faqData() { return genericProvider(FAQ_NAME); }
+
+    @DataProvider
+    public Object[][] stockSplitData(){
+        return genericProvider(STOCK_SPLIT_NAME);
+    }
 }

@@ -4,6 +4,7 @@
       "do_assertions": true,
       "module_title": "PressRelease/PressRelease.ascx_01",
       "module_definition": "PressRelease/PressRelease.ascx",
+      "source_file": "~/Modules/IRPortal.Modules.PressRelease/PressRelease.ascx",
       "region_name": "Content Pane",
       "module_path": "//span[div/h1/span[text()='PressRelease/PressRelease.ascx_01']]",
       "properties": [
@@ -29,6 +30,7 @@
       "do_assertions": true,
       "module_title": "PressRelease/PressRelease.ascx_02",
       "module_definition": "PressRelease/PressRelease.ascx",
+      "source_file": "~/Modules/IRPortal.Modules.PressRelease/PressRelease.ascx",
       "region_name": "Content Pane",
       "module_path": "//span[div/h1/span[text()='PressRelease/PressRelease.ascx_02']]",
       "properties": [
@@ -62,6 +64,7 @@
       "do_assertions": true,
       "module_title": "PressRelease/4_2_2/PressRelease.ascx_01",
       "module_definition": "PressRelease/4_2_2/PressRelease.ascx",
+      "source_file": "~/Modules/IRPortal.Modules.PressRelease/4_2_2/PressRelease.ascx",
       "region_name": "Content Pane",
       "module_path": "//span[div/div/h2/span[text()='PressRelease/4_2_2/PressRelease.ascx_01']]",
       "properties": [
@@ -87,6 +90,7 @@
       "do_assertions": true,
       "module_title": "PressRelease/4_2_2/PressRelease.ascx_02",
       "module_definition": "PressRelease/4_2_2/PressRelease.ascx",
+      "source_file": "~/Modules/IRPortal.Modules.PressRelease/4_2_2/PressRelease.ascx",
       "region_name": "Content Pane",
       "module_path": "//span[div/div/h2/span[text()='PressRelease/4_2_2/PressRelease.ascx_02']]",
       "properties": [
@@ -119,6 +123,7 @@
       "do_assertions": true,
       "module_title": "PressRelease/4_0_9/PressRelease.ascx_01",
       "module_definition": "PressRelease/4_0_9/PressRelease.ascx",
+      "source_file": "~/Modules/IRPortal.Modules.PressRelease/4_0_9/PressRelease.ascx",
       "region_name": "Content Pane",
       "module_path": "//span[div/h1/span[text()='PressRelease/4_0_9/PressRelease.ascx_01']]",
       "properties": [
@@ -144,6 +149,7 @@
       "do_assertions": true,
       "module_title": "PressRelease/4_0_9/PressRelease.ascx_02",
       "module_definition": "PressRelease/4_0_9/PressRelease.ascx",
+      "source_file": "~/Modules/IRPortal.Modules.PressRelease/4_0_9/PressRelease.ascx",
       "region_name": "Content Pane",
       "module_path": "//span[div/h1/span[text()='PressRelease/4_0_9/PressRelease.ascx_02']]",
       "properties": [
@@ -177,6 +183,7 @@
       "do_assertions": true,
       "module_title": "PressRelease/3_5_9/PressRelease.ascx_01",
       "module_definition": "PressRelease/3_5_9/PressRelease.ascx",
+      "source_file": "~/Modules/IRPortal.Modules.PressRelease/3_5_9/PressRelease.ascx",
       "region_name": "Content Pane",
       "module_path": "//span[div/h1/span[text()='PressRelease/3_5_9/PressRelease.ascx_01']]",
       "properties": [
@@ -202,6 +209,7 @@
       "do_assertions": true,
       "module_title": "PressRelease/3_5_9/PressRelease.ascx_02",
       "module_definition": "PressRelease/3_5_9/PressRelease.ascx",
+      "source_file": "~/Modules/IRPortal.Modules.PressRelease/3_5_9/PressRelease.ascx",
       "region_name": "Content Pane",
       "module_path": "//span[div/h1/span[text()='PressRelease/3_5_9/PressRelease.ascx_02']]",
       "properties": [
@@ -235,6 +243,7 @@
       "do_assertions": true,
       "module_title": "PressRelease/3_5_18/PressRelease.ascx_01",
       "module_definition": "PressRelease/3_5_18/PressRelease.ascx",
+      "source_file": "~/Modules/IRPortal.Modules.PressRelease/3_5_18/PressRelease.ascx",
       "region_name": "Content Pane",
       "module_path": "//span[div/h1/span[text()='PressRelease/3_5_18/PressRelease.ascx_01']]",
       "properties": [
@@ -260,6 +269,7 @@
       "do_assertions": true,
       "module_title": "PressRelease/3_5_18/PressRelease.ascx_02",
       "module_definition": "PressRelease/3_5_18/PressRelease.ascx",
+      "source_file": "~/Modules/IRPortal.Modules.PressRelease/3_5_18/PressRelease.ascx",
       "region_name": "Content Pane",
       "module_path": "//span[div/h1/span[text()='PressRelease/3_5_18/PressRelease.ascx_02']]",
       "properties": [

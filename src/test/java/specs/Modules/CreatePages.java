@@ -55,7 +55,7 @@ public class CreatePages extends AbstractSpec {
         dashboard.openPageFromCommonTasks(pageAdminMenuButton);
     }
 
-    @Test(dataProvider=PAGE_DATA, priority=1, enabled=false)
+    @Test(dataProvider=PAGE_DATA, priority=1, enabled=true)
     public void createModulePage(JSONObject page) throws Exception {
         String pageName = page.get(SECTION_TITLE).toString();
         Assert.assertEquals(pageForModules.savePage(page, pageName), WorkflowState.IN_PROGRESS.state(), "New "+pageName+" Page didn't create properly");
@@ -63,7 +63,7 @@ public class CreatePages extends AbstractSpec {
         Assert.assertEquals(pageForModules.publishPage(pageName), WorkflowState.LIVE.state(), "Couldn't publish New "+pageName+" Page properly");
     }
 
-    @Test(dataProvider=PAGE_DATA, priority=2, enabled=true)
+    @Test(dataProvider=PAGE_DATA, priority=2, enabled=false)
     public void removeModulePage(JSONObject page) throws Exception {
         String pageName = page.get(SECTION_TITLE).toString();
         Assert.assertEquals(pageForModules.setupAsDeletedPage(pageName), WorkflowState.DELETE_PENDING.state(), pageName+" Page didn't setup as Deleted properly");

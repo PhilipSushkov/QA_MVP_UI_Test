@@ -39,6 +39,8 @@ public class CheckStockSplit extends AbstractSpec {
 
     private final String PAGE_DATA="pageData", PAGE_NAME="feed_modules", MODULE_DATA="moduleData", MODULE_NAME="stock_split";
 
+
+    // MUST MANUALLY ADD STOCK SPLIT DATA: TODO: FIGURE OUT HOW TO AUTOMATICALLY ADD STOCKSPLIT DATA
     @BeforeTest
     public void setUp() throws Exception {
         pageAdminMenuButton = By.xpath(propUIModulesFeed.getProperty("btnMenu_PageAdmin"));

@@ -15,6 +15,8 @@ import pageobjects.Modules.PageForModules;
 import pageobjects.PageAdmin.WorkflowState;
 import specs.AbstractSpec;
 import specs.Modules.util.ModuleFunctions;
+import java.lang.String;
+import util.EnvironmentType;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -36,10 +38,11 @@ public class CheckPerson extends AbstractSpec {
     private static String sPathToFile, sDataFileJson, sPathToModuleFile, sFileModuleJson;
     private static JSONParser parser;
 
-    private final String MODULE_DATA="moduleData", MODULE_NAME="person", PAGE_DATA = "pageData", PAGE_NAME = "person_modules";
+    private final String MODULE_DATA="moduleData", PAGE_DATA = "pageData", PAGE_NAME = "person_modules", MODULE_NAME ="person";
 
     @BeforeTest
     public void setUp() throws Exception {
+
         pageAdminMenuButton = By.xpath(propUIModulesPerson.getProperty("btnMenu_PageAdmin"));
 
         loginPage = new LoginPage(driver);
