@@ -1,15 +1,37 @@
 package pageobjects.api.AdminWeb.EuroNews;
 
+import com.jayway.jsonpath.JsonPath;
 import net.lightbody.bmp.BrowserMobProxy;
 import net.lightbody.bmp.BrowserMobProxyServer;
 import net.lightbody.bmp.core.har.Har;
 import net.lightbody.bmp.proxy.CaptureType;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.openqa.selenium.*;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobjects.AbstractPageObject;
-import pageobjects.PageObject;
 
 import static specs.ApiAbstractSpec.propAPI;
+
+import net.lightbody.bmp.BrowserMobProxy;
+import net.lightbody.bmp.BrowserMobProxyServer;
+import net.lightbody.bmp.core.har.*;
+import net.lightbody.bmp.proxy.CaptureType;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.net.URL;
+import java.util.List;
 
 /**
  * Created by philipsushkov on 2017-07-31.
@@ -46,7 +68,7 @@ public class EuroNews extends AbstractPageObject {
         WebElement element = null;
 
         try {
-            wait.until(ExpectedConditions.visibilityOf(findElement(searchInp)));
+            waitForElement(searchInp);
             element = findElement(searchInp);
         } catch (ElementNotFoundException e) {
         } catch (ElementNotVisibleException e) {
@@ -60,7 +82,7 @@ public class EuroNews extends AbstractPageObject {
         WebElement element = null;
 
         try {
-            wait.until(ExpectedConditions.visibilityOf(findElement(clientsDataTable)));
+            waitForElement(clientsDataTable);
             element = findElement(clientsDataTable);
         } catch (ElementNotFoundException e) {
         } catch (ElementNotVisibleException e) {
@@ -74,7 +96,7 @@ public class EuroNews extends AbstractPageObject {
         WebElement element = null;
 
         try {
-            wait.until(ExpectedConditions.visibilityOf(findElement(page4Href)));
+            waitForElement(page4Href);
             element = findElement(page4Href);
         } catch (ElementNotFoundException e) {
         } catch (ElementNotVisibleException e) {
@@ -88,7 +110,7 @@ public class EuroNews extends AbstractPageObject {
         WebElement element = null;
 
         try {
-            wait.until(ExpectedConditions.visibilityOf(findElement(widgetContent)));
+            waitForElement(widgetContent);
             element = findElement(widgetContent);
         } catch (ElementNotFoundException e) {
         } catch (ElementNotVisibleException e) {
@@ -102,7 +124,7 @@ public class EuroNews extends AbstractPageObject {
         WebElement element = null;
 
         try {
-            wait.until(ExpectedConditions.visibilityOf(findElement(cellDataSpan)));
+            waitForElement(cellDataSpan);
             element = findElement(cellDataSpan);
         } catch (ElementNotFoundException e) {
         } catch (ElementNotVisibleException e) {
@@ -113,9 +135,105 @@ public class EuroNews extends AbstractPageObject {
     }
 
     public Har getHar() {
-        // get the HAR data
         har = proxyEuroNews.getHar();
         return har;
+    }
+
+    public JSONObject getResponseData(JSONObject data) {
+        JSONParser parser;
+        HttpClient client;
+        String sReguestUrl;
+        JSONObject jsonResponse = null;
+
+        String sDomain = data.get("domain").toString();
+        String sMethod = data.get("method").toString();
+        String sContentType = data.get("content_type").toString();
+        String sApiRequestName =data.get("api_request_name").toString();
+        String sUrlData = getUrl(data);
+        System.out.println(sDomain + ": " + sMethod);
+
+        for (HarEntry entry : har.getLog().getEntries()) {
+            HarRequest request = entry.getRequest();
+            HarResponse response = entry.getResponse();
+
+            List<HarNameValuePair> harListRequest = request.getHeaders();
+            List<HarNameValuePair> harListResponse = response.getHeaders();
+
+            //System.out.println("Request URL: " + request.getUrl() + " = " + sUrlData);
+            //System.out.println("Request Method: " + request.getMethod() + " = " + sMethod);
+            //System.out.println("Response Content Type: " + harListResponse.get(0).getValue() + " = " + sContentType);
+
+            if (request.getUrl().equals(sUrlData) && request.getMethod().equals(sMethod) && harListResponse.get(0).getValue().contains(sContentType)) {
+                sReguestUrl = request.getUrl();
+                System.out.println(request.getUrl() + " " + response.getStatus());
+
+                parser = new JSONParser();
+                client = HttpClientBuilder.create().build();
+
+                // Send Http Api request for chosen upper URL
+                HttpGet get = new HttpGet(sReguestUrl);
+                List<HarNameValuePair> params = request.getHeaders();
+                for (HarNameValuePair param : params) {
+                    get.setHeader(param.getName(), param.getValue());
+                }
+
+                // Analyze Http Response and extract JSON-data
+                try {
+                    HttpResponse httpResponse = client.execute(get);
+                    HttpEntity httpEntity = httpResponse.getEntity();
+                    if (httpEntity != null) {
+                        String responseBody = EntityUtils.toString(httpEntity);
+                        jsonResponse = (JSONObject) parser.parse(responseBody);
+
+                        // Write JSON-data to the file
+                        FileWriter file = new FileWriter(sApiRequestName);
+                        i++;
+                        file.write(jsonResponse.toJSONString().replace("\\", ""));
+                        file.flush();
+
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+        }
+
+        // Write HAR Data in a File
+        File harFile = new File("euroNews");
+        try {
+            har.writeTo(harFile);
+        } catch (IOException ex) {
+            System.out.println (ex.toString());
+            System.out.println("Could not find file: euroNews");
+        }
+
+        return jsonResponse;
+    }
+
+    public String getUrl(JSONObject data) {
+        String sUrl;
+        try {
+            JSONArray paramsArray = (JSONArray) data.get("params");
+            sUrl = JsonPath.read(data, "$.url") + "?";
+            for (int i=0; i<paramsArray.size(); i++) {
+                String[] params = paramsArray.get(i).toString().split(":");
+                //System.out.println(params[0] + ":" +params[1]);
+                sUrl = sUrl + params[0] + "=" + params[1] + "&";
+            }
+            sUrl = removeLastChar(sUrl);
+            //System.out.println(sUrl);
+        } catch (NullPointerException e) {
+            sUrl = JsonPath.read(data, "$.url");
+        }
+        return sUrl;
+    }
+
+    private static String removeLastChar(String str) {
+        return str.substring(0, str.length() - 1);
     }
 
 }

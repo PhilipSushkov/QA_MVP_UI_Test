@@ -14,15 +14,12 @@ import pageobjects.api.AdminWeb.EuroNews.EuroNews;
 import pageobjects.api.AdminWeb.LeftMainMenu;
 import specs.ApiAbstractSpec;
 
-import io.restassured.RestAssured;
+import com.jayway.jsonpath.JsonPath;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-
-import static io.restassured.RestAssured.given;
-import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 
 /**
  * Created by philipsushkov on 2017-07-31.
@@ -35,12 +32,12 @@ public class CheckEuroNewsClientList extends ApiAbstractSpec {
     private static final String EURO_NEWS = "Euro News";
     private static String sPathToFile, sDataFileJson;
     private static JSONParser parser;
+    private final String DATA="getData", REQUESTS="requests";
 
     @BeforeTest
     public void setUp() throws InterruptedException {
         auth = new Auth(driver);
         leftMainMenu = new LeftMainMenu(driver);
-        euroNews = new EuroNews(driver, proxy);
 
         sPathToFile = System.getProperty("user.dir") + propAPI.getProperty("dataPath_EuroNewsClientList");
         sDataFileJson = propAPI.getProperty("json_EuroNewsClientListData");
@@ -53,11 +50,13 @@ public class CheckEuroNewsClientList extends ApiAbstractSpec {
         // Open Web Section
         auth.getWebSection();
 
+        euroNews = new EuroNews(driver, proxy);
+
         // Open Euro News Client List page in Web Section
         leftMainMenu.getEuroNewsClientListPage(EURO_NEWS);
     }
 
-    @Test
+    @Test(priority=1)
     public void checkEuroNewsClient() throws InterruptedException {
         final String expectedTitle = "Euro News Client List";
 
@@ -70,14 +69,16 @@ public class CheckEuroNewsClientList extends ApiAbstractSpec {
         Assert.assertNotNull(euroNews.getCellDataSpan(), "Cell Data spans don't exist");
     }
 
-    @Test
+    @Test(priority=2)
     public void checkHarFile() throws InterruptedException {
         Assert.assertNotNull(euroNews.getHar(), "HAR file didn't create");
     }
 
-    @Test
-    public void checkResponseData() throws InterruptedException {
-        Assert.assertNotNull(euroNews.getHar(), "HAR file didn't create");
+    @Test(dataProvider=DATA, priority=3)
+    public void checkResponseData(JSONObject data) throws InterruptedException {
+        Assert.assertNotNull(euroNews.getResponseData(data), "HAR file didn't create");
+        String sDomain = JsonPath.read(data, "$.domain");
+        System.out.println(sDomain);
     }
 
     @DataProvider
@@ -85,7 +86,7 @@ public class CheckEuroNewsClientList extends ApiAbstractSpec {
 
         try {
             JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFileJson));
-            JSONArray jsonArray = (JSONArray) jsonObject.get("alert_filter");
+            JSONArray jsonArray = (JSONArray) jsonObject.get(REQUESTS);
             ArrayList<Object> zoom = new ArrayList();
 
             for (int i = 0; i < jsonArray.size(); i++) {

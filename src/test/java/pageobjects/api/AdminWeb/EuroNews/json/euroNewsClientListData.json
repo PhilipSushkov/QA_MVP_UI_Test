@@ -2,12 +2,28 @@
   "requests": [
     {
       "do_assertions": true,
-      "domain": "euroadmin-dev.q4api.com",
-      "method": "GET"
+      "api_request_name": "euro_news_page",
+      "domain": "admin-dev.q4inc.com",
+      "method": "GET",
+      "url": "https://admin-dev.q4inc.com/",
+      "content_type": "text/html"
     },
     {
-      "do_assertions": false,
+      "do_assertions": true,
+      "api_request_name": "news_pageNumber0_pageSize25",
       "domain": "euroadmin-dev.q4api.com",
-      "method": "GET"
+      "url": "https://euroadmin-dev.q4api.com/v1/news",
+      "params": ["pageNumber:0", "pageSize:25"],
+      "method": "GET",
+      "content_type": "application/json"
+    },
+    {
+      "do_assertions": true,
+      "api_request_name": "news_pageNumber1_pageSize25",
+      "domain": "euroadmin-dev.q4api.com",
+      "method": "GET",
+      "url": "https://euroadmin-dev.q4api.com/v1/news",
+      "params": ["pageNumber:1", "pageSize:25"],
+      "content_type": "application/json"
     }]
 }
