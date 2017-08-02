@@ -12,6 +12,7 @@ import org.testng.annotations.Test;
 import pageobjects.api.AdminWeb.Auth;
 import pageobjects.api.AdminWeb.EuroNews.EuroNews;
 import pageobjects.api.AdminWeb.LeftMainMenu;
+import pageobjects.api.AdminWeb.ResponseDataObj;
 import specs.ApiAbstractSpec;
 
 import com.jayway.jsonpath.JsonPath;
@@ -69,9 +70,13 @@ public class CheckEuroNewsClientList extends ApiAbstractSpec {
 
     @Test(dataProvider=DATA_JSON_CONTENT, priority=3)
     public void checkResponseData(JSONObject data) throws InterruptedException {
-        Assert.assertNotNull(euroNews.getResponseData(data), "HAR file didn't create");
-        String sDomain = JsonPath.read(data, "$.domain");
-        //System.out.println(sDomain);
+        String sApiRequestName =data.get("api_request_name").toString();
+
+        ResponseDataObj responseDataObj = euroNews.getResponseData(data);
+
+        Assert.assertTrue(responseDataObj.getResponseCode() == Integer.valueOf(JsonPath.read(data, "$.expected.response_code")), "Response Code value of "+sApiRequestName+" is not the same as expected. Actual: "+responseDataObj.getResponseCode()+". Expected: "+JsonPath.read(data, "$.expected.response_code"));
+        Assert.assertTrue(responseDataObj.getResponseTime() < Integer.valueOf(JsonPath.read(data, "$.expected.response_time_ms")), "Response Time value of "+sApiRequestName+" exceeded the expected. Actual: "+responseDataObj.getResponseTime()+". Expected: "+JsonPath.read(data, "$.expected.response_time_ms"));
+        Assert.assertNotNull(responseDataObj.getJsonResponse(), "JSON Response Data doesn't exist");
     }
 
     @DataProvider

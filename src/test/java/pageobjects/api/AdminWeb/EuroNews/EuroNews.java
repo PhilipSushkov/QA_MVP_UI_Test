@@ -146,21 +146,19 @@ public class EuroNews extends AbstractPageObject {
         String sReguestUrl;
         ResponseDataObj responseDataObj = new ResponseDataObj();
 
-        //String sDomain = data.get("domain").toString();
         String sMethod = data.get("method").toString();
         String sContentType = data.get("content_type").toString();
-        //String sApiRequestName =data.get("api_request_name").toString();
         String sUrlData = Functions.getUrlFromData(data);
-        //System.out.println(sDomain + ": " + sMethod);
 
         for (HarEntry entry : proxyEuroNews.getHar().getLog().getEntries()) {
             HarRequest request = entry.getRequest();
             HarResponse response = entry.getResponse();
 
             List<HarNameValuePair> harListResponse = response.getHeaders();
-            if (request.getUrl().equals(sUrlData) && request.getMethod().equals(sMethod) && harListResponse.get(0).getValue().contains(sContentType)) {
+            if (request.getUrl().equals(sUrlData)
+                    && request.getMethod().equals(sMethod)
+                    && harListResponse.get(0).getValue().contains(sContentType)) {
                 sReguestUrl = request.getUrl();
-                //System.out.println(request.getUrl() + " " + response.getStatus());
 
                 parser = new JSONParser();
                 client = HttpClientBuilder.create().build();
@@ -177,22 +175,15 @@ public class EuroNews extends AbstractPageObject {
                     long start = System.currentTimeMillis();
                     HttpResponse httpResponse = client.execute(get);
                     long end = System.currentTimeMillis();
-                    System.out.println("Response time = " + (end-start) + " millis");
+                    responseDataObj.setResponseTime(end-start);
+                    System.out.println("Response Time of "+data.get("api_request_name").toString()+" is: " + responseDataObj.getResponseTime() + " ms");
+
+                    responseDataObj.setResponseCode(httpResponse.getStatusLine().getStatusCode());
+                    System.out.println("Response Code of "+data.get("api_request_name").toString()+" is: " + responseDataObj.getResponseCode());
 
                     HttpEntity httpEntity = httpResponse.getEntity();
                     if (httpEntity != null) {
-                        //String responseBody = EntityUtils.toString(httpEntity);
-                        //jsonResponse = (JSONObject) parser.parse(responseBody);
-
                         responseDataObj.setJsonResponse((JSONObject) parser.parse(EntityUtils.toString(httpEntity)));
-                        //System.out.println(responseDataObj.getJsonResponse().toJSONString());
-
-                        /*
-                        // Write JSON-data to the file
-                        FileWriter file = new FileWriter(sApiRequestName+".json");
-                        file.write(jsonResponse.toJSONString().replace("\\", ""));
-                        file.flush();
-                        */
                     }
 
                 } catch (ParseException e) {
