@@ -59,11 +59,8 @@ public class Auth extends AbstractPageObject {
 
         String winHandleBefore = driver.getWindowHandle();
 
-        waitForElement(loginUsingGoogleBtn);
-        findElement(loginUsingGoogleBtn).click();
-
-        waitForElement(loginWithGoogleBtn);
-        findElement(loginWithGoogleBtn).click();
+        waitForElementAndClick(driver, loginUsingGoogleBtn, DEFAULT_PAUSE);
+        waitForElementAndClick(driver, loginWithGoogleBtn, DEFAULT_PAUSE);
         Thread.sleep(DEFAULT_PAUSE);
 
         // Switch to new window opened
@@ -74,14 +71,7 @@ public class Auth extends AbstractPageObject {
         Thread.sleep(DEFAULT_PAUSE);
 
         // Perform the actions on new window
-        try {
-            waitForElement(googleEmailInp);
-        } catch (TimeoutException e) {
-            driver.navigate().refresh();
-            Thread.sleep(DEFAULT_PAUSE);
-            waitForElement(googleEmailInp);
-        }
-
+        waitForElementRefresh(driver, googleEmailInp, DEFAULT_PAUSE);
         findElement(googleEmailInp).sendKeys(sEmail);
         findElement(googleIdNextBtn).click();
 
@@ -95,13 +85,7 @@ public class Auth extends AbstractPageObject {
 
         driver.switchTo().window(winHandleBefore);
 
-        try {
-            waitForElement(productDown);
-        } catch (TimeoutException e) {
-            driver.navigate().refresh();
-            Thread.sleep(DEFAULT_PAUSE);
-            waitForElement(productDown);
-        }
+        waitForElementRefresh(driver, productDown, DEFAULT_PAUSE);
 
         return driver.getTitle();
 

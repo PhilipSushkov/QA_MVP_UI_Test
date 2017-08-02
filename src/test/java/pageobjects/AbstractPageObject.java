@@ -19,7 +19,6 @@ public class AbstractPageObject implements PageObject {
         }
     };
 
-    private final By logoutButton = By.xpath("//li/a[contains(text(),'Logout')]");
     private static final long DEFAULT_PAUSE = 1500;
     private static final int ATTEMPTS = 5;
 
@@ -57,6 +56,7 @@ public class AbstractPageObject implements PageObject {
 
     //Logout from Admin site
     public LoginPage logoutFromAdmin(){
+        final By logoutButton = By.xpath("//li/a[contains(text(),'Logout')]");
         waitForElement(logoutButton);
         findElement(logoutButton).click();
         return new LoginPage(driver);

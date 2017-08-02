@@ -30,19 +30,12 @@ public class CheckEuroNewsClientList extends ApiAbstractSpec {
     private static LeftMainMenu leftMainMenu;
     private static EuroNews euroNews;
     private static final String EURO_NEWS = "Euro News";
-    private static String sPathToFile, sDataFileJson;
-    private static JSONParser parser;
-    private final String DATA="getDataJsonContent", REQUESTS="requests", JSON_CONTENT = "application/json";
+    private final String DATA_JSON_CONTENT="getDataJsonContent", REQUESTS="requests", JSON_CONTENT = "application/json";
 
     @BeforeTest
     public void setUp() throws InterruptedException {
         auth = new Auth(driver);
         leftMainMenu = new LeftMainMenu(driver);
-
-        sPathToFile = System.getProperty("user.dir") + propAPI.getProperty("dataPath_EuroNewsClientList");
-        sDataFileJson = propAPI.getProperty("json_EuroNewsClientListData");
-
-        parser = new JSONParser();
 
         // Authorization
         auth.getGoogleAuthPage();
@@ -74,7 +67,7 @@ public class CheckEuroNewsClientList extends ApiAbstractSpec {
         Assert.assertNotNull(euroNews.getHar(), "HAR file didn't create");
     }
 
-    @Test(dataProvider=DATA, priority=3)
+    @Test(dataProvider=DATA_JSON_CONTENT, priority=3)
     public void checkResponseData(JSONObject data) throws InterruptedException {
         Assert.assertNotNull(euroNews.getResponseData(data), "HAR file didn't create");
         String sDomain = JsonPath.read(data, "$.domain");
@@ -82,16 +75,22 @@ public class CheckEuroNewsClientList extends ApiAbstractSpec {
     }
 
     @DataProvider
-    public Object[][] getDataJsonContent() {
+    public Object[][] genericProvider(String sType, String sContentType) {
+        String sPathToFile, sDataFileJson;
+        JSONParser parser;
+
+        sPathToFile = System.getProperty("user.dir") + propAPI.getProperty("dataPath_EuroNewsClientList");
+        sDataFileJson = propAPI.getProperty("json_EuroNewsClientListData");
+        parser = new JSONParser();
 
         try {
             JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFileJson));
-            JSONArray jsonArray = (JSONArray) jsonObject.get(REQUESTS);
+            JSONArray jsonArray = (JSONArray) jsonObject.get(sType);
             ArrayList<Object> zoom = new ArrayList();
 
             for (int i = 0; i < jsonArray.size(); i++) {
                 JSONObject pageObj = (JSONObject) jsonArray.get(i);
-                if (Boolean.parseBoolean(pageObj.get("do_assertions").toString()) && pageObj.get("content_type").toString().equals(JSON_CONTENT)) {
+                if (Boolean.parseBoolean(pageObj.get("do_assertions").toString()) && pageObj.get("content_type").toString().equals(sContentType)) {
                     zoom.add(jsonArray.get(i));
                 }
             }
@@ -112,6 +111,11 @@ public class CheckEuroNewsClientList extends ApiAbstractSpec {
         }
 
         return null;
+    }
+
+    @DataProvider
+    public Object[][] getDataJsonContent() {
+        return genericProvider(REQUESTS, JSON_CONTENT);
     }
 
     @AfterTest

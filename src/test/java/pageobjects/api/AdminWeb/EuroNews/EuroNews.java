@@ -24,11 +24,11 @@ import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import util.Functions;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URL;
 import java.util.List;
 
 /**
@@ -151,14 +151,16 @@ public class EuroNews extends AbstractPageObject {
         String sMethod = data.get("method").toString();
         String sContentType = data.get("content_type").toString();
         String sApiRequestName =data.get("api_request_name").toString();
-        String sUrlData = getUrl(data);
+        String sUrlData = Functions.getUrlFromHar(data);
+        String sPathToHar = System.getProperty("user.dir") + propAPI.getProperty("dataPath_EuroNewsHar");
+        String sHarFileName = "euroNews.har";
         //System.out.println(sDomain + ": " + sMethod);
 
         for (HarEntry entry : har.getLog().getEntries()) {
             HarRequest request = entry.getRequest();
             HarResponse response = entry.getResponse();
 
-            List<HarNameValuePair> harListRequest = request.getHeaders();
+            //List<HarNameValuePair> harListRequest = request.getHeaders();
             List<HarNameValuePair> harListResponse = response.getHeaders();
 
             //System.out.println("Request URL: " + request.getUrl() + " = " + sUrlData);
@@ -206,36 +208,9 @@ public class EuroNews extends AbstractPageObject {
 
         }
 
-        // Write HAR Data in a File
-        File harFile = new File("euroNews");
-        try {
-            har.writeTo(harFile);
-        } catch (IOException ex) {
-            System.out.println (ex.toString());
-            System.out.println("Could not find file: euroNews");
-        }
+        Functions.writeHarToFile(har, sPathToHar, sHarFileName);
 
         return jsonResponse;
-    }
-
-    public String getUrl(JSONObject data) {
-        String sUrl;
-        try {
-            JSONArray paramsArray = (JSONArray) data.get("params");
-            sUrl = JsonPath.read(data, "$.url") + "?";
-            for (int i=0; i<paramsArray.size(); i++) {
-                String[] params = paramsArray.get(i).toString().split(":");
-                sUrl = sUrl + params[0] + "=" + params[1] + "&";
-            }
-            sUrl = removeLastChar(sUrl);
-        } catch (NullPointerException e) {
-            sUrl = JsonPath.read(data, "$.url");
-        }
-        return sUrl;
-    }
-
-    private static String removeLastChar(String str) {
-        return str.substring(0, str.length() - 1);
     }
 
 }

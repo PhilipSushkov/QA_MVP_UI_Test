@@ -1,5 +1,7 @@
 package util;
 
+import com.jayway.jsonpath.JsonPath;
+import net.lightbody.bmp.core.har.Har;
 import org.apache.commons.io.FileUtils;
 import org.im4java.core.CompareCmd;
 import org.im4java.core.IMOperation;
@@ -365,6 +367,37 @@ public class Functions {
             e.printStackTrace();
         }
 
+    }
+
+    public static String getUrlFromHar(JSONObject data) {
+        String sUrl;
+        try {
+            JSONArray paramsArray = (JSONArray) data.get("params");
+            sUrl = JsonPath.read(data, "$.url") + "?";
+            for (int i=0; i<paramsArray.size(); i++) {
+                String[] params = paramsArray.get(i).toString().split(":");
+                sUrl = sUrl + params[0] + "=" + params[1] + "&";
+            }
+            sUrl = removeLastChar(sUrl);
+        } catch (NullPointerException e) {
+            sUrl = JsonPath.read(data, "$.url");
+        }
+        return sUrl;
+    }
+
+    public static String removeLastChar(String str) {
+        return str.substring(0, str.length() - 1);
+    }
+
+    // Write HAR Data in a File
+    public static void writeHarToFile(Har har, String sPathToFile, String sFileName) {
+        File harFile = new File(sPathToFile + sFileName);
+        try {
+            har.writeTo(harFile);
+        } catch (IOException e) {
+            System.out.println (e.toString());
+            System.out.println("Could not find file: " + sFileName);
+        }
     }
 
 }
