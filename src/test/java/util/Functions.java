@@ -1,6 +1,8 @@
 package util;
 
 import com.jayway.jsonpath.JsonPath;
+import de.sstoehr.harreader.HarReader;
+import de.sstoehr.harreader.HarReaderException;
 import net.lightbody.bmp.core.har.Har;
 import org.apache.commons.io.FileUtils;
 import org.im4java.core.CompareCmd;
@@ -369,7 +371,7 @@ public class Functions {
 
     }
 
-    public static String getUrlFromHar(JSONObject data) {
+    public static String getUrlFromData(JSONObject data) {
         String sUrl;
         try {
             JSONArray paramsArray = (JSONArray) data.get("params");
@@ -398,6 +400,18 @@ public class Functions {
             System.out.println (e.toString());
             System.out.println("Could not find file: " + sFileName);
         }
+    }
+
+    public static de.sstoehr.harreader.model.Har readHarFromFile(String sPathToFile, String sFileName) {
+        HarReader harReader = new HarReader();
+        try {
+            de.sstoehr.harreader.model.Har har = harReader.readFromFile(new File(sPathToFile + sFileName));
+            System.out.println(har.getLog().getCreator().getName());
+            return har;
+        } catch (HarReaderException e) {
+        }
+
+        return null;
     }
 
 }

@@ -1,12 +1,9 @@
 package pageobjects.api.AdminWeb.EuroNews;
 
-import com.jayway.jsonpath.JsonPath;
 import net.lightbody.bmp.BrowserMobProxy;
 import net.lightbody.bmp.BrowserMobProxyServer;
 import net.lightbody.bmp.core.har.Har;
 import net.lightbody.bmp.proxy.CaptureType;
-import org.apache.bcel.generic.RETURN;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.openqa.selenium.*;
 import pageobjects.AbstractPageObject;
@@ -21,13 +18,11 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
-import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import pageobjects.api.AdminWeb.ResponseDataObj;
 import util.Functions;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
@@ -38,7 +33,7 @@ import java.util.List;
 public class EuroNews extends AbstractPageObject {
     private static By moduleTitle, searchInp, clientsDataTable, page4Href, widgetContent, cellDataSpan;
     private static BrowserMobProxy proxyEuroNews = new BrowserMobProxyServer();
-    private static Har har;
+    private static String sPathToHar, sHarFileName;
     private static final long DEFAULT_PAUSE = 2000;
 
     public EuroNews(WebDriver driver, BrowserMobProxy proxy) {
@@ -51,6 +46,9 @@ public class EuroNews extends AbstractPageObject {
         page4Href = By.xpath(propAPI.getProperty("href_Page4"));
         widgetContent = By.xpath(propAPI.getProperty("content_Widget"));
         cellDataSpan = By.xpath(propAPI.getProperty("span_CellData"));
+
+        sPathToHar = System.getProperty("user.dir") + propAPI.getProperty("dataPath_EuroNewsHar");
+        sHarFileName = "euroNews.har";
 
         proxyEuroNews.enableHarCaptureTypes(CaptureType.REQUEST_HEADERS, CaptureType.RESPONSE_HEADERS);
         proxyEuroNews.newHar("euroNews");
@@ -68,10 +66,6 @@ public class EuroNews extends AbstractPageObject {
         try {
             waitForElement(searchInp);
             element = findElement(searchInp);
-            //JavascriptExecutor js = (JavascriptExecutor) driver;
-            //js.executeScript("arguments[0].setAttribute(arguments[1], arguments[2]);", element, "value", "4imprint");
-            //element.sendKeys(Keys.RETURN);
-
         } catch (ElementNotFoundException e) {
         } catch (ElementNotVisibleException e) {
         } catch (TimeoutException e) {
@@ -137,39 +131,36 @@ public class EuroNews extends AbstractPageObject {
     }
 
     public Har getHar() {
-        har = proxyEuroNews.getHar();
+        Har har = proxyEuroNews.getHar();
+        Functions.writeHarToFile(har, sPathToHar, sHarFileName);
         return har;
     }
 
-    public JSONObject getResponseData(JSONObject data) {
+    public de.sstoehr.harreader.model.Har readHarFromFile() {
+        return Functions.readHarFromFile(sPathToHar, sHarFileName);
+    }
+
+    public ResponseDataObj getResponseData(JSONObject data) {
         JSONParser parser;
         HttpClient client;
         String sReguestUrl;
-        JSONObject jsonResponse = null;
+        ResponseDataObj responseDataObj = new ResponseDataObj();
 
-        String sDomain = data.get("domain").toString();
+        //String sDomain = data.get("domain").toString();
         String sMethod = data.get("method").toString();
         String sContentType = data.get("content_type").toString();
-        String sApiRequestName =data.get("api_request_name").toString();
-        String sUrlData = Functions.getUrlFromHar(data);
-        String sPathToHar = System.getProperty("user.dir") + propAPI.getProperty("dataPath_EuroNewsHar");
-        String sHarFileName = "euroNews.har";
+        //String sApiRequestName =data.get("api_request_name").toString();
+        String sUrlData = Functions.getUrlFromData(data);
         //System.out.println(sDomain + ": " + sMethod);
 
-        for (HarEntry entry : har.getLog().getEntries()) {
+        for (HarEntry entry : proxyEuroNews.getHar().getLog().getEntries()) {
             HarRequest request = entry.getRequest();
             HarResponse response = entry.getResponse();
 
-            //List<HarNameValuePair> harListRequest = request.getHeaders();
             List<HarNameValuePair> harListResponse = response.getHeaders();
-
-            //System.out.println("Request URL: " + request.getUrl() + " = " + sUrlData);
-            //System.out.println("Request Method: " + request.getMethod() + " = " + sMethod);
-            //System.out.println("Response Content Type: " + harListResponse.get(0).getValue() + " = " + sContentType);
-
             if (request.getUrl().equals(sUrlData) && request.getMethod().equals(sMethod) && harListResponse.get(0).getValue().contains(sContentType)) {
                 sReguestUrl = request.getUrl();
-                System.out.println(request.getUrl() + " " + response.getStatus());
+                //System.out.println(request.getUrl() + " " + response.getStatus());
 
                 parser = new JSONParser();
                 client = HttpClientBuilder.create().build();
@@ -190,14 +181,20 @@ public class EuroNews extends AbstractPageObject {
 
                     HttpEntity httpEntity = httpResponse.getEntity();
                     if (httpEntity != null) {
-                        String responseBody = EntityUtils.toString(httpEntity);
-                        jsonResponse = (JSONObject) parser.parse(responseBody);
+                        //String responseBody = EntityUtils.toString(httpEntity);
+                        //jsonResponse = (JSONObject) parser.parse(responseBody);
 
+                        responseDataObj.setJsonResponse((JSONObject) parser.parse(EntityUtils.toString(httpEntity)));
+                        //System.out.println(responseDataObj.getJsonResponse().toJSONString());
+
+                        /*
                         // Write JSON-data to the file
                         FileWriter file = new FileWriter(sApiRequestName+".json");
                         file.write(jsonResponse.toJSONString().replace("\\", ""));
                         file.flush();
+                        */
                     }
+
                 } catch (ParseException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -208,9 +205,9 @@ public class EuroNews extends AbstractPageObject {
 
         }
 
-        Functions.writeHarToFile(har, sPathToHar, sHarFileName);
+        //Functions.writeHarToFile(har, sPathToHar, sHarFileName);
 
-        return jsonResponse;
+        return responseDataObj;
     }
 
 }
