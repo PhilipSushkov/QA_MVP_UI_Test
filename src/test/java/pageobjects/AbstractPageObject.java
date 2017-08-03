@@ -1,11 +1,14 @@
 package pageobjects;
 
+import net.lightbody.bmp.BrowserMobProxy;
+import net.lightbody.bmp.core.har.Har;
 import org.apache.commons.collections4.Predicate;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import pageobjects.LoginPage.LoginPage;
+import util.Functions;
 
 public class AbstractPageObject implements PageObject {
 
@@ -157,5 +160,20 @@ public class AbstractPageObject implements PageObject {
         }
         return false;
     }
+
+    public WebElement checkElementExists(By selector) {
+        WebElement element = null;
+
+        try {
+            waitForElement(selector);
+            element = findElement(selector);
+        } catch (ElementNotFoundException e) {
+        } catch (ElementNotVisibleException e) {
+        } catch (TimeoutException e) {
+        }
+
+        return element;
+    }
+
 
 }

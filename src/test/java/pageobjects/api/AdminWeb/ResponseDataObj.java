@@ -7,9 +7,9 @@ import org.json.simple.JSONObject;
  */
 
 public class ResponseDataObj {
-    private static JSONObject jsonResponse;
-    private static long responseTime;
-    private static int responseCode;
+    private JSONObject jsonResponse;
+    private long responseTime;
+    private int responseCode;
 
     public void setJsonResponse(JSONObject jsonResponseHar) {
         this.jsonResponse = jsonResponseHar;

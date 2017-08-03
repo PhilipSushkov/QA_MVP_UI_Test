@@ -60,74 +60,24 @@ public class EuroNews extends AbstractPageObject {
         return getText(moduleTitle);
     }
 
-    public WebElement getSearchInput() throws InterruptedException {
-        WebElement element = null;
-
-        try {
-            waitForElement(searchInp);
-            element = findElement(searchInp);
-        } catch (ElementNotFoundException e) {
-        } catch (ElementNotVisibleException e) {
-        } catch (TimeoutException e) {
-        }
-
-        return element;
+    public WebElement getSearchInput() {
+        return checkElementExists(searchInp);
     }
 
     public WebElement getClientsDataTable() {
-        WebElement element = null;
-
-        try {
-            waitForElement(clientsDataTable);
-            element = findElement(clientsDataTable);
-        } catch (ElementNotFoundException e) {
-        } catch (ElementNotVisibleException e) {
-        } catch (TimeoutException e) {
-        }
-
-        return element;
+        return checkElementExists(clientsDataTable);
     }
 
     public WebElement getPage4Href() {
-        WebElement element = null;
-
-        try {
-            waitForElement(page4Href);
-            element = findElement(page4Href);
-        } catch (ElementNotFoundException e) {
-        } catch (ElementNotVisibleException e) {
-        } catch (TimeoutException e) {
-        }
-
-        return element;
+        return checkElementExists(page4Href);
     }
 
     public WebElement getWidgetContent() {
-        WebElement element = null;
-
-        try {
-            waitForElement(widgetContent);
-            element = findElement(widgetContent);
-        } catch (ElementNotFoundException e) {
-        } catch (ElementNotVisibleException e) {
-        } catch (TimeoutException e) {
-        }
-
-        return element;
+        return checkElementExists(widgetContent);
     }
 
     public WebElement getCellDataSpan() {
-        WebElement element = null;
-
-        try {
-            waitForElement(cellDataSpan);
-            element = findElement(cellDataSpan);
-        } catch (ElementNotFoundException e) {
-        } catch (ElementNotVisibleException e) {
-        } catch (TimeoutException e) {
-        }
-
-        return element;
+        return checkElementExists(cellDataSpan);
     }
 
     public Har getHar() {
@@ -139,6 +89,7 @@ public class EuroNews extends AbstractPageObject {
     public de.sstoehr.harreader.model.Har readHarFromFile() {
         return Functions.readHarFromFile(sPathToHar, sHarFileName);
     }
+
 
     public ResponseDataObj getResponseData(JSONObject data) {
         JSONParser parser;
@@ -200,5 +151,6 @@ public class EuroNews extends AbstractPageObject {
 
         return responseDataObj;
     }
+
 
 }
