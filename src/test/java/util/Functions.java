@@ -419,7 +419,7 @@ public class Functions {
 
     public static ResponseDataObj setResponseDataObj(BrowserMobProxy sProxy, String sMethod, String sContentType, JSONObject data) throws IOException, ParseException {
         ResponseDataObj responseDataObj = new ResponseDataObj();
-        RequestDataObj requestDataObj = new RequestDataObj(sProxy, sMethod, sContentType, Functions.getUrlFromApiData(data));
+        RequestDataObj requestDataObj = new RequestDataObj(sProxy, sMethod, sContentType, getUrlFromApiData(data));
 
         responseDataObj.setResponseTime(requestDataObj.getHttpClient(), requestDataObj.getHttpGet());
         System.out.println("Response Time of "+data.get("api_request_name").toString()+" is: " + responseDataObj.getResponseTime() + " ms");
