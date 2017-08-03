@@ -3,6 +3,7 @@ package util;
 import com.jayway.jsonpath.JsonPath;
 import de.sstoehr.harreader.HarReader;
 import de.sstoehr.harreader.HarReaderException;
+import net.lightbody.bmp.BrowserMobProxy;
 import net.lightbody.bmp.core.har.Har;
 import org.apache.commons.io.FileUtils;
 import org.im4java.core.CompareCmd;
@@ -29,6 +30,8 @@ import javax.mail.search.SubjectTerm;
 import com.sun.mail.gimap.GmailFolder;
 import com.sun.mail.gimap.GmailRawSearchTerm;
 import com.sun.mail.gimap.GmailStore;
+import pageobjects.api.AdminWeb.EuroNews.RequestDataObj;
+import pageobjects.api.AdminWeb.ResponseDataObj;
 
 /**
  * Created by philipsushkov on 2016-12-08.
@@ -412,6 +415,22 @@ public class Functions {
         }
 
         return null;
+    }
+
+    public static ResponseDataObj setResponseDataObj(BrowserMobProxy sProxy, String sMethod, String sContentType, JSONObject data) throws IOException, ParseException {
+        ResponseDataObj responseDataObj = new ResponseDataObj();
+        RequestDataObj requestDataObj = new RequestDataObj(sProxy, sMethod, sContentType, Functions.getUrlFromApiData(data));
+
+        responseDataObj.setResponseTime(requestDataObj.getHttpClient(), requestDataObj.getHttpGet());
+        System.out.println("Response Time of "+data.get("api_request_name").toString()+" is: " + responseDataObj.getResponseTime() + " ms");
+
+        responseDataObj.setResponseCode(responseDataObj.getHttpResponse());
+        System.out.println("Response Code of "+data.get("api_request_name").toString()+" is: " + responseDataObj.getResponseCode());
+
+        responseDataObj.setJsonResponse(responseDataObj.getHttpResponse());
+        //System.out.println("JSON Response of "+data.get("api_request_name").toString()+" is: \n" + responseDataObj.getJsonResponse());
+
+        return responseDataObj;
     }
 
 }

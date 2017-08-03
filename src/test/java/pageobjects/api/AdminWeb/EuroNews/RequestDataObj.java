@@ -32,6 +32,7 @@ public class RequestDataObj {
         HttpGet httpGet = null;
 
         for (HarEntry harEntry:proxy.getHar().getLog().getEntries()) {
+
             HarRequest harRequest = harEntry.getRequest();
             HarResponse harResponse = harEntry.getResponse();
 
@@ -43,7 +44,7 @@ public class RequestDataObj {
                 httpGet = new HttpGet(harRequest.getUrl());
 
                 List<HarNameValuePair> params = harRequest.getHeaders();
-                for (HarNameValuePair param : params) {
+                for (HarNameValuePair param:params) {
                     httpGet.setHeader(param.getName(), param.getValue());
                 }
 

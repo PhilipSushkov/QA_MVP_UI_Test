@@ -16,7 +16,7 @@
       "do_assertions": true,
       "api_request_name": "clients_pageNumber0_pageSize25",
       "domain": "euroadmin-dev.q4api.com",
-      "url": "https://euroadmin-dev.q4api.com/v1/news",
+      "url": "https://euroadmin-dev.q4api.com/v1/client",
       "params": ["pageNumber:0", "pageSize:25"],
       "method": "GET",
       "content_type": "application/json",
@@ -30,7 +30,7 @@
       "api_request_name": "clients_pageNumber1_pageSize25",
       "domain": "euroadmin-dev.q4api.com",
       "method": "GET",
-      "url": "https://euroadmin-dev.q4api.com/v1/news",
+      "url": "https://euroadmin-dev.q4api.com/v1/client",
       "params": ["pageNumber:1", "pageSize:25"],
       "content_type": "application/json",
       "expected": {

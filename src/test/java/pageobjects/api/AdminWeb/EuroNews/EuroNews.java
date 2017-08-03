@@ -16,7 +16,6 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -24,7 +23,6 @@ import pageobjects.api.AdminWeb.ResponseDataObj;
 import util.Functions;
 
 import java.io.IOException;
-import java.util.List;
 
 /**
  * Created by philipsushkov on 2017-07-31.
@@ -91,47 +89,8 @@ public class EuroNews extends AbstractPageObject {
     }
 
 
-    public ResponseDataObj getResponseData(JSONObject data) {
-        JSONParser parser = new JSONParser();
-        //HttpClient client;
-        //String sReguestUrl;
-        ResponseDataObj responseDataObj = new ResponseDataObj();
-
-        //String sMethod = data.get("method").toString();
-        //String sContentType = data.get("content_type").toString();
-        //String sUrlData = Functions.getUrlFromApiData(data);
-
-        RequestDataObj requestDataObj = new RequestDataObj(proxyEuroNews, data.get("method").toString(),
-                data.get("content_type").toString(), Functions.getUrlFromApiData(data));
-        HttpGet get = requestDataObj.getHttpGet();
-        HttpClient client = requestDataObj.getHttpClient();
-
-                // Analyze Http Response and extract JSON-data
-                try {
-                    long start = System.currentTimeMillis();
-                    HttpResponse httpResponse = client.execute(get);
-                    long end = System.currentTimeMillis();
-                    responseDataObj.setResponseTime(end-start);
-                    System.out.println("Response Time of "+data.get("api_request_name").toString()+" is: " + responseDataObj.getResponseTime() + " ms");
-
-                    responseDataObj.setResponseCode(httpResponse.getStatusLine().getStatusCode());
-                    System.out.println("Response Code of "+data.get("api_request_name").toString()+" is: " + responseDataObj.getResponseCode());
-
-                    HttpEntity httpEntity = httpResponse.getEntity();
-                    if (httpEntity != null) {
-                        responseDataObj.setJsonResponse((JSONObject) parser.parse(EntityUtils.toString(httpEntity)));
-                    }
-
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-        //Functions.writeHarToFile(har, sPathToHar, sHarFileName);
-
-        return responseDataObj;
+    public ResponseDataObj getResponseData(JSONObject data) throws IOException, ParseException {
+        return Functions.setResponseDataObj(proxyEuroNews, data.get("method").toString(), data.get("content_type").toString(), data);
     }
-
 
 }

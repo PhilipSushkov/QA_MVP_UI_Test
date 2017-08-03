@@ -69,7 +69,7 @@ public class CheckEuroNewsClientList extends ApiAbstractSpec {
     }
 
     @Test(dataProvider=DATA_JSON_CONTENT, priority=3)
-    public void checkResponseData(JSONObject data) throws InterruptedException {
+    public void checkResponseData(JSONObject data) throws InterruptedException, IOException, ParseException {
         String sApiRequestName =data.get("api_request_name").toString();
 
         ResponseDataObj responseDataObj = euroNews.getResponseData(data);
