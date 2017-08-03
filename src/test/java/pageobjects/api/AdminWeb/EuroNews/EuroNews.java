@@ -92,34 +92,19 @@ public class EuroNews extends AbstractPageObject {
 
 
     public ResponseDataObj getResponseData(JSONObject data) {
-        JSONParser parser;
-        HttpClient client;
-        String sReguestUrl;
+        JSONParser parser = new JSONParser();
+        //HttpClient client;
+        //String sReguestUrl;
         ResponseDataObj responseDataObj = new ResponseDataObj();
 
-        String sMethod = data.get("method").toString();
-        String sContentType = data.get("content_type").toString();
-        String sUrlData = Functions.getUrlFromData(data);
+        //String sMethod = data.get("method").toString();
+        //String sContentType = data.get("content_type").toString();
+        //String sUrlData = Functions.getUrlFromApiData(data);
 
-        for (HarEntry entry : proxyEuroNews.getHar().getLog().getEntries()) {
-            HarRequest request = entry.getRequest();
-            HarResponse response = entry.getResponse();
-
-            List<HarNameValuePair> harListResponse = response.getHeaders();
-            if (request.getUrl().equals(sUrlData)
-                    && request.getMethod().equals(sMethod)
-                    && harListResponse.get(0).getValue().contains(sContentType)) {
-                sReguestUrl = request.getUrl();
-
-                parser = new JSONParser();
-                client = HttpClientBuilder.create().build();
-
-                // Send Http Api request for chosen upper URL
-                HttpGet get = new HttpGet(sReguestUrl);
-                List<HarNameValuePair> params = request.getHeaders();
-                for (HarNameValuePair param : params) {
-                    get.setHeader(param.getName(), param.getValue());
-                }
+        RequestDataObj requestDataObj = new RequestDataObj(proxyEuroNews, data.get("method").toString(),
+                data.get("content_type").toString(), Functions.getUrlFromApiData(data));
+        HttpGet get = requestDataObj.getHttpGet();
+        HttpClient client = requestDataObj.getHttpClient();
 
                 // Analyze Http Response and extract JSON-data
                 try {
@@ -142,10 +127,6 @@ public class EuroNews extends AbstractPageObject {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
-            }
-
-        }
 
         //Functions.writeHarToFile(har, sPathToHar, sHarFileName);
 

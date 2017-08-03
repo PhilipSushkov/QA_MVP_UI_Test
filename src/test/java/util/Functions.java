@@ -371,7 +371,7 @@ public class Functions {
 
     }
 
-    public static String getUrlFromData(JSONObject data) {
+    public static String getUrlFromApiData(JSONObject data) {
         String sUrl;
         try {
             JSONArray paramsArray = (JSONArray) data.get("params");
