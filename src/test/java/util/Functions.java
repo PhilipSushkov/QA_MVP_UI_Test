@@ -421,16 +421,21 @@ public class Functions {
         ResponseDataObj responseDataObj = new ResponseDataObj();
         RequestDataObj requestDataObj = new RequestDataObj(sProxy, sMethod, sContentType, getUrlFromApiData(data));
 
-        responseDataObj.setResponseTime(requestDataObj.getHttpClient(), requestDataObj.getHttpGet());
-        System.out.println("Response Time of "+data.get("api_request_name").toString()+" is: " + responseDataObj.getResponseTime() + " ms");
+        if (requestDataObj.getHttpGet() != null) {
+            responseDataObj.setResponseTime(requestDataObj.getHttpClient(), requestDataObj.getHttpGet());
+            System.out.println("Response Time of "+data.get("api_request_name").toString()+" is: " + responseDataObj.getResponseTime() + " ms");
 
-        responseDataObj.setResponseCode(responseDataObj.getHttpResponse());
-        System.out.println("Response Code of "+data.get("api_request_name").toString()+" is: " + responseDataObj.getResponseCode());
+            responseDataObj.setResponseCode(responseDataObj.getHttpResponse());
+            System.out.println("Response Code of "+data.get("api_request_name").toString()+" is: " + responseDataObj.getResponseCode());
 
-        responseDataObj.setJsonResponse(responseDataObj.getHttpResponse());
-        //System.out.println("JSON Response of "+data.get("api_request_name").toString()+" is: \n" + responseDataObj.getJsonResponse());
+            responseDataObj.setJsonResponse(responseDataObj.getHttpResponse());
+            //System.out.println("JSON Response of "+data.get("api_request_name").toString()+" is: \n" + responseDataObj.getJsonResponse());
 
-        return responseDataObj;
+            return responseDataObj;
+        } else {
+            return null;
+        }
+
     }
 
 }

@@ -73,6 +73,7 @@ public class CheckEuroNewsClientList extends ApiAbstractSpec {
         String sApiRequestName =data.get("api_request_name").toString();
 
         ResponseDataObj responseDataObj = euroNews.getResponseData(data);
+        Assert.assertNotNull(responseDataObj, "Api request isn't found in network traffic logs");
 
         Assert.assertTrue(responseDataObj.getResponseCode() == Integer.valueOf(JsonPath.read(data, "$.expected.response_code")), "Response Code value of "+sApiRequestName+" is not the same as expected. Actual: "+responseDataObj.getResponseCode()+". Expected: "+JsonPath.read(data, "$.expected.response_code"));
         Assert.assertTrue(responseDataObj.getResponseTime() < Integer.valueOf(JsonPath.read(data, "$.expected.response_time_ms")), "Response Time value of "+sApiRequestName+" exceeded the expected. Actual: "+responseDataObj.getResponseTime()+". Expected: "+JsonPath.read(data, "$.expected.response_time_ms"));
