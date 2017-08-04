@@ -149,9 +149,9 @@ public abstract class ApiAbstractSpec extends util.Functions {
     @AfterTest(alwaysRun=true)
     public void teardown() throws Exception {
         if (driver != null) {
-            proxy.stop();
             driver.quit();
         }
+        proxy.stop();
     }
 
 }
