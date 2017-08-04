@@ -74,8 +74,8 @@ public class CheckChangePassword extends AbstractSpec {
         final String expectedMessage = "Failed to change password at this moment.";
 
         String username = "quick-test2";
-        String oldPassword = "q4pass1234!";
-        String newPassword = "q4pass1234@";
+        String oldPassword = "q4pass1234!_";
+        String newPassword = "q4pass1234@_";
 
         // logging in user and then trying to change password with an incorrect current password entered
         loginPage.loginUser(username, oldPassword);
@@ -94,9 +94,9 @@ public class CheckChangePassword extends AbstractSpec {
         final String expectedMessage = "New Password and Confirm New Password do not match";
 
         String username = "quick-test3";
-        String oldPassword = "q4pass1234!";
-        String newPassword1 = "q4pass1234@";
-        String newPassword2 = "q4pass1234#";
+        String oldPassword = "q4pass1234!_";
+        String newPassword1 = "q4pass1234@_";
+        String newPassword2 = "q4pass1234#_";
 
         // logging in user and then trying to change password with "New password" and "Confirm new password" having different values
         loginPage.loginUser(username, oldPassword);
