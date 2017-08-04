@@ -76,7 +76,7 @@ public abstract class ApiAbstractSpec extends util.Functions {
     private void setupChromeLocalDriver() throws InterruptedException {
         DesiredCapabilities capabilities = DesiredCapabilities.chrome();
         ChromeOptions options = new ChromeOptions();
-        //options.addArguments("incognito");
+        options.addArguments("incognito");
         options.addArguments("no-sandbox");
         capabilities.setCapability(ChromeOptions.CAPABILITY, options);
 

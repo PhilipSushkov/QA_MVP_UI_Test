@@ -62,6 +62,7 @@ public class Auth extends AbstractPageObject {
         waitForElementAndClick(driver, loginUsingGoogleBtn, DEFAULT_PAUSE);
         waitForElementAndClick(driver, loginWithGoogleBtn, DEFAULT_PAUSE);
         Thread.sleep(DEFAULT_PAUSE);
+        System.out.println("Google Sign In page should open");
 
         // Switch to new window opened
         windowDidLoad("Sign in - Google Accounts");
@@ -76,6 +77,7 @@ public class Auth extends AbstractPageObject {
         findElement(googleIdNextBtn).click();
 
         Thread.sleep(DEFAULT_PAUSE);
+        System.out.println("Google Password page should open");
 
         waitForElement(googlePasswordInp);
         findElement(googlePasswordInp).sendKeys(sPassword);
@@ -84,6 +86,7 @@ public class Auth extends AbstractPageObject {
         Thread.sleep(DEFAULT_PAUSE);
 
         driver.switchTo().window(winHandleBefore);
+        System.out.println("Q4 Admin Home page should open");
 
         waitForElementRefresh(driver, productDown, DEFAULT_PAUSE);
 
