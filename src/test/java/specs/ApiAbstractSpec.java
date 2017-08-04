@@ -80,6 +80,12 @@ public abstract class ApiAbstractSpec extends util.Functions {
         options.addArguments("no-sandbox");
         capabilities.setCapability(ChromeOptions.CAPABILITY, options);
 
+        /*
+        if (proxy.isStarted()) {
+            proxy.stop();
+        }
+        */
+
         proxy.start();
         //System.out.println("Proxy port: "+ proxy.getPort());
 

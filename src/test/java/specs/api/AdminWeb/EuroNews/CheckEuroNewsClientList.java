@@ -87,8 +87,6 @@ public class CheckEuroNewsClientList extends ApiAbstractSpec {
         Assert.assertTrue(responseDataObj.getResponseTime() < Integer.valueOf(JsonPath.read(data, "$.expected.response_time_ms")), "Response Time value of "+sApiRequestName+" exceeded the expected. Actual: "+responseDataObj.getResponseTime()+". Expected: "+JsonPath.read(data, "$.expected.response_time_ms"));
         Assert.assertNotNull(responseDataObj.getJsonResponse(), "JSON Response Data doesn't exist");
 
-        //System.out.println(parser.parse(new FileReader(sPathToSchema + "schema_" + sApiRequestName + ".json")));
-
         try {
             InputStream inputStream = new FileInputStream(sPathToSchema + "schema_" + sApiRequestName + ".json");
             org.json.JSONObject rawSchema = new org.json.JSONObject(new JSONTokener(inputStream));

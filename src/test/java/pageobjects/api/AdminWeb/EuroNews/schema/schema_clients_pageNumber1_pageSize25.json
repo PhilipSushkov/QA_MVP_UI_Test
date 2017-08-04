@@ -37,7 +37,7 @@
           },
           "SolutionID": {
             "id": "/properties/recordset/items/properties/SolutionID",
-            "minimum": 2200,
+            "minimum": 1,
             "type": "number"
           },
           "SolutionPath": {
