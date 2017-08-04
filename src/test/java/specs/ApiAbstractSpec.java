@@ -47,7 +47,7 @@ public abstract class ApiAbstractSpec extends util.Functions {
     public static URL adminWebUrl;
     public static final long DEFAULT_TIMEOUT = 5L;
     protected WebDriver driver;
-    protected static BrowserMobProxy proxy = new BrowserMobProxyServer();
+    protected BrowserMobProxy proxy = new BrowserMobProxyServer();
 
     @BeforeTest
     public void init(final ITestContext testContext) throws Exception {
@@ -76,15 +76,13 @@ public abstract class ApiAbstractSpec extends util.Functions {
     private void setupChromeLocalDriver() throws InterruptedException {
         DesiredCapabilities capabilities = DesiredCapabilities.chrome();
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("incognito");
+        //options.addArguments("incognito");
         options.addArguments("no-sandbox");
         capabilities.setCapability(ChromeOptions.CAPABILITY, options);
 
-        /*
         if (proxy.isStarted()) {
             proxy.stop();
         }
-        */
 
         proxy.start();
         System.out.println("Proxy port: "+ proxy.getPort());
