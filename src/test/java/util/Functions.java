@@ -30,7 +30,7 @@ import javax.mail.search.SubjectTerm;
 import com.sun.mail.gimap.GmailFolder;
 import com.sun.mail.gimap.GmailRawSearchTerm;
 import com.sun.mail.gimap.GmailStore;
-import pageobjects.api.AdminWeb.EuroNews.RequestDataObj;
+import pageobjects.api.AdminWeb.RequestDataObj;
 import pageobjects.api.AdminWeb.ResponseDataObj;
 
 /**

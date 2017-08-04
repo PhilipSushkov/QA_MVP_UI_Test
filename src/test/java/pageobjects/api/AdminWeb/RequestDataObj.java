@@ -1,4 +1,4 @@
-package pageobjects.api.AdminWeb.EuroNews;
+package pageobjects.api.AdminWeb;
 
 import net.lightbody.bmp.BrowserMobProxy;
 import net.lightbody.bmp.core.har.HarEntry;

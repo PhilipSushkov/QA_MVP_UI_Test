@@ -36,9 +36,9 @@ public abstract class ApiAbstractSpec extends util.Functions {
     // IMPORTANT:
 // Determines which environment the test suite will run on but can be overridden by command line
 //------------------------------------------------------------------------------
-    private static final EnvironmentType DEFAULT_API_ENV = EnvironmentType.API_DEVELOP;
-    //private static final EnvironmentType DEFAULT_API_ENV = EnvironmentType.API_BETA;
-    //private static final EnvironmentType DEFAULT_API_ENV = EnvironmentType.API_PRODUCTION;
+    private static final EnvironmentType DEFAULT_ENV = EnvironmentType.DEVELOP;
+    //private static final EnvironmentType DEFAULT_ENV = EnvironmentType.BETA;
+    //private static final EnvironmentType DEFAULT_ENV = EnvironmentType.PRODUCTION;
 //------------------------------------------------------------------------------
 
     private static final EnvironmentType activeEnvironment = setupEnvironment();
@@ -59,7 +59,7 @@ public abstract class ApiAbstractSpec extends util.Functions {
         }
 
         switch (getActiveEnvironment()) {
-            case API_DEVELOP:
+            case DEVELOP:
                 setupChromeLocalDriver();
                 break;
             case BETA:
@@ -135,10 +135,10 @@ public abstract class ApiAbstractSpec extends util.Functions {
             if ((overrideEnvironment.equals("API_PROD")) || (overrideEnvironment.equals("API_BETA")) || (overrideEnvironment.equals("API_DEV"))) {
                 return EnvironmentType.valueOf(overrideEnvironment);
             } else {
-                return DEFAULT_API_ENV;
+                return DEFAULT_ENV;
             }
         } else {
-            return DEFAULT_API_ENV;
+            return DEFAULT_ENV;
         }
     }
 
