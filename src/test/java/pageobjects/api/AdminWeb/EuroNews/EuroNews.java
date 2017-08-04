@@ -94,6 +94,7 @@ public class EuroNews extends AbstractPageObject {
 
     public ResponseDataObj getResponseData(JSONObject data) throws IOException, ParseException {
         ResponseDataObj responseDataObj = Functions.setResponseDataObj(proxyEuroNews, data.get("method").toString(), data.get("content_type").toString(), data);
+
         try {
             FileWriter writeFile = new FileWriter(sPathToFile + "result_" + data.get("api_request_name").toString() + ".json");
             writeFile.write(responseDataObj.getJsonResponse().toJSONString().replace("\\", ""));
