@@ -1,5 +1,3 @@
-
-
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "definitions": {},
@@ -34,11 +32,13 @@
           },
           "InstrumentID": {
             "id": "/properties/recordset/items/properties/InstrumentID",
-            "type": "integer"
+            "minimum": 1,
+            "type": "number"
           },
           "SolutionID": {
             "id": "/properties/recordset/items/properties/SolutionID",
-            "type": "integer"
+            "minimum": 1,
+            "type": "number"
           },
           "SolutionPath": {
             "id": "/properties/recordset/items/properties/SolutionPath",
@@ -56,4 +56,3 @@
   },
   "type": "object"
 }
-

@@ -22,6 +22,8 @@ import org.json.simple.parser.ParseException;
 import pageobjects.api.AdminWeb.ResponseDataObj;
 import util.Functions;
 
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 
 /**
@@ -31,7 +33,7 @@ import java.io.IOException;
 public class EuroNews extends AbstractPageObject {
     private static By moduleTitle, searchInp, clientsDataTable, page4Href, widgetContent, cellDataSpan;
     private static BrowserMobProxy proxyEuroNews = new BrowserMobProxyServer();
-    private static String sPathToHar, sHarFileName;
+    private static String sPathToHar, sHarFileName, sPathToFile;
     private static final long DEFAULT_PAUSE = 2000;
 
     public EuroNews(WebDriver driver, BrowserMobProxy proxy) {
@@ -46,6 +48,7 @@ public class EuroNews extends AbstractPageObject {
         cellDataSpan = By.xpath(propAPI.getProperty("span_CellData"));
 
         sPathToHar = System.getProperty("user.dir") + propAPI.getProperty("dataPath_EuroNewsHar");
+        sPathToFile = System.getProperty("user.dir") + propAPI.getProperty("dataPath_EuroNewsClientList");
         sHarFileName = "euroNews.har";
 
         proxyEuroNews.enableHarCaptureTypes(CaptureType.REQUEST_HEADERS, CaptureType.RESPONSE_HEADERS);
@@ -90,7 +93,18 @@ public class EuroNews extends AbstractPageObject {
 
 
     public ResponseDataObj getResponseData(JSONObject data) throws IOException, ParseException {
-        return Functions.setResponseDataObj(proxyEuroNews, data.get("method").toString(), data.get("content_type").toString(), data);
+        ResponseDataObj responseDataObj = Functions.setResponseDataObj(proxyEuroNews, data.get("method").toString(), data.get("content_type").toString(), data);
+        try {
+            FileWriter writeFile = new FileWriter(sPathToFile + "result_" + data.get("api_request_name").toString() + ".json");
+            writeFile.write(responseDataObj.getJsonResponse().toJSONString().replace("\\", ""));
+            writeFile.flush();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return responseDataObj;
     }
 
 }

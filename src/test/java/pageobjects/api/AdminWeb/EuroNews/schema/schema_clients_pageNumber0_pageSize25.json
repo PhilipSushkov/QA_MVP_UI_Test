@@ -8,7 +8,8 @@
       "properties": {
         "TotalRecords": {
           "id": "/properties/output/properties/TotalRecords",
-          "type": "integer"
+          "minimum": 1,
+          "type": "number"
         }
       },
       "type": "object"
@@ -16,4 +17,3 @@
   },
   "type": "object"
 }
-
