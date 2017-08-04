@@ -87,7 +87,7 @@ public abstract class ApiAbstractSpec extends util.Functions {
         */
 
         proxy.start();
-        //System.out.println("Proxy port: "+ proxy.getPort());
+        System.out.println("Proxy port: "+ proxy.getPort());
 
         Proxy selProxy = ClientUtil.createSeleniumProxy(proxy);
         capabilities.setCapability(CapabilityType.PROXY, selProxy);
