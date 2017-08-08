@@ -25,7 +25,7 @@ public class EuroNews extends AbstractPageObject {
     private static BrowserMobProxy proxyEuroNews = new BrowserMobProxyServer();
     private static String sPathToHar, sHarFileName, sPathToFile, sPathToSchema;
     private static String searchWord;
-    private static final long DEFAULT_PAUSE = 2000;
+    //private static final long DEFAULT_PAUSE = 2000;
 
     public EuroNews(WebDriver driver, BrowserMobProxy proxy) {
         super(driver);
@@ -102,14 +102,22 @@ public class EuroNews extends AbstractPageObject {
         return Functions.getSchemaValidation(sPathToSchema, sPathToFile, sSchemaFileName, sResultFileName);
     }
 
-    public void clickPage4Href(){
+    public void clickPage4Href() {
         findElement(page4Href).click();
         waitForLoadingScreen(spinnerDiv);
         System.out.println("The next request is done");
     }
 
-    public void clickSearch(){
-        findElement(searchInp).sendKeys(searchWord);
+    public void clickSearch() {
+        //findElement(searchInp).sendKeys(searchWord);
+
+        waitForElement(searchInp);
+        WebElement element = findElement(searchInp);
+
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].setAttribute(arguments[1], arguments[2]);", element, "value", searchWord);
+        element.sendKeys(Keys.RETURN);
+
         waitForLoadingScreen(spinnerDiv);
         System.out.println("The search request is done");
     }
