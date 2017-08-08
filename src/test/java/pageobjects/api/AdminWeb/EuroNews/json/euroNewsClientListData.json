@@ -53,7 +53,7 @@
     },
     {
       "do_assertions": true,
-      "api_request_name": "clients_pageNumber0_pageSize25_term",
+      "api_request_name": "clients_pageNumber0_pageSize25_termV",
       "domain": "euroadmin-dev.q4api.com",
       "method": "GET",
       "url": "https://euroadmin-dev.q4api.com/v1/client",
@@ -66,7 +66,7 @@
     },
     {
       "do_assertions": true,
-      "api_request_name": "clients_pageNumber1_pageSize25_term",
+      "api_request_name": "clients_pageNumber1_pageSize25_termV",
       "domain": "euroadmin-dev.q4api.com",
       "method": "GET",
       "url": "https://euroadmin-dev.q4api.com/v1/client",

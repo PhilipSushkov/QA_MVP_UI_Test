@@ -75,6 +75,7 @@ public class CheckEuroNewsClientList extends ApiAbstractSpec {
 
         // Use Search functionality
         euroNews.clickSearch();
+        //euroNews.removeSearchWord();
 
     }
 

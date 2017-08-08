@@ -122,4 +122,15 @@ public class EuroNews extends AbstractPageObject {
         System.out.println("The search request is done");
     }
 
+    public void removeSearchWord() {
+        waitForElement(searchInp);
+        WebElement element = findElement(searchInp);
+
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].setAttribute(arguments[1], arguments[2]);", element, "value", "");
+        element.sendKeys(Keys.RETURN);
+
+        waitForLoadingScreen(spinnerDiv);
+        System.out.println("The search request is removed");
+    }
 }
