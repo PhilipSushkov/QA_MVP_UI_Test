@@ -47,9 +47,11 @@ public class CheckEuroNewsClientList extends ApiAbstractSpec {
         parser = new JSONParser();
 
         // Authorization
+        System.out.println("Start Google Authorization");
         auth.getGoogleAuthPage();
 
         // Open Web Section
+        System.out.println("Open Web Section");
         auth.getWebSection();
 
         euroNews = new EuroNews(driver, proxy);
