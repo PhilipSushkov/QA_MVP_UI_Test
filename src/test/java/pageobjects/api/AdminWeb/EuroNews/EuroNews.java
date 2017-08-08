@@ -24,6 +24,7 @@ public class EuroNews extends AbstractPageObject {
     private static By moduleTitle, searchInp, clientsDataTable, page4Href, widgetContent, cellDataSpan, spinnerDiv;
     private static BrowserMobProxy proxyEuroNews = new BrowserMobProxyServer();
     private static String sPathToHar, sHarFileName, sPathToFile, sPathToSchema;
+    private static String searchWord;
     private static final long DEFAULT_PAUSE = 2000;
 
     public EuroNews(WebDriver driver, BrowserMobProxy proxy) {
@@ -37,6 +38,8 @@ public class EuroNews extends AbstractPageObject {
         widgetContent = By.xpath(propAPI.getProperty("content_Widget"));
         cellDataSpan = By.xpath(propAPI.getProperty("span_CellData"));
         spinnerDiv = By.xpath(propAPI.getProperty("div_spinner"));
+
+        searchWord = propAPI.getProperty("searchWord");
 
         sPathToHar = System.getProperty("user.dir") + propAPI.getProperty("dataPath_EuroNewsHar");
         sPathToFile = System.getProperty("user.dir") + propAPI.getProperty("dataPath_EuroNewsClientList");
@@ -104,4 +107,11 @@ public class EuroNews extends AbstractPageObject {
         waitForLoadingScreen(spinnerDiv);
         System.out.println("The next request is done");
     }
+
+    public void clickSearch(){
+        findElement(searchInp).sendKeys(searchWord);
+        waitForLoadingScreen(spinnerDiv);
+        System.out.println("The search request is done");
+    }
+
 }

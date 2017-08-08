@@ -61,6 +61,7 @@ public class CheckEuroNewsClientList extends ApiAbstractSpec {
     public void checkEuroNewsClient() throws InterruptedException {
         final String expectedTitle = "Euro News Client List";
 
+        // Check elements after the first load
         Assert.assertNotNull(euroNews.getUrl());
         Assert.assertEquals(euroNews.getTitle(), expectedTitle, "Actual Euro News Client List page Title doesn't match to expected");
         Assert.assertNotNull(euroNews.getSearchInput(), "Search field doesn't exist");
@@ -69,7 +70,11 @@ public class CheckEuroNewsClientList extends ApiAbstractSpec {
         Assert.assertNotNull(euroNews.getWidgetContent(), "Widget Content doesn't exist");
         Assert.assertNotNull(euroNews.getCellDataSpan(), "Cell Data spans don't exist");
 
+        // Click the 4th page / dataset
         euroNews.clickPage4Href();
+
+        // Use Search functionality
+        euroNews.clickSearch();
 
     }
 
