@@ -417,9 +417,9 @@ public class Functions {
         return null;
     }
 
-    public static ResponseDataObj setResponseDataObj(BrowserMobProxy sProxy, String sMethod, String sContentType, JSONObject data) throws IOException, ParseException {
+    public static ResponseDataObj setResponseDataObj(BrowserMobProxy sProxy, JSONObject data, String sPathToFile) throws IOException, ParseException {
         ResponseDataObj responseDataObj = new ResponseDataObj();
-        RequestDataObj requestDataObj = new RequestDataObj(sProxy, sMethod, sContentType, getUrlFromApiData(data));
+        RequestDataObj requestDataObj = new RequestDataObj(sProxy, data.get("method").toString(), data.get("content_type").toString(), getUrlFromApiData(data));
 
         if (requestDataObj.getHttpGet() != null) {
             responseDataObj.setResponseTime(requestDataObj.getHttpClient(), requestDataObj.getHttpGet());
@@ -430,6 +430,16 @@ public class Functions {
 
             responseDataObj.setJsonResponse(responseDataObj.getHttpResponse());
             //System.out.println("JSON Response of "+data.get("api_request_name").toString()+" is: \n" + responseDataObj.getJsonResponse());
+
+            try {
+                FileWriter writeFile = new FileWriter(sPathToFile + "result_" + data.get("api_request_name").toString() + ".json");
+                writeFile.write(responseDataObj.getJsonResponse().toJSONString().replace("\\", ""));
+                writeFile.flush();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
             return responseDataObj;
         } else {

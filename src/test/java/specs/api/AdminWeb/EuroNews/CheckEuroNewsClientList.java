@@ -1,6 +1,5 @@
 package specs.api.AdminWeb.EuroNews;
 
-import org.json.JSONTokener;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -21,8 +20,6 @@ import com.jayway.jsonpath.JsonPath;
 import java.io.*;
 import java.util.ArrayList;
 
-import org.everit.json.schema.Schema;
-import org.everit.json.schema.loader.SchemaLoader;
 
 /**
  * Created by philipsushkov on 2017-07-31.
@@ -88,20 +85,11 @@ public class CheckEuroNewsClientList extends ApiAbstractSpec {
         Assert.assertTrue(responseDataObj.getResponseCode() == Integer.valueOf(JsonPath.read(data, "$.expected.response_code")), "Response Code value of "+sApiRequestName+" is not the same as expected. Actual: "+responseDataObj.getResponseCode()+". Expected: "+JsonPath.read(data, "$.expected.response_code"));
         Assert.assertTrue(responseDataObj.getResponseTime() < Integer.valueOf(JsonPath.read(data, "$.expected.response_time_ms")), "Response Time value of "+sApiRequestName+" exceeded the expected. Actual: "+responseDataObj.getResponseTime()+". Expected: "+JsonPath.read(data, "$.expected.response_time_ms"));
         Assert.assertNotNull(responseDataObj.getJsonResponse(), "JSON Response Data doesn't exist");
+    }
 
-        try {
-            InputStream inputStream = new FileInputStream(sPathToSchema + "schema_" + sApiRequestName + ".json");
-            org.json.JSONObject rawSchema = new org.json.JSONObject(new JSONTokener(inputStream));
-
-            InputStream inputStreamResult = new FileInputStream(sPathToFile + "result_" + sApiRequestName + ".json");
-            org.json.JSONObject rawSchemaResult = new org.json.JSONObject(new JSONTokener(inputStreamResult));
-
-            Schema schema = SchemaLoader.load(rawSchema);
-            schema.validate(rawSchemaResult); // throws a ValidationException if this object is invalid
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+    @Test(dataProvider=DATA_JSON_CONTENT, priority=4)
+    public void checkSchemaValidation(JSONObject data) throws InterruptedException, IOException, ParseException {
+        Assert.assertTrue(euroNews.schemaValidation(data), "Actual JSON schema doesn't match expected one");
     }
 
     @DataProvider

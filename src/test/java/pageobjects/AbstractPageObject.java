@@ -165,7 +165,7 @@ public class AbstractPageObject implements PageObject {
         WebElement element = null;
 
         try {
-            waitForElement(selector);
+            waitForAnyElementToAppear(selector);
             element = findElement(selector);
         } catch (ElementNotFoundException e) {
         } catch (ElementNotVisibleException e) {

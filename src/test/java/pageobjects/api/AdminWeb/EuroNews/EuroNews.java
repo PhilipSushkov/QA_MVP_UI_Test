@@ -4,6 +4,9 @@ import net.lightbody.bmp.BrowserMobProxy;
 import net.lightbody.bmp.BrowserMobProxyServer;
 import net.lightbody.bmp.core.har.Har;
 import net.lightbody.bmp.proxy.CaptureType;
+import org.everit.json.schema.Schema;
+import org.everit.json.schema.loader.SchemaLoader;
+import org.json.JSONTokener;
 import org.json.simple.JSONObject;
 import org.openqa.selenium.*;
 import pageobjects.AbstractPageObject;
@@ -22,9 +25,7 @@ import org.json.simple.parser.ParseException;
 import pageobjects.api.AdminWeb.ResponseDataObj;
 import util.Functions;
 
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 
 /**
  * Created by philipsushkov on 2017-07-31.
@@ -33,7 +34,7 @@ import java.io.IOException;
 public class EuroNews extends AbstractPageObject {
     private static By moduleTitle, searchInp, clientsDataTable, page4Href, widgetContent, cellDataSpan;
     private static BrowserMobProxy proxyEuroNews = new BrowserMobProxyServer();
-    private static String sPathToHar, sHarFileName, sPathToFile;
+    private static String sPathToHar, sHarFileName, sPathToFile, sPathToSchema;
     private static final long DEFAULT_PAUSE = 2000;
 
     public EuroNews(WebDriver driver, BrowserMobProxy proxy) {
@@ -51,13 +52,15 @@ public class EuroNews extends AbstractPageObject {
         sPathToFile = System.getProperty("user.dir") + propAPI.getProperty("dataPath_EuroNewsClientList");
         sHarFileName = "euroNews.har";
 
+        sPathToSchema = System.getProperty("user.dir") + propAPI.getProperty("dataPath_EuroNewsSchema");
+
         proxyEuroNews.enableHarCaptureTypes(CaptureType.REQUEST_HEADERS, CaptureType.RESPONSE_HEADERS);
         proxyEuroNews.newHar("euroNews");
     }
 
 
     public String getTitle() {
-        waitForElement(moduleTitle);
+        waitForAnyElementToAppear(moduleTitle);
         return getText(moduleTitle);
     }
 
@@ -93,19 +96,26 @@ public class EuroNews extends AbstractPageObject {
 
 
     public ResponseDataObj getResponseData(JSONObject data) throws IOException, ParseException {
-        ResponseDataObj responseDataObj = Functions.setResponseDataObj(proxyEuroNews, data.get("method").toString(), data.get("content_type").toString(), data);
+        ResponseDataObj responseDataObj = Functions.setResponseDataObj(proxyEuroNews, data, sPathToFile);
+        return responseDataObj;
+    }
+
+    public boolean schemaValidation(JSONObject data) throws InterruptedException, IOException, ParseException {
 
         try {
-            FileWriter writeFile = new FileWriter(sPathToFile + "result_" + data.get("api_request_name").toString() + ".json");
-            writeFile.write(responseDataObj.getJsonResponse().toJSONString().replace("\\", ""));
-            writeFile.flush();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            InputStream inputStream = new FileInputStream(sPathToSchema + "schema_" + data.get("api_request_name").toString() + ".json");
+            org.json.JSONObject rawSchema = new org.json.JSONObject(new JSONTokener(inputStream));
+
+            InputStream inputStreamResult = new FileInputStream(sPathToFile + "result_" + data.get("api_request_name").toString() + ".json");
+            org.json.JSONObject rawSchemaResult = new org.json.JSONObject(new JSONTokener(inputStreamResult));
+
+            Schema schema = SchemaLoader.load(rawSchema);
+            schema.validate(rawSchemaResult); // throws a ValidationException if this object is invalid
+            return true;
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         }
-
-        return responseDataObj;
     }
 
 }
