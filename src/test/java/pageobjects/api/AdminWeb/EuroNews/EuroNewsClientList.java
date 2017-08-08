@@ -20,14 +20,14 @@ import java.io.*;
  * Created by philipsushkov on 2017-07-31.
  */
 
-public class EuroNews extends AbstractPageObject {
+public class EuroNewsClientList extends AbstractPageObject {
     private static By moduleTitle, searchInp, clientsDataTable, page4Href, widgetContent, cellDataSpan, spinnerDiv;
     private static BrowserMobProxy proxyEuroNews = new BrowserMobProxyServer();
     private static String sPathToHar, sHarFileName, sPathToFile, sPathToSchema;
     private static String searchWord;
     //private static final long DEFAULT_PAUSE = 2000;
 
-    public EuroNews(WebDriver driver, BrowserMobProxy proxy) {
+    public EuroNewsClientList(WebDriver driver, BrowserMobProxy proxy) {
         super(driver);
         this.proxyEuroNews = proxy;
 
@@ -48,7 +48,7 @@ public class EuroNews extends AbstractPageObject {
         sPathToSchema = System.getProperty("user.dir") + propAPI.getProperty("dataPath_EuroNewsSchema");
 
         proxyEuroNews.enableHarCaptureTypes(CaptureType.REQUEST_HEADERS, CaptureType.RESPONSE_HEADERS);
-        proxyEuroNews.newHar("euroNews");
+        proxyEuroNews.newHar("euroClientNews");
     }
 
 

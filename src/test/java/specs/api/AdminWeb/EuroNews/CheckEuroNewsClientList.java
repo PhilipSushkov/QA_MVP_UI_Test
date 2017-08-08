@@ -10,7 +10,7 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import pageobjects.api.AdminWeb.Auth;
-import pageobjects.api.AdminWeb.EuroNews.EuroNews;
+import pageobjects.api.AdminWeb.EuroNews.EuroNewsClientList;
 import pageobjects.api.AdminWeb.LeftMainMenu;
 import pageobjects.api.AdminWeb.ResponseDataObj;
 import specs.ApiAbstractSpec;
@@ -28,7 +28,7 @@ import java.util.ArrayList;
 public class CheckEuroNewsClientList extends ApiAbstractSpec {
     private static Auth auth;
     private static LeftMainMenu leftMainMenu;
-    private static EuroNews euroNews;
+    private static EuroNewsClientList euroNews;
     private static final String EURO_NEWS = "Euro News";
     private static String sPathToSchema, sPathToFile;
     private static JSONParser parser;
@@ -51,7 +51,7 @@ public class CheckEuroNewsClientList extends ApiAbstractSpec {
         System.out.println("Open Web Section");
         auth.getWebSection();
 
-        euroNews = new EuroNews(driver, proxy);
+        euroNews = new EuroNewsClientList(driver, proxy);
 
         // Open Euro News Client List page in Web Section
         leftMainMenu.getEuroNewsClientListPage(EURO_NEWS);
