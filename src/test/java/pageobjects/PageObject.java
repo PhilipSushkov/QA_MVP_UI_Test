@@ -250,7 +250,8 @@ public interface PageObject {
     default void waitForElementAndClick(WebDriver driver, By selector, long DEFAULT_PAUSE) throws InterruptedException {
         for (int i = 0; i < 3; i++) {
             try {
-                waitForElement(selector);
+                waitForAnyElementToAppear(selector);
+                //waitForElement(selector);
                 findElement(selector).click();
                 break;
             } catch (TimeoutException e) {
@@ -263,7 +264,8 @@ public interface PageObject {
     default void waitForElementRefresh(WebDriver driver, By selector, long DEFAULT_PAUSE) throws InterruptedException {
         for (int i = 0; i < 3; i++) {
             try {
-                waitForElement(selector);
+                //waitForElement(selector);
+                waitForAnyElementToAppear(selector);
                 break;
             } catch (TimeoutException e) {
                 driver.navigate().refresh();
