@@ -9,6 +9,7 @@ import org.apache.commons.io.FileUtils;
 import org.im4java.core.CompareCmd;
 import org.im4java.core.IMOperation;
 import org.im4java.process.StandardStream;
+import org.json.JSONTokener;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -24,6 +25,9 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import java.util.Properties;
+
+import org.everit.json.schema.Schema;
+import org.everit.json.schema.loader.SchemaLoader;
 
 import javax.mail.*;
 import javax.mail.search.SubjectTerm;
@@ -446,6 +450,24 @@ public class Functions {
             return null;
         }
 
+    }
+
+    public static boolean getSchemaValidation (String sPathToSchema, String sPathToFile, String sSchemaFileName, String sResultFileName) throws IOException, ParseException {
+        try {
+            InputStream inputStream = new FileInputStream(sPathToSchema + sSchemaFileName);
+            org.json.JSONObject rawSchema = new org.json.JSONObject(new JSONTokener(inputStream));
+
+            InputStream inputStreamResult = new FileInputStream(sPathToFile + sResultFileName);
+            org.json.JSONObject rawSchemaResult = new org.json.JSONObject(new JSONTokener(inputStreamResult));
+
+            Schema schema = SchemaLoader.load(rawSchema);
+            schema.validate(rawSchemaResult); // throws a ValidationException if this object is invalid
+
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
 }

@@ -13,14 +13,6 @@ import pageobjects.AbstractPageObject;
 
 import static specs.ApiAbstractSpec.propAPI;
 
-import net.lightbody.bmp.core.har.*;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.util.EntityUtils;
-import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import pageobjects.api.AdminWeb.ResponseDataObj;
 import util.Functions;
@@ -100,22 +92,10 @@ public class EuroNews extends AbstractPageObject {
         return responseDataObj;
     }
 
-    public boolean schemaValidation(JSONObject data) throws InterruptedException, IOException, ParseException {
-
-        try {
-            InputStream inputStream = new FileInputStream(sPathToSchema + "schema_" + data.get("api_request_name").toString() + ".json");
-            org.json.JSONObject rawSchema = new org.json.JSONObject(new JSONTokener(inputStream));
-
-            InputStream inputStreamResult = new FileInputStream(sPathToFile + "result_" + data.get("api_request_name").toString() + ".json");
-            org.json.JSONObject rawSchemaResult = new org.json.JSONObject(new JSONTokener(inputStreamResult));
-
-            Schema schema = SchemaLoader.load(rawSchema);
-            schema.validate(rawSchemaResult); // throws a ValidationException if this object is invalid
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
+    public boolean schemaValidation(JSONObject data) throws IOException, ParseException {
+        String sSchemaFileName = "schema_" + data.get("api_request_name").toString() + ".json";
+        String sResultFileName = "result_" + data.get("api_request_name").toString() + ".json";
+        return Functions.getSchemaValidation(sPathToSchema, sPathToFile, sSchemaFileName, sResultFileName);
     }
 
 }

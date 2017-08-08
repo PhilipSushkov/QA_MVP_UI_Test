@@ -62,6 +62,7 @@ public class Auth extends AbstractPageObject {
 
         System.out.println("Click Login Using Google Btn");
         waitForElementAndClick(driver, loginUsingGoogleBtn, DEFAULT_PAUSE);
+        Thread.sleep(DEFAULT_PAUSE);
 
         System.out.println("Click Login With Google Btn");
         waitForElementAndClick(driver, loginWithGoogleBtn, DEFAULT_PAUSE);
