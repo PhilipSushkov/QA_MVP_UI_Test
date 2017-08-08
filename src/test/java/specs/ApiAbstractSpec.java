@@ -136,7 +136,7 @@ public abstract class ApiAbstractSpec extends util.Functions {
 
         String overrideEnvironment = System.getProperty("environment");
         if (overrideEnvironment != null) {
-            if ((overrideEnvironment.equals("API_PROD")) || (overrideEnvironment.equals("API_BETA")) || (overrideEnvironment.equals("API_DEV"))) {
+            if ((overrideEnvironment.equals("PRODUCTION")) || (overrideEnvironment.equals("BETA")) || (overrideEnvironment.equals("DEVELOP"))) {
                 return EnvironmentType.valueOf(overrideEnvironment);
             } else {
                 return DEFAULT_ENV;
