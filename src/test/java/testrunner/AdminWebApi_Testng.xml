@@ -17,7 +17,7 @@
 -->
 
 
-    <test name="EuroNewsClientList">
+    <test name="EuroNewsClientList1">
         <parameter name="browserName" value="chrome"></parameter>
         <classes>
             <class name="specs.api.AdminWeb.EuroNews.CheckEuroNewsClientList" />

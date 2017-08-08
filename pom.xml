@@ -16,7 +16,7 @@
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-support</artifactId>
-            <version>2.53.0</version>
+            <version>3.4.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -37,18 +37,18 @@
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-server</artifactId>
-            <version>2.53.0</version>
+            <version>3.4.0</version>
         </dependency>
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-firefox-driver</artifactId>
-            <version>2.53.0</version>
+            <version>3.4.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-chrome-driver</artifactId>
-            <version>2.53.0</version>
+            <version>3.4.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -200,8 +200,7 @@
         <dependency>
             <groupId>net.lightbody.bmp</groupId>
             <artifactId>browsermob-core</artifactId>
-            <version>2.1.4</version>
-            <scope>test</scope>
+            <version>2.1.0</version>
         </dependency>
         <dependency>
             <groupId>de.sstoehr</groupId>

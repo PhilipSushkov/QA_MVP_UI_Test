@@ -81,6 +81,8 @@ public class Auth extends AbstractPageObject {
 
         waitForElement(googlePasswordInp);
         findElement(googlePasswordInp).sendKeys(sPassword);
+
+        Thread.sleep(DEFAULT_PAUSE);
         findElement(googlePsNextBtn).click();
 
         Thread.sleep(DEFAULT_PAUSE);
@@ -91,7 +93,6 @@ public class Auth extends AbstractPageObject {
         waitForElementRefresh(driver, productDown, DEFAULT_PAUSE);
 
         return driver.getTitle();
-
     }
 
     public String getWebSection() throws InterruptedException {
