@@ -37,5 +37,18 @@
         "response_code": "200",
         "response_time_ms": "1000"
       }
+    },
+    {
+      "do_assertions": true,
+      "api_request_name": "clients_pageNumber4_pageSize25",
+      "domain": "euroadmin-dev.q4api.com",
+      "method": "GET",
+      "url": "https://euroadmin-dev.q4api.com/v1/client",
+      "params": ["pageNumber:4", "pageSize:25"],
+      "content_type": "application/json",
+      "expected": {
+        "response_code": "200",
+        "response_time_ms": "1000"
+      }
     }]
 }

@@ -4,9 +4,6 @@ import net.lightbody.bmp.BrowserMobProxy;
 import net.lightbody.bmp.BrowserMobProxyServer;
 import net.lightbody.bmp.core.har.Har;
 import net.lightbody.bmp.proxy.CaptureType;
-import org.everit.json.schema.Schema;
-import org.everit.json.schema.loader.SchemaLoader;
-import org.json.JSONTokener;
 import org.json.simple.JSONObject;
 import org.openqa.selenium.*;
 import pageobjects.AbstractPageObject;
@@ -24,7 +21,7 @@ import java.io.*;
  */
 
 public class EuroNews extends AbstractPageObject {
-    private static By moduleTitle, searchInp, clientsDataTable, page4Href, widgetContent, cellDataSpan;
+    private static By moduleTitle, searchInp, clientsDataTable, page4Href, widgetContent, cellDataSpan, spinnerDiv;
     private static BrowserMobProxy proxyEuroNews = new BrowserMobProxyServer();
     private static String sPathToHar, sHarFileName, sPathToFile, sPathToSchema;
     private static final long DEFAULT_PAUSE = 2000;
@@ -39,6 +36,7 @@ public class EuroNews extends AbstractPageObject {
         page4Href = By.xpath(propAPI.getProperty("href_Page4"));
         widgetContent = By.xpath(propAPI.getProperty("content_Widget"));
         cellDataSpan = By.xpath(propAPI.getProperty("span_CellData"));
+        spinnerDiv = By.xpath(propAPI.getProperty("div_spinner"));
 
         sPathToHar = System.getProperty("user.dir") + propAPI.getProperty("dataPath_EuroNewsHar");
         sPathToFile = System.getProperty("user.dir") + propAPI.getProperty("dataPath_EuroNewsClientList");
@@ -65,14 +63,17 @@ public class EuroNews extends AbstractPageObject {
     }
 
     public WebElement getPage4Href() {
+        waitForLoadingScreen(spinnerDiv);
         return checkElementExists(page4Href);
     }
 
     public WebElement getWidgetContent() {
+        waitForLoadingScreen(spinnerDiv);
         return checkElementExists(widgetContent);
     }
 
     public WebElement getCellDataSpan() {
+        waitForLoadingScreen(spinnerDiv);
         return checkElementExists(cellDataSpan);
     }
 
@@ -92,10 +93,15 @@ public class EuroNews extends AbstractPageObject {
         return responseDataObj;
     }
 
-    public boolean schemaValidation(JSONObject data) throws IOException, ParseException {
+    public boolean getSchemaValidation(JSONObject data) throws IOException, ParseException {
         String sSchemaFileName = "schema_" + data.get("api_request_name").toString() + ".json";
         String sResultFileName = "result_" + data.get("api_request_name").toString() + ".json";
         return Functions.getSchemaValidation(sPathToSchema, sPathToFile, sSchemaFileName, sResultFileName);
     }
 
+    public void clickPage4Href(){
+        findElement(page4Href).click();
+        waitForLoadingScreen(spinnerDiv);
+        System.out.println("The next request is done");
+    }
 }

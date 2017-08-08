@@ -1,0 +1,58 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "definitions": {},
+  "id": "http://example.com/example.json",
+  "properties": {
+    "output": {
+      "id": "/properties/output",
+      "properties": {
+        "TotalRecords": {
+          "id": "/properties/output/properties/TotalRecords",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "recordset": {
+      "id": "/properties/recordset",
+      "items": {
+        "id": "/properties/recordset/items",
+        "properties": {
+          "Currency": {
+            "id": "/properties/recordset/items/properties/Currency",
+            "type": "string"
+          },
+          "CustomerName": {
+            "id": "/properties/recordset/items/properties/CustomerName",
+            "type": "string"
+          },
+          "Exchange": {
+            "id": "/properties/recordset/items/properties/Exchange",
+            "type": ["string", "null"]
+          },
+          "InstrumentID": {
+            "id": "/properties/recordset/items/properties/InstrumentID",
+            "minimum": 1,
+            "type": "number"
+          },
+          "SolutionID": {
+            "id": "/properties/recordset/items/properties/SolutionID",
+            "minimum": 1,
+            "type": "number"
+          },
+          "SolutionPath": {
+            "id": "/properties/recordset/items/properties/SolutionPath",
+            "type": "string"
+          },
+          "Symbol": {
+            "id": "/properties/recordset/items/properties/Symbol",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "type": "array"
+    }
+  },
+  "type": "object"
+}

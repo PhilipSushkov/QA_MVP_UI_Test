@@ -68,6 +68,9 @@ public class CheckEuroNewsClientList extends ApiAbstractSpec {
         Assert.assertNotNull(euroNews.getPage4Href(), "Page #4 link doesn't exist");
         Assert.assertNotNull(euroNews.getWidgetContent(), "Widget Content doesn't exist");
         Assert.assertNotNull(euroNews.getCellDataSpan(), "Cell Data spans don't exist");
+
+        euroNews.clickPage4Href();
+
     }
 
     @Test(priority=2)
@@ -89,7 +92,7 @@ public class CheckEuroNewsClientList extends ApiAbstractSpec {
 
     @Test(dataProvider=DATA_JSON_CONTENT, priority=4)
     public void checkSchemaValidation(JSONObject data) throws InterruptedException, IOException, ParseException {
-        Assert.assertTrue(euroNews.schemaValidation(data), "Actual JSON schema doesn't match expected one");
+        Assert.assertTrue(euroNews.getSchemaValidation(data), "Actual JSON schema doesn't match expected one");
     }
 
     @DataProvider

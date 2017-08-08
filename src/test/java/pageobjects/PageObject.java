@@ -141,12 +141,12 @@ public interface PageObject {
         return result;
     }
 
-    default void waitForLoadingScreen() {
+    default void waitForLoadingScreen(By selector) {
         //Waits 2 sec for spinners to appear, then 10 sec for spinners to disappear
         WebDriverWait spinnerWait = new WebDriverWait(getDriver(), 2);
         try {
-            spinnerWait.until(ExpectedConditions.presenceOfElementLocated(By.className("x-loading-spinner")));
-            getWait().until(ExpectedConditions.invisibilityOfAllElements(findElements(By.className("x-loading-spinner"))));
+            spinnerWait.until(ExpectedConditions.presenceOfElementLocated(selector));
+            getWait().until(ExpectedConditions.invisibilityOfAllElements(findElements(selector)));
         } catch (Exception e) {
             // No loading spinners; do nothing
         }
