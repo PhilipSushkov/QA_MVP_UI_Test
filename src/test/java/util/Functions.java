@@ -463,8 +463,13 @@ public class Functions {
             Schema schema = SchemaLoader.load(rawSchema);
             schema.validate(rawSchemaResult); // throws a ValidationException if this object is invalid
 
+            System.out.println("Schema validation passed");
+
             return true;
         } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
