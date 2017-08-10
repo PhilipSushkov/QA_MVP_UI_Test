@@ -30,7 +30,7 @@ public class PageAdd extends AbstractPageObject {
     private static By revertBtn, parentUrlSpan, seoNameInput, previewLnk, commentsTxt, deleteBtn, addNewInput, saveAndSubmitBtn;
     private static String sPathToFile, sFilePagesJson, sFileModulesJson;
     private static JSONParser parser;
-    private static final long DEFAULT_PAUSE = 2500;
+    private static final long DEFAULT_PAUSE = 4500;
     private static PageAdminList pageAdminList;
 
     public PageAdd(WebDriver driver) {

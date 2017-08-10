@@ -137,6 +137,7 @@ public class LayoutDefinitionAdd extends AbstractPageObject {
                 }
             }
 
+            /*
             enable_viewState = Boolean.parseBoolean(data.get("enable_viewState").toString());
             jsonObj.put("enable_viewState", Boolean.parseBoolean(data.get("enable_viewState").toString()));
             if (enable_viewState) {
@@ -150,6 +151,7 @@ public class LayoutDefinitionAdd extends AbstractPageObject {
                     findElement(viewStateChk).click();
                 }
             }
+            */
 
 
             findElement(saveBtn).click();
@@ -302,14 +304,6 @@ public class LayoutDefinitionAdd extends AbstractPageObject {
                 }
             } catch (NullPointerException e) {
             }
-
-            try {
-                if (!findElement(viewStateChk).getAttribute("checked").equals(data.get("enable_viewState").toString())) {
-                    return false;
-                }
-            } catch (NullPointerException e) {
-            }
-
 
             System.out.println(name+ ": New "+PAGE_NAME+" has been checked");
             return true;
