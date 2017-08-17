@@ -15,8 +15,8 @@
     {
       "do_assertions": true,
       "api_request_name": "clients_pageNumber0_pageSize25",
-      "domain": "euroadmin-dev.q4api.com",
-      "url": "https://euroadmin-dev.q4api.com/v1/client",
+      "domain": "q4-admin-develop.herokuapp.com",
+      "url": "https://q4-admin-develop.herokuapp.com/api/euro/client",
       "params": ["pageNumber:0", "pageSize:25"],
       "method": "GET",
       "content_type": "application/json",
@@ -28,9 +28,9 @@
     {
       "do_assertions": true,
       "api_request_name": "clients_pageNumber1_pageSize25",
-      "domain": "euroadmin-dev.q4api.com",
+      "domain": "q4-admin-develop.herokuapp.com",
       "method": "GET",
-      "url": "https://euroadmin-dev.q4api.com/v1/client",
+      "url": "https://q4-admin-develop.herokuapp.com/api/euro/client",
       "params": ["pageNumber:1", "pageSize:25"],
       "content_type": "application/json",
       "expected": {
@@ -41,9 +41,9 @@
     {
       "do_assertions": true,
       "api_request_name": "clients_pageNumber4_pageSize25",
-      "domain": "euroadmin-dev.q4api.com",
+      "domain": "q4-admin-develop.herokuapp.com",
       "method": "GET",
-      "url": "https://euroadmin-dev.q4api.com/v1/client",
+      "url": "https://q4-admin-develop.herokuapp.com/api/euro/client",
       "params": ["pageNumber:4", "pageSize:25"],
       "content_type": "application/json",
       "expected": {
@@ -54,9 +54,9 @@
     {
       "do_assertions": true,
       "api_request_name": "clients_pageNumber0_pageSize25_termV",
-      "domain": "euroadmin-dev.q4api.com",
+      "domain": "q4-admin-develop.herokuapp.com",
       "method": "GET",
-      "url": "https://euroadmin-dev.q4api.com/v1/client",
+      "url": "https://q4-admin-develop.herokuapp.com/api/euro/client",
       "params": ["pageNumber:0", "pageSize:25", "term:4imprint"],
       "content_type": "application/json",
       "expected": {
@@ -67,9 +67,9 @@
     {
       "do_assertions": true,
       "api_request_name": "clients_pageNumber1_pageSize25_termV",
-      "domain": "euroadmin-dev.q4api.com",
+      "domain": "q4-admin-develop.herokuapp.com",
       "method": "GET",
-      "url": "https://euroadmin-dev.q4api.com/v1/client",
+      "url": "https://q4-admin-develop.herokuapp.com/api/euro/client",
       "params": ["pageNumber:1", "pageSize:25", "term:4imprint"],
       "content_type": "application/json",
       "expected": {

@@ -36,10 +36,12 @@ public class RequestDataObj {
             HarRequest harRequest = harEntry.getRequest();
             HarResponse harResponse = harEntry.getResponse();
 
+            //System.out.println(urlData);
+
             List<HarNameValuePair> harListResponse = harResponse.getHeaders();
             if (harRequest.getUrl().equals(urlData)
                     && harRequest.getMethod().equals(method)
-                    && harListResponse.get(0).getValue().contains(contentType)) {
+                    && harListResponse.get(5).getValue().contains(contentType)) {
 
                 httpGet = new HttpGet(harRequest.getUrl());
 
