@@ -36,12 +36,11 @@ public class RequestDataObj {
             HarRequest harRequest = harEntry.getRequest();
             HarResponse harResponse = harEntry.getResponse();
 
-            //System.out.println(urlData);
-
             List<HarNameValuePair> harListResponse = harResponse.getHeaders();
+            int sInd = getIndex(harListResponse, contentType);
             if (harRequest.getUrl().equals(urlData)
                     && harRequest.getMethod().equals(method)
-                    && harListResponse.get(5).getValue().contains(contentType)) {
+                    && harListResponse.get(sInd).getValue().contains(contentType)) {
 
                 httpGet = new HttpGet(harRequest.getUrl());
 
@@ -60,5 +59,15 @@ public class RequestDataObj {
     public HttpClient getHttpClient() {
         return httpClient;
     }
+
+    private int getIndex(List<HarNameValuePair> lHarListResponse, String sCondition) {
+        for (int i=0; i < lHarListResponse.size(); i++) {
+            if (lHarListResponse.get(i).getValue().contains(sCondition)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
 
 }
