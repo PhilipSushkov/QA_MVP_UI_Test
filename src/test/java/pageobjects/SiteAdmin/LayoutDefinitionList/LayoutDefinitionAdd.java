@@ -544,12 +544,14 @@ public class LayoutDefinitionAdd extends AbstractPageObject {
             } catch (NullPointerException e) {
             }
 
+            /*
             try {
                 if (!findElement(viewStateChk).getAttribute("checked").equals(data.get("enable_viewState").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
             }
+            */
 
 
             System.out.println(name+ ": New "+PAGE_NAME+" has been checked");
