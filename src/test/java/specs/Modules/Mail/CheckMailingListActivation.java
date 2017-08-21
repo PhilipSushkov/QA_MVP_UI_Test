@@ -10,7 +10,6 @@ import org.testng.annotations.*;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.LoginPage.LoginPage;
 import pageobjects.Modules.Mail.MailingListActivation;
-import pageobjects.Modules.Mail.MailingListSignUp;
 import pageobjects.Modules.ModuleBase;
 import pageobjects.Modules.PageForModules;
 import pageobjects.PageAdmin.WorkflowState;
@@ -23,36 +22,34 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-
 /**
- * Created by andyp on 2017-07-26.
+ * Created by andyp on 2017-08-01.
  */
 /*
-    This test requires a mailing list message email template to work. This can be found on Email Admin -> System Messages. Should be called "Activation Email"
-
-    The title of that template should be assigned to the emailSubject variable.
-
-    Country field not visible on reverseproxy sites for Mail/4_2_2/MailingListSignUp.ascx. Details can be found here: https://q4websystems.atlassian.net/browse/WEB-12858
-    Please add "element;select_Country;True", and "element;span_CountryRequired;True" on non-reverseproxy sites
-
-    Please refer to the Confluence page for complete info - https://q4websystems.atlassian.net/wiki/display/QA/Module+Testing+Notes
+        This test will see if activation module works.
+        Things to note:
+            1. Confirmation message may be different for different sites. Please change the JSON file accordingly for the sign up module.
+            2. Activation message may be different for different sites. Please change the JSON file accordingly for the sign up module.
+            
  */
-public class CheckMailingListSignUp extends AbstractSpec {
+public class CheckMailingListActivation extends AbstractSpec {
     private static By pageAdminMenuButton;
     private static LoginPage loginPage;
     private static Dashboard dashboard;
     private static PageForModules pageForModules;
-    private static MailingListSignUp mailingListSignUp;
+    private static MailingListActivation mailingListActivation;
     private static ModuleBase moduleBase;
 
     private static String sPathToFile, sDataFileJson, sPathToModuleFile, sFileModuleJson;
     private static JSONParser parser;
 
-    private static String user, password, emailSubject, validationSubject;
+    private static String user, password, emailSubject;
 
-    private static By siteEmailMenuButton,subscribersMenuItem;
+    private static By siteEmailMenuButton,systemMessagesMenuItem, subscribersMenuItem;
 
-    private final String MODULE_DATA="moduleData", MODULE_NAME="mailing_list_signup", PAGE_DATA = "pageData", PAGE_NAME = "mail_modules";
+    private String activationURL;
+
+    private final String MODULE_DATA="moduleData", MODULE_NAME="mailing_list_activation", PAGE_DATA = "pageData", PAGE_NAME = "mail_modules";
 
     @BeforeTest
     public void setUp() throws Exception {
@@ -61,14 +58,15 @@ public class CheckMailingListSignUp extends AbstractSpec {
         loginPage = new LoginPage(driver);
         dashboard = new Dashboard(driver);
         pageForModules = new PageForModules(driver);
-        mailingListSignUp = new MailingListSignUp(driver);
+        mailingListActivation = new MailingListActivation(driver);
 
         sPathToFile = System.getProperty("user.dir") + propUIModulesMail.getProperty("dataPath_Mail");
-        sDataFileJson = propUIModulesMail.getProperty("json_MailingListSignUpData");
+        sDataFileJson = propUIModulesMail.getProperty("json_MailingListActivationData");
         sPathToModuleFile = System.getProperty("user.dir") + propUIModulesMail.getProperty("dataPath_Mail");
-        sFileModuleJson = propUIModulesMail.getProperty("json_MailingListSignUpProp");
+        sFileModuleJson = propUIModulesMail.getProperty("json_MailingListActivationProp");
 
         siteEmailMenuButton = By.xpath(propUIEmailAdmin.getProperty("btnMenu_EmailAdmin"));
+        systemMessagesMenuItem = By.xpath(propUIEmailAdmin.getProperty("btnMenu_SystemMessages"));
         subscribersMenuItem = By.xpath(propUIEmailAdmin.getProperty("btnMenu_Subscribers"));
 
         moduleBase = new ModuleBase(driver, sPathToModuleFile, sFileModuleJson);
@@ -78,12 +76,12 @@ public class CheckMailingListSignUp extends AbstractSpec {
         user = "test@q4websystems.com";
         password = "testing!";
         emailSubject = "Ensco Website - Validate Account";
-        validationSubject = "MAIL_SIGNUP_DATA";
 
         deleteMail(user,password, emailSubject);
-        deleteMail(user,password,validationSubject);
+        //mailingListActivation.getConfirmationURL(mailingListActivation.getEmailContent(user,password,emailSubject));
         loginPage.loginUser();
-
+        //dashboard.openPageFromMenu(siteEmailMenuButton, systemMessagesMenuItem);
+        //Assert.assertTrue(moduleBase.activationEmailSetup(MODULE_NAME, emailSubject), "Email  was not setup successfully");
     }
 
     @BeforeMethod
@@ -92,24 +90,24 @@ public class CheckMailingListSignUp extends AbstractSpec {
     }
 
     @Test(dataProvider=PAGE_DATA, priority=1, enabled=false)
-    public void createMailingListSignUpPage(JSONObject module) throws InterruptedException {
+    public void createMailingListActivationPage(JSONObject module) throws InterruptedException {
         Assert.assertEquals(pageForModules.savePage(module, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+MODULE_NAME+" Page didn't save properly");
         Assert.assertEquals(pageForModules.saveAndSubmitPage(module, MODULE_NAME), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New "+MODULE_NAME+" Page properly");
         Assert.assertEquals(pageForModules.publishPage(MODULE_NAME), WorkflowState.LIVE.state(), "Couldn't publish New "+MODULE_NAME+" Page properly");
     }
 
     @Test(dataProvider=MODULE_DATA, priority=2, enabled=false)
-    public void createMailingListSignUpModule(JSONObject module) throws InterruptedException {
+    public void createMailingListActivationModule(JSONObject module) throws InterruptedException {
         String sModuleNameSet = module.get("module_title").toString();
         Assert.assertEquals(moduleBase.saveModule(module, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+sModuleNameSet+" Module didn't save properly");
-        Assert.assertEquals(mailingListSignUp.saveAndSubmitModule(module, sModuleNameSet), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New "+sModuleNameSet+" Module properly");
+        Assert.assertEquals(mailingListActivation.saveAndSubmitModule(module, sModuleNameSet), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New "+sModuleNameSet+" Module properly");
         Assert.assertEquals(moduleBase.publishModule(sModuleNameSet), WorkflowState.LIVE.state(), "Couldn't publish New "+sModuleNameSet+" Module properly");
     }
 
     @Test(dataProvider=MODULE_DATA, priority=3, enabled=false)
     public void checkProperties(JSONObject module) throws InterruptedException {
         // Checks that all input properties were saved correctly
-        Assert.assertEquals(mailingListSignUp.goToModuleEditPage(module.get("module_title").toString()), WorkflowState.LIVE.state());
+        Assert.assertEquals(mailingListActivation.goToModuleEditPage(module.get("module_title").toString()), WorkflowState.LIVE.state());
         JSONArray JSONArrProp = (JSONArray) module.get("properties");
         for (Object property : JSONArrProp) {
             String sProperty = property.toString();
@@ -126,14 +124,19 @@ public class CheckMailingListSignUp extends AbstractSpec {
     }
 
     @Test(dataProvider=MODULE_DATA, priority=4, enabled=true)
-    public void checkMailingListSignUpPreview(JSONObject module) throws InterruptedException, IOException, MessagingException {
+    public void checkMailingListActivationPreview(JSONObject module) throws InterruptedException, IOException, MessagingException {
         try {
             String sModuleNameSet = module.get("module_title").toString();
-            if(module.get("check_email").toString().equals("true")) {
-                //Delete subscriber if you are checking email (if you are checking subscribe button)
+
+            // Setup activation email and delete subscriber
+            if(module.get("module_title").toString().equals("SignUpModule")) {
+                driver.get(desktopUrl.toString());
+                dashboard.openPageFromMenu(siteEmailMenuButton, systemMessagesMenuItem);
+                Assert.assertTrue(moduleBase.activationEmailSetup(MODULE_NAME, emailSubject), "Email  was not setup successfully");
                 dashboard.openPageFromMenu(siteEmailMenuButton, subscribersMenuItem);
                 Assert.assertTrue(moduleBase.subscriberDelete(user), "Subscriber was not deleted successfully");
             }
+
             Assert.assertTrue(moduleBase.openModulePreview(sModuleNameSet).contains(MODULE_NAME),"Did not open correct page");
 
             JSONArray expectedResults = (JSONArray) module.get("expected");
@@ -142,21 +145,13 @@ public class CheckMailingListSignUp extends AbstractSpec {
                 Assert.assertTrue(ModuleFunctions.checkExpectedValue(driver, sExpected, module, sPathToModuleFile + sFileModuleJson, propUIModulesMail),
                         "Did not find correct " + sExpected.split(";")[0] + " at item " + sExpected.split(";")[1]);
             }
-            if(module.get("check_email").toString().equals("true")){
-                // Checking email that gets sent to the manager
-                mailingListSignUp.enterFields(module);
-                mailingListSignUp.clickSubmit(module);
-                Assert.assertTrue(mailingListSignUp.getSubmittedMessage(module), "Application was not submitted");
-                Assert.assertTrue(mailingListSignUp.checkEmail(user,password,emailSubject), "Activation email was not sent");
-                if(!module.get("module_title").toString().contains("Mail/MailingListSignUp")){
-                    Assert.assertTrue(mailingListSignUp.checkEmail(user,password,validationSubject), "Confirmation email was not sent");
-                }
-
-                deleteMail(user,password, emailSubject);
-                deleteMail(user,password,validationSubject);
-            } else{
-                mailingListSignUp.clickSubmit(module);
-                Assert.assertTrue(mailingListSignUp.getValidationSummary(module), "Validation summary is not working properly");
+            // Sign up if it is a sign up module
+            if(module.get("module_title").toString().equals("SignUpModule")) {
+                Assert.assertEquals(mailingListActivation.subscribeToMailingList(module), module.get("expected_message"), "Subscribing to email was not successful");
+                activationURL = mailingListActivation.getConfirmationURL(mailingListActivation.getEmailContent(user,password,emailSubject));
+            } else {
+                driver.get(activationURL);
+                Assert.assertEquals(mailingListActivation.getActivationMessage(module), module.get("expected_message"),"Activation message is not correct");
             }
 
         } catch (Exception e) {
@@ -167,13 +162,16 @@ public class CheckMailingListSignUp extends AbstractSpec {
     }
 
     @Test(dataProvider=MODULE_DATA, priority=5, enabled=true)
-    public void checkMailingListSignUpLive(JSONObject module) throws InterruptedException, IOException, MessagingException {
-
+    public void checkMailingListActivationLive(JSONObject module) throws InterruptedException, IOException, MessagingException {
         try {
-            if(module.get("check_email").toString().equals("true")) {
+            if(module.get("module_title").toString().equals("SignUpModule")) {
+                driver.get(desktopUrl.toString());
+                dashboard.openPageFromMenu(siteEmailMenuButton, systemMessagesMenuItem);
+                Assert.assertTrue(moduleBase.activationEmailSetup(MODULE_NAME, emailSubject), "Email  was not setup successfully");
                 dashboard.openPageFromMenu(siteEmailMenuButton, subscribersMenuItem);
                 Assert.assertTrue(moduleBase.subscriberDelete(user), "Subscriber was not deleted successfully");
             }
+
             Assert.assertTrue(moduleBase.openModuleLiveSite(MODULE_NAME).contains(MODULE_NAME),"Did not open correct page");
 
             JSONArray expectedResults = (JSONArray) module.get("expected");
@@ -182,22 +180,14 @@ public class CheckMailingListSignUp extends AbstractSpec {
                 Assert.assertTrue(ModuleFunctions.checkExpectedValue(driver, sExpected, module, sPathToModuleFile + sFileModuleJson, propUIModulesMail),
                         "Did not find correct " + sExpected.split(";")[0] + " at item " + sExpected.split(";")[1]);
             }
-
-            if(module.get("check_email").toString().equals("true")){
-                // Checking email that gets sent to the manager
-                mailingListSignUp.enterFields(module);
-                mailingListSignUp.clickSubmit(module);
-                Assert.assertTrue(mailingListSignUp.getSubmittedMessage(module), "Application was not submitted");
-                Assert.assertTrue(mailingListSignUp.checkEmail(user,password,emailSubject), "Activation email was not sent");
-                if(!module.get("module_title").toString().contains("Mail/MailingListSignUp")){
-                    Assert.assertTrue(mailingListSignUp.checkEmail(user,password,validationSubject), "Confirmation email was not sent");
-                }
-
-                deleteMail(user,password, emailSubject);
-                deleteMail(user,password,validationSubject);
-            } else{
-                mailingListSignUp.clickSubmit(module);
-                Assert.assertTrue(mailingListSignUp.getValidationSummary(module), "Validation summary is not working properly");
+            // Sign up if it is a sign up module
+            if(module.get("module_title").toString().equals("SignUpModule")) {
+                Assert.assertEquals(mailingListActivation.subscribeToMailingList(module), module.get("expected_message"), "Subscribing to email was not successful");
+                activationURL = mailingListActivation.getConfirmationURL(mailingListActivation.getEmailContent(user,password,emailSubject));
+            } else {
+                Assert.assertNotNull(activationURL, "Activation URL was not detected");
+                driver.get(activationURL);
+                Assert.assertEquals(mailingListActivation.getActivationMessage(module), module.get("expected_message"),"Activation message is not correct");
             }
 
         } catch (Exception e) {
@@ -208,14 +198,14 @@ public class CheckMailingListSignUp extends AbstractSpec {
     }
 
     @Test(dataProvider=MODULE_DATA, priority=6, enabled=false)
-    public void removeMailingListSignUpModule(JSONObject module) throws Exception {
+    public void removeMailingListActivationModule(JSONObject module) throws Exception {
         String sModuleNameSet = module.get("module_title").toString();
         Assert.assertEquals(moduleBase.setupAsDeletedModule(sModuleNameSet), WorkflowState.DELETE_PENDING.state(), "New "+sModuleNameSet+" Module didn't setup as Deleted properly");
         Assert.assertEquals(moduleBase.removeModule(module, sModuleNameSet), WorkflowState.NEW_ITEM.state(), "Couldn't remove "+sModuleNameSet+" Module. Something went wrong.");
     }
 
     @Test(dataProvider=PAGE_DATA, priority=7, enabled=false)
-    public void removeMailingListSignUpPage(JSONObject module) throws Exception {
+    public void removeMailingListActivationPage(JSONObject module) throws Exception {
         Assert.assertEquals(pageForModules.setupAsDeletedPage(MODULE_NAME), WorkflowState.DELETE_PENDING.state(), "New "+MODULE_NAME+" Page didn't setup as Deleted properly");
         Assert.assertEquals(pageForModules.removePage(module, MODULE_NAME), WorkflowState.NEW_ITEM.state(), "Couldn't remove "+MODULE_NAME+" Page. Something went wrong.");
     }

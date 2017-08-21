@@ -3,8 +3,8 @@ package util;
 public enum EnvironmentType {
 
   //DEVELOP("chicagotest.s1.q4web.dev/admin/"),
-  //DEVELOP("fbreverseproxy.s1.q4web.dev/admin/"),
-  DEVELOP("ensco.s1.q4web.newtest/admin/"),
+  DEVELOP("fbreverseproxy.s1.q4web.dev/admin/"),
+  //DEVELOP("ensco.s1.q4web.newtest/admin/"),
   //DEVELOP("chicagotest.s1.q4web.dev/admin/"),
   //DEVELOP("enscoreverseproxy.s1.q4web.dev/admin/"),
   //BETA("chicagotest.s1.q4web.newtest/admin/"), //chicagotest url
