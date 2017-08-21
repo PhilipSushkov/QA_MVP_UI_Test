@@ -30,7 +30,7 @@ public class CheckEuroNewsClientList extends ApiAbstractSpec {
     private static LeftMainMenu leftMainMenu;
     private static EuroNewsClientList euroNews;
     private static final String EURO_NEWS = "Euro News";
-    private static String sPathToSchema, sPathToFile;
+    private static String sPathToFile;
     private static JSONParser parser;
     private final String DATA_JSON_CONTENT="getDataJsonContent", REQUESTS="requests", JSON_CONTENT = "application/json";
 
@@ -39,7 +39,6 @@ public class CheckEuroNewsClientList extends ApiAbstractSpec {
         auth = new Auth(driver);
         leftMainMenu = new LeftMainMenu(driver);
         sPathToFile = System.getProperty("user.dir") + propAPI.getProperty("dataPath_EuroNewsClientList");
-        sPathToSchema = System.getProperty("user.dir") + propAPI.getProperty("dataPath_EuroNewsSchema");
 
         parser = new JSONParser();
 
