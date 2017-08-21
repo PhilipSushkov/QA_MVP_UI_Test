@@ -38,6 +38,7 @@ public class RequestDataObj {
 
             List<HarNameValuePair> harListResponse = harResponse.getHeaders();
             int sInd = getIndex(harListResponse, contentType);
+            
             if (harRequest.getUrl().equals(urlData)
                     && harRequest.getMethod().equals(method)
                     && harListResponse.get(sInd).getValue().contains(contentType)) {
