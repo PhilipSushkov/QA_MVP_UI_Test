@@ -3,8 +3,11 @@ package pageobjects;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import io.appium.java_client.functions.ExpectedCondition;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.Predicate;
+import org.apache.poi.ss.formula.functions.T;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.StaleElementReferenceException;
@@ -101,6 +104,12 @@ public interface PageObject {
 
     default void waitForElementToAppear(By selector) {
         getWait().until(ExpectedConditions.visibilityOfElementLocated(selector));
+    }
+
+    // Wait for element to have text within its innerhtml
+    default void waitForElementText(By selector){
+        (new WebDriverWait(getDriver(), 20)).until((org.openqa.selenium.support.ui.ExpectedCondition<Boolean>) d -> d.findElement(selector).getText().length()!= 0);
+
     }
 
     default <T extends PageObject> T pause(long time) {

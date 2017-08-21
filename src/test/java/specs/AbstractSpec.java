@@ -93,6 +93,8 @@ public abstract class AbstractSpec extends util.Functions {
     public static Properties propUIModulesSearch;
     private static final String PATHTO_MODULESHR_PROP = "Modules/HR/HR.properties";
     public static Properties propUIModulesHR;
+    private static final String PATHTO_MODULESMAIL_PROP = "Modules/Mail/Mail.properties";
+    public static Properties propUIModulesMail;
 
     @BeforeTest
     public void init(final ITestContext testContext) throws Exception {
@@ -284,6 +286,7 @@ public abstract class AbstractSpec extends util.Functions {
         propAPI = ConnectToPropUI(PATHTO_API_PROP);
         propUIModulesSearch = ConnectToPropUI(PATHTO_MODULESSEARCH_PROP);
         propUIModulesHR = ConnectToPropUI(PATHTO_MODULESHR_PROP);
+        propUIModulesMail = ConnectToPropUI(PATHTO_MODULESMAIL_PROP);
     }
 
 }

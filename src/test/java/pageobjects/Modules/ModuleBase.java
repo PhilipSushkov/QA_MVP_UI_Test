@@ -31,6 +31,7 @@ public class ModuleBase extends AbstractPageObject {
     private By publishBtn, saveBtn, workflowStateSpan, currentContentSpan, propertiesHref;
     private By commentsTxt, deleteBtn, saveAndSubmitBtn, regionNameSelect, previewLnk, sectionTitle;
     private By siteAdminBtn, linkToPageBtn, otherPageBtn, pageDropdown, commentsArea;
+    private By searchInput, searchBtn, subscriberEditTitle, searchCount, subscriberTitle;
     private String sPathToPageFile, sFilePageJson, sPathToModuleFile, sFileModuleJson, sPathToFile;
     private static JSONParser parser;
 
@@ -57,6 +58,13 @@ public class ModuleBase extends AbstractPageObject {
         deleteBtn = By.xpath(propUIPageAdmin.getProperty("btn_Delete"));
         publishBtn = By.xpath(propUIPageAdmin.getProperty("btn_Publish"));
         saveAndSubmitBtn = By.xpath(propUIPageAdmin.getProperty("btn_SaveAndSubmit"));
+
+        searchInput = By.xpath(propUIEmailAdmin.getProperty("input_Search"));
+        searchBtn = By.xpath("("+propUIEmailAdmin.getProperty("button_Search")+")[2]");
+        subscriberEditTitle = By.xpath(propUIEmailAdmin.getProperty("spanDivModule_Title"));
+        searchCount = By.xpath(propUIEmailAdmin.getProperty("span_SearchResultCount"));
+        subscriberTitle = By.xpath(propUIEmailAdmin.getProperty("spanModule_Title"));
+
 
         siteAdminBtn = By.xpath(propUIPageAdmin.getProperty("span_SiteAdmin"));
         linkToPageBtn = By.xpath(propUIPageAdmin.getProperty("li_LinkToPage"));
@@ -554,6 +562,43 @@ public class ModuleBase extends AbstractPageObject {
        return findElement(workflowStateSpan).getText();
 
    }
+
+    public Boolean subscriberDelete(String subscriberEmail){
+        waitForElementToAppear(subscriberTitle);
+        By subscriberEdit = By.xpath("//td[text()= '" + subscriberEmail + "']/../td/input");
+        Boolean deleted = false;
+
+        try{
+            // Checks on the first page if the user exists
+            driver.findElement(subscriberEdit).click();
+        }
+        catch (Exception e) {
+            // Searches for the user
+            driver.findElement(searchInput).sendKeys(subscriberEmail);
+            driver.findElement(searchBtn).click();
+            try{
+                driver.findElement(subscriberEdit).click();
+            } catch (Exception ex) {
+                System.out.println("Subscriber was not found");
+                deleted = true;
+                return deleted;
+            }
+        }
+        waitForElementToAppear(subscriberEditTitle);
+        driver.findElement(deleteBtn).click();
+        waitForElementToAppear(subscriberTitle);
+
+        // Searching to see if the email still exists
+        driver.findElement(searchInput).sendKeys(subscriberEmail);
+        driver.findElement(searchBtn).click();
+        if (driver.findElement(searchCount).getText().contains("No results found")) {
+            System.out.println("Subscriber was successfully deleted");
+            deleted = true;
+            return deleted;
+        }
+        System.out.println("Subscriber was not deleted");
+        return deleted;
+    }
 
     public void closeWindow() {
         try {
