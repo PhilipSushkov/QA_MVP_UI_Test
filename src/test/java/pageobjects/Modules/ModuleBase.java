@@ -33,6 +33,7 @@ public class ModuleBase extends AbstractPageObject {
     private By siteAdminBtn, linkToPageBtn, otherPageBtn, pageDropdown, commentsArea;
     private By searchInput, searchBtn, subscriberEditTitle, searchCount, emailAdminSectionTitle;
     private By addNewBtn, sysMsgNameInput, descriptionInput, fromInput, subjectInput, subscribePageSelect, textArea, switchToHtml, subscribePageOption;
+    private By emailInput, mailingListsChk;
     private String sPathToPageFile, sFilePageJson, sPathToModuleFile, sFileModuleJson, sPathToFile;
     private static JSONParser parser;
 
@@ -75,6 +76,8 @@ public class ModuleBase extends AbstractPageObject {
         switchToHtml = By.className(propUIContentAdmin.getProperty("html_SwitchTo"));
         textArea = By.tagName(propUIContentAdmin.getProperty("frame_Textarea"));
         subscribePageOption = By.xpath(propUIEmailAdmin.getProperty("option_SelectedParentSection"));
+        emailInput = By.xpath(propUIEmailAdmin.getProperty("input_EmailAddress"));
+        mailingListsChk = By.xpath(propUIEmailAdmin.getProperty("chk_MailingLists"));
 
         siteAdminBtn = By.xpath(propUIPageAdmin.getProperty("span_SiteAdmin"));
         linkToPageBtn = By.xpath(propUIPageAdmin.getProperty("li_LinkToPage"));
@@ -580,14 +583,14 @@ public class ModuleBase extends AbstractPageObject {
 
         try{
             // Checks on the first page if the user exists
-            driver.findElement(subscriberEdit).click();
+            findElement(subscriberEdit).click();
         }
         catch (Exception e) {
             // Searches for the user
-            driver.findElement(searchInput).sendKeys(subscriberEmail);
-            driver.findElement(searchBtn).click();
+            findElement(searchInput).sendKeys(subscriberEmail);
+            findElement(searchBtn).click();
             try{
-                driver.findElement(subscriberEdit).click();
+                findElement(subscriberEdit).click();
             } catch (Exception ex) {
                 System.out.println("Subscriber was not found");
                 deleted = true;
@@ -595,19 +598,66 @@ public class ModuleBase extends AbstractPageObject {
             }
         }
         waitForElementToAppear(subscriberEditTitle);
-        driver.findElement(deleteBtn).click();
+        findElement(deleteBtn).click();
         waitForElementToAppear(emailAdminSectionTitle);
 
         // Searching to see if the email still exists
-        driver.findElement(searchInput).sendKeys(subscriberEmail);
-        driver.findElement(searchBtn).click();
-        if (driver.findElement(searchCount).getText().contains("No results found")) {
+        findElement(searchInput).sendKeys(subscriberEmail);
+        findElement(searchBtn).click();
+        if (findElement(searchCount).getText().contains("No results found")) {
             System.out.println("Subscriber was successfully deleted");
             deleted = true;
             return deleted;
         }
         System.out.println("Subscriber was not deleted");
         return deleted;
+    }
+
+    public Boolean subscriberSave(String subscriberEmail){
+        waitForElementToAppear(emailAdminSectionTitle);
+        By subscriberEdit = By.xpath("//td[text()= '" + subscriberEmail + "']/../td/input");
+        Boolean saved = false;
+
+        try{
+            // Checks on the first page if the user exists
+            findElement(subscriberEdit).click();
+        }
+        catch (Exception e) {
+            // Searches for the user
+            findElement(searchInput).sendKeys(subscriberEmail);
+            findElement(searchBtn).click();
+            try{
+                findElement(subscriberEdit).click();
+            } catch (Exception ex) {
+                System.out.println("Subscriber was not found, creating new one");
+                findElement(addNewBtn).click();
+                waitForElementToAppear(subscriberEditTitle);
+                findElement(emailInput).sendKeys(subscriberEmail);
+
+            }
+        }
+
+        waitForElementToAppear(subscriberEditTitle);
+        // Check the first checkbox to see if it's checked - if not, it will check it.
+        // Save Active checkbox
+        if (!Boolean.parseBoolean(findElement(mailingListsChk).getAttribute("checked"))) {
+            findElement(mailingListsChk).click();
+        }
+
+        findElement(saveBtn).click();
+        waitForElementToAppear(emailAdminSectionTitle);
+
+        // Searching to see if the email still exists
+        findElement(searchInput).sendKeys(subscriberEmail);
+        findElement(searchBtn).click();
+
+        if (!findElement(searchCount).getText().contains("No results found")) {
+            System.out.println("Subscriber was successfully saved");
+            saved = true;
+            return saved;
+        }
+        System.out.println("Subscriber was not saved successfully");
+        return saved;
     }
 
     public boolean activationEmailSetup(String mailingPageTitle, String emailSubject){
