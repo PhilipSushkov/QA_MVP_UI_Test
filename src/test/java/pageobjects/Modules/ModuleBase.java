@@ -686,7 +686,7 @@ public class ModuleBase extends AbstractPageObject {
             driver.switchTo().defaultContent();
         }
 
-        // Changing subscribe / unsubscribe thing and the content of the email
+        // Changing subscribe / unsubscribe URL to the newly created page
         driver.findElement(subscribePageSelect).sendKeys("- " +mailingPageTitle);
 
         driver.findElement(saveBtn).click();
@@ -701,6 +701,50 @@ public class ModuleBase extends AbstractPageObject {
             return true;
         }
         System.out.println("Subscribe Email not setup successfully");
+        return false;
+    }
+
+    public boolean unsubscribeEmailSetup(String mailingPageTitle, String emailSubject){
+        waitForElementToAppear(emailAdminSectionTitle);
+        By systemMessageEdit = By.xpath("//td[text()= 'Unsubscribe Message']/../td/input");
+        Boolean done = false;
+
+        try{
+            // Looks for system message with the same name as Title
+            driver.findElement(systemMessageEdit).click();
+        }
+        catch (Exception e) {
+            // Searches for the user
+            System.out.println("System Message was not found, creating a new one");
+            driver.findElement(addNewBtn).click();
+            waitForElement(emailAdminSectionTitle);
+            driver.findElement(sysMsgNameInput).sendKeys("Unsubscribe Message");
+            driver.findElement(descriptionInput).sendKeys("email sent to users to remove from lists");
+            driver.findElement(fromInput).sendKeys("test@q4websystems.com");
+            driver.findElement(subjectInput).sendKeys(emailSubject);
+
+            findElement(switchToHtml).click();
+
+            driver.switchTo().frame(2);
+            findElement(textArea).sendKeys("{0}");
+            driver.switchTo().defaultContent();
+        }
+
+        // Changing subscribe / unsubscribe URL to the newly created page
+        driver.findElement(subscribePageSelect).sendKeys("- " +mailingPageTitle);
+
+        driver.findElement(saveBtn).click();
+        waitForElementToAppear(emailAdminSectionTitle);
+
+        // Checking if changes are reflected
+        driver.findElement(systemMessageEdit).click();
+        waitForElementToAppear(emailAdminSectionTitle);
+
+        if(findElement(subscribePageOption).getText().equals("- " + mailingPageTitle)) {
+            System.out.println("Unsubscribe Email was successfully setup");
+            return true;
+        }
+        System.out.println("Unsubscribe Email not setup successfully");
         return false;
     }
 
