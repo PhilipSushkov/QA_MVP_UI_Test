@@ -9,7 +9,7 @@ import org.testng.Assert;
 import org.testng.annotations.*;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.LoginPage.LoginPage;
-import pageobjects.Modules.Mail.MailingListActivation;
+import pageobjects.Modules.Mail.MailingListUnsubscribeAction;
 import pageobjects.Modules.ModuleBase;
 import pageobjects.Modules.PageForModules;
 import pageobjects.PageAdmin.WorkflowState;
@@ -23,21 +23,20 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * Created by andyp on 2017-08-01.
+ * Created by andyp on 2017-08-21.
  */
-/*
-        This test will see if activation module works.
-        Things to note:
-            1. Confirmation message may be different for different sites. Please change the JSON file accordingly for the sign up module.
-            2. Activation message may be different for different sites. Please change the JSON file accordingly for the sign up module.
 
+/*
+    Things to note:
+        This test behaves similarly to the Mailing List Activation module test. Other than that, not much to note.
  */
-public class CheckMailingListActivation extends AbstractSpec {
+
+public class CheckUnsubscribeAction extends AbstractSpec {
     private static By pageAdminMenuButton;
     private static LoginPage loginPage;
     private static Dashboard dashboard;
     private static PageForModules pageForModules;
-    private static MailingListActivation mailingListActivation;
+    private static MailingListUnsubscribeAction mailingListUnsubscribeAction;
     private static ModuleBase moduleBase;
 
     private static String sPathToFile, sDataFileJson, sPathToModuleFile, sFileModuleJson;
@@ -49,7 +48,7 @@ public class CheckMailingListActivation extends AbstractSpec {
 
     private String activationURL;
 
-    private final String MODULE_DATA="moduleData", MODULE_NAME="mailing_list_activation", PAGE_DATA = "pageData", PAGE_NAME = "mail_modules";
+    private final String MODULE_DATA="moduleData", MODULE_NAME="mailing_list_unsubscribe_action", PAGE_DATA = "pageData", PAGE_NAME = "mail_modules";
 
     @BeforeTest
     public void setUp() throws Exception {
@@ -58,12 +57,12 @@ public class CheckMailingListActivation extends AbstractSpec {
         loginPage = new LoginPage(driver);
         dashboard = new Dashboard(driver);
         pageForModules = new PageForModules(driver);
-        mailingListActivation = new MailingListActivation(driver);
+        mailingListUnsubscribeAction = new MailingListUnsubscribeAction(driver);
 
         sPathToFile = System.getProperty("user.dir") + propUIModulesMail.getProperty("dataPath_Mail");
-        sDataFileJson = propUIModulesMail.getProperty("json_MailingListActivationData");
+        sDataFileJson = propUIModulesMail.getProperty("json_MailingListUnsubscribeActionData");
         sPathToModuleFile = System.getProperty("user.dir") + propUIModulesMail.getProperty("dataPath_Mail");
-        sFileModuleJson = propUIModulesMail.getProperty("json_MailingListActivationProp");
+        sFileModuleJson = propUIModulesMail.getProperty("json_MailingListUnsubscribeActionProp");
 
         siteEmailMenuButton = By.xpath(propUIEmailAdmin.getProperty("btnMenu_EmailAdmin"));
         systemMessagesMenuItem = By.xpath(propUIEmailAdmin.getProperty("btnMenu_SystemMessages"));
@@ -75,13 +74,10 @@ public class CheckMailingListActivation extends AbstractSpec {
 
         user = "test@q4websystems.com";
         password = "testing!";
-        emailSubject = "Ensco Website - Validate Account";
+        emailSubject = "Ensco Website - Unsubscribe";
 
         deleteMail(user,password, emailSubject);
-        //mailingListActivation.getConfirmationURL(mailingListActivation.getEmailContent(user,password,emailSubject));
         loginPage.loginUser();
-        //dashboard.openPageFromMenu(siteEmailMenuButton, systemMessagesMenuItem);
-        //Assert.assertTrue(moduleBase.activationEmailSetup(MODULE_NAME, emailSubject), "Email  was not setup successfully");
     }
 
     @BeforeMethod
@@ -89,25 +85,25 @@ public class CheckMailingListActivation extends AbstractSpec {
         dashboard.openPageFromCommonTasks(pageAdminMenuButton);
     }
 
-    @Test(dataProvider=PAGE_DATA, priority=1, enabled=false)
-    public void createMailingListActivationPage(JSONObject module) throws InterruptedException {
+    @Test(dataProvider=PAGE_DATA, priority=1, enabled=true)
+    public void createMailingListUnsubscribeActionPage(JSONObject module) throws InterruptedException {
         Assert.assertEquals(pageForModules.savePage(module, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+MODULE_NAME+" Page didn't save properly");
         Assert.assertEquals(pageForModules.saveAndSubmitPage(module, MODULE_NAME), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New "+MODULE_NAME+" Page properly");
         Assert.assertEquals(pageForModules.publishPage(MODULE_NAME), WorkflowState.LIVE.state(), "Couldn't publish New "+MODULE_NAME+" Page properly");
     }
 
-    @Test(dataProvider=MODULE_DATA, priority=2, enabled=false)
-    public void createMailingListActivationModule(JSONObject module) throws InterruptedException {
+    @Test(dataProvider=MODULE_DATA, priority=2, enabled=true)
+    public void createMailingListUnsubscribeActionModule(JSONObject module) throws InterruptedException {
         String sModuleNameSet = module.get("module_title").toString();
         Assert.assertEquals(moduleBase.saveModule(module, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+sModuleNameSet+" Module didn't save properly");
-        Assert.assertEquals(mailingListActivation.saveAndSubmitModule(module, sModuleNameSet), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New "+sModuleNameSet+" Module properly");
+        Assert.assertEquals(mailingListUnsubscribeAction.saveAndSubmitModule(module, sModuleNameSet), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New "+sModuleNameSet+" Module properly");
         Assert.assertEquals(moduleBase.publishModule(sModuleNameSet), WorkflowState.LIVE.state(), "Couldn't publish New "+sModuleNameSet+" Module properly");
     }
 
-    @Test(dataProvider=MODULE_DATA, priority=3, enabled=false)
+    @Test(dataProvider=MODULE_DATA, priority=3, enabled=true)
     public void checkProperties(JSONObject module) throws InterruptedException {
         // Checks that all input properties were saved correctly
-        Assert.assertEquals(mailingListActivation.goToModuleEditPage(module.get("module_title").toString()), WorkflowState.LIVE.state());
+        Assert.assertEquals(mailingListUnsubscribeAction.goToModuleEditPage(module.get("module_title").toString()), WorkflowState.LIVE.state());
         JSONArray JSONArrProp = (JSONArray) module.get("properties");
         for (Object property : JSONArrProp) {
             String sProperty = property.toString();
@@ -124,17 +120,17 @@ public class CheckMailingListActivation extends AbstractSpec {
     }
 
     @Test(dataProvider=MODULE_DATA, priority=4, enabled=true)
-    public void checkMailingListActivationPreview(JSONObject module) throws InterruptedException, IOException, MessagingException {
+    public void checkMailingListUnsubscribeActionPreview(JSONObject module) throws InterruptedException, IOException, MessagingException {
         try {
             String sModuleNameSet = module.get("module_title").toString();
 
-            // Setup activation email and delete subscriber
-            if(module.get("module_title").toString().equals("SignUpModule")) {
+            // Setup unsubscribe email
+            if(module.get("module_title").toString().equals("UnsubscribeModule")) {
                 driver.get(desktopUrl.toString());
                 dashboard.openPageFromMenu(siteEmailMenuButton, systemMessagesMenuItem);
-                Assert.assertTrue(moduleBase.activationEmailSetup(MODULE_NAME, emailSubject), "Email  was not setup successfully");
+                Assert.assertTrue(moduleBase.unsubscribeEmailSetup(MODULE_NAME, emailSubject), "Email was not setup successfully");
                 dashboard.openPageFromMenu(siteEmailMenuButton, subscribersMenuItem);
-                Assert.assertTrue(moduleBase.subscriberDelete(user), "Subscriber was not deleted successfully");
+                Assert.assertTrue(moduleBase.subscriberSave(user), "Subscriber was not setup successfully");
             }
 
             Assert.assertTrue(moduleBase.openModulePreview(sModuleNameSet).contains(MODULE_NAME),"Did not open correct page");
@@ -146,12 +142,13 @@ public class CheckMailingListActivation extends AbstractSpec {
                         "Did not find correct " + sExpected.split(";")[0] + " at item " + sExpected.split(";")[1]);
             }
             // Sign up if it is a sign up module
-            if(module.get("module_title").toString().equals("SignUpModule")) {
-                Assert.assertEquals(mailingListActivation.subscribeToMailingList(module), module.get("expected_message"), "Subscribing to email was not successful");
-                activationURL = mailingListActivation.getConfirmationURL(mailingListActivation.getEmailContent(user,password,emailSubject));
+            if(module.get("module_title").toString().equals("UnsubscribeModule")) {
+                Assert.assertEquals(mailingListUnsubscribeAction.unsubscribeFromMailingList(module), module.get("expected_message"), "Unsubscribing to email was not successful");
+                activationURL = mailingListUnsubscribeAction.getUnsubscriptionURL(mailingListUnsubscribeAction.getEmailContent(user,password,emailSubject));
             } else {
+                Assert.assertNotNull(activationURL, "URL was not correct");
                 driver.get(activationURL);
-                Assert.assertEquals(mailingListActivation.getActivationMessage(module), module.get("expected_message"),"Activation message is not correct");
+                Assert.assertEquals(mailingListUnsubscribeAction.getUnsubscriptionMessage(module), module.get("expected_message"),"Unsubscription message is not correct");
             }
 
         } catch (Exception e) {
@@ -162,14 +159,13 @@ public class CheckMailingListActivation extends AbstractSpec {
     }
 
     @Test(dataProvider=MODULE_DATA, priority=5, enabled=true)
-    public void checkMailingListActivationLive(JSONObject module) throws InterruptedException, IOException, MessagingException {
+    public void checkMailingListUnsubscribeActionLive(JSONObject module) throws InterruptedException, IOException, MessagingException {
         try {
-            if(module.get("module_title").toString().equals("SignUpModule")) {
+            if(module.get("module_title").toString().equals("UnsubscribeModule")) {
                 driver.get(desktopUrl.toString());
-                dashboard.openPageFromMenu(siteEmailMenuButton, systemMessagesMenuItem);
-                Assert.assertTrue(moduleBase.activationEmailSetup(MODULE_NAME, emailSubject), "Email  was not setup successfully");
                 dashboard.openPageFromMenu(siteEmailMenuButton, subscribersMenuItem);
-                Assert.assertTrue(moduleBase.subscriberDelete(user), "Subscriber was not deleted successfully");
+                Assert.assertTrue(moduleBase.subscriberSave(user), "Subscriber was not setup successfully");
+                deleteMail(user,password, emailSubject);
             }
 
             Assert.assertTrue(moduleBase.openModuleLiveSite(MODULE_NAME).contains(MODULE_NAME),"Did not open correct page");
@@ -181,13 +177,13 @@ public class CheckMailingListActivation extends AbstractSpec {
                         "Did not find correct " + sExpected.split(";")[0] + " at item " + sExpected.split(";")[1]);
             }
             // Sign up if it is a sign up module
-            if(module.get("module_title").toString().equals("SignUpModule")) {
-                Assert.assertEquals(mailingListActivation.subscribeToMailingList(module), module.get("expected_message"), "Subscribing to email was not successful");
-                activationURL = mailingListActivation.getConfirmationURL(mailingListActivation.getEmailContent(user,password,emailSubject));
+            if(module.get("module_title").toString().equals("UnsubscribeModule")) {
+                Assert.assertEquals(mailingListUnsubscribeAction.unsubscribeFromMailingList(module), module.get("expected_message"), "Unsubscribing to email was not successful");
+                activationURL = mailingListUnsubscribeAction.getUnsubscriptionURL(mailingListUnsubscribeAction.getEmailContent(user,password,emailSubject));
             } else {
-                Assert.assertNotNull(activationURL, "Activation URL was not detected");
+                Assert.assertNotNull(activationURL, "URL was not correct");
                 driver.get(activationURL);
-                Assert.assertEquals(mailingListActivation.getActivationMessage(module), module.get("expected_message"),"Activation message is not correct");
+                Assert.assertEquals(mailingListUnsubscribeAction.getUnsubscriptionMessage(module), module.get("expected_message"),"Unsubscription message is not correct");
             }
 
         } catch (Exception e) {
@@ -198,14 +194,14 @@ public class CheckMailingListActivation extends AbstractSpec {
     }
 
     @Test(dataProvider=MODULE_DATA, priority=6, enabled=false)
-    public void removeMailingListActivationModule(JSONObject module) throws Exception {
+    public void removeMailingListUnsubscribeActionModule(JSONObject module) throws Exception {
         String sModuleNameSet = module.get("module_title").toString();
         Assert.assertEquals(moduleBase.setupAsDeletedModule(sModuleNameSet), WorkflowState.DELETE_PENDING.state(), "New "+sModuleNameSet+" Module didn't setup as Deleted properly");
         Assert.assertEquals(moduleBase.removeModule(module, sModuleNameSet), WorkflowState.NEW_ITEM.state(), "Couldn't remove "+sModuleNameSet+" Module. Something went wrong.");
     }
 
     @Test(dataProvider=PAGE_DATA, priority=7, enabled=false)
-    public void removeMailingListActivationPage(JSONObject module) throws Exception {
+    public void removeMailingListUnsubscribeActionPage(JSONObject module) throws Exception {
         Assert.assertEquals(pageForModules.setupAsDeletedPage(MODULE_NAME), WorkflowState.DELETE_PENDING.state(), "New "+MODULE_NAME+" Page didn't setup as Deleted properly");
         Assert.assertEquals(pageForModules.removePage(module, MODULE_NAME), WorkflowState.NEW_ITEM.state(), "Couldn't remove "+MODULE_NAME+" Page. Something went wrong.");
     }
