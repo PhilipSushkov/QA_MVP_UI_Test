@@ -149,7 +149,7 @@ public class MailingListSignUp extends AbstractPageObject {
     }
 
     public Boolean checkEmail(String user, String password, String subjectID) throws InterruptedException, IOException, MessagingException {
-        System.out.println("Checking email");
+        System.out.println("Checking email: " + subjectID);
         for(int i =1;i <=5; i++){
             if (getSpecificMail(user, password, subjectID) == null){
                 System.out.println("Email was not found, attempt # "+ i);

@@ -77,7 +77,7 @@ public class CheckMailingListSignUp extends AbstractSpec {
 
         user = "test@q4websystems.com";
         password = "testing!";
-        emailSubject = "Facebook Investor Relations Website - Validate Account";
+        emailSubject = "Ensco Website - Validate Account";
         validationSubject = "MAIL_SIGNUP_DATA";
 
         deleteMail(user,password, emailSubject);
@@ -130,6 +130,7 @@ public class CheckMailingListSignUp extends AbstractSpec {
         try {
             String sModuleNameSet = module.get("module_title").toString();
             if(module.get("check_email").toString().equals("true")) {
+                //Delete subscriber if you are checking email (if you are checking subscribe button)
                 dashboard.openPageFromMenu(siteEmailMenuButton, subscribersMenuItem);
                 Assert.assertTrue(moduleBase.subscriberDelete(user), "Subscriber was not deleted successfully");
             }
@@ -187,7 +188,10 @@ public class CheckMailingListSignUp extends AbstractSpec {
                 mailingListSignUp.enterFields(module);
                 mailingListSignUp.clickSubmit(module);
                 Assert.assertTrue(mailingListSignUp.getSubmittedMessage(module), "Application was not submitted");
-                Assert.assertTrue(mailingListSignUp.checkEmail(user,password,validationSubject), "Confirmation email was not sent");
+                Assert.assertTrue(mailingListSignUp.checkEmail(user,password,emailSubject), "Activation email was not sent");
+                if(!module.get("module_title").toString().contains("Mail/MailingListSignUp")){
+                    Assert.assertTrue(mailingListSignUp.checkEmail(user,password,validationSubject), "Confirmation email was not sent");
+                }
 
                 deleteMail(user,password, emailSubject);
                 deleteMail(user,password,validationSubject);
@@ -195,6 +199,7 @@ public class CheckMailingListSignUp extends AbstractSpec {
                 mailingListSignUp.clickSubmit(module);
                 Assert.assertTrue(mailingListSignUp.getValidationSummary(module), "Validation summary is not working properly");
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

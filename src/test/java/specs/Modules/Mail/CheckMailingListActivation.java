@@ -75,7 +75,7 @@ public class CheckMailingListActivation extends AbstractSpec {
 
         user = "test@q4websystems.com";
         password = "testing!";
-        emailSubject = "Facebook Investor Relations Website - Validate Account";
+        emailSubject = "Ensco Website - Validate Account";
 
         deleteMail(user,password, emailSubject);
         //mailingListActivation.getConfirmationURL(mailingListActivation.getEmailContent(user,password,emailSubject));
@@ -128,7 +128,7 @@ public class CheckMailingListActivation extends AbstractSpec {
         try {
             String sModuleNameSet = module.get("module_title").toString();
 
-            // Setup activation email
+            // Setup activation email and delete subscriber
             if(module.get("module_title").toString().equals("SignUpModule")) {
                 driver.get(desktopUrl.toString());
                 dashboard.openPageFromMenu(siteEmailMenuButton, systemMessagesMenuItem);
@@ -164,6 +164,14 @@ public class CheckMailingListActivation extends AbstractSpec {
     @Test(dataProvider=MODULE_DATA, priority=5, enabled=true)
     public void checkMailingListActivationLive(JSONObject module) throws InterruptedException, IOException, MessagingException {
         try {
+            if(module.get("module_title").toString().equals("SignUpModule")) {
+                driver.get(desktopUrl.toString());
+                dashboard.openPageFromMenu(siteEmailMenuButton, systemMessagesMenuItem);
+                Assert.assertTrue(moduleBase.activationEmailSetup(MODULE_NAME, emailSubject), "Email  was not setup successfully");
+                dashboard.openPageFromMenu(siteEmailMenuButton, subscribersMenuItem);
+                Assert.assertTrue(moduleBase.subscriberDelete(user), "Subscriber was not deleted successfully");
+            }
+
             Assert.assertTrue(moduleBase.openModuleLiveSite(MODULE_NAME).contains(MODULE_NAME),"Did not open correct page");
 
             JSONArray expectedResults = (JSONArray) module.get("expected");
@@ -173,11 +181,11 @@ public class CheckMailingListActivation extends AbstractSpec {
                         "Did not find correct " + sExpected.split(";")[0] + " at item " + sExpected.split(";")[1]);
             }
             // Sign up if it is a sign up module
-            if(module.get("module_title").toString().equals("Sign Up")) {
+            if(module.get("module_title").toString().equals("SignUpModule")) {
                 Assert.assertEquals(mailingListActivation.subscribeToMailingList(module), module.get("expected_message"), "Subscribing to email was not successful");
                 activationURL = mailingListActivation.getConfirmationURL(mailingListActivation.getEmailContent(user,password,emailSubject));
-                System.out.println("URL is" + activationURL);
             } else {
+                Assert.assertNotNull(activationURL, "Activation URL was not detected");
                 driver.get(activationURL);
                 Assert.assertEquals(mailingListActivation.getActivationMessage(module), module.get("expected_message"),"Activation message is not correct");
             }
