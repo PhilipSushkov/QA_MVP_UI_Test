@@ -2,14 +2,16 @@ package util;
 
 public enum EnvironmentType {
 
-  //DEVELOP("chicagotest.s1.q4web.dev/admin/"),
-  //DEVELOP("fbreverseproxy.s1.q4web.dev/admin/"),
   //BETA("facebook.s1.q4web.newtest/"), //chicagotest url
-  BETA("qaensco.s1.q4web.newtest/admin/"), //facebookrelease url
   //BETA("qachicagotest.s1.q4web.newtest/admin/"), //facebookrelease url
+  DEVELOP("fbreverseproxy.s1.q4web.dev/admin/"),
+  //DEVELOP("ensco.s1.q4web.newtest/admin/"),
+  //DEVELOP("chicagotest.s1.q4web.dev/admin/"),
+  //DEVELOP("enscoreverseproxy.s1.q4web.dev/admin/"),
+  //BETA("chicagotest.s1.q4web.newtest/admin/"), //chicagotest url
+  BETA("ensco.s1.q4web.newtest/admin"), //facebookrelease url
   PRODUCTION("chicagotest.s3.q4web.com/admin/"),
-
-  DEVELOP("admin-dev.q4inc.com/");
+  //DEVELOP("admin-dev.q4inc.com/");
 
   private final String host;
   private final String protocol = "https://";

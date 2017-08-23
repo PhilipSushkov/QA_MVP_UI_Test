@@ -150,7 +150,7 @@
     },
 
     {
-      "do_assertions": true,
+      "do_assertions": false,
       "module_title": "Feeds/SECFiling.aspx_03",
       "module_definition": "SEC_Filing_List/SECFiling.ascx",
       "source_file": "~/Modules/IRPortal.Modules.Feeds/SECFiling.ascx",

@@ -31,6 +31,9 @@ public class ModuleBase extends AbstractPageObject {
     private By publishBtn, saveBtn, workflowStateSpan, currentContentSpan, propertiesHref;
     private By commentsTxt, deleteBtn, saveAndSubmitBtn, regionNameSelect, previewLnk, sectionTitle;
     private By siteAdminBtn, linkToPageBtn, otherPageBtn, pageDropdown, commentsArea;
+    private By searchInput, searchBtn, subscriberEditTitle, searchCount, emailAdminSectionTitle;
+    private By addNewBtn, sysMsgNameInput, descriptionInput, fromInput, subjectInput, subscribePageSelect, textArea, switchToHtml, subscribePageOption;
+    private By emailInput, mailingListsChk;
     private String sPathToPageFile, sFilePageJson, sPathToModuleFile, sFileModuleJson, sPathToFile;
     private static JSONParser parser;
 
@@ -57,6 +60,24 @@ public class ModuleBase extends AbstractPageObject {
         deleteBtn = By.xpath(propUIPageAdmin.getProperty("btn_Delete"));
         publishBtn = By.xpath(propUIPageAdmin.getProperty("btn_Publish"));
         saveAndSubmitBtn = By.xpath(propUIPageAdmin.getProperty("btn_SaveAndSubmit"));
+
+        searchInput = By.xpath(propUIEmailAdmin.getProperty("input_Search"));
+        searchBtn = By.xpath("("+propUIEmailAdmin.getProperty("button_Search")+")[2]");
+        subscriberEditTitle = By.xpath(propUIEmailAdmin.getProperty("spanDivModule_Title"));
+        searchCount = By.xpath(propUIEmailAdmin.getProperty("span_SearchResultCount"));
+        emailAdminSectionTitle = By.xpath(propUIEmailAdmin.getProperty("spanModule_Title"));
+
+        addNewBtn = By.xpath(propUIEmailAdmin.getProperty("input_AddNew"));
+        sysMsgNameInput = By.xpath(propUIEmailAdmin.getProperty("input_SystemMessageName"));
+        descriptionInput = By.xpath(propUIEmailAdmin.getProperty("input_Description"));
+        fromInput = By.xpath(propUIEmailAdmin.getProperty("input_From"));
+        subjectInput = By.xpath(propUIEmailAdmin.getProperty("input_Subject"));
+        subscribePageSelect = By.xpath(propUIEmailAdmin.getProperty("select_Subscription"));
+        switchToHtml = By.className(propUIContentAdmin.getProperty("html_SwitchTo"));
+        textArea = By.tagName(propUIContentAdmin.getProperty("frame_Textarea"));
+        subscribePageOption = By.xpath(propUIEmailAdmin.getProperty("option_SelectedParentSection"));
+        emailInput = By.xpath(propUIEmailAdmin.getProperty("input_EmailAddress"));
+        mailingListsChk = By.xpath(propUIEmailAdmin.getProperty("chk_MailingLists"));
 
         siteAdminBtn = By.xpath(propUIPageAdmin.getProperty("span_SiteAdmin"));
         linkToPageBtn = By.xpath(propUIPageAdmin.getProperty("li_LinkToPage"));
@@ -87,13 +108,6 @@ public class ModuleBase extends AbstractPageObject {
             scrollToElementAndClick(addNewModuleBtn);
             Thread.sleep(DEFAULT_PAUSE);
 
-            try
-            {
-                String pageTitle = findElement(sectionTitle).getText();
-            }
-            catch (Exception e){
-                findElement(addNewModuleBtn).click();
-            }
             waitForElement(includeLagacyModulesChk);
 
             findElement(includeLagacyModulesChk).click();
@@ -562,6 +576,178 @@ public class ModuleBase extends AbstractPageObject {
 
    }
 
+    public Boolean subscriberDelete(String subscriberEmail){
+        waitForElementToAppear(emailAdminSectionTitle);
+        By subscriberEdit = By.xpath("//td[text()= '" + subscriberEmail + "']/../td/input");
+        Boolean deleted = false;
+
+        try{
+            // Checks on the first page if the user exists
+            findElement(subscriberEdit).click();
+        }
+        catch (Exception e) {
+            // Searches for the user
+            findElement(searchInput).sendKeys(subscriberEmail);
+            findElement(searchBtn).click();
+            try{
+                findElement(subscriberEdit).click();
+            } catch (Exception ex) {
+                System.out.println("Subscriber was not found");
+                deleted = true;
+                return deleted;
+            }
+        }
+        waitForElementToAppear(subscriberEditTitle);
+        findElement(deleteBtn).click();
+        waitForElementToAppear(emailAdminSectionTitle);
+
+        // Searching to see if the email still exists
+        findElement(searchInput).sendKeys(subscriberEmail);
+        findElement(searchBtn).click();
+        if (findElement(searchCount).getText().contains("No results found")) {
+            System.out.println("Subscriber was successfully deleted");
+            deleted = true;
+            return deleted;
+        }
+        System.out.println("Subscriber was not deleted");
+        return deleted;
+    }
+
+    public Boolean subscriberSave(String subscriberEmail){
+        waitForElementToAppear(emailAdminSectionTitle);
+        By subscriberEdit = By.xpath("//td[text()= '" + subscriberEmail + "']/../td/input");
+        Boolean saved = false;
+
+        try{
+            // Checks on the first page if the user exists
+            findElement(subscriberEdit).click();
+        }
+        catch (Exception e) {
+            // Searches for the user
+            findElement(searchInput).sendKeys(subscriberEmail);
+            findElement(searchBtn).click();
+            try{
+                findElement(subscriberEdit).click();
+            } catch (Exception ex) {
+                System.out.println("Subscriber was not found, creating new one");
+                findElement(addNewBtn).click();
+                waitForElementToAppear(subscriberEditTitle);
+                findElement(emailInput).sendKeys(subscriberEmail);
+
+            }
+        }
+
+        waitForElementToAppear(subscriberEditTitle);
+        // Check the first checkbox to see if it's checked - if not, it will check it.
+        // Save Active checkbox
+        if (!Boolean.parseBoolean(findElement(mailingListsChk).getAttribute("checked"))) {
+            findElement(mailingListsChk).click();
+        }
+
+        findElement(saveBtn).click();
+        waitForElementToAppear(emailAdminSectionTitle);
+
+        // Searching to see if the email still exists
+        findElement(searchInput).sendKeys(subscriberEmail);
+        findElement(searchBtn).click();
+
+        if (!findElement(searchCount).getText().contains("No results found")) {
+            System.out.println("Subscriber was successfully saved");
+            saved = true;
+            return saved;
+        }
+        System.out.println("Subscriber was not saved successfully");
+        return saved;
+    }
+
+    public boolean activationEmailSetup(String mailingPageTitle, String emailSubject){
+        waitForElementToAppear(emailAdminSectionTitle);
+        By systemMessageEdit = By.xpath("//td[text()= 'Activation Email']/../td/input");
+        Boolean done = false;
+
+        try{
+            // Looks for system message with the same name as Title
+            driver.findElement(systemMessageEdit).click();
+        }
+        catch (Exception e) {
+            // Searches for the user
+            System.out.println("System Message was not found, creating a new one");
+            driver.findElement(addNewBtn).click();
+            waitForElement(emailAdminSectionTitle);
+            driver.findElement(sysMsgNameInput).sendKeys("Activation Email");
+            driver.findElement(descriptionInput).sendKeys("email sent to users to activate subscriptions");
+            driver.findElement(fromInput).sendKeys("test@q4websystems.com");
+            driver.findElement(subjectInput).sendKeys(emailSubject);
+
+            findElement(switchToHtml).click();
+
+            driver.switchTo().frame(2);
+            findElement(textArea).sendKeys("{0}");
+            driver.switchTo().defaultContent();
+        }
+
+        // Changing subscribe / unsubscribe URL to the newly created page
+        driver.findElement(subscribePageSelect).sendKeys("- " +mailingPageTitle);
+
+        driver.findElement(saveBtn).click();
+        waitForElementToAppear(emailAdminSectionTitle);
+
+        // Checking if changes are reflected
+        driver.findElement(systemMessageEdit).click();
+        waitForElementToAppear(emailAdminSectionTitle);
+
+        if(findElement(subscribePageOption).getText().equals("- " + mailingPageTitle)) {
+            System.out.println("Subscribe Email was successfully setup");
+            return true;
+        }
+        System.out.println("Subscribe Email not setup successfully");
+        return false;
+    }
+
+    public boolean unsubscribeEmailSetup(String mailingPageTitle, String emailSubject){
+        waitForElementToAppear(emailAdminSectionTitle);
+        By systemMessageEdit = By.xpath("//td[text()= 'Unsubscribe Message']/../td/input");
+        Boolean done = false;
+
+        try{
+            // Looks for system message with the same name as Title
+            driver.findElement(systemMessageEdit).click();
+        }
+        catch (Exception e) {
+            // Searches for the user
+            System.out.println("System Message was not found, creating a new one");
+            driver.findElement(addNewBtn).click();
+            waitForElement(emailAdminSectionTitle);
+            driver.findElement(sysMsgNameInput).sendKeys("Unsubscribe Message");
+            driver.findElement(descriptionInput).sendKeys("email sent to users to remove from lists");
+            driver.findElement(fromInput).sendKeys("test@q4websystems.com");
+            driver.findElement(subjectInput).sendKeys(emailSubject);
+
+            findElement(switchToHtml).click();
+
+            driver.switchTo().frame(2);
+            findElement(textArea).sendKeys("{0}");
+            driver.switchTo().defaultContent();
+        }
+
+        // Changing subscribe / unsubscribe URL to the newly created page
+        driver.findElement(subscribePageSelect).sendKeys("- " +mailingPageTitle);
+
+        driver.findElement(saveBtn).click();
+        waitForElementToAppear(emailAdminSectionTitle);
+
+        // Checking if changes are reflected
+        driver.findElement(systemMessageEdit).click();
+        waitForElementToAppear(emailAdminSectionTitle);
+
+        if(findElement(subscribePageOption).getText().equals("- " + mailingPageTitle)) {
+            System.out.println("Unsubscribe Email was successfully setup");
+            return true;
+        }
+        System.out.println("Unsubscribe Email not setup successfully");
+        return false;
+    }
+
     public void closeWindow() {
         try {
             ArrayList<String> tabs = new ArrayList<>(driver.getWindowHandles());
@@ -574,7 +760,7 @@ public class ModuleBase extends AbstractPageObject {
         }
     }
 
-    private String getPageUrl(JSONObject obj, String moduleName) {
+    public String getPageUrl(JSONObject obj, String moduleName) {
         String  sItemID = JsonPath.read(obj, "$.['"+moduleName+"'].url_query.ItemID");
         String  sLanguageId = JsonPath.read(obj, "$.['"+moduleName+"'].url_query.LanguageId");
         String  sSectionId = JsonPath.read(obj, "$.['"+moduleName+"'].url_query.SectionId");
@@ -588,7 +774,7 @@ public class ModuleBase extends AbstractPageObject {
         return desktopUrl.toString()+"default.aspx?ItemID="+sItemID+"&LanguageId="+sLanguageId+"&SectionId="+sSectionId;
     }
 
-    private boolean checkModuleDefinitionExists(String sModuleDefinition) {
+    public boolean checkModuleDefinitionExists(String sModuleDefinition) {
         Select select = new Select(findElement(moduleDefinitionSelect));
         for (int i=0; i < select.getOptions().size(); i++) {
             //System.out.println(select.getOptions().get(i).getAttribute("text").toString() + " - " + sModuleDefinition);
@@ -600,7 +786,7 @@ public class ModuleBase extends AbstractPageObject {
         return false;
     }
 
-    private String addModuleDefinition(String friendly_name, String source_file) throws Exception {
+    public String addModuleDefinition(String friendly_name, String source_file) throws Exception {
         ((JavascriptExecutor)driver).executeScript("window.open();");
         Thread.sleep(DEFAULT_PAUSE);
 

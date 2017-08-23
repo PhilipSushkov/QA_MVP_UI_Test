@@ -34,8 +34,8 @@ public abstract class AbstractSpec extends util.Functions {
 // Determines which environment the test suite will run on but can be overridden by command line
 //------------------------------------------------------------------------------
     //private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.DEVELOP;
-    private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.BETA;
-    //private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.PRODUCTION;
+    //private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.BETA;
+    private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.PRODUCTION;
 //------------------------------------------------------------------------------
 
     private static final EnvironmentType activeEnvironment = setupEnvironment();
@@ -93,6 +93,8 @@ public abstract class AbstractSpec extends util.Functions {
     public static Properties propUIModulesSearch;
     private static final String PATHTO_MODULESHR_PROP = "Modules/HR/HR.properties";
     public static Properties propUIModulesHR;
+    private static final String PATHTO_MODULESMAIL_PROP = "Modules/Mail/Mail.properties";
+    public static Properties propUIModulesMail;
 
     @BeforeTest
     public void init(final ITestContext testContext) throws Exception {
@@ -203,7 +205,7 @@ public abstract class AbstractSpec extends util.Functions {
 
         driver = new RemoteWebDriver(new URL(BROWSER_STACK_URL), capability);
         driver.manage().timeouts().implicitlyWait(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
-        driver.manage().timeouts().pageLoadTimeout(40, TimeUnit.SECONDS); //Increased to 20 to perhaps reduce timeouts?
+        driver.manage().timeouts().pageLoadTimeout(50, TimeUnit.SECONDS); //Increased to 20 to perhaps reduce timeouts?
         //driver.manage().window().setSize(new Dimension(1400, 1400));
         driver.get(desktopUrl.toString());
     }
@@ -284,6 +286,7 @@ public abstract class AbstractSpec extends util.Functions {
         propAPI = ConnectToPropUI(PATHTO_API_PROP);
         propUIModulesSearch = ConnectToPropUI(PATHTO_MODULESSEARCH_PROP);
         propUIModulesHR = ConnectToPropUI(PATHTO_MODULESHR_PROP);
+        propUIModulesMail = ConnectToPropUI(PATHTO_MODULESMAIL_PROP);
     }
 
 }

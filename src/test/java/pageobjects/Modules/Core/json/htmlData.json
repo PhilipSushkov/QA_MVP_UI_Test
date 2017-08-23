@@ -7,6 +7,7 @@
       "source_file": "~/Modules/IRPortal.Modules.Core/Core/4_2_2/Html.ascx",
       "region_name": "Content Pane",
       "module_path": "//span[contains(@class, 'ContentPaneDiv1')]",
+      "path": "IRPortal.Data.EntityClasses.HtmlModuleInstanceEntity",
       "html_details": "Testing Details for HTML 4_2_2 Module",
       "properties": [
       ],
@@ -23,6 +24,7 @@
       "source_file": "~/Modules/IRPortal.Modules.Core/Core/4_2_2/Html.ascx",
       "region_name": "Content Pane",
       "module_path": "//span[contains(@class, 'ContentPaneDiv2')]",
+      "path": "IRPortal.Data.EntityClasses.HtmlModuleInstanceEntity",
       "html_details": "Testing Details for HTML 4_2_2 Module",
       "properties": [
         "CustomCss;HTML_CUSTOM_CSS"
@@ -41,6 +43,7 @@
       "source_file": "~/Modules/IRPortal.Modules.Core/Core/Html.ascx",
       "region_name": "Content Pane",
       "module_path": "//span[contains(@class, 'ContentPaneDiv3')]",
+      "path": "IRPortal.Data.EntityClasses.HtmlModuleInstanceEntity",
       "html_details": "Testing Details for HTML Module",
       "properties": [
       ],
@@ -57,6 +60,7 @@
       "source_file": "~/Modules/IRPortal.Modules.Core/Core/Html.ascx",
       "region_name": "Content Pane",
       "module_path": "//span[contains(@class, 'ContentPaneDiv4')]",
+      "path": "IRPortal.Data.EntityClasses.HtmlModuleInstanceEntity",
       "html_details": "Testing Details for HTML Module",
       "properties": [
         "CustomCss;HTML_CUSTOM_CSS"

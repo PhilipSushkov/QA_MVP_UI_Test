@@ -70,7 +70,7 @@ public class CheckQuickLink extends AbstractSpec {
         dashboard.openPageFromCommonTasks(pageAdminMenuButton);
     }
 
-    @Test(dataProvider=PAGE_DATA, priority=1, enabled=false)
+    @Test(dataProvider=PAGE_DATA, priority=1, enabled=true)
     public void createQuickLinkPage(JSONObject module) throws InterruptedException {
         Assert.assertEquals(pageForModules.savePage(module, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+MODULE_NAME+" Page didn't save properly");
         Assert.assertEquals(pageForModules.saveAndSubmitPage(module, MODULE_NAME), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New "+MODULE_NAME+" Page properly");
@@ -80,7 +80,7 @@ public class CheckQuickLink extends AbstractSpec {
     @Test(dataProvider=MODULE_DATA, priority=2, enabled=true)
     public void createQuickLinkModule(JSONObject module) throws InterruptedException {
         String sModuleNameSet = module.get("module_title").toString();
-        Assert.assertEquals(moduleBase.saveModule(module, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+sModuleNameSet+" Module didn't save properly");
+        Assert.assertEquals(quickLink.saveModule(module, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+sModuleNameSet+" Module didn't save properly");
         Assert.assertEquals(quickLink.saveAndSubmitModule(module, sModuleNameSet), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New "+sModuleNameSet+" Module properly");
         Assert.assertEquals(moduleBase.publishModule(sModuleNameSet), WorkflowState.LIVE.state(), "Couldn't publish New "+sModuleNameSet+" Module properly");
     }
@@ -141,14 +141,14 @@ public class CheckQuickLink extends AbstractSpec {
         }
     }
 
-    @Test(dataProvider=MODULE_DATA, priority=6, enabled=false)
+    @Test(dataProvider=MODULE_DATA, priority=6, enabled=true)
     public void removeQuickLinkModule(JSONObject module) throws Exception {
         String sModuleNameSet = module.get("module_title").toString();
         Assert.assertEquals(moduleBase.setupAsDeletedModule(sModuleNameSet), WorkflowState.DELETE_PENDING.state(), "New "+sModuleNameSet+" Module didn't setup as Deleted properly");
         Assert.assertEquals(moduleBase.removeModule(module, sModuleNameSet), WorkflowState.NEW_ITEM.state(), "Couldn't remove "+sModuleNameSet+" Module. Something went wrong.");
     }
 
-    @Test(dataProvider=PAGE_DATA, priority=7, enabled=false)
+    @Test(dataProvider=PAGE_DATA, priority=7, enabled=true)
     public void removeQuickLinkPage(JSONObject module) throws Exception {
         Assert.assertEquals(pageForModules.setupAsDeletedPage(MODULE_NAME), WorkflowState.DELETE_PENDING.state(), "New "+MODULE_NAME+" Page didn't setup as Deleted properly");
         Assert.assertEquals(pageForModules.removePage(module, MODULE_NAME), WorkflowState.NEW_ITEM.state(), "Couldn't remove "+MODULE_NAME+" Page. Something went wrong.");
