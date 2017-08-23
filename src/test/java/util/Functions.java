@@ -1,9 +1,15 @@
 package util;
 
+import com.jayway.jsonpath.JsonPath;
+import de.sstoehr.harreader.HarReader;
+import de.sstoehr.harreader.HarReaderException;
+import net.lightbody.bmp.BrowserMobProxy;
+import net.lightbody.bmp.core.har.Har;
 import org.apache.commons.io.FileUtils;
 import org.im4java.core.CompareCmd;
 import org.im4java.core.IMOperation;
 import org.im4java.process.StandardStream;
+import org.json.JSONTokener;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -20,11 +26,16 @@ import java.util.*;
 
 import java.util.Properties;
 
+import org.everit.json.schema.Schema;
+import org.everit.json.schema.loader.SchemaLoader;
+
 import javax.mail.*;
 import javax.mail.search.SubjectTerm;
 import com.sun.mail.gimap.GmailFolder;
 import com.sun.mail.gimap.GmailRawSearchTerm;
 import com.sun.mail.gimap.GmailStore;
+import pageobjects.api.AdminWeb.RequestDataObj;
+import pageobjects.api.AdminWeb.ResponseDataObj;
 
 /**
  * Created by philipsushkov on 2016-12-08.
@@ -366,4 +377,102 @@ public class Functions {
         }
 
     }
+
+    public static String getUrlFromApiData(JSONObject data) {
+        String sUrl;
+        try {
+            JSONArray paramsArray = (JSONArray) data.get("params");
+            sUrl = JsonPath.read(data, "$.url") + "?";
+            for (int i=0; i<paramsArray.size(); i++) {
+                String[] params = paramsArray.get(i).toString().split(":");
+                sUrl = sUrl + params[0] + "=" + params[1] + "&";
+            }
+            sUrl = removeLastChar(sUrl);
+        } catch (NullPointerException e) {
+            sUrl = JsonPath.read(data, "$.url");
+        }
+        return sUrl;
+    }
+
+    public static String removeLastChar(String str) {
+        return str.substring(0, str.length() - 1);
+    }
+
+    // Write HAR Data in a File
+    public static void writeHarToFile(Har har, String sPathToFile, String sFileName) {
+        File harFile = new File(sPathToFile + sFileName);
+        try {
+            har.writeTo(harFile);
+        } catch (IOException e) {
+            System.out.println (e.toString());
+            System.out.println("Could not find file: " + sFileName);
+        }
+    }
+
+    public static de.sstoehr.harreader.model.Har readHarFromFile(String sPathToFile, String sFileName) {
+        HarReader harReader = new HarReader();
+        try {
+            de.sstoehr.harreader.model.Har har = harReader.readFromFile(new File(sPathToFile + sFileName));
+            System.out.println(har.getLog().getCreator().getName());
+            return har;
+        } catch (HarReaderException e) {
+        }
+
+        return null;
+    }
+
+    public static ResponseDataObj setResponseDataObj(BrowserMobProxy sProxy, JSONObject data, String sPathToFile) throws IOException, ParseException {
+        ResponseDataObj responseDataObj = new ResponseDataObj();
+        RequestDataObj requestDataObj = new RequestDataObj(sProxy, data.get("method").toString(), data.get("content_type").toString(), getUrlFromApiData(data));
+
+        if (requestDataObj.getHttpGet() != null) {
+            responseDataObj.setResponseTime(requestDataObj.getHttpClient(), requestDataObj.getHttpGet());
+            System.out.println("Response Time of "+data.get("api_request_name").toString()+" is: " + responseDataObj.getResponseTime() + " ms");
+
+            responseDataObj.setResponseCode(responseDataObj.getHttpResponse());
+            System.out.println("Response Code of "+data.get("api_request_name").toString()+" is: " + responseDataObj.getResponseCode());
+
+            responseDataObj.setJsonResponse(responseDataObj.getHttpResponse());
+            //System.out.println("JSON Response of "+data.get("api_request_name").toString()+" is: \n" + responseDataObj.getJsonResponse());
+
+            try {
+                FileWriter writeFile = new FileWriter(sPathToFile + "result_" + data.get("api_request_name").toString() + ".json");
+                writeFile.write(responseDataObj.getJsonResponse().toJSONString().replace("\\", ""));
+                writeFile.flush();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return responseDataObj;
+        } else {
+            return null;
+        }
+
+    }
+
+    public static boolean getSchemaValidation (String sPathToSchema, String sPathToFile, String sSchemaFileName, String sResultFileName) throws IOException, ParseException {
+        try {
+            InputStream inputStream = new FileInputStream(sPathToSchema + sSchemaFileName);
+            org.json.JSONObject rawSchema = new org.json.JSONObject(new JSONTokener(inputStream));
+
+            InputStream inputStreamResult = new FileInputStream(sPathToFile + sResultFileName);
+            org.json.JSONObject rawSchemaResult = new org.json.JSONObject(new JSONTokener(inputStreamResult));
+
+            Schema schema = SchemaLoader.load(rawSchema);
+            schema.validate(rawSchemaResult); // throws a ValidationException if this object is invalid
+
+            System.out.println("Schema validation passed");
+
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 }

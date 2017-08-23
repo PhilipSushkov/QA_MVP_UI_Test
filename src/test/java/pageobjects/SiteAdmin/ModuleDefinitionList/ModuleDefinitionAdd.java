@@ -169,6 +169,7 @@ public class ModuleDefinitionAdd extends AbstractPageObject {
                 }
             }
 
+            /*
             enable_viewState = Boolean.parseBoolean(data.get("enable_viewState").toString());
             jsonObj.put("enable_viewState", Boolean.parseBoolean(data.get("enable_viewState").toString()));
             if (enable_viewState) {
@@ -182,7 +183,7 @@ public class ModuleDefinitionAdd extends AbstractPageObject {
                     findElement(viewStateChk).click();
                 }
             }
-
+            */
 
             findElement(saveBtn).click();
             Thread.sleep(DEFAULT_PAUSE);
@@ -361,13 +362,14 @@ public class ModuleDefinitionAdd extends AbstractPageObject {
             } catch (NullPointerException e) {
             }
 
+            /*
             try {
                 if (!findElement(viewStateChk).getAttribute("checked").equals(data.get("enable_viewState").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
             }
-
+            */
 
             System.out.println(name+ ": New "+PAGE_NAME+" has been checked");
             return true;
@@ -654,13 +656,14 @@ public class ModuleDefinitionAdd extends AbstractPageObject {
             } catch (NullPointerException e) {
             }
 
+            /*
             try {
                 if (!findElement(viewStateChk).getAttribute("checked").equals(data.get("enable_viewState").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
             }
-
+            */
 
             System.out.println(name+ ": New "+PAGE_NAME+" has been checked");
             return true;

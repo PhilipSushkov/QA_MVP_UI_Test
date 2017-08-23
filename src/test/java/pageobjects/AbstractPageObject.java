@@ -1,11 +1,14 @@
 package pageobjects;
 
+import net.lightbody.bmp.BrowserMobProxy;
+import net.lightbody.bmp.core.har.Har;
 import org.apache.commons.collections4.Predicate;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import pageobjects.LoginPage.LoginPage;
+import util.Functions;
 
 public class AbstractPageObject implements PageObject {
 
@@ -19,7 +22,6 @@ public class AbstractPageObject implements PageObject {
         }
     };
 
-    private final By logoutButton = By.xpath("//li/a[contains(text(),'Logout')]");
     private static final long DEFAULT_PAUSE = 1500;
     private static final int ATTEMPTS = 5;
 
@@ -57,6 +59,7 @@ public class AbstractPageObject implements PageObject {
 
     //Logout from Admin site
     public LoginPage logoutFromAdmin(){
+        final By logoutButton = By.xpath("//li/a[contains(text(),'Logout')]");
         waitForElement(logoutButton);
         findElement(logoutButton).click();
         return new LoginPage(driver);
@@ -176,6 +179,33 @@ public class AbstractPageObject implements PageObject {
         Actions actions = new Actions(driver);
         actions.moveToElement(element);
         actions.click().perform();
+    }
+
+    public boolean windowDidLoad (String title) {
+        for (int i = 0; i < 10; i++) {
+            for (String winHandle : driver.getWindowHandles()) {
+
+                if (driver.switchTo().window(winHandle).getTitle().equals(title)) {
+                    return true;
+                }
+            }
+            pause(1000L);
+        }
+        return false;
+    }
+
+    public WebElement checkElementExists(By selector) {
+        WebElement element = null;
+
+        try {
+            waitForAnyElementToAppear(selector);
+            element = findElement(selector);
+        } catch (ElementNotFoundException e) {
+        } catch (ElementNotVisibleException e) {
+        } catch (TimeoutException e) {
+        }
+
+        return element;
     }
 
 
