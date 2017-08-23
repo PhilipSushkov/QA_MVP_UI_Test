@@ -24,6 +24,7 @@ public class AliasEdit extends AbstractPageObject {
         aliasNameInput = By.xpath(propUISiteAdmin.getProperty("input_AliasName"));
         targetLanguageSelect = By.xpath(propUISiteAdmin.getProperty("select_TargetLanguage"));
         targetPageSelect = By.xpath(propUISiteAdmin.getProperty("select_TargetPage"));
+
         saveAndSubmitButton = By.xpath(propUISiteAdmin.getProperty("btn_SaveAndSubmit"));
     }
 

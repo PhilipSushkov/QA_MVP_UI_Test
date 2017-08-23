@@ -1,0 +1,52 @@
+{
+  "alias_list":[
+    {
+      "do_assertions":true,
+      "type": "Url",
+      "type_ch": "Page",
+      "redirect": "Permanent",
+      "name": "URLTest1",
+      "name_ch": "URLtoPage",
+      "url": "https://www.google.com",
+      "page_ch": "Home",
+      "comment": "Making URL Test 1",
+      "comment_ch": "Changing type and name"
+    },
+    {
+      "do_assertions":true,
+      "type": "Url",
+      "redirect": "Temporary",
+      "redirect_ch": "Permanent",
+      "name": "URLTest2",
+      "url": "https://www.google.com",
+      "url_ch": "www.newurl.com",
+      "comment": "Making URL Test 2",
+      "comment_ch": "Changing redirect type and url"
+    },
+    {
+      "do_assertions":true,
+      "type": "Page",
+      "type_ch": "Url",
+      "redirect": "Permanent",
+      "name": "PageTest1",
+      "name_ch": "PageToURL",
+      "language": "English",
+      "page": "Home",
+      "url_ch": "www.url.com",
+      "comment": "Making Page Test 1",
+      "comment_ch": "Changing type and name"
+    },
+    {
+      "do_assertions":true,
+      "type": "Page",
+      "redirect": "Temporary",
+      "redirect_ch": "Permanent",
+      "name": "PageTest2",
+      "language": "English",
+      "page": "Home",
+      "page_ch": "Company",
+      "comment": "Making Page Test 2",
+      "comment_ch": "Changing redirect type and page"
+    }
+  ]
+}
