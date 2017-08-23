@@ -34,11 +34,11 @@ public class CheckCrawlingSite {
     private static String sDataSiteJson_notLive, sDataSiteJson_n;
     private static JSONParser parser;
 
-    private static final int NUM_THREADS = 3;
+    private static final int NUM_THREADS = 7;
     private static final String PATHTO_PUBLICSITE_PROP = "PublicSite/PublicSiteMap.properties";
     public static Properties propUIPublicSite;
     private static final String SITE_DATA="siteData", SITE_DATA_2="siteData2", MODULE_DATA="moduleData";
-    private static ExtentReports extent, cookieExtent;
+    private static ExtentReports extent, cookieExtent, after;
 
 
     @BeforeTest
@@ -55,23 +55,65 @@ public class CheckCrawlingSite {
         parser = new JSONParser();
         extent = ExtentManager.GetExtent();
         cookieExtent = CookieExtentManager.GetExtent();
+        after = AfterExtentManager.GetExtent();
 
-        sDataSiteJson_n = propUIPublicSite.getProperty("json_SiteData_7");
+        sDataSiteJson_n = propUIPublicSite.getProperty("json_SiteData_2");
     }
 
-    @Test(dataProvider=SITE_DATA_2, threadPoolSize=NUM_THREADS, priority=1, enabled=true)
+    @Test(dataProvider=SITE_DATA_2, threadPoolSize=NUM_THREADS, priority=1, enabled=false)
     public void checkSiteVersion(String site) throws Exception {
         //crawlingSite = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile);
         String sVersionActual = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getSiteVersion();
+        String sUrlActual = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getSiteUrl();
         ExtentTest test = extent.createTest("Check version result for " + site);
 
         if (sVersionActual.equals(sSiteVersion)) {
             test.log(Status.PASS, "Site Version number is valid: " + sSiteVersion);
+            test.log(Status.PASS, "Site Url: " + sUrlActual);
         } else {
             test.log(Status.FAIL, "Actual Version number is wrong: " + sVersionActual + ". Supposed to be: " + sSiteVersion);
         }
 
         Assert.assertEquals(sVersionActual, sSiteVersion, "Site Version number is not correct for " + site);
+
+    }
+
+    @Test(dataProvider=SITE_DATA_2, threadPoolSize=NUM_THREADS, priority=1, enabled=true)
+    public void checkSiteVersionAfter(String site) throws Exception {
+        //crawlingSite = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile);
+        String sSiteVersionAfter = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getSiteVersionAfter();
+        String sUrlAfter = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getSiteUrlAfter();
+        ExtentTest test = after.createTest("Check version result for " + site);
+
+
+        JSONObject jsonObjSite = new JSONObject();
+        //System.out.println(sPathToFile + sSite + ".json");
+
+        JSONParser parserAfter = new JSONParser();
+        try {
+            jsonObjSite = (JSONObject) parserAfter.parse(new FileReader(sPathToFile + site + ".json"));
+        } catch (ParseException e) {
+        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
+        }
+
+        String sSiteVersionBefore = jsonObjSite.get("version_before").toString();
+        String sSiteUrlBefore = jsonObjSite.get("Url_before").toString();
+
+        if (sSiteVersionAfter.equals(sSiteVersionBefore)) {
+            test.log(Status.PASS, "After Site Version number is valid: " + sSiteVersionBefore);
+        } else {
+            test.log(Status.FAIL, "After Site Version number is wrong: " + sSiteVersionAfter + ". Supposed to be: " + sSiteVersionBefore);
+        }
+
+        if (sUrlAfter.equals(sSiteUrlBefore)) {
+            test.log(Status.PASS, "After Site Url is valid: " + sSiteUrlBefore);
+        } else {
+            test.log(Status.FAIL, "After Site Url is wrong: " + sUrlAfter + ". Supposed to be: " + sSiteUrlBefore);
+        }
+
+        Assert.assertEquals(sSiteVersionAfter, sSiteVersionBefore, "After Site Version number is not correct for " + site);
+        Assert.assertEquals(sUrlAfter, sSiteUrlBefore, "After Site Url is not correct for " + site);
 
     }
 
@@ -237,6 +279,7 @@ public class CheckCrawlingSite {
         //phDriver.quit();
         extent.flush();
         cookieExtent.flush();
+        after.flush();
     }
 }
 

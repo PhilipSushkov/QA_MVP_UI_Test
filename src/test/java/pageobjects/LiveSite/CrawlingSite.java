@@ -24,7 +24,7 @@ public class CrawlingSite {
     private String sSite, sPathToFile;
     private static final String sSlash = "/";
     private static final String sHttp = "http://";
-    private static final long DEFAULT_PAUSE = 1500;
+    private static final long DEFAULT_PAUSE = 2500;
     private JSONParser parser;
 
     public CrawlingSite(WebDriver phDriver, String sSite, String sPathToFile) {
@@ -46,12 +46,73 @@ public class CrawlingSite {
         } catch (TimeoutException e) {
             return "TimeoutException";
         } catch (WebDriverException e) {
-            return "Not Defined";
+            saveSiteVersion(sVersion);
+            return sVersion;
         }
 
         System.out.println(sSite + ": " + sVersion);
         saveSiteVersion(sVersion);
         return sVersion;
+    }
+
+    public String getSiteUrl() throws Exception {
+        String sUrl = "Not Defined";
+        String sSiteFull = Functions.UrlAddSlash(sSite, sSlash, sHttp);
+
+        try {
+            phDriver.get(sSiteFull);
+            Thread.sleep(DEFAULT_PAUSE);
+            sUrl = phDriver.getCurrentUrl();
+        } catch (TimeoutException e) {
+            return "TimeoutException";
+        } catch (WebDriverException e) {
+            saveSiteUrl(sUrl);
+            return sUrl;
+        }
+
+        System.out.println(sSite + ": " + sUrl);
+        saveSiteUrl(sUrl);
+        return sUrl;
+    }
+
+    public String getSiteVersionAfter() throws Exception {
+        String sVersion = "Not Defined";
+        String sSiteFull = Functions.UrlAddSlash(sSite, sSlash, sHttp);
+
+        try {
+            phDriver.get(sSiteFull);
+            Thread.sleep(DEFAULT_PAUSE);
+            sVersion = Functions.GetVersion(phDriver);
+        } catch (TimeoutException e) {
+            return "TimeoutException";
+        } catch (WebDriverException e) {
+            saveSiteVersionAfter(sVersion);
+            return sVersion;
+        }
+
+        System.out.println(sSite + ": " + sVersion);
+        saveSiteVersionAfter(sVersion);
+        return sVersion;
+    }
+
+    public String getSiteUrlAfter() throws Exception {
+        String sUrl = "Not Defined";
+        String sSiteFull = Functions.UrlAddSlash(sSite, sSlash, sHttp);
+
+        try {
+            phDriver.get(sSiteFull);
+            Thread.sleep(DEFAULT_PAUSE);
+            sUrl = phDriver.getCurrentUrl();
+        } catch (TimeoutException e) {
+            return "TimeoutException";
+        } catch (WebDriverException e) {
+            saveSiteUrlAfter(sUrl);
+            return sUrl;
+        }
+
+        System.out.println(sSite + ": " + sUrl);
+        saveSiteUrlAfter(sUrl);
+        return sUrl;
     }
 
     public String getSiteVersionCookie(String sCookie) throws Exception {
@@ -89,7 +150,88 @@ public class CrawlingSite {
         }
 
         jsonObjSite.put("domain", sSite);
-        jsonObjSite.put("version", sVersion);
+        jsonObjSite.put("version_before", sVersion);
+
+        try {
+            FileWriter file = new FileWriter(sPathToFile + sSite + ".json");
+            file.write(jsonObjSite.toJSONString().replace("\\", ""));
+            file.flush();
+            file.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void saveSiteUrl(String sUrl) throws Exception {
+        JSONObject jsonObjSite = new JSONObject();
+        //System.out.println(sPathToFile + sSite + ".json");
+
+        try {
+            jsonObjSite = (JSONObject) parser.parse(new FileReader(sPathToFile + sSite + ".json"));
+        } catch (ParseException e) {
+        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
+        }
+
+        jsonObjSite.put("Url_before", sUrl);
+
+        try {
+            FileWriter file = new FileWriter(sPathToFile + sSite + ".json");
+            file.write(jsonObjSite.toJSONString().replace("\\", ""));
+            file.flush();
+            file.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void saveSiteVersionAfter(String sVersion) throws Exception {
+        JSONObject jsonObjSite = new JSONObject();
+        //System.out.println(sPathToFile + sSite + ".json");
+
+        try {
+            jsonObjSite = (JSONObject) parser.parse(new FileReader(sPathToFile + sSite + ".json"));
+        } catch (ParseException e) {
+        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
+        }
+
+        jsonObjSite.put("version_after", sVersion);
+
+        try {
+            FileWriter file = new FileWriter(sPathToFile + sSite + ".json");
+            file.write(jsonObjSite.toJSONString().replace("\\", ""));
+            file.flush();
+            file.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void saveSiteUrlAfter(String sUrl) throws Exception {
+        JSONObject jsonObjSite = new JSONObject();
+        //System.out.println(sPathToFile + sSite + ".json");
+
+        try {
+            jsonObjSite = (JSONObject) parser.parse(new FileReader(sPathToFile + sSite + ".json"));
+        } catch (ParseException e) {
+        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
+        }
+
+        jsonObjSite.put("Url_after", sUrl);
 
         try {
             FileWriter file = new FileWriter(sPathToFile + sSite + ".json");
