@@ -63,7 +63,7 @@ public class CreatePerson extends AbstractPageObject {
 
         findElement(firstNameInput).sendKeys(data.get("first_name").toString());
         findElement(lastNameInput).sendKeys(data.get("last_name").toString());
-        findElement(inputDepartment).sendKeys(data.get("department").toString());
+        findElement(inputDepartment).click();
 
         findElement(saveButton).click();
 

@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Web CMS Suite Modules" parallel="tests" thread-count="1">
+
+    <!-- Core Modules -->
+    <test name="CheckBreadcrumb">
+        <classes>
+            <class name="specs.Modules.Core.CheckBreadcrumb" />
+        </classes>
+    </test>
+    <test name="CheckFastFact">
+        <classes>
+            <class name="specs.Modules.Core.CheckFastFact" />
+        </classes>
+    </test>
+    <test name="CheckFooter">
+        <classes>
+            <class name="specs.Modules.Core.CheckFooter" />
+        </classes>
+    </test>
+    <test name="CheckGlossary">
+        <classes>
+            <class name="specs.Modules.Core.CheckGlossary"/>
+        </classes>
+    </test>
+    <test name="CheckHtml">
+        <classes>
+            <class name="specs.Modules.Core.CheckHtml" />
+        </classes>
+    </test>
+    <test name="CheckPrintPage">
+        <classes>
+            <class name="specs.Modules.Core.CheckPrintPage"/>
+        </classes>
+    </test>
+    <test name="CheckQuickLink">
+        <classes>
+            <class name="specs.Modules.Core.CheckQuickLink"/>
+        </classes>
+    </test>
+
+    <!-- Event Modules -->
+    <test name="CheckEvent">
+        <classes>
+            <class name="specs.Modules.Event.CheckEvent"/>
+        </classes>
+    </test>
+    <test name="CheckEventDetails">
+        <classes>
+            <class name="specs.Modules.Event.CheckEventDetails"/>
+        </classes>
+    </test>
+    <test name="CheckEventLatest">
+        <classes>
+            <class name="specs.Modules.Event.CheckEventLatest"/>
+        </classes>
+    </test>
+    <test name="CheckEventWebcast">
+        <classes>
+            <class name="specs.Modules.Event.CheckEventWebcast"/>
+        </classes>
+    </test>
+    <test name="CheckEventWebcastDetails">
+        <classes>
+            <class name="specs.Modules.Event.CheckEventWebcastDetails"/>
+        </classes>
+    </test>
+
+    <!-- Faq Module -->
+    <test name="CheckFaq">
+        <classes>
+            <class name="specs.Modules.Faq.CheckFaq"/>
+        </classes>
+    </test>
+
+    <!-- Feed Modules -->
+    <test name="CheckSECFiling">
+        <classes>
+            <class name="specs.Modules.Feed.CheckSECFiling"/>
+        </classes>
+    </test>
+    <test name="CheckStockChart">
+        <classes>
+            <class name="specs.Modules.Feed.CheckStockChart"/>
+        </classes>
+    </test>
+    <test name="CheckStockHistorical">
+        <classes>
+            <class name="specs.Modules.Feed.CheckStockHistorical"/>
+        </classes>
+    </test>
+    <test name="CheckStockQuote">
+        <classes>
+            <class name="specs.Modules.Feed.CheckStockQuote"/>
+        </classes>
+    </test>
+    <test name="CheckStockQuoteHeader">
+        <classes>
+            <class name="specs.Modules.Feed.CheckStockQuoteHeader"/>
+        </classes>
+    </test>
+    <test name="CheckStockSplit">
+        <classes>
+            <class name="specs.Modules.Feed.CheckStockSplit"/>
+        </classes>
+    </test>
+
+    <!-- Person Modules -->
+    <test name="CheckDepartment">
+        <classes>
+            <class name="specs.Modules.Person.CheckDepartment"/>
+        </classes>
+    </test>
+    <test name="CheckPerson">
+        <classes>
+            <class name="specs.Modules.Person.CheckPerson"/>
+        </classes>
+    </test>
+    <test name="CheckPersonDetails">
+        <classes>
+            <class name="specs.Modules.Person.CheckPersonDetails"></class>
+        </classes>
+    </test>
+
+    <!-- Presentation Modules -->
+    <test name="CheckPresentation">
+        <classes>
+            <class name="specs.Modules.Presentation.CheckPresentation"/>
+        </classes>
+    </test>
+    <test name="CheckPresentationLatest">
+        <classes>
+            <class name="specs.Modules.Presentation.CheckPresentationLatest"/>
+        </classes>
+    </test>
+    <test name="CheckPresentationDetails">
+        <classes>
+            <class name="specs.Modules.Presentation.CheckPresentationDetails"/>
+        </classes>
+    </test>
+
+    <!-- PressRelease Modules -->
+    <test name="CheckPressRelease">
+        <classes>
+            <class name="specs.Modules.PressRelease.CheckPressRelease"/>
+        </classes>
+    </test>
+    <test name="CheckPressReleaseLatest">
+        <classes>
+            <class name="specs.Modules.PressRelease.CheckPressReleaseLatest"/>
+        </classes>
+    </test>
+    <test name="CheckPressReleaseDetails">
+        <classes>
+            <class name="specs.Modules.PressRelease.CheckPressReleaseDetails"/>
+        </classes>
+    </test>
+
+    <!-- Report Modules -->
+    <test name="CheckAnnualQuarterlyReport">
+        <classes>
+            <class name="specs.Modules.Report.CheckAnnualQuarterlyReport"/>
+        </classes>
+    </test>
+    <test name="CheckFinancialReport">
+        <classes>
+            <class name="specs.Modules.Report.CheckFinancialReport"/>
+        </classes>
+    </test>
+</suite>

@@ -37,7 +37,8 @@ public class CheckStockQuote extends AbstractSpec {
 
     private final String PAGE_DATA="pageData", PAGE_NAME="feed_modules", MODULE_DATA="moduleData", MODULE_NAME="stock_quote";
 
-
+    // Can't check stockQuoteIndice because each testing site will have a different default Indice, e.g NYSE or NASD. Our test has no way of identifying that default.
+    // Can't check Time Format for Stock_Quote2/StockQuote2_375.ascx.cs because it doesn't display time in the module.
 
     @BeforeTest
     public void setUp() throws Exception {

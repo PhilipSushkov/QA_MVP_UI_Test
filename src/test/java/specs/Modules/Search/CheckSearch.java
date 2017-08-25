@@ -27,14 +27,13 @@ import java.util.ArrayList;
  */
 public class CheckSearch extends AbstractSpec{
     /*
-    This test requires an image file to be in the file explorer. As of right now, there is no way to do this automatically.
+    This test requires an image file to be in the file explorer for the SearchButtonImage property. As of right now, there is no way to do this automatically.
     QAQ-502 is the related ticket for the file explorer automation
 
     The SearchButtonImage property also breaks the search button for 3.9.11 and 4.2.2, related ticket can be found here: WEB-12825
     This issue is due to the fact custom sites will use custom JS along with custom search button.
 
-    NOTE: THIS TEST DEPENDS ON PRE-EXISTING CONTENT ON THE TESTING SITE - USE CreateContent.java TO SET UP CONTENT
-
+    NOTE: THIS TEST DEPENDS ON PRE-EXISTING CONTENT ON THE TESTING SITE - USE CreateContent.java TO SET UP CONTENT. Set up the press releases.
      */
 
     private static By pageAdminMenuButton, siteAdminMenuButton, linkToPageMenuItem;
@@ -71,8 +70,6 @@ public class CheckSearch extends AbstractSpec{
         parser = new JSONParser();
 
         loginPage.loginUser();
-
-
     }
 
     @BeforeMethod
@@ -85,6 +82,7 @@ public class CheckSearch extends AbstractSpec{
         Assert.assertEquals(pageForModules.savePage(module, MODULE_NAME), WorkflowState.IN_PROGRESS.state(), "New "+MODULE_NAME+" Page didn't save properly");
         Assert.assertEquals(pageForModules.saveAndSubmitPage(module, MODULE_NAME), WorkflowState.FOR_APPROVAL.state(), "Couldn't submit New "+MODULE_NAME+" Page properly");
         Assert.assertEquals(pageForModules.publishPage(MODULE_NAME), WorkflowState.LIVE.state(), "Couldn't publish New "+MODULE_NAME+" Page properly");
+        //Editing Link To Page to direct search results to this page
         dashboard.openPageFromMenu(siteAdminMenuButton, linkToPageMenuItem);
         Assert.assertEquals(moduleBase.linkToPageEdit(LINK_TO_PAGE, KEY_NAME), WorkflowState.LIVE.state(), "Couldn't link new "+MODULE_NAME+" properly");
     }

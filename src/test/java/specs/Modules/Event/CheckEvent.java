@@ -89,7 +89,7 @@ public class CheckEvent extends AbstractSpec {
         Assert.assertEquals(moduleBase.publishModule(sModuleNameSet), WorkflowState.LIVE.state(), "Couldn't publish New "+sModuleNameSet+" Module properly");
     }
 
-    @Test(dataProvider=MODULE_DATA, priority=3, enabled=true)
+    @Test(dataProvider=MODULE_DATA, priority=3, enabled=false)
     public void checkProperties(JSONObject module) throws InterruptedException {
         // Checks that all input properties were saved correctly
         Assert.assertEquals(event.goToModuleEditPage(module.get("module_title").toString()), WorkflowState.LIVE.state());

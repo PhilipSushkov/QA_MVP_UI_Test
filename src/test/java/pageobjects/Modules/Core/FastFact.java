@@ -7,14 +7,21 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import pageobjects.AbstractPageObject;
+import pageobjects.Dashboard.Dashboard;
 import pageobjects.PageAdmin.WorkflowState;
 import pageobjects.PageObject;
+import sun.security.pkcs11.Secmod;
+import pageobjects.Modules.ModuleBase;
 
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
 
 import static specs.AbstractSpec.*;
 
@@ -23,8 +30,10 @@ import static specs.AbstractSpec.*;
  */
 public class FastFact extends AbstractPageObject {
     private static By workflowStateSpan, propertiesHref, commentsTxt, saveAndSubmitBtn, fastFactsBtn, addNewBtn, selectFirstFastFact, publishBtn, fastFactChkBox, editBtn;
-    private static String sPathToModuleFile, sFileModuleJson;
+    private static String sPathToModuleFile, sFileModuleJson, sPathToPageFile, sFilePageJson;
+    private static By addNewModuleBtn, includeLagacyModulesChk, moduleTitleInput, moduleDefinitionSelect, regionNameSelect, saveBtn, deleteBtn;
     private static JSONParser parser;
+    private static ModuleBase moduleBase;
     private static final long DEFAULT_PAUSE = 2500;
 
     public FastFact(WebDriver driver) {
@@ -41,8 +50,23 @@ public class FastFact extends AbstractPageObject {
         fastFactChkBox = By.xpath(propUIModulesCore.getProperty("input_FastFactChkBox"));
         editBtn = By.xpath(propUIContentAdmin.getProperty("btn_Edit"));
 
+        addNewModuleBtn = By.xpath(propUIModules.getProperty("btn_AddNewModule"));
+        moduleTitleInput = By.xpath(propUIModules.getProperty("input_ModuleTitle"));
+        moduleDefinitionSelect = By.xpath(propUIModules.getProperty("select_ModuleDefinition"));
+        includeLagacyModulesChk = By.xpath(propUIModules.getProperty("chk_IncludeLagacyModules"));
+
+        saveBtn = By.xpath(propUIPageAdmin.getProperty("btn_Save"));
+        deleteBtn = By.xpath(propUIPageAdmin.getProperty("btn_Delete"));
+        publishBtn = By.xpath(propUIPageAdmin.getProperty("btn_Publish"));
+        regionNameSelect = By.xpath(propUIModules.getProperty("select_RegionName"));
+
         sPathToModuleFile = System.getProperty("user.dir") + propUIModulesCore.getProperty("dataPath_Core");
         sFileModuleJson = propUIModulesCore.getProperty("json_FastFactProp");
+
+        sPathToPageFile = System.getProperty("user.dir") + propUIModules.getProperty("dataPath_Modules");
+        sFilePageJson = propUIModules.getProperty("json_PagesProp");
+
+        moduleBase = new ModuleBase(driver, sPathToModuleFile, sFileModuleJson);
 
         parser = new JSONParser();
     }
@@ -101,6 +125,165 @@ public class FastFact extends AbstractPageObject {
 
         return null;
     }
+
+    public String saveModule(JSONObject modulesDataObj, String moduleName) throws InterruptedException {
+        String module_title, module_definition, region_name, source_file, qualified_path;
+
+        try {
+
+            JSONObject jsonObj = (JSONObject) parser.parse(new FileReader(sPathToPageFile + sFilePageJson));
+
+            String pageUrl = moduleBase.getPageUrl(jsonObj, moduleName);
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+
+            waitForElement(commentsTxt);
+
+            waitForElementToAppear(addNewModuleBtn);
+            scrollToElementAndClick(addNewModuleBtn);
+            Thread.sleep(DEFAULT_PAUSE);
+
+            waitForElement(includeLagacyModulesChk);
+
+            findElement(includeLagacyModulesChk).click();
+            Thread.sleep(DEFAULT_PAUSE);
+            waitForElement(moduleTitleInput);
+
+            JSONObject module = new JSONObject();
+
+            module_definition = modulesDataObj.get("module_definition").toString();
+            source_file = modulesDataObj.get("source_file").toString();
+            qualified_path = modulesDataObj.get("path").toString();
+            Boolean moduleDefinitionExists = moduleBase.checkModuleDefinitionExists(module_definition);
+
+            if (!moduleDefinitionExists) {
+                try {
+                    String moduleDefinitionState = addModuleDefinition(module_definition, source_file, qualified_path);
+                    if (moduleDefinitionState.equals("Live")) {
+                        driver.navigate().refresh();
+                        Thread.sleep(DEFAULT_PAUSE);
+                        waitForElement(commentsTxt);
+                    } else {
+                        return null;
+                    }
+                } catch (Exception e) {
+                    return null;
+                }
+            }
+
+            module_title = modulesDataObj.get("module_title").toString();
+            findElement(moduleTitleInput).sendKeys(module_title);
+
+            findElement(moduleDefinitionSelect).sendKeys(module_definition);
+            module.put("module_definition", module_definition);
+
+            region_name = modulesDataObj.get("region_name").toString();
+            findElement(regionNameSelect).sendKeys(region_name);
+            module.put("region_name", region_name);
+
+            Thread.sleep(DEFAULT_PAUSE);
+
+            findElement(saveBtn).click();
+            Thread.sleep(DEFAULT_PAUSE);
+            waitForElement(deleteBtn);
+
+
+            module.put("workflow_state", WorkflowState.IN_PROGRESS.state());
+            module.put("active", "true");
+
+            URL pageURL = new URL(getUrl());
+            String[] params = pageURL.getQuery().split("&");
+            JSONObject jsonURLQuery = new JSONObject();
+            for (String param:params) {
+                jsonURLQuery.put(param.split("=")[0], param.split("=")[1]);
+            }
+            module.put("url_query", jsonURLQuery);
+
+            JSONObject jsonObjSave;
+            try {
+                jsonObjSave = (JSONObject) parser.parse(new FileReader(sPathToModuleFile + sFileModuleJson));
+            } catch (ParseException e) {
+                jsonObjSave = (JSONObject) parser.parse("{}");
+            }
+
+            jsonObjSave.put(module_title, module);
+
+            try {
+                FileWriter file = new FileWriter(sPathToModuleFile + sFileModuleJson);
+                file.write(jsonObjSave.toJSONString().replace("\\", ""));
+                file.flush();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            System.out.println("New "+moduleName+" has been created");
+            return findElement(workflowStateSpan).getText();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    private String addModuleDefinition(String friendly_name, String source_file, String qualified_path) throws Exception {
+        ((JavascriptExecutor)driver).executeScript("window.open();");
+        Thread.sleep(DEFAULT_PAUSE);
+
+        ArrayList<String> tabs = new ArrayList<> (driver.getWindowHandles());
+        driver.switchTo().window(tabs.get(1));
+
+        driver.get(desktopUrl.toString());
+
+        Dashboard dashboard = new Dashboard(driver);
+        By siteAdminMenuButton = By.xpath(propUISiteAdmin.getProperty("btnMenu_SiteAdmin"));
+        By moduleDefinitionListMenuItem = By.xpath(propUISiteAdmin.getProperty("itemMenu_ModuleDefinitionList"));
+        dashboard.openPageFromMenu(siteAdminMenuButton, moduleDefinitionListMenuItem);
+
+        By addNewLink = By.xpath(propUISiteAdmin.getProperty("input_AddNew"));
+        waitForElement(addNewLink);
+        findElement(addNewLink).click();
+        waitForElement(saveAndSubmitBtn);
+
+        URL pageURL = new URL(getUrl());
+        By friendlyNameField = By.xpath(propUISiteAdmin.getProperty("input_FriendlyName"));
+        By sourceFileField = By.xpath(propUISiteAdmin.getProperty("input_SourceFile"));
+        By useDefaultRb = By.xpath(propUISiteAdmin.getProperty("rb_UseDefault"));
+        By qualifiedPathField = By.xpath(propUISiteAdmin.getProperty("input_QualifiedPath"));
+        findElement(friendlyNameField).sendKeys(friendly_name);
+        findElement(sourceFileField).sendKeys(source_file);
+        findElement(qualifiedPathField).clear();
+        findElement(qualifiedPathField).sendKeys(qualified_path);
+        findElement(useDefaultRb).click();
+        findElement(commentsTxt).sendKeys("Adding a new Module Definition: " + friendly_name);
+        findElement(saveAndSubmitBtn).click();
+        try{
+            findElement(saveAndSubmitBtn).click();
+        }
+        catch (Exception e){
+
+        }
+        driver.get(pageURL.toString());
+        waitForElement(publishBtn);
+
+        findElement(commentsTxt).sendKeys("Publish a new Module Definition: " + friendly_name);
+        findElement(publishBtn).click();
+        Thread.sleep(DEFAULT_PAUSE);
+
+        driver.get(pageURL.toString());
+        String state = findElement(workflowStateSpan).getText();
+
+        driver.switchTo().window(tabs.get(1)).close();
+        Thread.sleep(DEFAULT_PAUSE);
+        driver.switchTo().window(tabs.get(0));
+
+        return state;
+    }
+
 
     public String goToModuleEditPage(String moduleName) {
         try {

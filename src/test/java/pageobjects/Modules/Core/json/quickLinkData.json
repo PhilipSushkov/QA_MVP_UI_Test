@@ -7,6 +7,7 @@
       "source_file": "~/Modules/IRPortal.Modules.Core/4_2_2/QuickLink.ascx",
       "region_name": "Content Pane",
       "module_path": "//span[div/div/h2/span[text()='Core/4_2_2/QuickLink.aspx_01']]",
+      "path":"IRPortal.Data.EntityClasses.QuickLinkModuleInstanceEntity",
       "properties": [
         "Tags;SELENIUM_QUICKLINK_TAG",
         "TagMode;Do not use tags"
@@ -25,6 +26,7 @@
       "source_file": "~/Modules/IRPortal.Modules.Core/4_2_2/QuickLink.ascx",
       "region_name": "Content Pane",
       "module_path": "//span[div/div/h2/span[text()='Core/4_2_2/QuickLink.aspx_02']]",
+      "path":"IRPortal.Data.EntityClasses.QuickLinkModuleInstanceEntity",
       "properties": [
         "CustomCss;QUICKLINK_CUSTOM_CSS",
         "IsOnHomePage;True",
@@ -50,6 +52,7 @@
       "source_file": "~/Modules/IRPortal.Modules.Core/QuickLink.ascx",
       "region_name": "Content Pane",
       "module_path": "//span[div/h1/span[text()='Core/QuickLink.aspx_01']]",
+      "path":"IRPortal.Data.EntityClasses.QuickLinkModuleInstanceEntity",
       "properties": [
         "Tags;SELENIUM_QUICKLINK_TAG",
         "TagMode;Do not use tags"
@@ -68,6 +71,7 @@
       "source_file": "~/Modules/IRPortal.Modules.Core/QuickLink.ascx",
       "region_name": "Content Pane",
       "module_path": "//span[div/h1/span[text()='Core/QuickLink.aspx_02']]",
+      "path":"IRPortal.Data.EntityClasses.QuickLinkModuleInstanceEntity",
       "properties": [
         "CustomCss;QUICKLINK_CUSTOM_CSS",
         "IsOnHomePage;True",
