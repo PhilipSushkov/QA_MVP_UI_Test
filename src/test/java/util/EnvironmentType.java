@@ -8,7 +8,6 @@ public enum EnvironmentType {
   BETA("qaensco.s1.q4web.newtest/admin/"), //facebookrelease url
   //BETA("qachicagotest.s1.q4web.newtest/admin/"), //facebookrelease url
   PRODUCTION("chicagotest.s3.q4web.com/admin/"),
-
   DEVELOP("admin-dev.q4inc.com/");
 
   private final String host;
