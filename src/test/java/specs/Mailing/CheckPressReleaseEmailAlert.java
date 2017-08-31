@@ -248,7 +248,7 @@ public class CheckPressReleaseEmailAlert extends AbstractSpec {
 
             Message[] email = getMail(data.get("email_account").toString(),
                                       data.get("email_password").toString(),
-                    "QaEnsco - " + testData.get("headline").toString());
+                    testData.get("headline").toString());
 
             if (Boolean.valueOf(data.get("expect_mail").toString())) {
                 for (int i = 0; i < 5; i++) {
@@ -258,7 +258,7 @@ public class CheckPressReleaseEmailAlert extends AbstractSpec {
                         System.out.println("attempt #" + i);
                         email = getMail(data.get("email_account").toString(),
                                         data.get("email_password").toString(),
-                                "QaEnsco - "+ testData.get("headline").toString());
+                                testData.get("headline").toString());
                         Thread.sleep(MED_WAIT);
                     }
                 }

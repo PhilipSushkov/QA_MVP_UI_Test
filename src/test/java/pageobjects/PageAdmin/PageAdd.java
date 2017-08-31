@@ -193,7 +193,7 @@ public class PageAdd extends AbstractPageObject {
 
             findElement(previewLnk).click();
 
-            Thread.sleep(DEFAULT_PAUSE);
+            Thread.sleep(DEFAULT_PAUSE*3);
 
             ArrayList<String> tabs = new ArrayList<> (driver.getWindowHandles());
             driver.switchTo().window(tabs.get(1));
@@ -204,7 +204,7 @@ public class PageAdd extends AbstractPageObject {
 
                     if (findElement(breadcrumbDiv).getText().contains(pageName)) { */
                         driver.switchTo().window(tabs.get(1)).close();
-                        Thread.sleep(DEFAULT_PAUSE);
+                        Thread.sleep(DEFAULT_PAUSE*3);
                         driver.switchTo().window(tabs.get(0));
 
                         System.out.println(pageName+ ": New Page Preview has been checked");

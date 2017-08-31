@@ -246,7 +246,7 @@ public class CheckPresentationEmailAlert extends AbstractSpec {
 
             Assert.assertTrue(Boolean.valueOf(testData.get("preconditions_met").toString()));
 
-            Message[] email = getMail(data.get("email_account").toString(), data.get("email_password").toString(), "QaEnsco - " + testData.get("title").toString());
+            Message[] email = getMail(data.get("email_account").toString(), data.get("email_password").toString(), testData.get("title").toString());
             System.out.println(testData.get("title").toString());
 
             if (Boolean.valueOf(data.get("expect_mail").toString())) {
@@ -255,7 +255,7 @@ public class CheckPresentationEmailAlert extends AbstractSpec {
                         break;
                     } else {
                         System.out.println("attempt #" + i);
-                        email = getMail(data.get("email_account").toString(), data.get("email_password").toString(), "QaEnsco - " + testData.get("title").toString());
+                        email = getMail(data.get("email_account").toString(), data.get("email_password").toString(), testData.get("title").toString());
                         Thread.sleep(MED_WAIT);
                     }
                 }
