@@ -47,7 +47,7 @@ public class LocalDriverFactory {
                 driver = new ChromeDriver(capabilities);
 
                 driver.manage().timeouts().implicitlyWait(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
-                driver.manage().timeouts().pageLoadTimeout(45, TimeUnit.SECONDS); //Increased to 20 to perhaps reduce timeouts?
+                driver.manage().timeouts().pageLoadTimeout(60, TimeUnit.SECONDS); //Increased to 20 to perhaps reduce timeouts?
 
                 return driver;
 

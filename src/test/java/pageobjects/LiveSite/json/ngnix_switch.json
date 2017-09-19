@@ -1,29 +1,5 @@
 [
   {
-    "Site": "www.curtisswright.com"
-  },
-  {
-    "Site": "www.cwcontrols.com"
-  },
-  {
-    "Site": "ir.cedarfair.com"
-  },
-  {
-    "Site": "ir.knotoffshorepartners.com"
-  },
-  {
-    "Site": "www.knotoffshorepartners.com"
-  },
-  {
-    "Site": "unitholder.phillips66partners.com"
-  },
-  {
-    "Site": "www.intactfc.com"
-  },
-  {
-    "Site": "www.intactcf.com"
-  },
-  {
     "Site": "investors.tableau.com"
   },
   {
@@ -61,6 +37,9 @@
   },
   {
     "Site": "media.sjm.com"
+  },
+  {
+    "Site": "investors.ccre.com"
   },
   {
     "Site": "invest.jacobs.com"
@@ -121,6 +100,12 @@
   },
   {
     "Site": "investors.ryder.com"
+  },
+  {
+    "Site": "news.q4websystems.com"
+  },
+  {
+    "Site": "www.lsgold.com"
   },
   {
     "Site": "investors.taubman.com"
@@ -258,6 +243,9 @@
     "Site": "ir.cliffsnaturalresources.com"
   },
   {
+    "Site": "ri.cliffsnaturalresources.com"
+  },
+  {
     "Site": "investor.symantec.com"
   },
   {
@@ -366,7 +354,16 @@
     "Site": "investor.southerncompany.com"
   },
   {
+    "Site": "investors.dupont.com"
+  },
+  {
     "Site": "www.investors.dupont.com"
+  },
+  {
+    "Site": "investor.dupont.com"
+  },
+  {
+    "Site": "www.investor.dupont.com"
   },
   {
     "Site": "www.hailegoldmineeis.com"
@@ -385,6 +382,12 @@
   },
   {
     "Site": "investors.canadiantire.ca"
+  },
+  {
+    "Site": "investor.relations.canadiantire.ca"
+  },
+  {
+    "Site": "ir.canadiantire.ca"
   },
   {
     "Site": "investors.fairmountsantrol.com"
@@ -498,6 +501,9 @@
     "Site": "investors.k.to"
   },
   {
+    "Site": "investors.bms.com"
+  },
+  {
     "Site": "ir.pjtpartners.com"
   },
   {
@@ -529,6 +535,9 @@
   },
   {
     "Site": "www.capellaeducation.com"
+  },
+  {
+    "Site": "ir.adama.com"
   },
   {
     "Site": "investor.omnicomgroup.com"
@@ -585,6 +594,9 @@
     "Site": "investor.fb.com"
   },
   {
+    "Site": "investors.haichangholdings.com"
+  },
+  {
     "Site": "investors.squaretwofinancial.com"
   },
   {
@@ -597,10 +609,16 @@
     "Site": "investors.sciodiamond.com"
   },
   {
+    "Site": "investors.xactlycorp.com"
+  },
+  {
     "Site": "investors.ooma.com"
   },
   {
     "Site": "investor.siriusxm.com"
+  },
+  {
+    "Site": "investor.boardbooks.com"
   },
   {
     "Site": "investor.belden.com"
@@ -639,6 +657,9 @@
     "Site": "www.auricometals.ca"
   },
   {
+    "Site": "investors.netsuite.com"
+  },
+  {
     "Site": "ir.hmhco.com"
   },
   {
@@ -667,6 +688,9 @@
   },
   {
     "Site": "www.lancastercolony.com"
+  },
+  {
+    "Site": "investors.atento.com"
   },
   {
     "Site": "ir.logitech.com"
@@ -776,7 +800,9 @@
   {
     "Site": "ir.veeva.com"
   },
-
+  {
+    "Site": "investors.homeaway.com"
+  },
   {
     "Site": "investor.deere.com"
   },
@@ -931,6 +957,9 @@
     "Site": "www.seaworldinvestors.com"
   },
   {
+    "Site": "investors.trcsolutions.com"
+  },
+  {
     "Site": "investor.juniper.net"
   },
   {
@@ -944,6 +973,9 @@
   },
   {
     "Site": "www.denbury.com"
+  },
+  {
+    "Site": "doingright.denbury.com"
   },
   {
     "Site": "ir.acorda.com"
