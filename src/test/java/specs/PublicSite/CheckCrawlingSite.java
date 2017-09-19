@@ -57,7 +57,7 @@ public class CheckCrawlingSite {
         cookieExtent = CookieExtentManager.GetExtent();
         after = AfterExtentManager.GetExtent();
 
-        sDataSiteJson_n = propUIPublicSite.getProperty("json_SiteData_2");
+        sDataSiteJson_n = propUIPublicSite.getProperty("json_NgnixSiteData");
     }
 
     @Test(dataProvider=SITE_DATA_2, threadPoolSize=NUM_THREADS, priority=1, enabled=false)

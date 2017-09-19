@@ -21,6 +21,7 @@ public class AfterExtentManager {
         extent = new ExtentReports();
         extent.attachReporter(getHtmlReporter());
         return extent;
+
     }
 
     private static ExtentHtmlReporter getHtmlReporter() {
