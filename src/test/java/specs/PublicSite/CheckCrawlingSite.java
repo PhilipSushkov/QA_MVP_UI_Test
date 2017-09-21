@@ -60,11 +60,12 @@ public class CheckCrawlingSite {
         sDataSiteJson_n = propUIPublicSite.getProperty("json_NgnixSiteData");
     }
 
-    @Test(dataProvider=SITE_DATA_2, threadPoolSize=NUM_THREADS, priority=1, enabled=false)
+    @Test(dataProvider=SITE_DATA_2, threadPoolSize=NUM_THREADS, priority=1, enabled=true)
     public void checkSiteVersion(String site) throws Exception {
         //crawlingSite = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile);
         String sVersionActual = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getSiteVersion();
         String sUrlActual = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getSiteUrl();
+        String sXCacheStatus = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getXCacheStatus();
         ExtentTest test = extent.createTest("Check version result for " + site);
 
         if (sVersionActual.equals(sSiteVersion)) {
@@ -78,7 +79,7 @@ public class CheckCrawlingSite {
 
     }
 
-    @Test(dataProvider=SITE_DATA_2, threadPoolSize=NUM_THREADS, priority=1, enabled=true)
+    @Test(dataProvider=SITE_DATA_2, threadPoolSize=NUM_THREADS, priority=1, enabled=false)
     public void checkSiteVersionAfter(String site) throws Exception {
         //crawlingSite = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile);
         String sSiteVersionAfter = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getSiteVersionAfter();

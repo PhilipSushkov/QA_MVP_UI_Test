@@ -75,6 +75,28 @@ public class CrawlingSite {
         return sUrl;
     }
 
+
+    public String getXCacheStatus() throws Exception {
+        String sXCacheStatus = "Not Defined";
+        String sSiteFull = Functions.UrlAddSlash(sSite, sSlash, sHttp);
+
+        try {
+            phDriver.get(sSiteFull);
+            Thread.sleep(DEFAULT_PAUSE);
+            sXCacheStatus = phDriver.getCurrentUrl();
+        } catch (TimeoutException e) {
+            return "TimeoutException";
+        } catch (WebDriverException e) {
+            saveXCacheStatus(sXCacheStatus);
+            return sXCacheStatus;
+        }
+
+        System.out.println(sSite + " X-Cache-Status: " + sXCacheStatus);
+        saveSiteUrl(sXCacheStatus);
+        return sXCacheStatus;
+    }
+
+
     public String getSiteVersionAfter() throws Exception {
         String sVersion = "Not Defined";
         String sSiteFull = Functions.UrlAddSlash(sSite, sSlash, sHttp);
@@ -151,6 +173,33 @@ public class CrawlingSite {
 
         jsonObjSite.put("domain", sSite);
         jsonObjSite.put("version_before", sVersion);
+
+        try {
+            FileWriter file = new FileWriter(sPathToFile + sSite + ".json");
+            file.write(jsonObjSite.toJSONString().replace("\\", ""));
+            file.flush();
+            file.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void saveXCacheStatus(String sXCacheStatus) throws Exception {
+        JSONObject jsonObjSite = new JSONObject();
+        //System.out.println(sPathToFile + sSite + ".json");
+
+        try {
+            jsonObjSite = (JSONObject) parser.parse(new FileReader(sPathToFile + sSite + ".json"));
+        } catch (ParseException e) {
+        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
+        }
+
+        jsonObjSite.put("X_Cache_Status_Before", sXCacheStatus);
 
         try {
             FileWriter file = new FileWriter(sPathToFile + sSite + ".json");

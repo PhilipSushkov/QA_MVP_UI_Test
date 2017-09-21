@@ -21,16 +21,18 @@ import java.io.IOException;
 
 public class CheckCacheStatus {
     private final String sUrl = "http://investors.level3.com/";
+    private static final long DEFAULT_PAUSE = 1000;
+    long startTime;
 
     @BeforeTest
     public void setUp() {
-
+        startTime = System.currentTimeMillis();
     }
 
-    @Test(threadPoolSize = 1, invocationCount = 10, timeOut = 2000)
-    public void checkCacheStatus() {
+    @Test(threadPoolSize = 1, invocationCount = 30, timeOut = 3000)
+    public void checkCacheStatus() throws InterruptedException {
         Long id = Thread.currentThread().getId();
-        System.out.println("Test method executing on thread with id: " + id);
+        //System.out.println("Test method executing on thread with id: " + id);
 
         HttpGet httpGet = new HttpGet(sUrl);
 
@@ -55,6 +57,7 @@ public class CheckCacheStatus {
         localContext.setAttribute(HttpClientContext.COOKIE_STORE, cookieStore);
 
         try {
+
             long start = System.currentTimeMillis();
             HttpResponse response = httpClient.execute(httpGet);
             long end = System.currentTimeMillis();
@@ -63,14 +66,22 @@ public class CheckCacheStatus {
 
             int statusCode = response.getStatusLine().getStatusCode();
 
-            System.out.println(id+": "+statusCode);
+            System.out.println("Thread #"+id+": "+statusCode);
 
             Header[] headers = response.getAllHeaders();
             for (Header header : headers) {
-                System.out.println("Key: " + header.getName()
-                        + " ,Value: " + header.getValue()+"\n");
+                if (header.getName().equals("X-Cache-status")) {
+                    System.out.println(header.getName() + ": " + header.getValue());
+                }
+                if (header.getName().equals("X-DIS-Request-ID")) {
+                    System.out.println(header.getName() + ": " + header.getValue());
+                }
             }
-            System.out.println("\n Done");
+
+            long endTime = System.currentTimeMillis();
+
+            System.out.println("Time: " + ((endTime - startTime)/1000) + " sec\n");
+            Thread.sleep(DEFAULT_PAUSE);
 
         } catch(IOException e)
         {
