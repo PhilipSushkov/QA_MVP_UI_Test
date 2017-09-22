@@ -1,6 +1,17 @@
 package pageobjects.LiveSite;
 
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
+import org.apache.http.Header;
+import org.apache.http.HttpHeaders;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.cookie.BasicClientCookie;
+import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.HttpContext;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -76,14 +87,38 @@ public class CrawlingSite {
     }
 
 
-    public String getXCacheStatus() throws Exception {
+    public String getXCacheStatus(String sSiteFull) throws Exception {
         String sXCacheStatus = "Not Defined";
-        String sSiteFull = Functions.UrlAddSlash(sSite, sSlash, sHttp);
+        //String sSiteFull = Functions.UrlAddSlash(sSite, sSlash, sHttp);
 
         try {
-            phDriver.get(sSiteFull);
-            Thread.sleep(DEFAULT_PAUSE);
-            sXCacheStatus = phDriver.getCurrentUrl();
+            HttpGet httpGet = new HttpGet(sSiteFull);
+
+            //httpGet.setHeader(HttpHeaders.HOST, sSite);
+            httpGet.setHeader(HttpHeaders.CONTENT_TYPE, "text/html; charset=utf-8");
+            httpGet.setHeader(HttpHeaders.CONNECTION, "keep-alive");
+            httpGet.setHeader(HttpHeaders.USER_AGENT, "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:45.0) Gecko/20100101 Firefox/45.0");
+            httpGet.setHeader(HttpHeaders.ACCEPT, "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+            httpGet.setHeader(HttpHeaders.CACHE_CONTROL, "max-age=0");
+
+            HttpClient httpClient = HttpClientBuilder.create().build();
+
+            try {
+                HttpResponse response = httpClient.execute(httpGet);
+                Header[] headers = response.getAllHeaders();
+                for (Header header : headers) {
+                    if (header.getName().equals("X-Cache-status")) {
+                        sXCacheStatus = header.getValue();
+                    }
+                }
+            } catch(IOException e)
+            {
+                saveXCacheStatus(sXCacheStatus);
+            } catch(Exception e)
+            {
+                saveXCacheStatus(sXCacheStatus);
+            }
+
         } catch (TimeoutException e) {
             return "TimeoutException";
         } catch (WebDriverException e) {
@@ -92,7 +127,7 @@ public class CrawlingSite {
         }
 
         System.out.println(sSite + " X-Cache-Status: " + sXCacheStatus);
-        saveSiteUrl(sXCacheStatus);
+        saveXCacheStatus(sXCacheStatus);
         return sXCacheStatus;
     }
 
@@ -135,6 +170,50 @@ public class CrawlingSite {
         System.out.println(sSite + ": " + sUrl);
         saveSiteUrlAfter(sUrl);
         return sUrl;
+    }
+
+    public String getXCacheStatusAfter(String sSiteFull) throws Exception {
+        String sXCacheStatus = "Not Defined";
+        //String sSiteFull = Functions.UrlAddSlash(sSite, sSlash, sHttp);
+
+        try {
+            HttpGet httpGet = new HttpGet(sSiteFull);
+
+            //httpGet.setHeader(HttpHeaders.HOST, sSite);
+            httpGet.setHeader(HttpHeaders.CONTENT_TYPE, "text/html; charset=utf-8");
+            httpGet.setHeader(HttpHeaders.CONNECTION, "keep-alive");
+            httpGet.setHeader(HttpHeaders.USER_AGENT, "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:45.0) Gecko/20100101 Firefox/45.0");
+            httpGet.setHeader(HttpHeaders.ACCEPT, "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+            httpGet.setHeader(HttpHeaders.CACHE_CONTROL, "max-age=0");
+
+            HttpClient httpClient = HttpClientBuilder.create().build();
+
+            try {
+                HttpResponse response = httpClient.execute(httpGet);
+                Header[] headers = response.getAllHeaders();
+                for (Header header : headers) {
+                    if (header.getName().equals("X-Cache-status")) {
+                        sXCacheStatus = header.getValue();
+                    }
+                }
+            } catch(IOException e)
+            {
+                saveXCacheStatusAfter(sXCacheStatus);
+            } catch(Exception e)
+            {
+                saveXCacheStatusAfter(sXCacheStatus);
+            }
+
+        } catch (TimeoutException e) {
+            return "TimeoutException";
+        } catch (WebDriverException e) {
+            saveXCacheStatusAfter(sXCacheStatus);
+            return sXCacheStatus;
+        }
+
+        System.out.println(sSite + " X-Cache-Status: " + sXCacheStatus);
+        saveXCacheStatusAfter(sXCacheStatus);
+        return sXCacheStatus;
     }
 
     public String getSiteVersionCookie(String sCookie) throws Exception {
@@ -281,6 +360,33 @@ public class CrawlingSite {
         }
 
         jsonObjSite.put("Url_after", sUrl);
+
+        try {
+            FileWriter file = new FileWriter(sPathToFile + sSite + ".json");
+            file.write(jsonObjSite.toJSONString().replace("\\", ""));
+            file.flush();
+            file.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void saveXCacheStatusAfter(String sXCacheStatus) throws Exception {
+        JSONObject jsonObjSite = new JSONObject();
+        //System.out.println(sPathToFile + sSite + ".json");
+
+        try {
+            jsonObjSite = (JSONObject) parser.parse(new FileReader(sPathToFile + sSite + ".json"));
+        } catch (ParseException e) {
+        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
+        }
+
+        jsonObjSite.put("X_Cache_Status_After", sXCacheStatus);
 
         try {
             FileWriter file = new FileWriter(sPathToFile + sSite + ".json");

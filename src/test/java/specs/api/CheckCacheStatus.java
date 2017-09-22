@@ -20,7 +20,7 @@ import java.io.IOException;
 
 
 public class CheckCacheStatus {
-    private final String sUrl = "http://investors.level3.com/";
+    private final String sUrl = "http://www.thirdpointre.com/home/default.aspx";
     private static final long DEFAULT_PAUSE = 1000;
     long startTime;
 
@@ -36,7 +36,7 @@ public class CheckCacheStatus {
 
         HttpGet httpGet = new HttpGet(sUrl);
 
-        httpGet.setHeader(HttpHeaders.HOST, "investors.level3.com");
+        //httpGet.setHeader(HttpHeaders.HOST, "www.thirdpointre.com");
         httpGet.setHeader(HttpHeaders.CONTENT_TYPE, "text/html; charset=utf-8");
         httpGet.setHeader(HttpHeaders.CONNECTION, "keep-alive");
         httpGet.setHeader(HttpHeaders.USER_AGENT, "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:45.0) Gecko/20100101 Firefox/45.0");
@@ -45,7 +45,7 @@ public class CheckCacheStatus {
 
         BasicCookieStore cookieStore = new BasicCookieStore();
         BasicClientCookie cookieSessionId = new BasicClientCookie("ASP.NET_SessionId", "0puw3swnsinu3jojxdo55b25"+id);
-        cookieSessionId.setDomain("investors.level3.com");
+        cookieSessionId.setDomain("thirdpointre.bm");
         cookieSessionId.setPath("/");
         cookieSessionId.setAttribute("HTTP", "true");
         cookieStore.addCookie(cookieSessionId);

@@ -65,12 +65,13 @@ public class CheckCrawlingSite {
         //crawlingSite = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile);
         String sVersionActual = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getSiteVersion();
         String sUrlActual = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getSiteUrl();
-        String sXCacheStatus = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getXCacheStatus();
+        String sXCacheStatus = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getXCacheStatus(sUrlActual);
         ExtentTest test = extent.createTest("Check version result for " + site);
 
         if (sVersionActual.equals(sSiteVersion)) {
             test.log(Status.PASS, "Site Version number is valid: " + sSiteVersion);
             test.log(Status.PASS, "Site Url: " + sUrlActual);
+            test.log(Status.PASS, "Site X-Cache-Status: " + sXCacheStatus);
         } else {
             test.log(Status.FAIL, "Actual Version number is wrong: " + sVersionActual + ". Supposed to be: " + sSiteVersion);
         }
@@ -84,6 +85,7 @@ public class CheckCrawlingSite {
         //crawlingSite = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile);
         String sSiteVersionAfter = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getSiteVersionAfter();
         String sUrlAfter = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getSiteUrlAfter();
+        String sXCacheStatusAfter = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getXCacheStatusAfter(sUrlAfter);
         ExtentTest test = after.createTest("Check version result for " + site);
 
 
@@ -100,6 +102,7 @@ public class CheckCrawlingSite {
 
         String sSiteVersionBefore = jsonObjSite.get("version_before").toString();
         String sSiteUrlBefore = jsonObjSite.get("Url_before").toString();
+        String sSiteXCacheStatusBefore = jsonObjSite.get("X_Cache_Status_Before").toString();
 
         if (sSiteVersionAfter.equals(sSiteVersionBefore)) {
             test.log(Status.PASS, "After Site Version number is valid: " + sSiteVersionBefore);
@@ -111,6 +114,12 @@ public class CheckCrawlingSite {
             test.log(Status.PASS, "After Site Url is valid: " + sSiteUrlBefore);
         } else {
             test.log(Status.FAIL, "After Site Url is wrong: " + sUrlAfter + ". Supposed to be: " + sSiteUrlBefore);
+        }
+
+        if (sXCacheStatusAfter.equals(sSiteXCacheStatusBefore)) {
+            test.log(Status.PASS, "After Site X-Cache-Status is valid: " + sSiteXCacheStatusBefore);
+        } else {
+            test.log(Status.FAIL, "After Site X-Cache-Status is wrong: " + sXCacheStatusAfter + ". Supposed to be: " + sSiteXCacheStatusBefore);
         }
 
         Assert.assertEquals(sSiteVersionAfter, sSiteVersionBefore, "After Site Version number is not correct for " + site);
