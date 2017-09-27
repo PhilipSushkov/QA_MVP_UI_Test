@@ -17,7 +17,6 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.openqa.selenium.*;
-import org.openqa.selenium.remote.server.handler.FindElement;
 import util.Functions;
 
 import java.io.FileNotFoundException;
@@ -26,6 +25,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * Created by philipsushkov on 2017-03-28.
@@ -67,16 +67,36 @@ public class CrawlingSite {
         return sVersion;
     }
 
-    public Boolean getSslTrust() throws Exception {
+    public Boolean getSslTrust() throws InterruptedException {
         boolean result = false;
 
         try {
+            //phDriver.get("https://www.sslshopper.com/ssl-checker.html#hostname="+getSiteUrl());
             phDriver.get("https://www.sslshopper.com/ssl-checker.html#hostname="+sSite);
             Thread.sleep(DEFAULT_PAUSE);
-            WebElement element = phDriver.findElement(By.xpath(""));
-            result = true;
-        } catch (WebDriverException e) {
-            e.printStackTrace();
+            WebElement elementTitle = phDriver.findElement(By.xpath("//h3[contains(text(), 'resolves to')]"));
+
+            if (elementTitle!=null) {
+                try {
+                    WebElement elementRes = phDriver.findElement(By.xpath("//td[@class='failed']"));
+                    System.out.println("You got the failed message");
+                    result = false;
+                } catch (NoSuchElementException e1) {
+                    result = true;
+                }
+                catch (WebDriverException e3) {
+                    result = true;
+                }
+            } else {
+                System.out.println("The correct title is not found");
+                result = false;
+            }
+
+
+        } catch (WebDriverException e2) {
+            e2.printStackTrace();
+        } catch (Exception e4) {
+            e4.printStackTrace();
         }
 
         return result;

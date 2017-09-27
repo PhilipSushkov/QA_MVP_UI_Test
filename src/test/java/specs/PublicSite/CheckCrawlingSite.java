@@ -62,7 +62,7 @@ public class CheckCrawlingSite {
         sDataSiteSsl = propUIPublicSite.getProperty("json_SiteDataSsl");
     }
 
-    @Test(dataProvider=SITE_DATA_2, threadPoolSize=NUM_THREADS, priority=1, enabled=true)
+    @Test(dataProvider=SITE_DATA_2, threadPoolSize=NUM_THREADS, priority=1, enabled=false)
     public void checkSiteVersion(String site) throws Exception {
         //crawlingSite = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile);
         String sVersionActual = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getSiteVersion();
@@ -171,10 +171,10 @@ public class CheckCrawlingSite {
         System.out.println("Module: " + moduleName + " " +id);
     }
 
-    @Test(dataProvider=SITE_DATA_SSL, priority=6, enabled=false)
+    @Test(dataProvider=SITE_DATA_SSL, priority=6, enabled=true)
     public void checkSslSertificates(String site) throws Exception {
         crawlingSite = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile);
-        Assert.assertTrue(crawlingSite.getSslTrust(), "Some Ssl Certificates are failed" + site);
+        Assert.assertTrue(crawlingSite.getSslTrust(), "Some Ssl Certificates are failed: " + site);
     }
 
     @AfterMethod
