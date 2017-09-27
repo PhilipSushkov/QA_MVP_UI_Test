@@ -17,6 +17,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.openqa.selenium.*;
+import org.openqa.selenium.remote.server.handler.FindElement;
 import util.Functions;
 
 import java.io.FileNotFoundException;
@@ -64,6 +65,21 @@ public class CrawlingSite {
         System.out.println(sSite + ": " + sVersion);
         saveSiteVersion(sVersion);
         return sVersion;
+    }
+
+    public Boolean getSslTrust() throws Exception {
+        boolean result = false;
+
+        try {
+            phDriver.get("https://www.sslshopper.com/ssl-checker.html#hostname="+sSite);
+            Thread.sleep(DEFAULT_PAUSE);
+            WebElement element = phDriver.findElement(By.xpath(""));
+            result = true;
+        } catch (WebDriverException e) {
+            e.printStackTrace();
+        }
+
+        return result;
     }
 
     public String getSiteUrl() throws Exception {
