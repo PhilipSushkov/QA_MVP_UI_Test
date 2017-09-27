@@ -104,6 +104,9 @@ public class LookupAdd extends AbstractPageObject {
             findElement(additionalInfoField).sendKeys(additional_info);
             jsonObj.put("additional_info", additional_info);
 
+
+
+
             // Save Active checkbox
             active = Boolean.parseBoolean(data.get("active").toString());
             jsonObj.put("active", Boolean.parseBoolean(data.get("active").toString()));
