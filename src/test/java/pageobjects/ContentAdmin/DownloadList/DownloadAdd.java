@@ -1,13 +1,12 @@
-package pageobjects.SiteAdmin.LookupList;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import pageobjects.AbstractPageObject;
+package pageobjects.ContentAdmin.DownloadList;
 
 import com.jayway.jsonpath.JsonPath;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.openqa.selenium.*;
+import org.openqa.selenium.support.ui.Select;
+import pageobjects.AbstractPageObject;
 import pageobjects.PageAdmin.WorkflowState;
 
 import java.io.FileNotFoundException;
@@ -17,58 +16,62 @@ import java.io.IOException;
 import java.net.URL;
 
 import static specs.AbstractSpec.desktopUrl;
-import static specs.AbstractSpec.propUISiteAdmin;
+import static specs.AbstractSpec.propUIContentAdmin;
 
 /**
- * Created by philipsushkov on 2017-05-05.
+ * Created by victorlam 2017-09-27.
  */
 
-public class LookupAdd extends AbstractPageObject {
-    private static By moduleTitle, lookupTypeField, lookupTextField, lookupValueField, additionalInfoField, lookupTypeSelect;
+public class DownloadAdd extends AbstractPageObject {
+    private static By moduleTitle, downloadDateField, downloadTypeField, downloadTitleField, downloadDescriptionField, tagsField, downloadPathField, downloadTypeSelect;
     private static By activeChk, saveBtn, revertBtn, cancelBtn, deleteBtn, addNewLink, publishBtn;
     private static By workflowStateSpan, commentsTxt, successMsg, saveAndSubmitBtn, currentContentSpan;
     private static String sPathToFile, sFileJson;
     private static JSONParser parser;
     private static final long DEFAULT_PAUSE = 2500;
-    private final String PAGE_NAME="Lookup";
+    private final String PAGE_NAME="Download";
 
-    public LookupAdd(WebDriver driver) {
+    public DownloadAdd(WebDriver driver) {
         super(driver);
-        moduleTitle = By.xpath(propUISiteAdmin.getProperty("spanModule_Title"));
-        lookupTypeField = By.xpath(propUISiteAdmin.getProperty("input_LookupType"));
-        lookupTextField = By.xpath(propUISiteAdmin.getProperty("input_LookupText"));
-        lookupValueField = By.xpath(propUISiteAdmin.getProperty("input_LookupValue"));
-        additionalInfoField = By.xpath(propUISiteAdmin.getProperty("input_AdditionalInfo"));
-        lookupTypeSelect = By.xpath(propUISiteAdmin.getProperty("select_LookupType"));
-        activeChk = By.xpath(propUISiteAdmin.getProperty("chk_Active"));
-        saveBtn = By.xpath(propUISiteAdmin.getProperty("btn_Save"));
-        cancelBtn = By.xpath(propUISiteAdmin.getProperty("btn_Cancel"));
-        deleteBtn = By.xpath(propUISiteAdmin.getProperty("btn_Delete"));
-        publishBtn = By.xpath(propUISiteAdmin.getProperty("btn_Publish"));
-        addNewLink = By.xpath(propUISiteAdmin.getProperty("input_AddNew"));
-        revertBtn = By.xpath(propUISiteAdmin.getProperty("btn_Revert"));
-        workflowStateSpan = By.xpath(propUISiteAdmin.getProperty("select_WorkflowState"));
-        commentsTxt = By.xpath(propUISiteAdmin.getProperty("txtarea_Comments"));
-        successMsg = By.xpath(propUISiteAdmin.getProperty("msg_Success"));
-        saveAndSubmitBtn = By.xpath(propUISiteAdmin.getProperty("btn_SaveAndSubmit"));
-        currentContentSpan = By.xpath(propUISiteAdmin.getProperty("span_CurrentContent"));
+        moduleTitle = By.xpath(propUIContentAdmin.getProperty("spanModule_Title"));
+        downloadDateField = By.xpath(propUIContentAdmin.getProperty("input_DownloadDate"));
+        downloadTypeField = By.xpath(propUIContentAdmin.getProperty("input_DownloadType"));
+        downloadTitleField = By.xpath(propUIContentAdmin.getProperty("input_DownloadTitle"));
+        downloadDescriptionField = By.xpath(propUIContentAdmin.getProperty("input_DownloadDescription"));
+        tagsField = By.xpath(propUIContentAdmin.getProperty("input_Tags"));
+        downloadPathField = By.xpath(propUIContentAdmin.getProperty("input_DownloadPath"));
+        downloadTypeSelect = By.xpath(propUIContentAdmin.getProperty("select_DownloadType"));
+        activeChk = By.xpath(propUIContentAdmin.getProperty("chk_Active"));
+        saveBtn = By.xpath(propUIContentAdmin.getProperty("btn_Save"));
+        cancelBtn = By.xpath(propUIContentAdmin.getProperty("btn_Cancel"));
+        deleteBtn = By.xpath(propUIContentAdmin.getProperty("btn_Delete"));
+        publishBtn = By.xpath(propUIContentAdmin.getProperty("btn_Publish"));
+        addNewLink = By.xpath(propUIContentAdmin.getProperty("input_AddNew"));
+        revertBtn = By.xpath(propUIContentAdmin.getProperty("btn_Revert"));
+        workflowStateSpan = By.xpath(propUIContentAdmin.getProperty("select_WorkflowState"));
+        commentsTxt = By.xpath(propUIContentAdmin.getProperty("txtarea_Comments"));
+        successMsg = By.xpath(propUIContentAdmin.getProperty("msg_Success"));
+        saveAndSubmitBtn = By.xpath(propUIContentAdmin.getProperty("btn_SaveAndSubmit"));
+        currentContentSpan = By.xpath(propUIContentAdmin.getProperty("span_CurrentContent"));
 
         parser = new JSONParser();
 
-        sPathToFile = System.getProperty("user.dir") + propUISiteAdmin.getProperty("dataPath_LookupList");
-        sFileJson = propUISiteAdmin.getProperty("json_Lookup");
+        sPathToFile = System.getProperty("user.dir") + propUIContentAdmin.getProperty("dataPath_DownloadList");
+        sFileJson = propUIContentAdmin.getProperty("json_Download");
     }
 
     public String getTitle() {
         findElement(addNewLink).click();
         waitForElement(moduleTitle);
         String sTitle = getText(moduleTitle);
+        JavascriptExecutor jse = (JavascriptExecutor)driver;
+        jse.executeScript("arguments[0].scrollIntoView()", findElement(cancelBtn));
         findElement(cancelBtn).click();
         return sTitle;
     }
 
-    public String saveLookup(JSONObject data, String name) {
-        String lookup_type, lookup_text, lookup_value, additional_info;
+    public String saveDownload(JSONObject data, String name) {
+        String download_date, download_type, download_title, download_description, tags, download_filename;
         Boolean active;
         JSONObject jsonObj = new JSONObject();
         JSONObject jsonMain = new JSONObject();
@@ -84,28 +87,40 @@ public class LookupAdd extends AbstractPageObject {
             } catch (ParseException e) {
             }
 
-            lookup_type = data.get("lookup_type").toString();
-            findElement(lookupTypeField).clear();
-            findElement(lookupTypeField).sendKeys(lookup_type);
-            jsonObj.put("lookup_type", lookup_type);
+            download_date = data.get("download_date").toString();
+            findElement(downloadDateField).clear();
+            findElement(downloadDateField).sendKeys(download_date);
+            findElement(downloadDateField).sendKeys(Keys.RETURN);
+            jsonObj.put("download_date", download_date);
 
-            lookup_text = data.get("lookup_text").toString();
-            findElement(lookupTextField).clear();
-            findElement(lookupTextField).sendKeys(lookup_text);
-            jsonObj.put("lookup_text", lookup_text);
+            download_type = data.get("download_type").toString();
+            //findElement(downloadTypeField).clear();
+            findElement(downloadPathField).click();
+            findElement(downloadPathField).click();
+            findElement(downloadTypeField).sendKeys(download_type);
+            jsonObj.put("download_type", download_type);
 
-            lookup_value = data.get("lookup_value").toString();
-            findElement(lookupValueField).clear();
-            findElement(lookupValueField).sendKeys(lookup_value);
-            jsonObj.put("lookup_value", lookup_value);
+            download_title = data.get("download_title").toString();
+            findElement(downloadTitleField).clear();
+            findElement(downloadTitleField).sendKeys(download_title);
+            jsonObj.put("download_title", download_title);
 
-            additional_info = data.get("additional_info").toString();
-            findElement(additionalInfoField).clear();
-            findElement(additionalInfoField).sendKeys(additional_info);
-            jsonObj.put("additional_info", additional_info);
+            download_description = data.get("download_description").toString();
+            findElement(downloadDescriptionField).clear();
+            findElement(downloadDescriptionField).sendKeys(download_description);
+            jsonObj.put("download_description", download_description);
 
+            tags = data.get("tags").toString();
+            findElement(tagsField).clear();
+            findElement(tagsField).sendKeys(tags);
+            jsonObj.put("tags", tags);
 
-
+            download_filename = data.get("download_filename").toString();
+            JavascriptExecutor js = (JavascriptExecutor) driver;
+            WebElement elemSrc =  driver.findElement(downloadPathField);
+            String filename = download_filename;
+            js.executeScript("arguments[0].setAttribute(arguments[1], arguments[2]);", elemSrc, "value", "files/"+filename);
+            jsonObj.put("download_filename", download_filename);
 
             // Save Active checkbox
             active = Boolean.parseBoolean(data.get("active").toString());
@@ -122,6 +137,8 @@ public class LookupAdd extends AbstractPageObject {
                 }
             }
 
+            JavascriptExecutor jse = (JavascriptExecutor)driver;
+            jse.executeScript("arguments[0].scrollIntoView()", findElement(saveBtn));
             findElement(saveBtn).click();
             Thread.sleep(DEFAULT_PAUSE);
             waitForElement(successMsg);
@@ -150,9 +167,9 @@ public class LookupAdd extends AbstractPageObject {
         return null;
     }
 
-    public String saveAndSubmitLookup(JSONObject data, String name) throws InterruptedException {
+    public String saveAndSubmitDownload(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
-        By editBtn = By.xpath("//td[(text()='" + data.get("lookup_text").toString() + "')]/parent::tr/td/input[contains(@id, 'imgEdit')][contains(@id, 'Lookup')]");
+        By editBtn = By.xpath("//td[(text()='" + data.get("download_title").toString() + "')]/parent::tr/td/input[contains(@id, 'imgEdit')][contains(@id, 'Reports')]");
 
         try {
             waitForElement(moduleTitle);
@@ -163,8 +180,8 @@ public class LookupAdd extends AbstractPageObject {
             } catch (ParseException e) {
             }
 
-            waitForElement(lookupTypeSelect);
-            findElement(lookupTypeSelect).sendKeys(data.get("lookup_type").toString());
+            waitForElement(downloadTypeSelect);
+            findElement(downloadTypeSelect).sendKeys(data.get("download_type").toString());
             Thread.sleep(DEFAULT_PAUSE);
 
             //String pageUrl = getPageUrl(jsonMain, name);
@@ -212,7 +229,7 @@ public class LookupAdd extends AbstractPageObject {
         return null;
     }
 
-    public Boolean checkLookup(JSONObject data, String name) throws InterruptedException {
+    public Boolean checkDownload(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
 
         try {
@@ -229,28 +246,43 @@ public class LookupAdd extends AbstractPageObject {
 
             // Compare field values with entry data
             try {
-                if (!findElement(lookupTypeField).getAttribute("value").equals(data.get("lookup_type").toString())) {
+                if (!findElement(downloadDateField).getAttribute("value").equals(data.get("download_date").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
             }
 
             try {
-                if (!findElement(lookupTextField).getAttribute("value").equals(data.get("lookup_text").toString())) {
+                if (!new Select(findElement(downloadTypeField)).getFirstSelectedOption().getText().trim().equals(data.get("download_type").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
             }
 
             try {
-                if (!findElement(lookupValueField).getAttribute("value").equals(data.get("lookup_value").toString())) {
+                if (!findElement(downloadTitleField).getAttribute("value").equals(data.get("download_title").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
             }
 
             try {
-                if (!findElement(additionalInfoField).getAttribute("value").equals(data.get("additional_info").toString())) {
+                if (!findElement(downloadDescriptionField).getAttribute("value").equals(data.get("download_description").toString())) {
+                    return false;
+                }
+            } catch (NullPointerException e) {
+            }
+
+            try {
+                if (!findElement(tagsField).getAttribute("value").equals(data.get("tags").toString() + " ")) {
+                    return false;
+                }
+            } catch (NullPointerException e) {
+            }
+
+            try {
+                JavascriptExecutor js = (JavascriptExecutor)driver;
+                if (!js.executeScript("return arguments[0].value;", driver.findElement(downloadPathField)).equals("files/" + data.get("download_filename").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
@@ -272,7 +304,7 @@ public class LookupAdd extends AbstractPageObject {
         return null;
     }
 
-    public String publishLookup(JSONObject data, String name) throws InterruptedException {
+    public String publishDownload(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
         JSONObject jsonObj = new JSONObject();
 
@@ -289,7 +321,9 @@ public class LookupAdd extends AbstractPageObject {
             Thread.sleep(DEFAULT_PAUSE);
 
             waitForElement(publishBtn);
-            findElement(publishBtn).click();
+            JavascriptExecutor jse = (JavascriptExecutor)driver;
+            jse.executeScript("arguments[0].scrollIntoView()", findElement(By.xpath("(" + propUIContentAdmin.getProperty("btn_Publish") + ")[2]")));
+            findElement(By.xpath("(" + propUIContentAdmin.getProperty("btn_Publish") + ")[2]")).click();
             Thread.sleep(DEFAULT_PAUSE*2);
 
             driver.get(pageUrl);
@@ -318,7 +352,7 @@ public class LookupAdd extends AbstractPageObject {
         return null;
     }
 
-    public String changeAndSubmitLookup(JSONObject data, String name) throws InterruptedException {
+    public String changeAndSubmitDownload(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
         JSONObject jsonObj = new JSONObject();
 
@@ -336,10 +370,10 @@ public class LookupAdd extends AbstractPageObject {
             waitForElement(saveAndSubmitBtn);
 
             try {
-                if (!data.get("lookup_value_ch").toString().isEmpty()) {
-                    findElement(lookupValueField).clear();
-                    findElement(lookupValueField).sendKeys(data.get("lookup_value_ch").toString());
-                    jsonObj.put("lookup_value", data.get("lookup_value_ch").toString());
+                if (!data.get("download_description_ch").toString().isEmpty()) {
+                    findElement(downloadDescriptionField).clear();
+                    findElement(downloadDescriptionField).sendKeys(data.get("download_description_ch").toString());
+                    jsonObj.put("download_description", data.get("download_description_ch").toString());
                 }
             } catch (NullPointerException e) {
             }
@@ -394,7 +428,7 @@ public class LookupAdd extends AbstractPageObject {
         return null;
     }
 
-    public String revertToLiveLookup(String name) throws InterruptedException {
+    public String revertToLiveDownload(String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
         JSONObject jsonObj = new JSONObject();
 
@@ -412,6 +446,9 @@ public class LookupAdd extends AbstractPageObject {
             waitForElement(revertBtn);
 
             if (jsonObj.get("workflow_state").toString().equals(WorkflowState.FOR_APPROVAL.state())) {
+
+                JavascriptExecutor jse = (JavascriptExecutor) driver;
+                jse.executeScript("arguments[0].scrollIntoView()", findElement(revertBtn));
                 findElement(revertBtn).click();
                 Thread.sleep(DEFAULT_PAUSE);
 
@@ -439,7 +476,7 @@ public class LookupAdd extends AbstractPageObject {
         return null;
     }
 
-    public Boolean checkLookupCh(JSONObject data, String name) throws InterruptedException {
+    public Boolean checkDownloadCh(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
 
         try {
@@ -456,28 +493,43 @@ public class LookupAdd extends AbstractPageObject {
 
             // Compare field values with entry data
             try {
-                if (!findElement(lookupTypeField).getAttribute("value").equals(data.get("lookup_type").toString())) {
+                if (!findElement(downloadDateField).getAttribute("value").equals(data.get("download_date").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
             }
 
             try {
-                if (!findElement(lookupTextField).getAttribute("value").equals(data.get("lookup_text").toString())) {
+                if (!new Select(findElement(downloadTypeField)).getFirstSelectedOption().getText().trim().equals(data.get("download_type").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
             }
 
             try {
-                if (!findElement(lookupValueField).getAttribute("value").equals(data.get("lookup_value_ch").toString())) {
+                if (!findElement(downloadTitleField).getAttribute("value").equals(data.get("download_title").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
             }
 
             try {
-                if (!findElement(additionalInfoField).getAttribute("value").equals(data.get("additional_info").toString())) {
+                if (!findElement(downloadDescriptionField).getAttribute("value").equals(data.get("download_description_ch").toString())) {
+                    return false;
+                }
+            } catch (NullPointerException e) {
+            }
+
+            try {
+                if (!findElement(tagsField).getAttribute("value").equals(data.get("tags").toString() + " ")) {
+                    return false;
+                }
+            } catch (NullPointerException e) {
+            }
+
+            try {
+                JavascriptExecutor js = (JavascriptExecutor)driver;
+                if (!js.executeScript("return arguments[0].value;", driver.findElement(downloadPathField)).equals("files/" + data.get("download_filename").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
@@ -499,7 +551,7 @@ public class LookupAdd extends AbstractPageObject {
         return null;
     }
 
-    public String setupAsDeletedLookup(String name) throws InterruptedException {
+    public String setupAsDeletedDownload(String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
         JSONObject jsonObj = new JSONObject();
 
@@ -542,7 +594,7 @@ public class LookupAdd extends AbstractPageObject {
         return null;
     }
 
-    public String removeLookup(JSONObject data, String name) throws InterruptedException {
+    public String removeDownload(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
 
         try {
@@ -560,7 +612,7 @@ public class LookupAdd extends AbstractPageObject {
 
                 waitForElement(commentsTxt);
                 findElement(commentsTxt).sendKeys("Approving "+PAGE_NAME+" removal");
-                findElement(publishBtn).click();
+                findElement(By.xpath("(" + propUIContentAdmin.getProperty("btn_Publish") + ")[2]")).click();
 
                 Thread.sleep(DEFAULT_PAUSE*2);
 
