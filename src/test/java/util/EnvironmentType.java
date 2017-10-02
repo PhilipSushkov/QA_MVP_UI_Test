@@ -4,7 +4,7 @@ public enum EnvironmentType {
 
   //BETA("facebook.s1.q4web.newtest/"), //chicagotest url
   //BETA("qachicagotest.s1.q4web.newtest/admin/"), //facebookrelease url
-  DEVELOP("chicagotest.s1.q4web.newtest/admin/"),
+  DEVELOP("qaensco.s1.q4web.newtest/admin/"),
   //DEVELOP("ensco.s1.q4web.newtest/admin/"),
   //DEVELOP("chicagotest.s1.q4web.dev/admin/"),
   //DEVELOP("enscoreverseproxy.s1.q4web.dev/admin/"),
