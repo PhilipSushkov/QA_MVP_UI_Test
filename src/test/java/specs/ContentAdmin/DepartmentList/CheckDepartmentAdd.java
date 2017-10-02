@@ -11,7 +11,6 @@ import pageobjects.ContentAdmin.DepartmentList.DepartmentAdd;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.LoginPage.LoginPage;
 import pageobjects.PageAdmin.WorkflowState;
-import pageobjects.SiteAdmin.LookupList.LookupAdd;
 import specs.AbstractSpec;
 
 import java.io.FileNotFoundException;
