@@ -1,7 +1,7 @@
 {
 "department": [
 {
-"do_assertions": false,
+"do_assertions": true,
 "department_name": "Dep 01",
 "department_name_ch": "Dep 03",
 "active": true,
