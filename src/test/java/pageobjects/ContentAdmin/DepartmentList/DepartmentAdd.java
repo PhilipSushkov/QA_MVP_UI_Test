@@ -1,12 +1,13 @@
-package pageobjects.ContentAdmin.DownloadList;
+package pageobjects.ContentAdmin.DepartmentList;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import pageobjects.AbstractPageObject;
 
 import com.jayway.jsonpath.JsonPath;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.openqa.selenium.*;
-import org.openqa.selenium.support.ui.Select;
-import pageobjects.AbstractPageObject;
 import pageobjects.PageAdmin.WorkflowState;
 
 import java.io.FileNotFoundException;
@@ -19,28 +20,22 @@ import static specs.AbstractSpec.desktopUrl;
 import static specs.AbstractSpec.propUIContentAdmin;
 
 /**
- * Created by victorlam 2017-09-27.
+ * Created by charleszheng on 2017-09-25.
  */
 
-public class DownloadAdd extends AbstractPageObject {
-    private static By moduleTitle, downloadDateField, downloadTypeField, downloadTitleField, downloadDescriptionField, tagsField, downloadPathField, downloadTypeSelect;
+public class DepartmentAdd extends AbstractPageObject {
+    private static By moduleTitle, departmentNameField;
     private static By activeChk, saveBtn, revertBtn, cancelBtn, deleteBtn, addNewLink, publishBtn;
     private static By workflowStateSpan, commentsTxt, successMsg, saveAndSubmitBtn, currentContentSpan;
     private static String sPathToFile, sFileJson;
     private static JSONParser parser;
     private static final long DEFAULT_PAUSE = 2500;
-    private final String PAGE_NAME="Download";
+    private final String PAGE_NAME="Department";
 
-    public DownloadAdd(WebDriver driver) {
+    public DepartmentAdd(WebDriver driver) {
         super(driver);
         moduleTitle = By.xpath(propUIContentAdmin.getProperty("spanModule_Title"));
-        downloadDateField = By.xpath(propUIContentAdmin.getProperty("input_DownloadDate"));
-        downloadTypeField = By.xpath(propUIContentAdmin.getProperty("input_DownloadType"));
-        downloadTitleField = By.xpath(propUIContentAdmin.getProperty("input_DownloadTitle"));
-        downloadDescriptionField = By.xpath(propUIContentAdmin.getProperty("input_DownloadDescription"));
-        tagsField = By.xpath(propUIContentAdmin.getProperty("input_Tags"));
-        downloadPathField = By.xpath(propUIContentAdmin.getProperty("input_DownloadPath"));
-        downloadTypeSelect = By.xpath(propUIContentAdmin.getProperty("select_DownloadType"));
+        departmentNameField = By.xpath(propUIContentAdmin.getProperty("input_DepartmentName"));
         activeChk = By.xpath(propUIContentAdmin.getProperty("chk_Active"));
         saveBtn = By.xpath(propUIContentAdmin.getProperty("btn_Save"));
         cancelBtn = By.xpath(propUIContentAdmin.getProperty("btn_Cancel"));
@@ -56,23 +51,20 @@ public class DownloadAdd extends AbstractPageObject {
 
         parser = new JSONParser();
 
-        sPathToFile = System.getProperty("user.dir") + propUIContentAdmin.getProperty("dataPath_DownloadList");
-        sFileJson = propUIContentAdmin.getProperty("json_Download");
+        sPathToFile = System.getProperty("user.dir") + propUIContentAdmin.getProperty("dataPath_DepartmentList");
+        sFileJson = propUIContentAdmin.getProperty("json_Department");
     }
 
     public String getTitle() {
         findElement(addNewLink).click();
         waitForElement(moduleTitle);
         String sTitle = getText(moduleTitle);
-        JavascriptExecutor jse = (JavascriptExecutor)driver;
-        jse.executeScript("arguments[0].scrollIntoView()", findElement(cancelBtn));
         findElement(cancelBtn).click();
-
         return sTitle;
     }
 
-    public String saveDownload(JSONObject data, String name) {
-        String download_date, download_type, download_title, download_description, tags, download_filename;
+    public String saveDepartment(JSONObject data, String name) {
+        String department_name;
         Boolean active;
         JSONObject jsonObj = new JSONObject();
         JSONObject jsonMain = new JSONObject();
@@ -88,40 +80,10 @@ public class DownloadAdd extends AbstractPageObject {
             } catch (ParseException e) {
             }
 
-            download_date = data.get("download_date").toString();
-            findElement(downloadDateField).clear();
-            findElement(downloadDateField).sendKeys(download_date);
-            findElement(downloadDateField).sendKeys(Keys.RETURN);
-            jsonObj.put("download_date", download_date);
-
-            download_type = data.get("download_type").toString();
-            //findElement(downloadTypeField).clear();
-            findElement(downloadPathField).click();
-            findElement(downloadPathField).click();
-            findElement(downloadTypeField).sendKeys(download_type);
-            jsonObj.put("download_type", download_type);
-
-            download_title = data.get("download_title").toString();
-            findElement(downloadTitleField).clear();
-            findElement(downloadTitleField).sendKeys(download_title);
-            jsonObj.put("download_title", download_title);
-
-            download_description = data.get("download_description").toString();
-            findElement(downloadDescriptionField).clear();
-            findElement(downloadDescriptionField).sendKeys(download_description);
-            jsonObj.put("download_description", download_description);
-
-            tags = data.get("tags").toString();
-            findElement(tagsField).clear();
-            findElement(tagsField).sendKeys(tags);
-            jsonObj.put("tags", tags);
-
-            download_filename = data.get("download_filename").toString();
-            JavascriptExecutor js = (JavascriptExecutor) driver;
-            WebElement elemSrc =  driver.findElement(downloadPathField);
-            String filename = download_filename;
-            js.executeScript("arguments[0].setAttribute(arguments[1], arguments[2]);", elemSrc, "value", "files/"+filename);
-            jsonObj.put("download_filename", download_filename);
+            department_name = data.get("department_name").toString();
+            findElement(departmentNameField).clear();
+            findElement(departmentNameField).sendKeys(department_name);
+            jsonObj.put("department_name", department_name);
 
             // Save Active checkbox
             active = Boolean.parseBoolean(data.get("active").toString());
@@ -138,8 +100,6 @@ public class DownloadAdd extends AbstractPageObject {
                 }
             }
 
-            JavascriptExecutor jse = (JavascriptExecutor)driver;
-            jse.executeScript("arguments[0].scrollIntoView()", findElement(saveBtn));
             findElement(saveBtn).click();
             Thread.sleep(DEFAULT_PAUSE);
             waitForElement(successMsg);
@@ -168,9 +128,9 @@ public class DownloadAdd extends AbstractPageObject {
         return null;
     }
 
-    public String saveAndSubmitDownload(JSONObject data, String name) throws InterruptedException {
+    public String saveAndSubmitDepartment(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
-        By editBtn = By.xpath("//td[(text()='" + data.get("download_title").toString() + "')]/parent::tr/td/input[contains(@id, 'imgEdit')][contains(@id, 'Reports')]");
+        By editBtn = By.xpath("//td[(text()='" + data.get("department_name").toString() + "')]/parent::tr/td/input[contains(@id, 'imgEdit')][contains(@id, 'Department')]");
 
         try {
             waitForElement(moduleTitle);
@@ -180,10 +140,6 @@ public class DownloadAdd extends AbstractPageObject {
                 jsonMain = (JSONObject) parser.parse(readFile);
             } catch (ParseException e) {
             }
-
-            waitForElement(downloadTypeSelect);
-            findElement(downloadTypeSelect).sendKeys(data.get("download_type").toString());
-            Thread.sleep(DEFAULT_PAUSE);
 
             //String pageUrl = getPageUrl(jsonMain, name);
             //driver.get(pageUrl);
@@ -230,7 +186,7 @@ public class DownloadAdd extends AbstractPageObject {
         return null;
     }
 
-    public Boolean checkDownload(JSONObject data, String name) throws InterruptedException {
+    public Boolean checkDepartment(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
 
         try {
@@ -247,43 +203,7 @@ public class DownloadAdd extends AbstractPageObject {
 
             // Compare field values with entry data
             try {
-                if (!findElement(downloadDateField).getAttribute("value").equals(data.get("download_date").toString())) {
-                    return false;
-                }
-            } catch (NullPointerException e) {
-            }
-
-            try {
-                if (!new Select(findElement(downloadTypeField)).getFirstSelectedOption().getText().trim().equals(data.get("download_type").toString())) {
-                    return false;
-                }
-            } catch (NullPointerException e) {
-            }
-
-            try {
-                if (!findElement(downloadTitleField).getAttribute("value").equals(data.get("download_title").toString())) {
-                    return false;
-                }
-            } catch (NullPointerException e) {
-            }
-
-            try {
-                if (!findElement(downloadDescriptionField).getAttribute("value").equals(data.get("download_description").toString())) {
-                    return false;
-                }
-            } catch (NullPointerException e) {
-            }
-
-            try {
-                if (!findElement(tagsField).getAttribute("value").equals(data.get("tags").toString() + " ")) {
-                    return false;
-                }
-            } catch (NullPointerException e) {
-            }
-
-            try {
-                JavascriptExecutor js = (JavascriptExecutor)driver;
-                if (!js.executeScript("return arguments[0].value;", driver.findElement(downloadPathField)).equals("files/" + data.get("download_filename").toString())) {
+                if (!findElement(departmentNameField).getAttribute("value").equals(data.get("department_name").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
@@ -305,7 +225,7 @@ public class DownloadAdd extends AbstractPageObject {
         return null;
     }
 
-    public String publishDownload(JSONObject data, String name) throws InterruptedException {
+    public String publishDepartment(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
         JSONObject jsonObj = new JSONObject();
 
@@ -322,9 +242,7 @@ public class DownloadAdd extends AbstractPageObject {
             Thread.sleep(DEFAULT_PAUSE);
 
             waitForElement(publishBtn);
-            JavascriptExecutor jse = (JavascriptExecutor)driver;
-            jse.executeScript("arguments[0].scrollIntoView()", findElement(By.xpath("(" + propUIContentAdmin.getProperty("btn_Publish") + ")[2]")));
-            findElement(By.xpath("(" + propUIContentAdmin.getProperty("btn_Publish") + ")[2]")).click();
+            findElement(publishBtn).click();
             Thread.sleep(DEFAULT_PAUSE*2);
 
             driver.get(pageUrl);
@@ -353,7 +271,7 @@ public class DownloadAdd extends AbstractPageObject {
         return null;
     }
 
-    public String changeAndSubmitDownload(JSONObject data, String name) throws InterruptedException {
+    public String changeAndSubmitDepartment(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
         JSONObject jsonObj = new JSONObject();
 
@@ -371,29 +289,10 @@ public class DownloadAdd extends AbstractPageObject {
             waitForElement(saveAndSubmitBtn);
 
             try {
-                if (!data.get("download_type_ch").toString().isEmpty()) {
-                    findElement(downloadPathField).click();
-                    findElement(downloadPathField).click();
-                    findElement(downloadTypeField).sendKeys(data.get("download_type_ch").toString());
-                    jsonObj.put("download_type", data.get("download_type_ch").toString());
-                }
-            } catch (NullPointerException e) {
-            }
-
-            try {
-                if (!data.get("download_title_ch").toString().isEmpty()) {
-                    findElement(downloadTitleField).clear();
-                    findElement(downloadTitleField).sendKeys(data.get("download_title_ch").toString());
-                    jsonObj.put("download_title", data.get("download_title_ch").toString());
-                }
-            } catch (NullPointerException e) {
-            }
-
-            try {
-                if (!data.get("download_description_ch").toString().isEmpty()) {
-                    findElement(downloadDescriptionField).clear();
-                    findElement(downloadDescriptionField).sendKeys(data.get("download_description_ch").toString());
-                    jsonObj.put("download_description", data.get("download_description_ch").toString());
+                if (!data.get("department_value_ch").toString().isEmpty()) {
+                    findElement(departmentNameField).clear();
+                    findElement(departmentNameField).sendKeys(data.get("department_value_ch").toString());
+                    jsonObj.put("department_name", data.get("department_value_ch").toString());
                 }
             } catch (NullPointerException e) {
             }
@@ -448,7 +347,7 @@ public class DownloadAdd extends AbstractPageObject {
         return null;
     }
 
-    public String revertToLiveDownload(String name) throws InterruptedException {
+    public String revertToLiveDepartment(String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
         JSONObject jsonObj = new JSONObject();
 
@@ -466,9 +365,6 @@ public class DownloadAdd extends AbstractPageObject {
             waitForElement(revertBtn);
 
             if (jsonObj.get("workflow_state").toString().equals(WorkflowState.FOR_APPROVAL.state())) {
-
-                JavascriptExecutor jse = (JavascriptExecutor) driver;
-                jse.executeScript("arguments[0].scrollIntoView()", findElement(revertBtn));
                 findElement(revertBtn).click();
                 Thread.sleep(DEFAULT_PAUSE);
 
@@ -496,7 +392,7 @@ public class DownloadAdd extends AbstractPageObject {
         return null;
     }
 
-    public Boolean checkDownloadCh(JSONObject data, String name) throws InterruptedException {
+    public Boolean checkDepartmentCh(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
 
         try {
@@ -513,43 +409,7 @@ public class DownloadAdd extends AbstractPageObject {
 
             // Compare field values with entry data
             try {
-                if (!findElement(downloadDateField).getAttribute("value").equals(data.get("download_date").toString())) {
-                    return false;
-                }
-            } catch (NullPointerException e) {
-            }
-
-            try {
-                if (!new Select(findElement(downloadTypeField)).getFirstSelectedOption().getText().trim().equals(data.get("download_type_ch").toString())) {
-                    return false;
-                }
-            } catch (NullPointerException e) {
-            }
-
-            try {
-                if (!findElement(downloadTitleField).getAttribute("value").equals(data.get("download_title_ch").toString())) {
-                    return false;
-                }
-            } catch (NullPointerException e) {
-            }
-
-            try {
-                if (!findElement(downloadDescriptionField).getAttribute("value").equals(data.get("download_description_ch").toString())) {
-                    return false;
-                }
-            } catch (NullPointerException e) {
-            }
-
-            try {
-                if (!findElement(tagsField).getAttribute("value").equals(data.get("tags").toString() + " ")) {
-                    return false;
-                }
-            } catch (NullPointerException e) {
-            }
-
-            try {
-                JavascriptExecutor js = (JavascriptExecutor)driver;
-                if (!js.executeScript("return arguments[0].value;", driver.findElement(downloadPathField)).equals("files/" + data.get("download_filename").toString())) {
+                    if (!findElement(departmentNameField).getAttribute("value").equals(data.get("department_name").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
@@ -571,7 +431,7 @@ public class DownloadAdd extends AbstractPageObject {
         return null;
     }
 
-    public String setupAsDeletedDownload(String name) throws InterruptedException {
+    public String setupAsDeletedDepartment(String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
         JSONObject jsonObj = new JSONObject();
 
@@ -614,7 +474,7 @@ public class DownloadAdd extends AbstractPageObject {
         return null;
     }
 
-    public String removeDownload(JSONObject data, String name) throws InterruptedException {
+    public String removeDepartment(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
 
         try {
@@ -632,7 +492,7 @@ public class DownloadAdd extends AbstractPageObject {
 
                 waitForElement(commentsTxt);
                 findElement(commentsTxt).sendKeys("Approving "+PAGE_NAME+" removal");
-                findElement(By.xpath("(" + propUIContentAdmin.getProperty("btn_Publish") + ")[2]")).click();
+                findElement(publishBtn).click();
 
                 Thread.sleep(DEFAULT_PAUSE*2);
 
