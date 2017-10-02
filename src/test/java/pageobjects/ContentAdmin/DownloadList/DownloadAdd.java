@@ -67,6 +67,7 @@ public class DownloadAdd extends AbstractPageObject {
         JavascriptExecutor jse = (JavascriptExecutor)driver;
         jse.executeScript("arguments[0].scrollIntoView()", findElement(cancelBtn));
         findElement(cancelBtn).click();
+
         return sTitle;
     }
 
@@ -370,6 +371,25 @@ public class DownloadAdd extends AbstractPageObject {
             waitForElement(saveAndSubmitBtn);
 
             try {
+                if (!data.get("download_type_ch").toString().isEmpty()) {
+                    findElement(downloadPathField).click();
+                    findElement(downloadPathField).click();
+                    findElement(downloadTypeField).sendKeys(data.get("download_type_ch").toString());
+                    jsonObj.put("download_type", data.get("download_type_ch").toString());
+                }
+            } catch (NullPointerException e) {
+            }
+
+            try {
+                if (!data.get("download_title_ch").toString().isEmpty()) {
+                    findElement(downloadTitleField).clear();
+                    findElement(downloadTitleField).sendKeys(data.get("download_title_ch").toString());
+                    jsonObj.put("download_title", data.get("download_title_ch").toString());
+                }
+            } catch (NullPointerException e) {
+            }
+
+            try {
                 if (!data.get("download_description_ch").toString().isEmpty()) {
                     findElement(downloadDescriptionField).clear();
                     findElement(downloadDescriptionField).sendKeys(data.get("download_description_ch").toString());
@@ -500,14 +520,14 @@ public class DownloadAdd extends AbstractPageObject {
             }
 
             try {
-                if (!new Select(findElement(downloadTypeField)).getFirstSelectedOption().getText().trim().equals(data.get("download_type").toString())) {
+                if (!new Select(findElement(downloadTypeField)).getFirstSelectedOption().getText().trim().equals(data.get("download_type_ch").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
             }
 
             try {
-                if (!findElement(downloadTitleField).getAttribute("value").equals(data.get("download_title").toString())) {
+                if (!findElement(downloadTitleField).getAttribute("value").equals(data.get("download_title_ch").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
