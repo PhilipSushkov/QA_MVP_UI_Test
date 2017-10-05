@@ -64,8 +64,6 @@ public class DownloadAdd extends AbstractPageObject {
         findElement(addNewLink).click();
         waitForElement(moduleTitle);
         String sTitle = getText(moduleTitle);
-        JavascriptExecutor jse = (JavascriptExecutor)driver;
-        jse.executeScript("arguments[0].scrollIntoView()", findElement(cancelBtn));
         findElement(cancelBtn).click();
 
         return sTitle;
@@ -138,8 +136,6 @@ public class DownloadAdd extends AbstractPageObject {
                 }
             }
 
-            JavascriptExecutor jse = (JavascriptExecutor)driver;
-            jse.executeScript("arguments[0].scrollIntoView()", findElement(saveBtn));
             findElement(saveBtn).click();
             Thread.sleep(DEFAULT_PAUSE);
             waitForElement(successMsg);
@@ -322,8 +318,6 @@ public class DownloadAdd extends AbstractPageObject {
             Thread.sleep(DEFAULT_PAUSE);
 
             waitForElement(publishBtn);
-            JavascriptExecutor jse = (JavascriptExecutor)driver;
-            jse.executeScript("arguments[0].scrollIntoView()", findElement(By.xpath("(" + propUIContentAdmin.getProperty("btn_Publish") + ")[2]")));
             findElement(By.xpath("(" + propUIContentAdmin.getProperty("btn_Publish") + ")[2]")).click();
             Thread.sleep(DEFAULT_PAUSE*2);
 
@@ -466,9 +460,6 @@ public class DownloadAdd extends AbstractPageObject {
             waitForElement(revertBtn);
 
             if (jsonObj.get("workflow_state").toString().equals(WorkflowState.FOR_APPROVAL.state())) {
-
-                JavascriptExecutor jse = (JavascriptExecutor) driver;
-                jse.executeScript("arguments[0].scrollIntoView()", findElement(revertBtn));
                 findElement(revertBtn).click();
                 Thread.sleep(DEFAULT_PAUSE);
 
