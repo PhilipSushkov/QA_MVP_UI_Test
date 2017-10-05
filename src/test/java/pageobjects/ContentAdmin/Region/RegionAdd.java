@@ -1,6 +1,7 @@
-package pageobjects.ContentAdmin.DownloadList;
+package pageobjects.ContentAdmin.Region;
 
 import com.jayway.jsonpath.JsonPath;
+import org.apache.commons.lang.ObjectUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -22,25 +23,26 @@ import static specs.AbstractSpec.propUIContentAdmin;
  * Created by victorlam 2017-09-27.
  */
 
-public class DownloadAdd extends AbstractPageObject {
-    private static By moduleTitle, downloadDateField, downloadTypeField, downloadTitleField, downloadDescriptionField, tagsField, downloadPathField, downloadTypeSelect;
-    private static By activeChk, saveBtn, revertBtn, cancelBtn, deleteBtn, addNewLink, publishBtn;
-    private static By workflowStateSpan, commentsTxt, successMsg, saveAndSubmitBtn, currentContentSpan;
+public class RegionAdd extends AbstractPageObject {
+    private static By moduleTitle, regionGlobalOperationField, regionNameField, regionBodyField, tagsField, regionGlobalOperationSelect, textArea;
+    private static By hideReportsChk, activeChk, saveBtn, revertBtn, cancelBtn, deleteBtn, addNewLink, publishBtn;
+    private static By switchToHtml, workflowStateSpan, commentsTxt, successMsg, saveAndSubmitBtn, currentContentSpan;
+    private static By body, bodyContent;
     private static String sPathToFile, sFileJson;
     private static JSONParser parser;
     private static final long DEFAULT_PAUSE = 2500;
-    private final String PAGE_NAME="Download";
+    private final String PAGE_NAME="Region";
 
-    public DownloadAdd(WebDriver driver) {
+    public RegionAdd(WebDriver driver) {
         super(driver);
-        moduleTitle = By.xpath(propUIContentAdmin.getProperty("spanModule_Title"));
-        downloadDateField = By.xpath(propUIContentAdmin.getProperty("input_DownloadDate"));
-        downloadTypeField = By.xpath(propUIContentAdmin.getProperty("input_DownloadType"));
-        downloadTitleField = By.xpath(propUIContentAdmin.getProperty("input_DownloadTitle"));
-        downloadDescriptionField = By.xpath(propUIContentAdmin.getProperty("input_DownloadDescription"));
+        switchToHtml = By.className(propUIContentAdmin.getProperty("html_SwitchTo"));
+        moduleTitle = By.xpath(propUIContentAdmin.getProperty("span_Title"));
+        regionGlobalOperationField = By.xpath(propUIContentAdmin.getProperty("input_RegionGlobalOperations"));
+        regionNameField = By.xpath(propUIContentAdmin.getProperty("input_RegionName"));
+        //regionBodyField = By.xpath(propUIContentAdmin.getProperty("input_RegionBody"));
         tagsField = By.xpath(propUIContentAdmin.getProperty("input_Tags"));
-        downloadPathField = By.xpath(propUIContentAdmin.getProperty("input_DownloadPath"));
-        downloadTypeSelect = By.xpath(propUIContentAdmin.getProperty("select_DownloadType"));
+        regionGlobalOperationSelect = By.xpath(propUIContentAdmin.getProperty("select_GlobalOperation"));
+        hideReportsChk = By.xpath(propUIContentAdmin.getProperty("chk_HideReports"));
         activeChk = By.xpath(propUIContentAdmin.getProperty("chk_Active"));
         saveBtn = By.xpath(propUIContentAdmin.getProperty("btn_Save"));
         cancelBtn = By.xpath(propUIContentAdmin.getProperty("btn_Cancel"));
@@ -53,24 +55,32 @@ public class DownloadAdd extends AbstractPageObject {
         successMsg = By.xpath(propUIContentAdmin.getProperty("msg_Success"));
         saveAndSubmitBtn = By.xpath(propUIContentAdmin.getProperty("btn_SaveAndSubmit"));
         currentContentSpan = By.xpath(propUIContentAdmin.getProperty("span_CurrentContent"));
+        textArea = By.tagName(propUIContentAdmin.getProperty("frame_Textarea"));
 
         parser = new JSONParser();
 
-        sPathToFile = System.getProperty("user.dir") + propUIContentAdmin.getProperty("dataPath_DownloadList");
-        sFileJson = propUIContentAdmin.getProperty("json_Download");
+        sPathToFile = System.getProperty("user.dir") + propUIContentAdmin.getProperty("dataPath_RegionList");
+        sFileJson = propUIContentAdmin.getProperty("json_Region");
+
+        body = By.xpath(propUIContentAdmin.getProperty("frame_Body"));
+        bodyContent = By.xpath(propUIContentAdmin.getProperty("txtarea_Body"));
     }
 
     public String getTitle() {
         findElement(addNewLink).click();
         waitForElement(moduleTitle);
         String sTitle = getText(moduleTitle);
+        //findElement(cancelBtn).click();
+        JavascriptExecutor jse = (JavascriptExecutor) driver;
+        jse.executeScript("arguments[0].scrollIntoView()", findElement(cancelBtn));
         findElement(cancelBtn).click();
 
         return sTitle;
     }
 
-    public String saveDownload(JSONObject data, String name) {
-        String download_date, download_type, download_title, download_description, tags, download_filename;
+    public String saveRegion(JSONObject data, String name) {
+        String region_global_operation, region_name, region_body, tags;
+        Boolean hideReports;
         Boolean active;
         JSONObject jsonObj = new JSONObject();
         JSONObject jsonMain = new JSONObject();
@@ -86,40 +96,50 @@ public class DownloadAdd extends AbstractPageObject {
             } catch (ParseException e) {
             }
 
-            download_date = data.get("download_date").toString();
-            findElement(downloadDateField).clear();
-            findElement(downloadDateField).sendKeys(download_date);
-            findElement(downloadDateField).sendKeys(Keys.RETURN);
-            jsonObj.put("download_date", download_date);
+            region_global_operation = data.get("region_global_operation").toString();
+            //findElement(regionGlobalOperationField).clear();
+            findElement(regionGlobalOperationField).sendKeys(region_global_operation);
+            jsonObj.put("region_global_operation", region_global_operation);
 
-            download_type = data.get("download_type").toString();
-            //findElement(downloadTypeField).clear();
-            findElement(downloadPathField).click();
-            findElement(downloadPathField).click();
-            findElement(downloadTypeField).sendKeys(download_type);
-            jsonObj.put("download_type", download_type);
+            region_name = data.get("region_name").toString();
+            findElement(regionNameField).clear();
+            findElement(regionNameField).sendKeys(region_name);
+            jsonObj.put("region_name", region_name);
 
-            download_title = data.get("download_title").toString();
-            findElement(downloadTitleField).clear();
-            findElement(downloadTitleField).sendKeys(download_title);
-            jsonObj.put("download_title", download_title);
+            /*region_body = data.get("region_body").toString();
+            findElement(regionBodyField).clear();
+            findElement(regionBodyField).sendKeys(region_body);
+            jsonObj.put("region_body", region_body);*/
 
-            download_description = data.get("download_description").toString();
-            findElement(downloadDescriptionField).clear();
-            findElement(downloadDescriptionField).sendKeys(download_description);
-            jsonObj.put("download_description", download_description);
+            findElement(switchToHtml).click();
+
+            region_body = data.get("region_body").toString();
+            driver.switchTo().frame(2);
+            findElement(textArea).sendKeys(region_body);
+            driver.switchTo().defaultContent();
+            pause(1000L);
+            jsonObj.put("region_body", region_body);
 
             tags = data.get("tags").toString();
             findElement(tagsField).clear();
             findElement(tagsField).sendKeys(tags);
             jsonObj.put("tags", tags);
 
-            download_filename = data.get("download_filename").toString();
-            JavascriptExecutor js = (JavascriptExecutor) driver;
-            WebElement elemSrc =  driver.findElement(downloadPathField);
-            String filename = download_filename;
-            js.executeScript("arguments[0].setAttribute(arguments[1], arguments[2]);", elemSrc, "value", "files/"+filename);
-            jsonObj.put("download_filename", download_filename);
+            // Save Hide Reports checkbox
+            hideReports = Boolean.parseBoolean(data.get("hide_reports").toString());
+            jsonObj.put("hide_reports", Boolean.parseBoolean(data.get("hide_reports").toString()));
+            if (hideReports) {
+                if (!Boolean.parseBoolean(findElement(hideReportsChk).getAttribute("checked"))) {
+                    findElement(hideReportsChk).click();
+                } else {
+                }
+            } else {
+                if (!Boolean.parseBoolean(findElement(hideReportsChk).getAttribute("checked"))) {
+                } else {
+                    findElement(hideReportsChk).click();
+                }
+            }
+
 
             // Save Active checkbox
             active = Boolean.parseBoolean(data.get("active").toString());
@@ -136,8 +156,6 @@ public class DownloadAdd extends AbstractPageObject {
                 }
             }
 
-            //JavascriptExecutor jse = (JavascriptExecutor)driver;
-            //jse.executeScript("arguments[0].scrollIntoView()", findElement(saveBtn));
             findElement(saveBtn).click();
             Thread.sleep(DEFAULT_PAUSE);
             waitForElement(successMsg);
@@ -166,9 +184,9 @@ public class DownloadAdd extends AbstractPageObject {
         return null;
     }
 
-    public String saveAndSubmitDownload(JSONObject data, String name) throws InterruptedException {
+    public String saveAndSubmitRegion(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
-        By editBtn = By.xpath("//td[(text()='" + data.get("download_title").toString() + "')]/parent::tr/td/input[contains(@id, 'imgEdit')][contains(@id, 'Reports')]");
+        By editBtn = By.xpath("//td[(text()='" + data.get("region_name").toString() + "')]/parent::tr/td/input[contains(@id, 'imgEdit')][contains(@id, 'Region')]");
 
         try {
             waitForElement(moduleTitle);
@@ -179,8 +197,8 @@ public class DownloadAdd extends AbstractPageObject {
             } catch (ParseException e) {
             }
 
-            waitForElement(downloadTypeSelect);
-            findElement(downloadTypeSelect).sendKeys(data.get("download_type").toString());
+            waitForElement(regionGlobalOperationSelect);
+            findElement(regionGlobalOperationSelect).sendKeys(data.get("region_global_operation").toString());
             Thread.sleep(DEFAULT_PAUSE);
 
             //String pageUrl = getPageUrl(jsonMain, name);
@@ -228,7 +246,7 @@ public class DownloadAdd extends AbstractPageObject {
         return null;
     }
 
-    public Boolean checkDownload(JSONObject data, String name) throws InterruptedException {
+    public Boolean checkRegion(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
 
         try {
@@ -244,31 +262,34 @@ public class DownloadAdd extends AbstractPageObject {
             waitForElement(commentsTxt);
 
             // Compare field values with entry data
+
             try {
-                if (!findElement(downloadDateField).getAttribute("value").equals(data.get("download_date").toString())) {
+                if (!new Select(findElement(regionGlobalOperationField)).getFirstSelectedOption().getText().trim().equals(data.get("region_global_operation").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
             }
 
             try {
-                if (!new Select(findElement(downloadTypeField)).getFirstSelectedOption().getText().trim().equals(data.get("download_type").toString())) {
+                if (!findElement(regionNameField).getAttribute("value").equals(data.get("region_name").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
             }
 
-            try {
-                if (!findElement(downloadTitleField).getAttribute("value").equals(data.get("download_title").toString())) {
+            /*try {
+                if (!findElement(regionBodyField).getAttribute("value").equals(data.get("region_body").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
-            }
+            }*/
 
             try {
-                if (!findElement(downloadDescriptionField).getAttribute("value").equals(data.get("download_description").toString())) {
+                driver.switchTo().frame(findElement(body));
+                if (!findElement(bodyContent).getText().equals(data.get("region_body").toString())) {
                     return false;
                 }
+                driver.switchTo().defaultContent();
             } catch (NullPointerException e) {
             }
 
@@ -280,8 +301,7 @@ public class DownloadAdd extends AbstractPageObject {
             }
 
             try {
-                JavascriptExecutor js = (JavascriptExecutor)driver;
-                if (!js.executeScript("return arguments[0].value;", driver.findElement(downloadPathField)).equals("files/" + data.get("download_filename").toString())) {
+                if (!findElement(hideReportsChk).getAttribute("checked").equals(data.get("hide_reports").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
@@ -303,7 +323,7 @@ public class DownloadAdd extends AbstractPageObject {
         return null;
     }
 
-    public String publishDownload(JSONObject data, String name) throws InterruptedException {
+    public String publishRegion(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
         JSONObject jsonObj = new JSONObject();
 
@@ -320,9 +340,7 @@ public class DownloadAdd extends AbstractPageObject {
             Thread.sleep(DEFAULT_PAUSE);
 
             waitForElement(publishBtn);
-            //JavascriptExecutor jse = (JavascriptExecutor)driver;
-            //jse.executeScript("arguments[0].scrollIntoView()", findElement(By.xpath("(" + propUIContentAdmin.getProperty("btn_Publish") + ")[2]")));
-            findElement(By.xpath("(" + propUIContentAdmin.getProperty("btn_Publish") + ")[2]")).click();
+            findElement(publishBtn).click();
             Thread.sleep(DEFAULT_PAUSE*2);
 
             driver.get(pageUrl);
@@ -351,7 +369,7 @@ public class DownloadAdd extends AbstractPageObject {
         return null;
     }
 
-    public String changeAndSubmitDownload(JSONObject data, String name) throws InterruptedException {
+    public String changeAndSubmitRegion(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
         JSONObject jsonObj = new JSONObject();
 
@@ -369,29 +387,67 @@ public class DownloadAdd extends AbstractPageObject {
             waitForElement(saveAndSubmitBtn);
 
             try {
-                if (!data.get("download_type_ch").toString().isEmpty()) {
-                    findElement(downloadPathField).click();
-                    findElement(downloadPathField).click();
-                    findElement(downloadTypeField).sendKeys(data.get("download_type_ch").toString());
-                    jsonObj.put("download_type", data.get("download_type_ch").toString());
+                if (!data.get("region_global_operation_ch").toString().isEmpty()) {
+                    findElement(regionGlobalOperationField).sendKeys(data.get("region_global_operation_ch").toString());
+                    jsonObj.put("region_global_operation", data.get("region_global_operation_ch").toString());
                 }
             } catch (NullPointerException e) {
             }
 
             try {
-                if (!data.get("download_title_ch").toString().isEmpty()) {
-                    findElement(downloadTitleField).clear();
-                    findElement(downloadTitleField).sendKeys(data.get("download_title_ch").toString());
-                    jsonObj.put("download_title", data.get("download_title_ch").toString());
+                if (!data.get("region_name_ch").toString().isEmpty()) {
+                    findElement(regionNameField).clear();
+                    findElement(regionNameField).sendKeys(data.get("region_name_ch").toString());
+                    jsonObj.put("region_name", data.get("region_name_ch").toString());
                 }
             } catch (NullPointerException e) {
             }
 
             try {
-                if (!data.get("download_description_ch").toString().isEmpty()) {
-                    findElement(downloadDescriptionField).clear();
-                    findElement(downloadDescriptionField).sendKeys(data.get("download_description_ch").toString());
-                    jsonObj.put("download_description", data.get("download_description_ch").toString());
+                if (!data.get("tags_ch").toString().isEmpty()) {
+                    findElement(tagsField).clear();
+                    findElement(tagsField).sendKeys(data.get("tags_ch").toString());
+                    jsonObj.put("tags", data.get("tags_ch").toString());
+                }
+            } catch (NullPointerException e) {
+            }
+
+            /*try {
+                if (!data.get("region_body_ch").toString().isEmpty()) {
+                    findElement(regionBodyField).clear();
+                    findElement(regionBodyField).sendKeys(data.get("region_body_ch").toString());
+                    jsonObj.put("region_body", data.get("region_body_ch").toString());
+                }
+            } catch (NullPointerException e) {
+            }*/
+
+            try {
+                if (!data.get("region_body_ch").toString().isEmpty()) {
+                    findElement(switchToHtml).click();
+                    driver.switchTo().frame(2);
+                    findElement(textArea).clear();
+                    findElement(textArea).sendKeys(data.get("region_body_ch").toString());
+                    driver.switchTo().defaultContent();
+                    jsonObj.put("region_body", data.get("region_body_ch").toString());
+                }
+            } catch (NullPointerException e) {
+            }
+
+            jsonObj.put("hide_reports", Boolean.parseBoolean(data.get("hide_reports").toString()));
+            try {
+                // Save Hide Reports checkbox
+                if (Boolean.parseBoolean(data.get("hide_reports_ch").toString())) {
+                    if (!Boolean.parseBoolean(findElement(hideReportsChk).getAttribute("checked"))) {
+                        findElement(hideReportsChk).click();
+                        jsonObj.put("hide_reports", true);
+                    } else {
+                    }
+                } else {
+                    if (!Boolean.parseBoolean(findElement(hideReportsChk).getAttribute("checked"))) {
+                    } else {
+                        findElement(hideReportsChk).click();
+                        jsonObj.put("hide_reports", false);
+                    }
                 }
             } catch (NullPointerException e) {
             }
@@ -446,7 +502,7 @@ public class DownloadAdd extends AbstractPageObject {
         return null;
     }
 
-    public String revertToLiveDownload(String name) throws InterruptedException {
+    public String revertToLiveRegion(String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
         JSONObject jsonObj = new JSONObject();
 
@@ -464,9 +520,6 @@ public class DownloadAdd extends AbstractPageObject {
             waitForElement(revertBtn);
 
             if (jsonObj.get("workflow_state").toString().equals(WorkflowState.FOR_APPROVAL.state())) {
-
-                //JavascriptExecutor jse = (JavascriptExecutor) driver;
-                //jse.executeScript("arguments[0].scrollIntoView()", findElement(revertBtn));
                 findElement(revertBtn).click();
                 Thread.sleep(DEFAULT_PAUSE);
 
@@ -494,7 +547,7 @@ public class DownloadAdd extends AbstractPageObject {
         return null;
     }
 
-    public Boolean checkDownloadCh(JSONObject data, String name) throws InterruptedException {
+    public Boolean checkRegionCh(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
 
         try {
@@ -510,44 +563,50 @@ public class DownloadAdd extends AbstractPageObject {
             waitForElement(commentsTxt);
 
             // Compare field values with entry data
+
             try {
-                if (!findElement(downloadDateField).getAttribute("value").equals(data.get("download_date").toString())) {
+                if (!new Select(findElement(regionGlobalOperationField)).getFirstSelectedOption().getText().trim().equals(data.get("region_global_operation_ch").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
             }
 
             try {
-                if (!new Select(findElement(downloadTypeField)).getFirstSelectedOption().getText().trim().equals(data.get("download_type_ch").toString())) {
+                if (!findElement(regionNameField).getAttribute("value").equals(data.get("region_name_ch").toString())) {
+                    return false;
+                }
+            } catch (NullPointerException e) {
+            }
+
+            /*try {
+                if (!findElement(regionBodyField).getAttribute("value").equals(data.get("region_body_ch").toString())) {
+                    return false;
+                }
+            } catch (NullPointerException e) {
+            }*/
+
+            try {
+                driver.switchTo().frame(findElement(body));
+                if (!findElement(bodyContent).getText().equals(data.get("region_body_ch").toString())) {
+                    driver.switchTo().defaultContent();
+                    return false;
+                }
+                else {
+                    driver.switchTo().defaultContent();
+                }
+            } catch (NullPointerException e) {
+                driver.switchTo().defaultContent();
+            }
+
+            try {
+                if (!findElement(tagsField).getAttribute("value").contains(data.get("tags_ch").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
             }
 
             try {
-                if (!findElement(downloadTitleField).getAttribute("value").equals(data.get("download_title_ch").toString())) {
-                    return false;
-                }
-            } catch (NullPointerException e) {
-            }
-
-            try {
-                if (!findElement(downloadDescriptionField).getAttribute("value").equals(data.get("download_description_ch").toString())) {
-                    return false;
-                }
-            } catch (NullPointerException e) {
-            }
-
-            try {
-                if (!findElement(tagsField).getAttribute("value").equals(data.get("tags").toString() + " ")) {
-                    return false;
-                }
-            } catch (NullPointerException e) {
-            }
-
-            try {
-                JavascriptExecutor js = (JavascriptExecutor)driver;
-                if (!js.executeScript("return arguments[0].value;", driver.findElement(downloadPathField)).equals("files/" + data.get("download_filename").toString())) {
+                if (!findElement(hideReportsChk).getAttribute("checked").equals(data.get("hide_reports_ch").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
@@ -569,7 +628,7 @@ public class DownloadAdd extends AbstractPageObject {
         return null;
     }
 
-    public String setupAsDeletedDownload(String name) throws InterruptedException {
+    public String setupAsDeletedRegion(String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
         JSONObject jsonObj = new JSONObject();
 
@@ -612,7 +671,7 @@ public class DownloadAdd extends AbstractPageObject {
         return null;
     }
 
-    public String removeDownload(JSONObject data, String name) throws InterruptedException {
+    public String removeRegion(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
 
         try {
@@ -630,7 +689,7 @@ public class DownloadAdd extends AbstractPageObject {
 
                 waitForElement(commentsTxt);
                 findElement(commentsTxt).sendKeys("Approving "+PAGE_NAME+" removal");
-                findElement(By.xpath("(" + propUIContentAdmin.getProperty("btn_Publish") + ")[2]")).click();
+                findElement(publishBtn).click();
 
                 Thread.sleep(DEFAULT_PAUSE*2);
 
