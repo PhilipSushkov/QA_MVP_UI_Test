@@ -53,7 +53,7 @@ public class CheckSearchPr extends AbstractSpec{
         String searchTerm = "QWERTYUIOP" + RandomStringUtils.randomAlphabetic(6);
         searchPage.removePreviewToolbar();
         String searchSummary = searchPage.searchSomething(searchTerm);
-        String badResult = "No results found for {3}";
+        String badResult = "No results found";
 
         Assert.assertEquals(badResult, searchSummary, "Search returned results when it shouldn't have");
 
