@@ -109,6 +109,21 @@
             <class name="specs.ContentAdmin.FaqList.CheckFaqAdd" />
         </classes>
     </test>
+    <test name="CheckRegionAdd">
+        <classes>
+            <class name="specs.ContentAdmin.Region.CheckRegionAdd" />
+        </classes>
+    </test>
+    <test name="CheckDownloadAdd">
+        <classes>
+            <class name="specs.ContentAdmin.DownloadList.CheckDownloadAdd" />
+        </classes>
+    </test>
+    <test name="CheckDepartmentAdd">
+        <classes>
+            <class name="specs.ContentAdmin.DepartmentList.CheckDepartmentAdd" />
+        </classes>
+    </test>
 
     <test name="CreateNewUser">
         <classes>
