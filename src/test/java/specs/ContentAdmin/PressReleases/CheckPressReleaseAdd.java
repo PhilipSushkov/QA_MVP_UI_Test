@@ -103,7 +103,7 @@ public class CheckPressReleaseAdd extends AbstractSpec {
         else
         {
             Assert.assertTrue(pressReleaseAdd.previewPressRelease(data, sPressReleaseTitle), "Preview of Changed "+ PAGE_NAME + "  didn't work properly (after Change and Submit)");
-            Assert.assertFalse(pressReleaseAdd.publicPressRelease(data, sPressReleaseTitle), "Changed "+ PAGE_NAME + " shouldn't be shown on Public site (after Change and Submit)");
+            Assert.assertTrue(pressReleaseAdd.publicPressRelease(data, sPressReleaseTitle), "Changed "+ PAGE_NAME + " with unchanged headline should show on Public site (after Change and Submit)");
         }
     }
 

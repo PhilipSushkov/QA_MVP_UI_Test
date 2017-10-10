@@ -495,6 +495,15 @@ public class PressReleaseAdd extends AbstractPageObject {
             }
 
             try {
+                if (!data.get("pressrelease_date_ch").toString().isEmpty()) {
+                    findElement(prDateInput).clear();
+                    findElement(prDateInput).sendKeys(data.get("pressrelease_date_ch").toString());
+                    jsonObj.put("pressrelease_date", data.get("pressrelease_date_ch").toString());
+                }
+            } catch (NullPointerException e) {
+            }
+
+            try {
                 if (!data.get("tags_ch").toString().isEmpty()) {
                     findElement(tagsInput).clear();
                     findElement(tagsInput).sendKeys(data.get("tags_ch").toString());
@@ -650,7 +659,7 @@ public class PressReleaseAdd extends AbstractPageObject {
             }
 
             try {
-                if (!findElement(prDateInput).getAttribute("value").equals(data.get("pressrelease_date").toString())) {
+                if (!findElement(prDateInput).getAttribute("value").equals(data.get("pressrelease_date_ch").toString())) {
                     System.out.println("Fails date");
                     return false;
                 }
