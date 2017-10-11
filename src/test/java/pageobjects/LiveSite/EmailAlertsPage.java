@@ -63,7 +63,7 @@ public class EmailAlertsPage extends AbstractPageObject {
             findElement(emailSubTextField).sendKeys(data.get("email").toString());
 
             //Old subscribe has all the checkboxes already checked when first opened
-            if (data.get("mailing_list").toString() == "true"){
+            if (data.get("mailing_list").toString() == "false"){
                 findElement(eodBtn).click();
                 findElement(testListBtn).click();
                 findElement(pressReleaseBtn).click();

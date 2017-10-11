@@ -1,13 +1,13 @@
-package pageobjects.SiteAdmin.LookupList;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import pageobjects.AbstractPageObject;
+package pageobjects.ContentAdmin.Region;
 
 import com.jayway.jsonpath.JsonPath;
+import org.apache.commons.lang.ObjectUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.openqa.selenium.*;
+import org.openqa.selenium.support.ui.Select;
+import pageobjects.AbstractPageObject;
 import pageobjects.PageAdmin.WorkflowState;
 
 import java.io.FileNotFoundException;
@@ -17,58 +17,70 @@ import java.io.IOException;
 import java.net.URL;
 
 import static specs.AbstractSpec.desktopUrl;
-import static specs.AbstractSpec.propUISiteAdmin;
+import static specs.AbstractSpec.propUIContentAdmin;
 
 /**
- * Created by philipsushkov on 2017-05-05.
+ * Created by victorlam 2017-09-27.
  */
 
-public class LookupAdd extends AbstractPageObject {
-    private static By moduleTitle, lookupTypeField, lookupTextField, lookupValueField, additionalInfoField, lookupTypeSelect;
-    private static By activeChk, saveBtn, revertBtn, cancelBtn, deleteBtn, addNewLink, publishBtn;
-    private static By workflowStateSpan, commentsTxt, successMsg, saveAndSubmitBtn, currentContentSpan;
+public class RegionAdd extends AbstractPageObject {
+    private static By moduleTitle, regionGlobalOperationField, regionNameField, regionBodyField, tagsField, regionGlobalOperationSelect, textArea;
+    private static By hideReportsChk, activeChk, saveBtn, revertBtn, cancelBtn, deleteBtn, addNewLink, publishBtn;
+    private static By switchToHtml, workflowStateSpan, commentsTxt, successMsg, saveAndSubmitBtn, currentContentSpan;
+    private static By body, bodyContent;
     private static String sPathToFile, sFileJson;
     private static JSONParser parser;
     private static final long DEFAULT_PAUSE = 2500;
-    private final String PAGE_NAME="Lookup";
+    private final String PAGE_NAME="Region";
 
-    public LookupAdd(WebDriver driver) {
+    public RegionAdd(WebDriver driver) {
         super(driver);
-        moduleTitle = By.xpath(propUISiteAdmin.getProperty("spanModule_Title"));
-        lookupTypeField = By.xpath(propUISiteAdmin.getProperty("input_LookupType"));
-        lookupTextField = By.xpath(propUISiteAdmin.getProperty("input_LookupText"));
-        lookupValueField = By.xpath(propUISiteAdmin.getProperty("input_LookupValue"));
-        additionalInfoField = By.xpath(propUISiteAdmin.getProperty("input_AdditionalInfo"));
-        lookupTypeSelect = By.xpath(propUISiteAdmin.getProperty("select_LookupType"));
-        activeChk = By.xpath(propUISiteAdmin.getProperty("chk_Active"));
-        saveBtn = By.xpath(propUISiteAdmin.getProperty("btn_Save"));
-        cancelBtn = By.xpath(propUISiteAdmin.getProperty("btn_Cancel"));
-        deleteBtn = By.xpath(propUISiteAdmin.getProperty("btn_Delete"));
-        publishBtn = By.xpath(propUISiteAdmin.getProperty("btn_Publish"));
-        addNewLink = By.xpath(propUISiteAdmin.getProperty("input_AddNew"));
-        revertBtn = By.xpath(propUISiteAdmin.getProperty("btn_Revert"));
-        workflowStateSpan = By.xpath(propUISiteAdmin.getProperty("select_WorkflowState"));
-        commentsTxt = By.xpath(propUISiteAdmin.getProperty("txtarea_Comments"));
-        successMsg = By.xpath(propUISiteAdmin.getProperty("msg_Success"));
-        saveAndSubmitBtn = By.xpath(propUISiteAdmin.getProperty("btn_SaveAndSubmit"));
-        currentContentSpan = By.xpath(propUISiteAdmin.getProperty("span_CurrentContent"));
+        switchToHtml = By.className(propUIContentAdmin.getProperty("html_SwitchTo"));
+        moduleTitle = By.xpath(propUIContentAdmin.getProperty("span_Title"));
+        regionGlobalOperationField = By.xpath(propUIContentAdmin.getProperty("input_RegionGlobalOperations"));
+        regionNameField = By.xpath(propUIContentAdmin.getProperty("input_RegionName"));
+        //regionBodyField = By.xpath(propUIContentAdmin.getProperty("input_RegionBody"));
+        tagsField = By.xpath(propUIContentAdmin.getProperty("input_Tags"));
+        regionGlobalOperationSelect = By.xpath(propUIContentAdmin.getProperty("select_GlobalOperation"));
+        hideReportsChk = By.xpath(propUIContentAdmin.getProperty("chk_HideReports"));
+        activeChk = By.xpath(propUIContentAdmin.getProperty("chk_Active"));
+        saveBtn = By.xpath(propUIContentAdmin.getProperty("btn_Save"));
+        cancelBtn = By.xpath(propUIContentAdmin.getProperty("btn_Cancel"));
+        deleteBtn = By.xpath(propUIContentAdmin.getProperty("btn_Delete"));
+        publishBtn = By.xpath(propUIContentAdmin.getProperty("btn_Publish"));
+        addNewLink = By.xpath(propUIContentAdmin.getProperty("input_AddNew"));
+        revertBtn = By.xpath(propUIContentAdmin.getProperty("btn_Revert"));
+        workflowStateSpan = By.xpath(propUIContentAdmin.getProperty("select_WorkflowState"));
+        commentsTxt = By.xpath(propUIContentAdmin.getProperty("txtarea_Comments"));
+        successMsg = By.xpath(propUIContentAdmin.getProperty("msg_Success"));
+        saveAndSubmitBtn = By.xpath(propUIContentAdmin.getProperty("btn_SaveAndSubmit"));
+        currentContentSpan = By.xpath(propUIContentAdmin.getProperty("span_CurrentContent"));
+        textArea = By.tagName(propUIContentAdmin.getProperty("frame_Textarea"));
 
         parser = new JSONParser();
 
-        sPathToFile = System.getProperty("user.dir") + propUISiteAdmin.getProperty("dataPath_LookupList");
-        sFileJson = propUISiteAdmin.getProperty("json_Lookup");
+        sPathToFile = System.getProperty("user.dir") + propUIContentAdmin.getProperty("dataPath_RegionList");
+        sFileJson = propUIContentAdmin.getProperty("json_Region");
+
+        body = By.xpath(propUIContentAdmin.getProperty("frame_Body"));
+        bodyContent = By.xpath(propUIContentAdmin.getProperty("txtarea_Body"));
     }
 
     public String getTitle() {
         findElement(addNewLink).click();
         waitForElement(moduleTitle);
         String sTitle = getText(moduleTitle);
+        //findElement(cancelBtn).click();
+        JavascriptExecutor jse = (JavascriptExecutor) driver;
+        jse.executeScript("arguments[0].scrollIntoView()", findElement(cancelBtn));
         findElement(cancelBtn).click();
+
         return sTitle;
     }
 
-    public String saveLookup(JSONObject data, String name) {
-        String lookup_type, lookup_text, lookup_value, additional_info;
+    public String saveRegion(JSONObject data, String name) {
+        String region_global_operation, region_name, region_body, tags;
+        Boolean hideReports;
         Boolean active;
         JSONObject jsonObj = new JSONObject();
         JSONObject jsonMain = new JSONObject();
@@ -84,27 +96,49 @@ public class LookupAdd extends AbstractPageObject {
             } catch (ParseException e) {
             }
 
-            lookup_type = data.get("lookup_type").toString();
-            findElement(lookupTypeField).clear();
-            findElement(lookupTypeField).sendKeys(lookup_type);
-            jsonObj.put("lookup_type", lookup_type);
+            region_global_operation = data.get("region_global_operation").toString();
+            //findElement(regionGlobalOperationField).clear();
+            findElement(regionGlobalOperationField).sendKeys(region_global_operation);
+            jsonObj.put("region_global_operation", region_global_operation);
 
-            lookup_text = data.get("lookup_text").toString();
-            findElement(lookupTextField).clear();
-            findElement(lookupTextField).sendKeys(lookup_text);
-            jsonObj.put("lookup_text", lookup_text);
+            region_name = data.get("region_name").toString();
+            findElement(regionNameField).clear();
+            findElement(regionNameField).sendKeys(region_name);
+            jsonObj.put("region_name", region_name);
 
-            lookup_value = data.get("lookup_value").toString();
-            findElement(lookupValueField).clear();
-            findElement(lookupValueField).sendKeys(lookup_value);
-            jsonObj.put("lookup_value", lookup_value);
+            /*region_body = data.get("region_body").toString();
+            findElement(regionBodyField).clear();
+            findElement(regionBodyField).sendKeys(region_body);
+            jsonObj.put("region_body", region_body);*/
 
-            additional_info = data.get("additional_info").toString();
-            findElement(additionalInfoField).clear();
-            findElement(additionalInfoField).sendKeys(additional_info);
-            jsonObj.put("additional_info", additional_info);
+            findElement(switchToHtml).click();
 
+            region_body = data.get("region_body").toString();
+            driver.switchTo().frame(2);
+            findElement(textArea).sendKeys(region_body);
+            driver.switchTo().defaultContent();
+            pause(1000L);
+            jsonObj.put("region_body", region_body);
 
+            tags = data.get("tags").toString();
+            findElement(tagsField).clear();
+            findElement(tagsField).sendKeys(tags);
+            jsonObj.put("tags", tags);
+
+            // Save Hide Reports checkbox
+            hideReports = Boolean.parseBoolean(data.get("hide_reports").toString());
+            jsonObj.put("hide_reports", Boolean.parseBoolean(data.get("hide_reports").toString()));
+            if (hideReports) {
+                if (!Boolean.parseBoolean(findElement(hideReportsChk).getAttribute("checked"))) {
+                    findElement(hideReportsChk).click();
+                } else {
+                }
+            } else {
+                if (!Boolean.parseBoolean(findElement(hideReportsChk).getAttribute("checked"))) {
+                } else {
+                    findElement(hideReportsChk).click();
+                }
+            }
 
 
             // Save Active checkbox
@@ -150,9 +184,9 @@ public class LookupAdd extends AbstractPageObject {
         return null;
     }
 
-    public String saveAndSubmitLookup(JSONObject data, String name) throws InterruptedException {
+    public String saveAndSubmitRegion(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
-        By editBtn = By.xpath("//td[(text()='" + data.get("lookup_text").toString() + "')]/parent::tr/td/input[contains(@id, 'imgEdit')][contains(@id, 'Lookup')]");
+        By editBtn = By.xpath("//td[(text()='" + data.get("region_name").toString() + "')]/parent::tr/td/input[contains(@id, 'imgEdit')][contains(@id, 'Region')]");
 
         try {
             waitForElement(moduleTitle);
@@ -163,8 +197,8 @@ public class LookupAdd extends AbstractPageObject {
             } catch (ParseException e) {
             }
 
-            waitForElement(lookupTypeSelect);
-            findElement(lookupTypeSelect).sendKeys(data.get("lookup_type").toString());
+            waitForElement(regionGlobalOperationSelect);
+            findElement(regionGlobalOperationSelect).sendKeys(data.get("region_global_operation").toString());
             Thread.sleep(DEFAULT_PAUSE);
 
             //String pageUrl = getPageUrl(jsonMain, name);
@@ -212,7 +246,7 @@ public class LookupAdd extends AbstractPageObject {
         return null;
     }
 
-    public Boolean checkLookup(JSONObject data, String name) throws InterruptedException {
+    public Boolean checkRegion(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
 
         try {
@@ -228,29 +262,46 @@ public class LookupAdd extends AbstractPageObject {
             waitForElement(commentsTxt);
 
             // Compare field values with entry data
+
             try {
-                if (!findElement(lookupTypeField).getAttribute("value").equals(data.get("lookup_type").toString())) {
+                if (!new Select(findElement(regionGlobalOperationField)).getFirstSelectedOption().getText().trim().equals(data.get("region_global_operation").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
             }
 
             try {
-                if (!findElement(lookupTextField).getAttribute("value").equals(data.get("lookup_text").toString())) {
+                if (!findElement(regionNameField).getAttribute("value").equals(data.get("region_name").toString())) {
+                    return false;
+                }
+            } catch (NullPointerException e) {
+            }
+
+            /*try {
+                if (!findElement(regionBodyField).getAttribute("value").equals(data.get("region_body").toString())) {
+                    return false;
+                }
+            } catch (NullPointerException e) {
+            }*/
+
+            try {
+                driver.switchTo().frame(findElement(body));
+                if (!findElement(bodyContent).getText().equals(data.get("region_body").toString())) {
+                    return false;
+                }
+                driver.switchTo().defaultContent();
+            } catch (NullPointerException e) {
+            }
+
+            try {
+                if (!findElement(tagsField).getAttribute("value").equals(data.get("tags").toString() + " ")) {
                     return false;
                 }
             } catch (NullPointerException e) {
             }
 
             try {
-                if (!findElement(lookupValueField).getAttribute("value").equals(data.get("lookup_value").toString())) {
-                    return false;
-                }
-            } catch (NullPointerException e) {
-            }
-
-            try {
-                if (!findElement(additionalInfoField).getAttribute("value").equals(data.get("additional_info").toString())) {
+                if (!findElement(hideReportsChk).getAttribute("checked").equals(data.get("hide_reports").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
@@ -272,7 +323,7 @@ public class LookupAdd extends AbstractPageObject {
         return null;
     }
 
-    public String publishLookup(JSONObject data, String name) throws InterruptedException {
+    public String publishRegion(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
         JSONObject jsonObj = new JSONObject();
 
@@ -318,7 +369,7 @@ public class LookupAdd extends AbstractPageObject {
         return null;
     }
 
-    public String changeAndSubmitLookup(JSONObject data, String name) throws InterruptedException {
+    public String changeAndSubmitRegion(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
         JSONObject jsonObj = new JSONObject();
 
@@ -336,10 +387,67 @@ public class LookupAdd extends AbstractPageObject {
             waitForElement(saveAndSubmitBtn);
 
             try {
-                if (!data.get("lookup_value_ch").toString().isEmpty()) {
-                    findElement(lookupValueField).clear();
-                    findElement(lookupValueField).sendKeys(data.get("lookup_value_ch").toString());
-                    jsonObj.put("lookup_value", data.get("lookup_value_ch").toString());
+                if (!data.get("region_global_operation_ch").toString().isEmpty()) {
+                    findElement(regionGlobalOperationField).sendKeys(data.get("region_global_operation_ch").toString());
+                    jsonObj.put("region_global_operation", data.get("region_global_operation_ch").toString());
+                }
+            } catch (NullPointerException e) {
+            }
+
+            try {
+                if (!data.get("region_name_ch").toString().isEmpty()) {
+                    findElement(regionNameField).clear();
+                    findElement(regionNameField).sendKeys(data.get("region_name_ch").toString());
+                    jsonObj.put("region_name", data.get("region_name_ch").toString());
+                }
+            } catch (NullPointerException e) {
+            }
+
+            try {
+                if (!data.get("tags_ch").toString().isEmpty()) {
+                    findElement(tagsField).clear();
+                    findElement(tagsField).sendKeys(data.get("tags_ch").toString());
+                    jsonObj.put("tags", data.get("tags_ch").toString());
+                }
+            } catch (NullPointerException e) {
+            }
+
+            /*try {
+                if (!data.get("region_body_ch").toString().isEmpty()) {
+                    findElement(regionBodyField).clear();
+                    findElement(regionBodyField).sendKeys(data.get("region_body_ch").toString());
+                    jsonObj.put("region_body", data.get("region_body_ch").toString());
+                }
+            } catch (NullPointerException e) {
+            }*/
+
+            try {
+                if (!data.get("region_body_ch").toString().isEmpty()) {
+                    findElement(switchToHtml).click();
+                    driver.switchTo().frame(2);
+                    findElement(textArea).clear();
+                    findElement(textArea).sendKeys(data.get("region_body_ch").toString());
+                    driver.switchTo().defaultContent();
+                    jsonObj.put("region_body", data.get("region_body_ch").toString());
+                }
+            } catch (NullPointerException e) {
+            }
+
+            jsonObj.put("hide_reports", Boolean.parseBoolean(data.get("hide_reports").toString()));
+            try {
+                // Save Hide Reports checkbox
+                if (Boolean.parseBoolean(data.get("hide_reports_ch").toString())) {
+                    if (!Boolean.parseBoolean(findElement(hideReportsChk).getAttribute("checked"))) {
+                        findElement(hideReportsChk).click();
+                        jsonObj.put("hide_reports", true);
+                    } else {
+                    }
+                } else {
+                    if (!Boolean.parseBoolean(findElement(hideReportsChk).getAttribute("checked"))) {
+                    } else {
+                        findElement(hideReportsChk).click();
+                        jsonObj.put("hide_reports", false);
+                    }
                 }
             } catch (NullPointerException e) {
             }
@@ -394,7 +502,7 @@ public class LookupAdd extends AbstractPageObject {
         return null;
     }
 
-    public String revertToLiveLookup(String name) throws InterruptedException {
+    public String revertToLiveRegion(String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
         JSONObject jsonObj = new JSONObject();
 
@@ -439,7 +547,7 @@ public class LookupAdd extends AbstractPageObject {
         return null;
     }
 
-    public Boolean checkLookupCh(JSONObject data, String name) throws InterruptedException {
+    public Boolean checkRegionCh(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
 
         try {
@@ -455,29 +563,50 @@ public class LookupAdd extends AbstractPageObject {
             waitForElement(commentsTxt);
 
             // Compare field values with entry data
+
             try {
-                if (!findElement(lookupTypeField).getAttribute("value").equals(data.get("lookup_type").toString())) {
+                if (!new Select(findElement(regionGlobalOperationField)).getFirstSelectedOption().getText().trim().equals(data.get("region_global_operation_ch").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
             }
 
             try {
-                if (!findElement(lookupTextField).getAttribute("value").equals(data.get("lookup_text").toString())) {
+                if (!findElement(regionNameField).getAttribute("value").equals(data.get("region_name_ch").toString())) {
+                    return false;
+                }
+            } catch (NullPointerException e) {
+            }
+
+            /*try {
+                if (!findElement(regionBodyField).getAttribute("value").equals(data.get("region_body_ch").toString())) {
+                    return false;
+                }
+            } catch (NullPointerException e) {
+            }*/
+
+            try {
+                driver.switchTo().frame(findElement(body));
+                if (!findElement(bodyContent).getText().equals(data.get("region_body_ch").toString())) {
+                    driver.switchTo().defaultContent();
+                    return false;
+                }
+                else {
+                    driver.switchTo().defaultContent();
+                }
+            } catch (NullPointerException e) {
+                driver.switchTo().defaultContent();
+            }
+
+            try {
+                if (!findElement(tagsField).getAttribute("value").contains(data.get("tags_ch").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
             }
 
             try {
-                if (!findElement(lookupValueField).getAttribute("value").equals(data.get("lookup_value_ch").toString())) {
-                    return false;
-                }
-            } catch (NullPointerException e) {
-            }
-
-            try {
-                if (!findElement(additionalInfoField).getAttribute("value").equals(data.get("additional_info").toString())) {
+                if (!findElement(hideReportsChk).getAttribute("checked").equals(data.get("hide_reports_ch").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
@@ -499,7 +628,7 @@ public class LookupAdd extends AbstractPageObject {
         return null;
     }
 
-    public String setupAsDeletedLookup(String name) throws InterruptedException {
+    public String setupAsDeletedRegion(String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
         JSONObject jsonObj = new JSONObject();
 
@@ -542,7 +671,7 @@ public class LookupAdd extends AbstractPageObject {
         return null;
     }
 
-    public String removeLookup(JSONObject data, String name) throws InterruptedException {
+    public String removeRegion(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
 
         try {
