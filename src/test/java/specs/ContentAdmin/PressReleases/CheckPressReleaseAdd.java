@@ -84,7 +84,7 @@ public class CheckPressReleaseAdd extends AbstractSpec {
     @Test(dataProvider=DATA, priority=4)
     public void revertPressRelease(JSONObject data) throws InterruptedException {
         sPressReleaseTitle = data.get("pressrelease_headline").toString();
-        Assert.assertEquals(pressReleaseAdd.changeAndSubmitPressRelease(data, sPressReleaseTitle), WorkflowState.FOR_APPROVAL.state(), "Some fields of New "+ PAGE_NAME +" didn't change properly (after Save and Submit)");
+        Assert.assertEquals(pressReleaseAdd.changeAndSubmitPressRelease(data, sPressReleaseTitle), WorkflowState.FOR_APPROVAL.state(), "Some fields of New "+ PAGE_NAME +" didn't change properly (after Change and Submit)");
         Assert.assertEquals(pressReleaseAdd.revertToLivePressRelease(sPressReleaseTitle), WorkflowState.LIVE.state(), "Couldn't revert to Live changes for New "+ PAGE_NAME);
         Assert.assertTrue(pressReleaseAdd.checkPressRelease(data, sPressReleaseTitle), "Reverted "+ PAGE_NAME +" data doesn't fit well to entry data (after Revert To Live)");
         Assert.assertTrue(pressReleaseAdd.previewPressRelease(data, sPressReleaseTitle), "Preview of Reverted "+ PAGE_NAME + " didn't work properly (after Revert to Live)");
@@ -94,7 +94,7 @@ public class CheckPressReleaseAdd extends AbstractSpec {
     @Test(dataProvider=DATA, priority=5)
     public void changeAndSubmitPressRelease(JSONObject data) throws Exception {
         sPressReleaseTitle = data.get("pressrelease_headline").toString();
-        Assert.assertEquals(pressReleaseAdd.changeAndSubmitPressRelease(data, sPressReleaseTitle), WorkflowState.FOR_APPROVAL.state(), "Some fields of New "+ PAGE_NAME +" didn't change properly (after Save and Submit)");
+        Assert.assertEquals(pressReleaseAdd.changeAndSubmitPressRelease(data, sPressReleaseTitle), WorkflowState.FOR_APPROVAL.state(), "Some fields of New "+ PAGE_NAME +" didn't change properly (after Change and Submit)");
         Assert.assertTrue(pressReleaseAdd.checkPressReleaseCh(data, sPressReleaseTitle), "Submitted New "+ PAGE_NAME +" changes don't fit well to change data (after Change And Submit)");
         if (data.get("pressrelease_headline_ch") != null){
             Assert.assertTrue(pressReleaseAdd.previewPressReleaseCh(data, sPressReleaseTitle), "Preview of Changed "+ PAGE_NAME + "  didn't work properly (after Change and Submit)");

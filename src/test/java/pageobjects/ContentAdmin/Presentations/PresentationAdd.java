@@ -1,4 +1,4 @@
-package pageobjects.ContentAdmin.PressReleases;
+package pageobjects.ContentAdmin.Presentations;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.Select;
@@ -24,33 +24,29 @@ import static specs.AbstractSpec.propUIContentAdmin;
  * Created by charleszheng on 2017-09-27.
  */
 
-public class PressReleaseAdd extends AbstractPageObject {
-    private static By moduleTitle, timeHourSelect, timeMinSelect, relatedDocumentInput;
-    private static By prDateInput, tagsInput, publishBtn,prHeadline;
+public class PresentationAdd extends AbstractPageObject{
+    private static By moduleTitle, timeHourSelect, timeMinSelect, presentationFileInput;
+    private static By pDateInput, tagsInput, publishBtn,pTitle;
+    private static By speakerName, speakerPosition, btn_SpeakerOK, speakerNameChk, speakerPositionChk;
     private static By currentContentSpan;
-    private static By mtHttp, mtName, mtProperty, mtContent, mtScheme, mtLang, mtDir;
-    private static By mtHttpChk, mtNameChk, mtPropertyChk, mtContentChk, mtSchemeChk, mtLangChk, mtDirChk;
-    private static By activeChk, saveBtn, revertBtn, cancelBtn, deleteBtn, addNewLink, advancedBtn, advancedAddNewBtn,advancedokBtn;
+    private static By activeChk, saveBtn, revertBtn, cancelBtn, deleteBtn, addNewLink, speakersAddNewBtn;
     private static By workflowStateSpan, commentsTxt, successMsg, saveAndSubmitBtn;
     private static By previewLnk;
     private static String sPathToFile, sFileJson;
     private static JSONParser parser;
     private static final long DEFAULT_PAUSE = 2500;
-    private final String PAGE_NAME="Press Release", METATAG="meta_tag";
+    private final String PAGE_NAME="Presentation", SPEAKERS="speakers";
 
-    public PressReleaseAdd(WebDriver driver) {
+    public PresentationAdd(WebDriver driver) {
         super(driver);
         moduleTitle = By.xpath(propUIContentAdmin.getProperty("spanModule_Title"));
-        timeHourSelect = By.xpath(propUIContentAdmin.getProperty("select_Hour"));
-        timeMinSelect = By.xpath(propUIContentAdmin.getProperty("select_Min"));
-        relatedDocumentInput = By.xpath(propUIContentAdmin.getProperty("input_RelatedDocument"));
-        prDateInput = By.xpath(propUIContentAdmin.getProperty("input_PRDate"));
-        prHeadline = By.xpath(propUIContentAdmin.getProperty("input_PRHeadline"));
+        timeHourSelect = By.xpath(propUIContentAdmin.getProperty("select_PresentationTimeHH"));
+        timeMinSelect = By.xpath(propUIContentAdmin.getProperty("select_PresentationTimeMM"));
+        presentationFileInput = By.xpath(propUIContentAdmin.getProperty("input_PresentationFile"));
+        pDateInput = By.xpath(propUIContentAdmin.getProperty("input_PresentationDate"));
+        pTitle = By.xpath(propUIContentAdmin.getProperty("input_PresentationTitle"));
         tagsInput = By.xpath(propUIContentAdmin.getProperty("input_Tags"));
         activeChk = By.xpath(propUIContentAdmin.getProperty("chk_Active"));
-        advancedBtn = By.xpath(propUIContentAdmin.getProperty("btn_Advanced"));
-        advancedAddNewBtn = By.xpath(propUIContentAdmin.getProperty("btn_AdvancedAddNew"));
-        advancedokBtn = By.xpath(propUIContentAdmin.getProperty("btn_AdvancedOk"));
         saveBtn = By.xpath(propUIContentAdmin.getProperty("btn_Save"));
         cancelBtn = By.xpath(propUIContentAdmin.getProperty("btn_Cancel"));
         deleteBtn = By.xpath(propUIContentAdmin.getProperty("btn_Delete"));
@@ -62,27 +58,18 @@ public class PressReleaseAdd extends AbstractPageObject {
         successMsg = By.xpath(propUIContentAdmin.getProperty("msg_Success"));
         saveAndSubmitBtn = By.xpath(propUIContentAdmin.getProperty("btn_SaveAndSubmit"));
         currentContentSpan = By.xpath(propUIContentAdmin.getProperty("span_CurrentContent"));
-        mtHttp = By.xpath(propUIContentAdmin.getProperty("input_MTHttp"));
-        mtName = By.xpath(propUIContentAdmin.getProperty("input_MTName"));
-        mtProperty = By.xpath(propUIContentAdmin.getProperty("input_MTProperty"));
-        mtContent = By.xpath(propUIContentAdmin.getProperty("input_MTContent"));
-        mtScheme = By.xpath(propUIContentAdmin.getProperty("input_MTScheme"));
-        mtLang = By.xpath(propUIContentAdmin.getProperty("input_MTLang"));
-        mtDir = By.xpath(propUIContentAdmin.getProperty("input_MTDir"));
-        mtHttpChk = By.xpath(propUIContentAdmin.getProperty("input_MTHttpChk"));
-        mtNameChk = By.xpath(propUIContentAdmin.getProperty("input_MTNameChk"));
-        mtPropertyChk = By.xpath(propUIContentAdmin.getProperty("input_MTPropertyChk"));
-        mtContentChk = By.xpath(propUIContentAdmin.getProperty("input_MTContentChk"));
-        mtSchemeChk = By.xpath(propUIContentAdmin.getProperty("input_MTSchemeChk"));
-        mtLangChk = By.xpath(propUIContentAdmin.getProperty("input_MTLangChk"));
-        mtDirChk = By.xpath(propUIContentAdmin.getProperty("input_MTDirChk"));
         previewLnk = By.xpath(propUIContentAdmin.getProperty("lnk_Preview"));
-
+        speakersAddNewBtn = By.xpath(propUIContentAdmin.getProperty("href_AddNewSpeakers"));
+        speakerName = By.xpath(propUIContentAdmin.getProperty("input_SpeakerName")) ;
+        speakerPosition = By.xpath(propUIContentAdmin.getProperty("input_SpeakerPosition")) ;
+        btn_SpeakerOK = By.xpath(propUIContentAdmin.getProperty("btn_SpeakerOK"));
+        speakerNameChk = By.xpath(propUIContentAdmin.getProperty("input_SpeakerName_Chk"));
+        speakerPositionChk = By.xpath(propUIContentAdmin.getProperty("input_SpeakerPosition_Chk"));
 
         parser = new JSONParser();
 
-        sPathToFile = System.getProperty("user.dir") + propUIContentAdmin.getProperty("dataPath_PressReleaseList");
-        sFileJson = propUIContentAdmin.getProperty("json_PressRelease");
+        sPathToFile = System.getProperty("user.dir") + propUIContentAdmin.getProperty("dataPath_PresentationList");
+        sFileJson = propUIContentAdmin.getProperty("json_Presentation");
     }
 
     public String getTitle() {
@@ -93,21 +80,20 @@ public class PressReleaseAdd extends AbstractPageObject {
         return sTitle;
     }
 
-    public String savePressRelease(JSONObject data, String name) {
-        String time_hour, time_min, related_document, pressrelease_date, tags, pressrelease_headline,
-        mt_http, mt_name, mt_property, mt_content, mt_scheme, mt_lang, mt_dir;
+    public String savePresentation(JSONObject data, String name) {
+        String time_hour, time_min, presentation_file, presentation_date, tags, presentation_title,
+                speaker_name, speaker_position;
+
         Boolean active;
         JSONObject jsonObj = new JSONObject();
         JSONObject jsonMain = new JSONObject();
-        JSONObject  mtObj;
+        JSONObject  sObj;
 
         waitForElement(addNewLink);
         findElement(addNewLink).click();
         waitForElement(saveBtn);
-        waitForElement(advancedBtn);
-        findElement(advancedBtn).click();
-        waitForElement(advancedAddNewBtn);
-        findElement(advancedAddNewBtn).click();
+        waitForElement(speakersAddNewBtn);
+        findElement(speakersAddNewBtn).click();
 
         try {
             try {
@@ -116,10 +102,10 @@ public class PressReleaseAdd extends AbstractPageObject {
             } catch (ParseException e) {
             }
 
-            pressrelease_date = data.get("pressrelease_date").toString();
-            findElement(prDateInput).clear();
-            findElement(prDateInput).sendKeys(pressrelease_date);
-            jsonObj.put("pressrelease_date", pressrelease_date);
+            presentation_date = data.get("presentation_date").toString();
+            findElement(pDateInput).clear();
+            findElement(pDateInput).sendKeys(presentation_date);
+            jsonObj.put("presentation_date", presentation_date);
 
             time_hour = data.get("time_hour").toString();
             findElement(timeHourSelect).sendKeys(time_hour);
@@ -129,61 +115,36 @@ public class PressReleaseAdd extends AbstractPageObject {
             findElement(timeMinSelect).sendKeys(time_min);
             jsonObj.put("time_min", time_min);
 
-            pressrelease_headline= data.get("pressrelease_headline").toString();
-            findElement(prHeadline).clear();
-            findElement(prHeadline).sendKeys(pressrelease_headline);
-            jsonObj.put("pressrelease_headline", pressrelease_headline);
+            presentation_title= data.get("presentation_title").toString();
+            findElement(pTitle).clear();
+            findElement(pTitle).sendKeys(presentation_title);
+            jsonObj.put("presentation_title", presentation_title);
 
             tags = data.get("tags").toString();
             findElement(tagsInput).clear();
             findElement(tagsInput).sendKeys(tags);
             jsonObj.put("tags", tags);
 
-            mtObj = (JSONObject) data.get("meta_tag");
+            sObj = (JSONObject) data.get("speakers");
 
-            mt_http = mtObj.get("http_equiv").toString();
-            findElement(mtHttp).clear();
-            findElement(mtHttp).sendKeys(mt_http);
-            jsonObj.put("http_equiv", mt_http);
+            speaker_name = sObj.get("speaker_name").toString();
+            findElement(speakerName).clear();
+            findElement(speakerName).sendKeys(speaker_name);
+            jsonObj.put("speaker_name", speaker_name);
 
-            mt_name = mtObj.get("name").toString();
-            findElement(mtName).clear();
-            findElement(mtName).sendKeys(mt_name);
-            jsonObj.put("name", mt_name);
+            speaker_position = sObj.get("speaker_position").toString();
+            findElement(speakerPosition).clear();
+            findElement(speakerPosition).sendKeys(speaker_position);
+            jsonObj.put("speaker_position", speaker_position);
 
-            mt_property = mtObj.get("property").toString();
-            findElement(mtProperty).clear();
-            findElement(mtProperty).sendKeys(mt_property);
-            jsonObj.put("property", mt_property);
+            findElement(btn_SpeakerOK).click();
 
-            mt_content = mtObj.get("content").toString();
-            findElement(mtContent).clear();
-            findElement(mtContent).sendKeys(mt_content);
-            jsonObj.put("content", mt_content);
-
-            mt_scheme = mtObj.get("scheme").toString();
-            findElement(mtScheme).clear();
-            findElement(mtScheme).sendKeys(mt_scheme);
-            jsonObj.put("scheme", mt_scheme);
-
-            mt_lang = mtObj.get("lang").toString();
-            findElement(mtLang).clear();
-            findElement(mtLang).sendKeys(mt_lang);
-            jsonObj.put("lang", mt_lang);
-
-            mt_dir = mtObj.get("dir").toString();
-            findElement(mtDir).clear();
-            findElement(mtDir).sendKeys(mt_dir);
-            jsonObj.put("dir", mt_dir);
-
-            findElement(advancedokBtn).click();
-
-            related_document = data.get("related_document").toString();
+            presentation_file = data.get("presentation_file").toString();
             JavascriptExecutor js = (JavascriptExecutor) driver;
-            WebElement elemSrc =  driver.findElement(relatedDocumentInput);
-            String filename = related_document;
+            WebElement elemSrc =  driver.findElement(presentationFileInput);
+            String filename = presentation_file;
             js.executeScript("arguments[0].setAttribute(arguments[1], arguments[2]);", elemSrc, "value", "files/"+filename);
-            jsonObj.put("download_filename", related_document);
+            jsonObj.put("presentation_filename", presentation_file);
 
 
             // Save Active checkbox
@@ -237,9 +198,9 @@ public class PressReleaseAdd extends AbstractPageObject {
         return null;
     }
 
-    public String saveAndSubmitPressRelease(JSONObject data, String name) throws InterruptedException {
+    public String saveAndSubmitPresentation(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
-        By editBtn = By.xpath("//td[(text()='"+name+"')]/parent::tr/td/input[contains(@id, 'imgEdit')][contains(@id, 'PressRelease')]");
+        By editBtn = By.xpath("//td[(text()='"+name+"')]/parent::tr/td/input[contains(@id, 'imgEdit')][contains(@id, 'Presentation')]");
 
         try {
             waitForElement(moduleTitle);
@@ -281,9 +242,9 @@ public class PressReleaseAdd extends AbstractPageObject {
         return null;
     }
 
-    public Boolean checkPressRelease(JSONObject data, String name) throws InterruptedException {
+    public Boolean checkPresentation(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
-        JSONObject jsonMetaTag = (JSONObject) data.get(METATAG);
+        JSONObject jsonSpeakers = (JSONObject) data.get(SPEAKERS);
 
         try {
             try {
@@ -296,8 +257,6 @@ public class PressReleaseAdd extends AbstractPageObject {
             driver.get(pageUrl);
             Thread.sleep(DEFAULT_PAUSE);
             waitForElement(commentsTxt);
-            waitForElement(advancedBtn);
-            findElement(advancedBtn).click();
 
             // Compare field values with entry data
             try {
@@ -321,7 +280,7 @@ public class PressReleaseAdd extends AbstractPageObject {
             }
 
             try {
-                if (!findElement(prDateInput).getAttribute("value").equals(data.get("pressrelease_date").toString())) {
+                if (!findElement(pDateInput).getAttribute("value").equals(data.get("presentation_date").toString())) {
                     System.out.println("Fails date");
                     return false;
                 }
@@ -329,8 +288,8 @@ public class PressReleaseAdd extends AbstractPageObject {
             }
 
             try {
-                if (!findElement(prHeadline).getAttribute("value").equals(data.get("pressrelease_headline").toString())) {
-                    System.out.println("Fails headline");
+                if (!findElement(pTitle).getAttribute("value").equals(data.get("presentation_title").toString())) {
+                    System.out.println("Fails title");
                     return false;
                 }
             } catch (NullPointerException e) {
@@ -347,49 +306,14 @@ public class PressReleaseAdd extends AbstractPageObject {
             }
 
             try {
-                if (!findElement(mtHttpChk).getAttribute("value").trim().equals(jsonMetaTag.get("http_equiv").toString())) {
+                if (!findElement(speakerNameChk).getAttribute("value").trim().equals(jsonSpeakers.get("speaker_name").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
             }
 
             try {
-                if (!findElement(mtNameChk).getAttribute("value").trim().equals(jsonMetaTag.get("name").toString())) {
-                    return false;
-                }
-            } catch (NullPointerException e) {
-            }
-
-            try {
-                if (!findElement(mtPropertyChk).getAttribute("value").trim().equals(jsonMetaTag.get("property").toString())) {
-                    return false;
-                }
-            } catch (NullPointerException e) {
-            }
-
-            try {
-                if (!findElement(mtContentChk).getAttribute("value").trim().equals(jsonMetaTag.get("content").toString())) {
-                    return false;
-                }
-            } catch (NullPointerException e) {
-            }
-
-            try {
-                if (!findElement(mtSchemeChk).getAttribute("value").trim().equals(jsonMetaTag.get("scheme").toString())) {
-                    return false;
-                }
-            } catch (NullPointerException e) {
-            }
-
-            try {
-                if (!findElement(mtLangChk).getAttribute("value").trim().equals(jsonMetaTag.get("lang").toString())) {
-                    return false;
-                }
-            } catch (NullPointerException e) {
-            }
-
-            try {
-                if (!findElement(mtDirChk).getAttribute("value").trim().equals(jsonMetaTag.get("dir").toString())) {
+                if (!findElement(speakerPositionChk).getAttribute("value").trim().equals(jsonSpeakers.get("speaker_position").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
@@ -397,7 +321,7 @@ public class PressReleaseAdd extends AbstractPageObject {
 
             try {
                 JavascriptExecutor js = (JavascriptExecutor)driver;
-                if (!js.executeScript("return arguments[0].value;", driver.findElement(relatedDocumentInput)).equals("files/" + data.get("related_document").toString())) {
+                if (!js.executeScript("return arguments[0].value;", driver.findElement(presentationFileInput)).equals("files/" + data.get("presentation_file").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
@@ -419,7 +343,7 @@ public class PressReleaseAdd extends AbstractPageObject {
         return null;
     }
 
-    public String publishPressRelease(JSONObject data, String name) throws InterruptedException {
+    public String publishPresentation(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
         JSONObject jsonObj = new JSONObject();
 
@@ -456,7 +380,7 @@ public class PressReleaseAdd extends AbstractPageObject {
             Thread.sleep(DEFAULT_PAUSE*2);
             driver.navigate().refresh();
 
-            System.out.println(jsonObj.get("pressrelease_headline").toString() + ": New "+PAGE_NAME+" has been published");
+            System.out.println(jsonObj.get("presentation_title").toString() + ": New "+PAGE_NAME+" has been published");
             return findElement(workflowStateSpan).getText();
         } catch (IOException e) {
             e.printStackTrace();
@@ -465,7 +389,7 @@ public class PressReleaseAdd extends AbstractPageObject {
         return null;
     }
 
-    public String changeAndSubmitPressRelease(JSONObject data, String name) throws InterruptedException {
+    public String changeAndSubmitPresentation(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
         JSONObject jsonObj = new JSONObject();
 
@@ -483,19 +407,19 @@ public class PressReleaseAdd extends AbstractPageObject {
             waitForElement(saveAndSubmitBtn);
 
             try {
-                if (!data.get("pressrelease_headline_ch").toString().isEmpty()) {
-                    findElement(prHeadline).clear();
-                    findElement(prHeadline).sendKeys(data.get("pressrelease_headline_ch").toString());
-                    jsonObj.put("pressrelease_headline", data.get("pressrelease_headline_ch").toString());
+                if (!data.get("presentation_title_ch").toString().isEmpty()) {
+                    findElement(pTitle).clear();
+                    findElement(pTitle).sendKeys(data.get("presentation_title_ch").toString());
+                    jsonObj.put("presentation_title", data.get("presentation_title_ch").toString());
                 }
             } catch (NullPointerException e) {
             }
 
             try {
-                if (!data.get("pressrelease_date_ch").toString().isEmpty()) {
-                    findElement(prDateInput).clear();
-                    findElement(prDateInput).sendKeys(data.get("pressrelease_date_ch").toString());
-                    jsonObj.put("pressrelease_date", data.get("pressrelease_date_ch").toString());
+                if (!data.get("presentation_date_ch").toString().isEmpty()) {
+                    findElement(pDateInput).clear();
+                    findElement(pDateInput).sendKeys(data.get("presentation_date_ch").toString());
+                    jsonObj.put("presentation_date", data.get("presentation_date_ch").toString());
                 }
             } catch (NullPointerException e) {
             }
@@ -510,12 +434,12 @@ public class PressReleaseAdd extends AbstractPageObject {
             }
 
             try {
-                if (!data.get("related_document_ch").toString().isEmpty()) {
+                if (!data.get("presentation_file_ch").toString().isEmpty()) {
                     JavascriptExecutor js = (JavascriptExecutor) driver;
-                    WebElement elemSrc =  driver.findElement(relatedDocumentInput);
-                    String filename = data.get("related_document_ch").toString();
+                    WebElement elemSrc =  driver.findElement(presentationFileInput);
+                    String filename = data.get("presentation_file_ch").toString();
                     js.executeScript("arguments[0].setAttribute(arguments[1], arguments[2]);", elemSrc, "value", "files/"+filename);
-                    jsonObj.put("download_filename", filename);
+                    jsonObj.put("presentation_filename", filename);
                 }
             } catch (NullPointerException e) {
             }
@@ -561,7 +485,7 @@ public class PressReleaseAdd extends AbstractPageObject {
             Thread.sleep(DEFAULT_PAUSE);
             waitForElement(workflowStateSpan);
 
-            System.out.println(jsonObj.get("pressrelease_headline").toString() + ": New "+PAGE_NAME+" changes have been submitted");
+            System.out.println(jsonObj.get("presentation_title").toString() + ": New "+PAGE_NAME+" changes have been submitted");
             return findElement(workflowStateSpan).getText();
         } catch (IOException e) {
             e.printStackTrace();
@@ -570,7 +494,7 @@ public class PressReleaseAdd extends AbstractPageObject {
         return null;
     }
 
-    public String revertToLivePressRelease(String name) throws InterruptedException {
+    public String revertToLivePresentation(String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
         JSONObject jsonObj = new JSONObject();
 
@@ -604,7 +528,7 @@ public class PressReleaseAdd extends AbstractPageObject {
                 Thread.sleep(DEFAULT_PAUSE);
                 waitForElement(workflowStateSpan);
 
-                System.out.println(jsonObj.get("pressrelease_headline").toString()+ ": "+PAGE_NAME+" has been reverted to Live");
+                System.out.println(jsonObj.get("presentation_title").toString()+ ": "+PAGE_NAME+" has been reverted to Live");
                 return findElement(workflowStateSpan).getText();
             }
 
@@ -615,9 +539,9 @@ public class PressReleaseAdd extends AbstractPageObject {
         return null;
     }
 
-    public Boolean checkPressReleaseCh(JSONObject data, String name) throws InterruptedException {
+    public Boolean checkPresentationCh(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
-        JSONObject jsonMetaTag = (JSONObject) data.get(METATAG);
+        JSONObject jsonSpeakers = (JSONObject) data.get(SPEAKERS);
 
         try {
             try {
@@ -631,8 +555,6 @@ public class PressReleaseAdd extends AbstractPageObject {
             driver.get(pageUrl);
             Thread.sleep(DEFAULT_PAUSE);
             waitForElement(commentsTxt);
-            waitForElement(advancedBtn);
-            findElement(advancedBtn).click();
 
             // Compare field values with entry data
             try {
@@ -656,7 +578,7 @@ public class PressReleaseAdd extends AbstractPageObject {
             }
 
             try {
-                if (!findElement(prDateInput).getAttribute("value").equals(data.get("pressrelease_date_ch").toString())) {
+                if (!findElement(pDateInput).getAttribute("value").equals(data.get("presentation_date_ch").toString())) {
                     System.out.println("Fails date");
                     return false;
                 }
@@ -664,8 +586,8 @@ public class PressReleaseAdd extends AbstractPageObject {
             }
 
             try {
-                if (!findElement(prHeadline).getAttribute("value").equals(data.get("pressrelease_headline_ch").toString())) {
-                    System.out.println("Fails headline");
+                if (!findElement(pTitle).getAttribute("value").equals(data.get("presentation_title_ch").toString())) {
+                    System.out.println("Fails title");
                     return false;
                 }
             } catch (NullPointerException e) {
@@ -682,55 +604,20 @@ public class PressReleaseAdd extends AbstractPageObject {
             }
 
             try {
-                if (!findElement(mtHttpChk).getAttribute("value").trim().equals(jsonMetaTag.get("http_equiv").toString())) {
-                    System.out.println(findElement(mtHttpChk).getAttribute("value"));
-                    System.out.println(data.get("http_equiv").toString());
-                    System.out.println("Fails http_equiv");
+                if (!findElement(speakerNameChk).getAttribute("value").trim().equals(jsonSpeakers.get("speaker_name").toString())) {
+                    System.out.println(findElement(speakerNameChk).getAttribute("value"));
+                    System.out.println(data.get("speaker_name").toString());
+                    System.out.println("Fails speaker name");
                     return false;
                 }
             } catch (NullPointerException e) {
             }
 
             try {
-                if (!findElement(mtNameChk).getAttribute("value").trim().equals(jsonMetaTag.get("name").toString())) {
-                    System.out.println(findElement(mtNameChk).getAttribute("value"));
-                    System.out.println(data.get("name").toString());
-                    System.out.println("Fails name");
-                    return false;
-                }
-            } catch (NullPointerException e) {
-            }
-
-            try {
-                if (!findElement(mtPropertyChk).getAttribute("value").trim().equals(jsonMetaTag.get("property").toString())) {
-                    return false;
-                }
-            } catch (NullPointerException e) {
-            }
-
-            try {
-                if (!findElement(mtContentChk).getAttribute("value").trim().equals(jsonMetaTag.get("content").toString())) {
-                    return false;
-                }
-            } catch (NullPointerException e) {
-            }
-
-            try {
-                if (!findElement(mtSchemeChk).getAttribute("value").trim().equals(jsonMetaTag.get("scheme").toString())) {
-                    return false;
-                }
-            } catch (NullPointerException e) {
-            }
-
-            try {
-                if (!findElement(mtLangChk).getAttribute("value").trim().equals(jsonMetaTag.get("lang").toString())) {
-                    return false;
-                }
-            } catch (NullPointerException e) {
-            }
-
-            try {
-                if (!findElement(mtDirChk).getAttribute("value").trim().equals(jsonMetaTag.get("dir").toString())) {
+                if (!findElement(speakerPositionChk).getAttribute("value").trim().equals(jsonSpeakers.get("speaker_position").toString())) {
+                    System.out.println(findElement(speakerNameChk).getAttribute("value"));
+                    System.out.println(data.get("speaker_position").toString());
+                    System.out.println("Fails speaker position");
                     return false;
                 }
             } catch (NullPointerException e) {
@@ -738,7 +625,7 @@ public class PressReleaseAdd extends AbstractPageObject {
 
             try {
                 JavascriptExecutor js = (JavascriptExecutor)driver;
-                if (!js.executeScript("return arguments[0].value;", driver.findElement(relatedDocumentInput)).equals("files/" + data.get("related_document_ch").toString())) {
+                if (!js.executeScript("return arguments[0].value;", driver.findElement(presentationFileInput)).equals("files/" + data.get("presentation_file_ch").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
@@ -752,7 +639,7 @@ public class PressReleaseAdd extends AbstractPageObject {
             }
 
 
-            System.out.println(obj.get("pressrelease_headline").toString()+ ": New "+PAGE_NAME+" has been checked");
+            System.out.println(obj.get("presentation_title").toString()+ ": New "+PAGE_NAME+" has been checked");
             return true;
         } catch (IOException e) {
             e.printStackTrace();
@@ -761,7 +648,7 @@ public class PressReleaseAdd extends AbstractPageObject {
         return null;
     }
 
-    public String setupAsDeletedPressRelease(String name) throws InterruptedException {
+    public String setupAsDeletedPresentation(String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
         JSONObject jsonObj = new JSONObject();
 
@@ -808,7 +695,7 @@ public class PressReleaseAdd extends AbstractPageObject {
             file.write(jsonMain.toJSONString().replace("\\", ""));
             file.flush();
 
-            System.out.println(jsonObj.get("pressrelease_headline").toString()+ ": "+PAGE_NAME+" set up as deleted");
+            System.out.println(jsonObj.get("presentation_title").toString()+ ": "+PAGE_NAME+" set up as deleted");
             return findElement(currentContentSpan).getText();
         } catch (IOException e) {
             e.printStackTrace();
@@ -817,7 +704,7 @@ public class PressReleaseAdd extends AbstractPageObject {
         return null;
     }
 
-    public String removePressRelease(JSONObject data, String name) throws InterruptedException {
+    public String removePresentation(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
 
         try {
@@ -873,7 +760,7 @@ public class PressReleaseAdd extends AbstractPageObject {
         return null;
     }
 
-    public Boolean previewPressRelease(JSONObject data, String name) throws InterruptedException {
+    public Boolean previewPresentation(JSONObject data, String name) throws InterruptedException {
         try {
             JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sFileJson));
             JSONObject Obj = (JSONObject) jsonObject.get(name);
@@ -890,17 +777,17 @@ public class PressReleaseAdd extends AbstractPageObject {
             driver.switchTo().window(tabs.get(1));
             //       driver.get(getPreviewPageUrl(jsonObject,name));
 
-                if (findElement(By.xpath("//span[contains(@class,'ModuleHeadline')][contains(text(),'" + name + "')]")) != null) {
+            if (findElement(By.xpath("//span[contains(@class,'ModuleHeadline')][contains(text(),'" + name + "')]")) != null) {
                 /* try {
                     waitForElement(breadcrumbDiv);
 
                     if (findElement(breadcrumbDiv).getText().contains(pageName)) { */
-                    driver.switchTo().window(tabs.get(1)).close();
-                    Thread.sleep(DEFAULT_PAUSE * 3);
-                    driver.switchTo().window(tabs.get(0));
+                driver.switchTo().window(tabs.get(1)).close();
+                Thread.sleep(DEFAULT_PAUSE * 3);
+                driver.switchTo().window(tabs.get(0));
 
-                    System.out.println(name + ": New Press Release Preview has been checked");
-                    return true;
+                System.out.println(name + ": New Presentation Preview has been checked");
+                return true;
                     /* } else {
                         driver.switchTo().window(tabs.get(1)).close();
                         Thread.sleep(DEFAULT_PAUSE);
@@ -913,12 +800,12 @@ public class PressReleaseAdd extends AbstractPageObject {
                     driver.switchTo().window(tabs.get(0));
                     return false;
                 } */
-                } else {
-                    driver.switchTo().window(tabs.get(1)).close();
-                    Thread.sleep(DEFAULT_PAUSE);
-                    driver.switchTo().window(tabs.get(0));
-                    return false;
-                }
+            } else {
+                driver.switchTo().window(tabs.get(1)).close();
+                Thread.sleep(DEFAULT_PAUSE);
+                driver.switchTo().window(tabs.get(0));
+                return false;
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -983,142 +870,10 @@ public class PressReleaseAdd extends AbstractPageObject {
         return null;
     }
 
-    public Boolean publicPressRelease(JSONObject data, String name) throws InterruptedException {
-        try {
-            JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sFileJson));
-            JSONObject Obj = (JSONObject) jsonObject.get(name);
-
-            String pageUrl = getPageUrl(jsonObject, name);
-            driver.get(pageUrl);
-            Thread.sleep(DEFAULT_PAUSE);
-
-            String publicUrl = findElement(By.xpath("//span[contains(@id,'PageUrl')]")).getText();
-
-            ((JavascriptExecutor)driver).executeScript("window.open();");
-
-            Thread.sleep(DEFAULT_PAUSE);
-
-            ArrayList<String> tabs = new ArrayList<> (driver.getWindowHandles());
-            driver.switchTo().window(tabs.get(1));
-
-
-            try {
-                driver.get(publicUrl);
-            } catch (TimeoutException e) {
-                driver.findElement(By.tagName("body")).sendKeys("Keys.ESCAPE");
-            }
-
-                if (driver.getTitle().contains(name)){
-                /*try {
-                    waitForElement(breadcrumbDiv);
-                    if ((findElement(breadcrumbDiv).getText().contains(pageName))) { */
-                    driver.switchTo().window(tabs.get(1)).close();
-                    driver.switchTo().window(tabs.get(0));
-
-                    System.out.println(name + ": New Press Release Public has checked");
-                    return true;
-                    /*}
-                } catch (TimeoutException e) {
-                } */
-                } /*else if (JsonPath.read(jsonObject, "$.['"+pageName+"'].page_type").toString().equals("External")) {
-                if (driver.getCurrentUrl().contains(JsonPath.read(jsonObject, "$.['" + pageName + "'].external_url").toString())) {
-                    driver.switchTo().window(tabs.get(1)).close();
-                    driver.switchTo().window(tabs.get(0));
-
-                    System.out.println(pageName+ ": New Page Public has been checked");
-                    return true;
-                } else {
-                    driver.switchTo().window(tabs.get(1)).close();
-                    driver.switchTo().window(tabs.get(0));
-                    return false;
-                }
-            }*/ else {
-                    driver.switchTo().window(tabs.get(1)).close();
-                    driver.switchTo().window(tabs.get(0));
-                    return false;
-                }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        } catch (NullPointerException e) {
-        }
-
-        return null;
-    }
-
-    public Boolean publicPressReleaseCh(JSONObject data, String name) throws InterruptedException {
-        try {
-            JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sFileJson));
-            JSONObject Obj = (JSONObject) jsonObject.get(name);
-
-            String pageUrl = getPageUrl(jsonObject, name);
-            driver.get(pageUrl);
-            Thread.sleep(DEFAULT_PAUSE);
-
-            String publicUrl = findElement(By.xpath("//span[contains(@id,'PageUrl')]")).getText();
-
-            ((JavascriptExecutor)driver).executeScript("window.open();");
-
-            Thread.sleep(DEFAULT_PAUSE);
-
-            ArrayList<String> tabs = new ArrayList<> (driver.getWindowHandles());
-            driver.switchTo().window(tabs.get(1));
-
-
-            try {
-                driver.get(publicUrl);
-            } catch (TimeoutException e) {
-                driver.findElement(By.tagName("body")).sendKeys("Keys.ESCAPE");
-            }
-
-            if (driver.getTitle().contains(data.get("pressrelease_headline_ch").toString())){
-                /*try {
-                    waitForElement(breadcrumbDiv);
-                    if ((findElement(breadcrumbDiv).getText().contains(pageName))) { */
-                driver.switchTo().window(tabs.get(1)).close();
-                driver.switchTo().window(tabs.get(0));
-
-                System.out.println(data.get("pressrelease_headline_ch").toString() + ": New Press Release Public has checked");
-                return true;
-                    /*}
-                } catch (TimeoutException e) {
-                } */
-            } /*else if (JsonPath.read(jsonObject, "$.['"+pageName+"'].page_type").toString().equals("External")) {
-                if (driver.getCurrentUrl().contains(JsonPath.read(jsonObject, "$.['" + pageName + "'].external_url").toString())) {
-                    driver.switchTo().window(tabs.get(1)).close();
-                    driver.switchTo().window(tabs.get(0));
-
-                    System.out.println(pageName+ ": New Page Public has been checked");
-                    return true;
-                } else {
-                    driver.switchTo().window(tabs.get(1)).close();
-                    driver.switchTo().window(tabs.get(0));
-                    return false;
-                }
-            }*/ else {
-                driver.switchTo().window(tabs.get(1)).close();
-                driver.switchTo().window(tabs.get(0));
-                return false;
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        } catch (NullPointerException e) {
-        }
-
-        return null;
-    }
-
     public String getPageUrl(JSONObject obj, String name) {
         String sItemID = JsonPath.read(obj, "$.['"+name+"'].url_query.ItemID");
         String sLanguageId = JsonPath.read(obj, "$.['"+name+"'].url_query.LanguageId");
         String sSectionId = JsonPath.read(obj, "$.['"+name+"'].url_query.SectionId");
         return desktopUrl.toString()+"default.aspx?ItemID="+sItemID+"&LanguageId="+sLanguageId+"&SectionId="+sSectionId;
     }
-
-
 }
