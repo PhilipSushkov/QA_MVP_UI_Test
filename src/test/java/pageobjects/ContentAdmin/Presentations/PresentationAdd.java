@@ -9,6 +9,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import pageobjects.PageAdmin.WorkflowState;
+import pageobjects.Dashboard.Dashboard;
+
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -32,8 +34,10 @@ public class PresentationAdd extends AbstractPageObject{
     private static By activeChk, saveBtn, revertBtn, cancelBtn, deleteBtn, addNewLink, speakersAddNewBtn;
     private static By workflowStateSpan, commentsTxt, successMsg, saveAndSubmitBtn;
     private static By previewLnk;
+    private static By investorBtn, presentationBtn;
     private static String sPathToFile, sFileJson;
     private static JSONParser parser;
+    private static Dashboard dashboard;
     private static final long DEFAULT_PAUSE = 2500;
     private final String PAGE_NAME="Presentation", SPEAKERS="speakers";
 
@@ -65,6 +69,8 @@ public class PresentationAdd extends AbstractPageObject{
         btn_SpeakerOK = By.xpath(propUIContentAdmin.getProperty("btn_SpeakerOK"));
         speakerNameChk = By.xpath(propUIContentAdmin.getProperty("input_SpeakerName_Chk"));
         speakerPositionChk = By.xpath(propUIContentAdmin.getProperty("input_SpeakerPosition_Chk"));
+        investorBtn = By.xpath("//li/a[contains(text(),'Investors')]");
+        presentationBtn = By.xpath("//li/a[contains(text(),'Presentations')]");
 
         parser = new JSONParser();
 
@@ -760,7 +766,102 @@ public class PresentationAdd extends AbstractPageObject{
         return null;
     }
 
-    public Boolean previewPresentation(JSONObject data, String name) throws InterruptedException {
+    public Boolean publicPresentation(JSONObject data, String name) throws InterruptedException {
+        try {
+            JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sFileJson));
+            JSONObject Obj = (JSONObject) jsonObject.get(name);
+
+            String pageUrl = getPageUrl(jsonObject, name);
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+
+            String publicUrl = findElement(By.xpath("//span[contains(@id,'PageUrl')]")).getText();
+
+            ((JavascriptExecutor)driver).executeScript("window.open();");
+
+            Thread.sleep(DEFAULT_PAUSE);
+
+            ArrayList<String> tabs = new ArrayList<> (driver.getWindowHandles());
+            driver.switchTo().window(tabs.get(1));
+
+
+            try {
+                driver.get(publicUrl);
+            } catch (TimeoutException e) {
+                driver.findElement(By.tagName("body")).sendKeys("Keys.ESCAPE");
+            }
+
+            if (driver.getTitle().contains(name)) {
+                driver.switchTo().window(tabs.get(1)).close();
+                driver.switchTo().window(tabs.get(0));
+
+                System.out.println(name + ": New Presentation Public has checked");
+                return true;
+            }
+                else {
+                driver.switchTo().window(tabs.get(1)).close();
+                driver.switchTo().window(tabs.get(0));
+                return false;
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (NullPointerException e) {
+        }
+
+        return null;
+    }
+
+    public Boolean publicPresentationCh(JSONObject data, String name) throws InterruptedException {
+        try {
+            JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sFileJson));
+            JSONObject Obj = (JSONObject) jsonObject.get(name);
+
+            String pageUrl = getPageUrl(jsonObject, name);
+            driver.get(pageUrl);
+            Thread.sleep(DEFAULT_PAUSE);
+
+            String publicUrl = findElement(By.xpath("//span[contains(@id,'PageUrl')]")).getText();
+
+            ((JavascriptExecutor)driver).executeScript("window.open();");
+
+            Thread.sleep(DEFAULT_PAUSE);
+
+            ArrayList<String> tabs = new ArrayList<> (driver.getWindowHandles());
+            driver.switchTo().window(tabs.get(1));
+
+
+            try {
+                driver.get(publicUrl);
+            } catch (TimeoutException e) {
+                driver.findElement(By.tagName("body")).sendKeys("Keys.ESCAPE");
+            }
+
+            if (driver.getTitle().contains(data.get("presentation_title_ch").toString())){
+                driver.switchTo().window(tabs.get(1)).close();
+                driver.switchTo().window(tabs.get(0));
+
+                System.out.println(data.get("presentation_title_ch").toString() + ": New Presentation Public has checked");
+                return true;
+            }  else {
+                driver.switchTo().window(tabs.get(1)).close();
+                driver.switchTo().window(tabs.get(0));
+                return false;
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (NullPointerException e) {
+        }
+
+        return null;
+    }
+
+ /*   public Boolean previewPresentation(JSONObject data, String name) throws InterruptedException {
         try {
             JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sFileJson));
             JSONObject Obj = (JSONObject) jsonObject.get(name);
@@ -777,29 +878,15 @@ public class PresentationAdd extends AbstractPageObject{
             driver.switchTo().window(tabs.get(1));
             //       driver.get(getPreviewPageUrl(jsonObject,name));
 
-            if (findElement(By.xpath("//span[contains(@class,'ModuleHeadline')][contains(text(),'" + name + "')]")) != null) {
-                /* try {
-                    waitForElement(breadcrumbDiv);
+            dashboard.openPageFromMenu(investorBtn, presentationBtn);
 
-                    if (findElement(breadcrumbDiv).getText().contains(pageName)) { */
+            if (findElement(By.xpath("//span[contains(@class,'ModuleHeadline')][contains(text(),'" + name + "')]")) != null) {
                 driver.switchTo().window(tabs.get(1)).close();
                 Thread.sleep(DEFAULT_PAUSE * 3);
                 driver.switchTo().window(tabs.get(0));
 
                 System.out.println(name + ": New Presentation Preview has been checked");
                 return true;
-                    /* } else {
-                        driver.switchTo().window(tabs.get(1)).close();
-                        Thread.sleep(DEFAULT_PAUSE);
-                        driver.switchTo().window(tabs.get(0));
-                        return false;
-                    }
-                }  catch (TimeoutException e) {
-                    driver.switchTo().window(tabs.get(1)).close();
-                    Thread.sleep(DEFAULT_PAUSE);
-                    driver.switchTo().window(tabs.get(0));
-                    return false;
-                } */
             } else {
                 driver.switchTo().window(tabs.get(1)).close();
                 Thread.sleep(DEFAULT_PAUSE);
@@ -812,13 +899,17 @@ public class PresentationAdd extends AbstractPageObject{
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        catch (Exception e){
+            e.printStackTrace();
+        }
 
         return null;
     }
 
-    public Boolean previewPressReleaseCh(JSONObject data, String name) throws InterruptedException {
+    public Boolean previewPresentationCh(JSONObject data, String name) throws InterruptedException {
         try {
             JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sFileJson));
+            JSONObject Obj = (JSONObject) jsonObject.get(name);
 
             String pageUrl = getPageUrl(jsonObject, name);
             driver.get(pageUrl);
@@ -831,29 +922,16 @@ public class PresentationAdd extends AbstractPageObject{
             ArrayList<String> tabs = new ArrayList<> (driver.getWindowHandles());
             driver.switchTo().window(tabs.get(1));
             //       driver.get(getPreviewPageUrl(jsonObject,name));
-            if (findElement(By.xpath("//span[contains(@class,'ModuleHeadline')][contains(text(),'" + data.get("pressrelease_headline_ch").toString() + "')]")) != null) {
-                /* try {
-                    waitForElement(breadcrumbDiv);
 
-                    if (findElement(breadcrumbDiv).getText().contains(pageName)) { */
+            dashboard.openPageFromMenu(investorBtn, presentationBtn);
+
+            if (findElement(By.xpath("//span[contains(@class,'ModuleHeadline')][contains(text(),'" + data.get("presentation_title_ch") + "')]")) != null) {
                 driver.switchTo().window(tabs.get(1)).close();
                 Thread.sleep(DEFAULT_PAUSE * 3);
                 driver.switchTo().window(tabs.get(0));
 
-                System.out.println(data.get("pressrelease_headline_ch").toString() + ": New Press Release Preview has been checked");
+                System.out.println(data.get("presentation_title_ch") + ": New Presentation Preview has been checked");
                 return true;
-                    /* } else {
-                        driver.switchTo().window(tabs.get(1)).close();
-                        Thread.sleep(DEFAULT_PAUSE);
-                        driver.switchTo().window(tabs.get(0));
-                        return false;
-                    }
-                }  catch (TimeoutException e) {
-                    driver.switchTo().window(tabs.get(1)).close();
-                    Thread.sleep(DEFAULT_PAUSE);
-                    driver.switchTo().window(tabs.get(0));
-                    return false;
-                } */
             } else {
                 driver.switchTo().window(tabs.get(1)).close();
                 Thread.sleep(DEFAULT_PAUSE);
@@ -866,9 +944,12 @@ public class PresentationAdd extends AbstractPageObject{
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        catch (Exception e){
+            e.printStackTrace();
+        }
 
         return null;
-    }
+    }*/
 
     public String getPageUrl(JSONObject obj, String name) {
         String sItemID = JsonPath.read(obj, "$.['"+name+"'].url_query.ItemID");

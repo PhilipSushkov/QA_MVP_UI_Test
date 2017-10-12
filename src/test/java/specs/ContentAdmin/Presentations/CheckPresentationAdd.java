@@ -69,8 +69,8 @@ public class CheckPresentationAdd extends AbstractSpec {
         sPresentationTitle = data.get("presentation_title").toString();
         Assert.assertEquals(presentationAdd.saveAndSubmitPresentation(data, sPresentationTitle), WorkflowState.FOR_APPROVAL.state(), "New " + PAGE_NAME + " doesn't submit properly (after Save And Submit)");
         Assert.assertTrue(presentationAdd.checkPresentation(data, sPresentationTitle), "Submitted New "+ PAGE_NAME +" data doesn't fit well to entry data (after Save and Submit)");
-//        Assert.assertTrue(presentationAdd.previewP(data, sPressReleaseTitle), "Preview of New "+ PAGE_NAME + " didn't work properly (after Save and Submit)");
-//        Assert.assertFalse(presentationAdd.publicPressRelease(data, sPressReleaseTitle), "New "+ PAGE_NAME + " shouldn't be shown on Public site (after Save and Submit)");
+//        Assert.assertTrue(presentationAdd.previewPresentation(data, sPresentationTitle), "Preview of New "+ PAGE_NAME + " didn't work properly (after Save and Submit)");
+        Assert.assertFalse(presentationAdd.publicPresentation(data, sPresentationTitle), "New "+ PAGE_NAME + " shouldn't be shown on Public site (after Save and Submit)");
 
     }
 
@@ -78,7 +78,7 @@ public class CheckPresentationAdd extends AbstractSpec {
     public void publishPresentation(JSONObject data) throws InterruptedException {
         sPresentationTitle = data.get("presentation_title").toString();
         Assert.assertEquals(presentationAdd.publishPresentation(data, sPresentationTitle), WorkflowState.LIVE.state(), "New "+ PAGE_NAME +" doesn't publish properly (after Publish)");
-//        Assert.assertTrue(presentationAdd.publicPressRelease(data, sPressReleaseTitle), "New "+ PAGE_NAME + " should be shown on Public site (after Publish)");
+        Assert.assertTrue(presentationAdd.publicPresentation(data, sPresentationTitle), "New "+ PAGE_NAME + " should be shown on Public site (after Publish)");
     }
 
     @Test(dataProvider=DATA, priority=4)
@@ -87,8 +87,8 @@ public class CheckPresentationAdd extends AbstractSpec {
         Assert.assertEquals(presentationAdd.changeAndSubmitPresentation(data, sPresentationTitle), WorkflowState.FOR_APPROVAL.state(), "Some fields of New "+ PAGE_NAME +" didn't change properly (after Change and Submit)");
         Assert.assertEquals(presentationAdd.revertToLivePresentation(sPresentationTitle), WorkflowState.LIVE.state(), "Couldn't revert to Live changes for New "+ PAGE_NAME);
         Assert.assertTrue(presentationAdd.checkPresentation(data, sPresentationTitle), "Reverted "+ PAGE_NAME +" data doesn't fit well to entry data (after Revert To Live)");
-//        Assert.assertTrue(presentationAdd.previewPressRelease(data, sPressReleaseTitle), "Preview of Reverted "+ PAGE_NAME + " didn't work properly (after Revert to Live)");
-//        Assert.assertTrue(presentationAdd.publicPressRelease(data, sPressReleaseTitle), "Reverted"+ PAGE_NAME + " should be shown on Public site (after Revert to Live)");
+//      Assert.assertTrue(presentationAdd.previewPressRelease(data, sPresentationTitle), "Preview of Reverted "+ PAGE_NAME + " didn't work properly (after Revert to Live)");
+        Assert.assertTrue(presentationAdd.publicPresentation(data, sPresentationTitle), "Reverted"+ PAGE_NAME + " should be shown on Public site (after Revert to Live)");
     }
 
     @Test(dataProvider=DATA, priority=5)
@@ -96,50 +96,43 @@ public class CheckPresentationAdd extends AbstractSpec {
         sPresentationTitle = data.get("presentation_title").toString();
         Assert.assertEquals(presentationAdd.changeAndSubmitPresentation(data, sPresentationTitle), WorkflowState.FOR_APPROVAL.state(), "Some fields of New "+ PAGE_NAME +" didn't change properly (after Change and Submit)");
         Assert.assertTrue(presentationAdd.checkPresentationCh(data, sPresentationTitle), "Submitted New "+ PAGE_NAME +" changes don't fit well to change data (after Change And Submit)");
-       /*
         if (data.get("presentation_title_ch") != null){
-            Assert.assertTrue(presentationAdd.previewPressReleaseCh(data, sPressReleaseTitle), "Preview of Changed "+ PAGE_NAME + "  didn't work properly (after Change and Submit)");
-            Assert.assertFalse(presentationAdd.publicPressReleaseCh(data, sPressReleaseTitle), "Changed "+ PAGE_NAME + " shouldn't be shown on Public site (after Change and Submit)");
+//            Assert.assertTrue(presentationAdd.previewPressReleaseCh(data, sPresentationTitle), "Preview of Changed "+ PAGE_NAME + "  didn't work properly (after Change and Submit)");
+            Assert.assertFalse(presentationAdd.publicPresentationCh(data, sPresentationTitle), "Changed "+ PAGE_NAME + " shouldn't be shown on Public site (after Change and Submit)");
         }
         else
         {
-           Assert.assertTrue(pressReleaseAdd.previewPressRelease(data, sPressReleaseTitle), "Preview of Changed "+ PAGE_NAME + "  didn't work properly (after Change and Submit)");
-           Assert.assertTrue(pressReleaseAdd.publicPressRelease(data, sPressReleaseTitle), "Changed "+ PAGE_NAME + " with unchanged headline should show on Public site (after Change and Submit)");
+ //          Assert.assertTrue(presentationAdd.previewPressRelease(data, sPresentationTitle), "Preview of Changed "+ PAGE_NAME + "  didn't work properly (after Change and Submit)");
+           Assert.assertTrue(presentationAdd.publicPresentation(data, sPresentationTitle), "Changed "+ PAGE_NAME + " with unchanged headline should show on Public site (after Change and Submit)");
         }
-        */
     }
 
     @Test(dataProvider=DATA, priority=6)
     public void publishEditPresentation(JSONObject data) throws InterruptedException {
         sPresentationTitle = data.get("presentation_title").toString();
         Assert.assertEquals(presentationAdd.publishPresentation(data, sPresentationTitle), WorkflowState.LIVE.state(), "Changed "+ PAGE_NAME +" doesn't publish properly (after Publish)");
-       /*
-        if (data.get("pressrelease_headline_ch") != null) {
-            Assert.assertTrue(presentationAdd.publicPresentation(data, sPressReleaseTitle), "Changed " + PAGE_NAME + " should be shown on Public site (after Revert to Live)");
+        if (data.get("presentation_title_ch") != null) {
+            Assert.assertTrue(presentationAdd.publicPresentationCh(data, sPresentationTitle), "Changed " + PAGE_NAME + " should be shown on Public site (after Publish Edit)");
         }
         else
         {
-            Assert.assertTrue(pressReleaseAdd.publicPressRelease(data, sPressReleaseTitle), "Changed " + PAGE_NAME + " should be shown on Public site (after Revert to Live)");
+            Assert.assertTrue(presentationAdd.publicPresentation(data, sPresentationTitle), "Changed " + PAGE_NAME + " should be shown on Public site (after Publish Edit)");
         }
-        */
-
     }
 
     @Test(dataProvider=DATA, priority=7)
     public void deletePresentation(JSONObject data) throws Exception {
         sPresentationTitle = data.get("presentation_title").toString();
         Assert.assertEquals(presentationAdd.setupAsDeletedPresentation(sPresentationTitle), WorkflowState.DELETE_PENDING.state(), "Changed "+ PAGE_NAME +" didn't setup as Deleted properly");
-        /*
-        if (data.get("pressrelease_headline_ch") != null) {
-            Assert.assertTrue(presentationAdd.previewPressReleaseCh(data, sPressReleaseTitle), "Deleted " + PAGE_NAME + " shouldn't be shown in Preview (after Delete)");
-            Assert.assertTrue(presentationAdd.publicPressReleaseCh(data, sPressReleaseTitle), "Deleted " + PAGE_NAME + " should be shown on Public pages (after Delete)");
+        if (data.get("presentation_title_ch") != null) {
+//            Assert.assertTrue(presentationAdd.previewPressReleaseCh(data, sPresentationTitle), "Deleted " + PAGE_NAME + " shouldn't be shown in Preview (after Delete)");
+            Assert.assertTrue(presentationAdd.publicPresentationCh(data, sPresentationTitle), "Deleted " + PAGE_NAME + " should be shown on Public pages (after Delete)");
         }
         else
         {
-            Assert.assertTrue(pressReleaseAdd.previewPressRelease(data, sPressReleaseTitle), "Deleted " + PAGE_NAME + " shouldn't be shown in Preview (after Delete)");
-            Assert.assertTrue(pressReleaseAdd.publicPressRelease(data, sPressReleaseTitle), "Deleted " + PAGE_NAME + " should be shown on Public pages (after Delete)");
+//            Assert.assertTrue(presentationAdd.previewPressRelease(data, sPresentationTitle), "Deleted " + PAGE_NAME + " shouldn't be shown in Preview (after Delete)");
+            Assert.assertTrue(presentationAdd.publicPresentation(data, sPresentationTitle), "Deleted " + PAGE_NAME + " should be shown on Public pages (after Delete)");
         }
-        */
     }
 
     @Test(dataProvider=DATA, priority=8)
