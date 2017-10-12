@@ -9,8 +9,6 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import pageobjects.PageAdmin.WorkflowState;
-import pageobjects.Dashboard.Dashboard;
-
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -34,10 +32,8 @@ public class PresentationAdd extends AbstractPageObject{
     private static By activeChk, saveBtn, revertBtn, cancelBtn, deleteBtn, addNewLink, speakersAddNewBtn;
     private static By workflowStateSpan, commentsTxt, successMsg, saveAndSubmitBtn;
     private static By previewLnk;
-    private static By investorBtn, presentationBtn;
     private static String sPathToFile, sFileJson;
     private static JSONParser parser;
-    private static Dashboard dashboard;
     private static final long DEFAULT_PAUSE = 2500;
     private final String PAGE_NAME="Presentation", SPEAKERS="speakers";
 
@@ -69,8 +65,6 @@ public class PresentationAdd extends AbstractPageObject{
         btn_SpeakerOK = By.xpath(propUIContentAdmin.getProperty("btn_SpeakerOK"));
         speakerNameChk = By.xpath(propUIContentAdmin.getProperty("input_SpeakerName_Chk"));
         speakerPositionChk = By.xpath(propUIContentAdmin.getProperty("input_SpeakerPosition_Chk"));
-        investorBtn = By.xpath("//li/a[contains(text(),'Investors')]");
-        presentationBtn = By.xpath("//li/a[contains(text(),'Presentations')]");
 
         parser = new JSONParser();
 
