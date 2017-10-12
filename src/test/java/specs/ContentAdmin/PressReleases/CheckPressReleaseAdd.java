@@ -112,11 +112,11 @@ public class CheckPressReleaseAdd extends AbstractSpec {
         sPressReleaseTitle = data.get("pressrelease_headline").toString();
         Assert.assertEquals(pressReleaseAdd.publishPressRelease(data, sPressReleaseTitle), WorkflowState.LIVE.state(), "Changed "+ PAGE_NAME +" doesn't publish properly (after Publish)");
         if (data.get("pressrelease_headline_ch") != null) {
-            Assert.assertTrue(pressReleaseAdd.publicPressReleaseCh(data, sPressReleaseTitle), "Changed " + PAGE_NAME + " should be shown on Public site (after Revert to Live)");
+            Assert.assertTrue(pressReleaseAdd.publicPressReleaseCh(data, sPressReleaseTitle), "Changed " + PAGE_NAME + " should be shown on Public site (after Publish Edit)");
         }
         else
         {
-            Assert.assertTrue(pressReleaseAdd.publicPressRelease(data, sPressReleaseTitle), "Changed " + PAGE_NAME + " should be shown on Public site (after Revert to Live)");
+            Assert.assertTrue(pressReleaseAdd.publicPressRelease(data, sPressReleaseTitle), "Changed " + PAGE_NAME + " should be shown on Public site (after Publish Edit)");
         }
 
     }
