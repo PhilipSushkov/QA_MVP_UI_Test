@@ -95,7 +95,7 @@ public class PressReleaseAdd extends AbstractPageObject {
 
     public String savePressRelease(JSONObject data, String name) {
         String time_hour, time_min, related_document, pressrelease_date, tags, pressrelease_headline,
-        mt_http, mt_name, mt_property, mt_content, mt_scheme, mt_lang, mt_dir;
+                mt_http, mt_name, mt_property, mt_content, mt_scheme, mt_lang, mt_dir;
         Boolean active;
         JSONObject jsonObj = new JSONObject();
         JSONObject jsonMain = new JSONObject();
@@ -890,17 +890,17 @@ public class PressReleaseAdd extends AbstractPageObject {
             driver.switchTo().window(tabs.get(1));
             //       driver.get(getPreviewPageUrl(jsonObject,name));
 
-                if (findElement(By.xpath("//span[contains(@class,'ModuleHeadline')][contains(text(),'" + name + "')]")) != null) {
+            if (findElement(By.xpath("//span[contains(@class,'ModuleHeadline')][contains(text(),'" + name + "')]")) != null) {
                 /* try {
                     waitForElement(breadcrumbDiv);
 
                     if (findElement(breadcrumbDiv).getText().contains(pageName)) { */
-                    driver.switchTo().window(tabs.get(1)).close();
-                    Thread.sleep(DEFAULT_PAUSE * 3);
-                    driver.switchTo().window(tabs.get(0));
+                driver.switchTo().window(tabs.get(1)).close();
+                Thread.sleep(DEFAULT_PAUSE * 3);
+                driver.switchTo().window(tabs.get(0));
 
-                    System.out.println(name + ": New Press Release Preview has been checked");
-                    return true;
+                System.out.println(name + ": New Press Release Preview has been checked");
+                return true;
                     /* } else {
                         driver.switchTo().window(tabs.get(1)).close();
                         Thread.sleep(DEFAULT_PAUSE);
@@ -913,12 +913,12 @@ public class PressReleaseAdd extends AbstractPageObject {
                     driver.switchTo().window(tabs.get(0));
                     return false;
                 } */
-                } else {
-                    driver.switchTo().window(tabs.get(1)).close();
-                    Thread.sleep(DEFAULT_PAUSE);
-                    driver.switchTo().window(tabs.get(0));
-                    return false;
-                }
+            } else {
+                driver.switchTo().window(tabs.get(1)).close();
+                Thread.sleep(DEFAULT_PAUSE);
+                driver.switchTo().window(tabs.get(0));
+                return false;
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -1008,19 +1008,19 @@ public class PressReleaseAdd extends AbstractPageObject {
                 driver.findElement(By.tagName("body")).sendKeys("Keys.ESCAPE");
             }
 
-                if (driver.getTitle().contains(name)){
+            if (driver.getTitle().contains(name)){
                 /*try {
                     waitForElement(breadcrumbDiv);
                     if ((findElement(breadcrumbDiv).getText().contains(pageName))) { */
-                    driver.switchTo().window(tabs.get(1)).close();
-                    driver.switchTo().window(tabs.get(0));
+                driver.switchTo().window(tabs.get(1)).close();
+                driver.switchTo().window(tabs.get(0));
 
-                    System.out.println(name + ": New Press Release Public has checked");
-                    return true;
+                System.out.println(name + ": New Press Release Public has checked");
+                return true;
                     /*}
                 } catch (TimeoutException e) {
                 } */
-                } /*else if (JsonPath.read(jsonObject, "$.['"+pageName+"'].page_type").toString().equals("External")) {
+            } /*else if (JsonPath.read(jsonObject, "$.['"+pageName+"'].page_type").toString().equals("External")) {
                 if (driver.getCurrentUrl().contains(JsonPath.read(jsonObject, "$.['" + pageName + "'].external_url").toString())) {
                     driver.switchTo().window(tabs.get(1)).close();
                     driver.switchTo().window(tabs.get(0));
@@ -1033,10 +1033,10 @@ public class PressReleaseAdd extends AbstractPageObject {
                     return false;
                 }
             }*/ else {
-                    driver.switchTo().window(tabs.get(1)).close();
-                    driver.switchTo().window(tabs.get(0));
-                    return false;
-                }
+                driver.switchTo().window(tabs.get(1)).close();
+                driver.switchTo().window(tabs.get(0));
+                return false;
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
