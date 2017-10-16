@@ -30,7 +30,7 @@ public class CheckCacheStatus {
         startTime = System.currentTimeMillis();
     }
 
-    @Test(threadPoolSize = 1, invocationCount = 40, timeOut = 3000)
+    @Test(threadPoolSize = 1, invocationCount = 100, timeOut = 3000)
     public void checkCacheStatus() throws InterruptedException {
         Long id = Thread.currentThread().getId();
         //System.out.println("Test method executing on thread with id: " + id);
