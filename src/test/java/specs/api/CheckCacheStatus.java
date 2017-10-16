@@ -20,7 +20,8 @@ import java.io.IOException;
 
 
 public class CheckCacheStatus {
-    private final String sUrl = "http://www.thirdpointre.com/home/default.aspx";
+    //private final String sUrl = "http://www.thirdpointre.com/home/default.aspx";
+    private final String sUrl = "http://investor.pgecorp.com/";
     private static final long DEFAULT_PAUSE = 1000;
     long startTime;
 
@@ -45,7 +46,7 @@ public class CheckCacheStatus {
 
         BasicCookieStore cookieStore = new BasicCookieStore();
         BasicClientCookie cookieSessionId = new BasicClientCookie("ASP.NET_SessionId", "0puw3swnsinu3jojxdo55b25"+id);
-        cookieSessionId.setDomain("thirdpointre.bm");
+        cookieSessionId.setDomain("investor.pgecorp.com");
         cookieSessionId.setPath("/");
         cookieSessionId.setAttribute("HTTP", "true");
         cookieStore.addCookie(cookieSessionId);
