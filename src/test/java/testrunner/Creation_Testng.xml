@@ -109,11 +109,15 @@
             <class name="specs.ContentAdmin.FaqList.CheckFaqAdd" />
         </classes>
     </test>
+
+    <!--
     <test name="CheckRegionAdd">
         <classes>
             <class name="specs.ContentAdmin.Region.CheckRegionAdd" />
         </classes>
     </test>
+    -->
+
     <test name="CheckDownloadAdd">
         <classes>
             <class name="specs.ContentAdmin.DownloadList.CheckDownloadAdd" />
