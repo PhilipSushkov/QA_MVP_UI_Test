@@ -31,13 +31,13 @@ public class CheckCrawlingSite {
     private static CrawlingSite crawlingSite;
     private static String sPathToFile, sDataSiteJson, sDataModuleJson;
     private static String sSiteVersion, sSiteVersionCookie, sCookie;
-    private static String sDataSiteJson_notLive, sDataSiteJson_n;
+    private static String sDataSiteJson_notLive, sDataSiteJson_n, sDataSiteSsl;
     private static JSONParser parser;
 
     private static final int NUM_THREADS = 7;
     private static final String PATHTO_PUBLICSITE_PROP = "PublicSite/PublicSiteMap.properties";
     public static Properties propUIPublicSite;
-    private static final String SITE_DATA="siteData", SITE_DATA_2="siteData2", MODULE_DATA="moduleData";
+    private static final String SITE_DATA="siteData", SITE_DATA_2="siteData2", MODULE_DATA="moduleData", SITE_DATA_SSL="siteDataSsl";
     private static ExtentReports extent, cookieExtent, after;
 
 
@@ -57,7 +57,9 @@ public class CheckCrawlingSite {
         cookieExtent = CookieExtentManager.GetExtent();
         after = AfterExtentManager.GetExtent();
 
-        sDataSiteJson_n = propUIPublicSite.getProperty("json_SiteData_2");
+        //sDataSiteJson_n = propUIPublicSite.getProperty("json_NgnixSiteData");
+        sDataSiteJson_n = propUIPublicSite.getProperty("json_SiteDataSsl");
+        sDataSiteSsl = propUIPublicSite.getProperty("json_SiteDataSsl");
     }
 
     @Test(dataProvider=SITE_DATA_2, threadPoolSize=NUM_THREADS, priority=1, enabled=false)
@@ -65,11 +67,13 @@ public class CheckCrawlingSite {
         //crawlingSite = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile);
         String sVersionActual = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getSiteVersion();
         String sUrlActual = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getSiteUrl();
+        String sXCacheStatus = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getXCacheStatus(sUrlActual);
         ExtentTest test = extent.createTest("Check version result for " + site);
 
         if (sVersionActual.equals(sSiteVersion)) {
             test.log(Status.PASS, "Site Version number is valid: " + sSiteVersion);
             test.log(Status.PASS, "Site Url: " + sUrlActual);
+            test.log(Status.PASS, "Site X-Cache-Status: " + sXCacheStatus);
         } else {
             test.log(Status.FAIL, "Actual Version number is wrong: " + sVersionActual + ". Supposed to be: " + sSiteVersion);
         }
@@ -78,11 +82,12 @@ public class CheckCrawlingSite {
 
     }
 
-    @Test(dataProvider=SITE_DATA_2, threadPoolSize=NUM_THREADS, priority=1, enabled=true)
+    @Test(dataProvider=SITE_DATA_2, threadPoolSize=NUM_THREADS, priority=1, enabled=false)
     public void checkSiteVersionAfter(String site) throws Exception {
         //crawlingSite = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile);
         String sSiteVersionAfter = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getSiteVersionAfter();
         String sUrlAfter = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getSiteUrlAfter();
+        String sXCacheStatusAfter = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getXCacheStatusAfter(sUrlAfter);
         ExtentTest test = after.createTest("Check version result for " + site);
 
 
@@ -99,6 +104,7 @@ public class CheckCrawlingSite {
 
         String sSiteVersionBefore = jsonObjSite.get("version_before").toString();
         String sSiteUrlBefore = jsonObjSite.get("Url_before").toString();
+        String sSiteXCacheStatusBefore = jsonObjSite.get("X_Cache_Status_Before").toString();
 
         if (sSiteVersionAfter.equals(sSiteVersionBefore)) {
             test.log(Status.PASS, "After Site Version number is valid: " + sSiteVersionBefore);
@@ -110,6 +116,12 @@ public class CheckCrawlingSite {
             test.log(Status.PASS, "After Site Url is valid: " + sSiteUrlBefore);
         } else {
             test.log(Status.FAIL, "After Site Url is wrong: " + sUrlAfter + ". Supposed to be: " + sSiteUrlBefore);
+        }
+
+        if (sXCacheStatusAfter.equals(sSiteXCacheStatusBefore)) {
+            test.log(Status.PASS, "After Site X-Cache-Status is valid: " + sSiteXCacheStatusBefore);
+        } else {
+            test.log(Status.FAIL, "After Site X-Cache-Status is wrong: " + sXCacheStatusAfter + ". Supposed to be: " + sSiteXCacheStatusBefore);
         }
 
         Assert.assertEquals(sSiteVersionAfter, sSiteVersionBefore, "After Site Version number is not correct for " + site);
@@ -157,6 +169,12 @@ public class CheckCrawlingSite {
 
         Long id = Thread.currentThread().getId();
         System.out.println("Module: " + moduleName + " " +id);
+    }
+
+    @Test(dataProvider=SITE_DATA_SSL, priority=6, enabled=true)
+    public void checkSslSertificates(String site) throws Exception {
+        crawlingSite = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile);
+        Assert.assertTrue(crawlingSite.getSslTrust(), "Some Ssl Certificates are failed: " + site);
     }
 
     @AfterMethod
@@ -216,6 +234,36 @@ public class CheckCrawlingSite {
 
         try {
             JSONArray jsonArray = (JSONArray) parser.parse(new FileReader(sPathToFile + sDataSiteJson_n));
+            ArrayList<String> zoom = new ArrayList();
+
+            for (Iterator<JSONObject> iterator = jsonArray.iterator(); iterator.hasNext();) {
+                JSONObject jsonObject = iterator.next();
+                zoom.add(jsonObject.get("Site").toString());
+            }
+
+            Object[][] newSites = new Object[zoom.size()][1];
+            for (int i = 0; i < zoom.size(); i++) {
+                newSites[i][0] = zoom.get(i);
+            }
+
+            return newSites;
+
+        }  catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    @DataProvider(name=SITE_DATA_SSL, parallel=true)
+    public Object[][] siteDataSsl() {
+
+        try {
+            JSONArray jsonArray = (JSONArray) parser.parse(new FileReader(sPathToFile + sDataSiteSsl));
             ArrayList<String> zoom = new ArrayList();
 
             for (Iterator<JSONObject> iterator = jsonArray.iterator(); iterator.hasNext();) {
