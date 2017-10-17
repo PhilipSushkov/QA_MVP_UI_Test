@@ -102,7 +102,7 @@ public class CheckEventAdd extends AbstractSpec {
         }
         else
         {
-            //          Assert.assertTrue(eventAdd.previewPressRelease(data, sEventTitle), "Preview of Changed "+ PAGE_NAME + "  didn't work properly (after Change and Submit)");
+            // Assert.assertTrue(eventAdd.previewPressRelease(data, sEventTitle), "Preview of Changed "+ PAGE_NAME + "  didn't work properly (after Change and Submit)");
             Assert.assertTrue(eventAdd.publicEvent(data, sEventTitle), "Changed "+ PAGE_NAME + " with unchanged headline should show on Public site (after Change and Submit)");
         }
     }
@@ -125,12 +125,12 @@ public class CheckEventAdd extends AbstractSpec {
         sEventTitle = data.get("event_title").toString();
         Assert.assertEquals(eventAdd.setupAsDeletedEvent(sEventTitle), WorkflowState.DELETE_PENDING.state(), "Changed "+ PAGE_NAME +" didn't setup as Deleted properly");
         if (data.get("event_title_ch") != null) {
-//            Assert.assertTrue(eventAdd.previewPressReleaseCh(data, sEventTitle), "Deleted " + PAGE_NAME + " shouldn't be shown in Preview (after Delete)");
+        // Assert.assertTrue(eventAdd.previewPressReleaseCh(data, sEventTitle), "Deleted " + PAGE_NAME + " shouldn't be shown in Preview (after Delete)");
             Assert.assertTrue(eventAdd.publicEventCh(data, sEventTitle), "Deleted " + PAGE_NAME + " should be shown on Public pages (after Delete)");
         }
         else
         {
-//            Assert.assertTrue(eventAdd.previewPressRelease(data, sEventTitle), "Deleted " + PAGE_NAME + " shouldn't be shown in Preview (after Delete)");
+        // Assert.assertTrue(eventAdd.previewPressRelease(data, sEventTitle), "Deleted " + PAGE_NAME + " shouldn't be shown in Preview (after Delete)");
             Assert.assertTrue(eventAdd.publicEvent(data, sEventTitle), "Deleted " + PAGE_NAME + " should be shown on Public pages (after Delete)");
         }
     }
