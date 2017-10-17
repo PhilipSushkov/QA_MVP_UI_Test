@@ -1,6 +1,5 @@
 package specs.EmailAdmin.Compose;
 
-import com.sun.jna.platform.win32.OaIdl;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
