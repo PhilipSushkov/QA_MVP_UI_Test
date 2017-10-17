@@ -17,7 +17,7 @@ public class FunctionalBtn extends AbstractPageObject {
     private static By btnGoLive, btnOneTouch, spanOneTouch, btnTwoFactorAuthentication, spanTwoFactorAuthentication, btnIFrames, spanIFrames, btnUpdateRememberDays, btnSendGrid, spanSendGrid;
     private static final String sEnabledLbl = "ENABLED", sDisabledLbl = "DISABLED", sClassNameRed = "ng-binding red", sClassNameGreen = "ng-binding green";
     private static final String sEnableBtn = "ENABLE", sDisableBtn = "DISABLE";
-    private static final long DEFAULT_PAUSE = 2500;
+    private static final long DEFAULT_PAUSE = 7500;
 
     public FunctionalBtn(WebDriver driver) {
         super(driver);
