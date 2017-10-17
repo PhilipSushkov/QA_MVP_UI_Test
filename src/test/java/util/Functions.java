@@ -34,7 +34,6 @@ import javax.mail.search.SubjectTerm;
 import com.sun.mail.gimap.GmailFolder;
 import com.sun.mail.gimap.GmailRawSearchTerm;
 import com.sun.mail.gimap.GmailStore;
-import org.openqa.selenium.interactions.Pause;
 import pageobjects.api.AdminWeb.RequestDataObj;
 import pageobjects.api.AdminWeb.ResponseDataObj;
 
@@ -306,16 +305,9 @@ public class Functions {
             inbox.open(Folder.READ_ONLY);
             Message[] Messages = inbox.search(new GmailRawSearchTerm("subject:" + subjectID));
 
-            for (int i = 1; i <= 5; i++) {
-                if (Messages != null) {
-                    for (int j = 0; j < Messages.length; j++) {
-                        return Messages[j];
-                    }
-                }
-                else {
-                    System.out.println("attempt #" + i);
-                    Messages = inbox.search(new GmailRawSearchTerm("subject:" + subjectID));
-                    Thread.sleep(10000);
+            if (Messages != null){
+                for (int i = 0; i < Messages.length; i++){
+                    return Messages[i];
                 }
             }
 

@@ -3,10 +3,9 @@
     {
       "do_assertions": true,
       "template": "Press Release Template - English",
-      "to": "Test List",
+      "to": "Press Release",
       "from": "Test <test@q4websystems.com>",
       "subject": "TestMail01",
-      "subject_ch": "TestMail03",
       "body_text": "This is a test",
       "created_by": "Test",
       "send_test_message_to": "test@q4websystems.com",
@@ -16,9 +15,9 @@
     {
       "do_assertions": true,
       "template": "",
-      "to": "Test List",
+      "to": "Press Release",
       "from": "Test <test@q4websystems.com>",
-      "subject": "TestMail02",
+      "subject": "TestMail01",
       "body_text": "This is a test",
       "created_by": "Test",
       "send_test_message_to": "test@q4websystems.com",
