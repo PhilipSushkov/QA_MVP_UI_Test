@@ -64,11 +64,21 @@ public class CheckComposeMailingListMessage extends AbstractSpec {
         Assert.assertNotNull(composeMailingListMessage.getUrl());
         Assert.assertEquals(composeMailingListMessage.getTitle(), expectedTitle, "Actual Mailing List Messages Admin page Title doesn't match to expected");
         Assert.assertNotNull(composeMailingListMessage.saveMail(data, sMailingName),"New "+MAIL_NAME+" didn't save properly");
-        Assert.assertNotNull(composeMailingListMessage.sendMail(),"New "+MAIL_NAME+" didn't send properly" );
+        Assert.assertNotNull(composeMailingListMessage.sendTestMail(),"New "+MAIL_NAME+" didn't send properly" );
         Assert.assertNotNull(functions.getSpecificMail("test@q4websystems.com", "testing!" ,data.get(MAIL_NAME).toString()),"New "+MAIL_NAME+" is not received" );
         functions.deleteMail("test@q4websystems.com", "testing!" ,data.get(MAIL_NAME).toString());
         Assert.assertNull(functions.getSpecificMail("test@q4websystems.com", "testing!" ,data.get(MAIL_NAME).toString()),"New "+MAIL_NAME+" is not deleted properly" );
-
+        Assert.assertNotNull(composeMailingListMessage.updateAndSendMail(data, sMailingName),"New "+MAIL_NAME+" didn't update and send properly");
+        if (data.get("subject_ch") != null){
+            Assert.assertNotNull(functions.getSpecificMail("test@q4websystems.com", "testing!", data.get("subject_ch").toString()), "New " + MAIL_NAME + " is not received");
+            functions.deleteMail("test@q4websystems.com", "testing!", data.get("subject_ch").toString());
+            Assert.assertNull(functions.getSpecificMail("test@q4websystems.com", "testing!", data.get("subject_ch").toString()), "New " + MAIL_NAME + " is not deleted properly");
+        }
+        else {
+            Assert.assertNotNull(functions.getSpecificMail("test@q4websystems.com", "testing!", data.get(MAIL_NAME).toString()), "New " + MAIL_NAME + " is not received");
+            functions.deleteMail("test@q4websystems.com", "testing!", data.get(MAIL_NAME).toString());
+            Assert.assertNull(functions.getSpecificMail("test@q4websystems.com", "testing!", data.get(MAIL_NAME).toString()), "New " + MAIL_NAME + " is not deleted properly");
+        }
     }
 
     @DataProvider

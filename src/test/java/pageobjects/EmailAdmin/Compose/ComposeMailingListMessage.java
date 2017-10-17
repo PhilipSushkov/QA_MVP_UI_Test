@@ -23,14 +23,14 @@ import static specs.AbstractSpec.propUIEmailAdmin;
 public class ComposeMailingListMessage extends AbstractPageObject {
     private static By moduleTitle, selectTemplate, selectTo, inputFrom, inputSubject,
             textareaBody, textareaBodyContent, textarea, inputCreatedBy, inputSendTestMessageTo,
-            buttonSendTestEmail, buttonSave, successMsg;
+            buttonSendTestEmail, buttonSave, buttonSendEmail,
+            successMsgTestSend, successMsgUpdate, successMsgSend;
 
     private static String sPathToFile, sFileJson;
     private static JSONParser parser;
     private static final long DEFAULT_PAUSE = 2500;
     private final String PAGE_NAME="Mailing List Message";
 
-    private static Compose compose;
 
     public ComposeMailingListMessage(WebDriver driver) {
         super(driver);
@@ -46,7 +46,10 @@ public class ComposeMailingListMessage extends AbstractPageObject {
         inputSendTestMessageTo = By.xpath(propUIEmailAdmin.getProperty("input_SendTestMessageTo"));
         buttonSendTestEmail = By.xpath(propUIEmailAdmin.getProperty("button_SendTestEmail"));
         buttonSave = By.xpath(propUIEmailAdmin.getProperty("button_Save"));
-        successMsg = By.xpath(propUIEmailAdmin.getProperty("success_msg"));
+        buttonSendEmail = By.xpath(propUIEmailAdmin.getProperty("button_SendEmail"));
+        successMsgTestSend = By.xpath(propUIEmailAdmin.getProperty("success_Msg_TestSend"));
+        successMsgUpdate = By.xpath(propUIEmailAdmin.getProperty("success_Msg_Update"));
+        successMsgSend = By.xpath(propUIEmailAdmin.getProperty("success_Msg_Send"));
 
         parser = new JSONParser();
 
@@ -124,6 +127,8 @@ public class ComposeMailingListMessage extends AbstractPageObject {
 
             findElement(buttonSave).click();
             Thread.sleep(DEFAULT_PAUSE);
+            waitForElement(successMsgUpdate);
+
 
             jsonMain.put(name, jsonObj);
 
@@ -148,10 +153,82 @@ public class ComposeMailingListMessage extends AbstractPageObject {
         return null;
     }
 
-    public String sendMail(){
+    public String sendTestMail(){
         try{
             findElement(buttonSendTestEmail).click();
-            waitForElementText(successMsg);
+            waitForElementText(successMsgTestSend);
+            return "PASS";
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public String updateAndSendMail(JSONObject data, String name){
+        try{
+            JSONObject jsonObj = new JSONObject();
+            JSONObject jsonMain = new JSONObject();
+            waitForElement(buttonSave);
+            try {
+                try {
+                    FileReader readFile = new FileReader(sPathToFile + sFileJson);
+                    jsonMain = (JSONObject) parser.parse(readFile);
+                } catch (ParseException e) {
+                }
+
+                try {
+                    if (!data.get("subject_ch").toString().isEmpty()) {
+                        findElement(inputSubject).clear();
+                        findElement(inputSubject).sendKeys(data.get("subject_ch").toString());
+                        jsonObj.put("subject", data.get("subject_ch").toString());
+                    }
+                } catch (NullPointerException e) {
+                }
+
+                try {
+                    if (!data.get("to_ch").toString().isEmpty()) {
+                        findElement(inputSendTestMessageTo).clear();
+                        findElement(inputSendTestMessageTo).sendKeys(data.get("to_ch").toString());
+                        jsonObj.put("to", data.get("to_ch").toString());
+                    }
+                } catch (NullPointerException e) {
+                }
+
+                try {
+                    if (!data.get("from_ch").toString().isEmpty()) {
+                        findElement(inputFrom).clear();
+                        findElement(inputFrom).sendKeys(data.get("from_ch").toString());
+                        jsonObj.put("from", data.get("from_ch").toString());
+                    }
+                } catch (NullPointerException e) {
+                }
+
+                findElement(buttonSave).click();
+                Thread.sleep(DEFAULT_PAUSE);
+                waitForElement(successMsgUpdate);
+
+                jsonMain.put(name, jsonObj);
+
+                try {
+                    FileWriter writeFile = new FileWriter(sPathToFile + sFileJson);
+                    writeFile.write(jsonMain.toJSONString().replace("\\", ""));
+                    writeFile.flush();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                System.out.println(name + ": "+PAGE_NAME+" has been updated");
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+            findElement(buttonSendEmail).click();
+            waitForElementText(successMsgSend);
             return "PASS";
         }
         catch(Exception e){
