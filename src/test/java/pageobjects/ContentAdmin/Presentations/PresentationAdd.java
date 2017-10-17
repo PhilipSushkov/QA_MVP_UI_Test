@@ -21,7 +21,7 @@ import static specs.AbstractSpec.desktopUrl;
 import static specs.AbstractSpec.propUIContentAdmin;
 
 /**
- * Created by charleszheng on 2017-10-11.
+ * Created by charleszheng on 2017-09-27.
  */
 
 public class PresentationAdd extends AbstractPageObject{
