@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="Web CMS Suite Creation" parallel="tests" thread-count="1">
+<suite name="Web CMS Suite Creation" parallel="tests" thread-count="3">
   
     <test name="CheckPageAdd">
         <classes>
@@ -109,6 +109,36 @@
             <class name="specs.ContentAdmin.FaqList.CheckFaqAdd" />
         </classes>
     </test>
+
+    <!--
+    <test name="CheckRegionAdd">
+        <classes>
+            <class name="specs.ContentAdmin.Region.CheckRegionAdd" />
+        </classes>
+    </test>
+    -->
+
+    <test name="CheckDownloadAdd">
+        <classes>
+            <class name="specs.ContentAdmin.DownloadList.CheckDownloadAdd" />
+        </classes>
+    </test>
+    <test name="CheckDepartmentAdd">
+        <classes>
+            <class name="specs.ContentAdmin.DepartmentList.CheckDepartmentAdd" />
+        </classes>
+    </test>
+    <test name="CheckPressReleaseAdd">
+        <classes>
+            <class name="specs.ContentAdmin.PressReleases.CheckPressReleaseAdd" />
+        </classes>
+    </test>
+    <test name="CheckPresentationAdd">
+        <classes>
+            <class name="specs.ContentAdmin.Presentations.CheckPresentationAdd" />
+        </classes>
+    </test>
+
 
     <test name="CreateNewUser">
         <classes>

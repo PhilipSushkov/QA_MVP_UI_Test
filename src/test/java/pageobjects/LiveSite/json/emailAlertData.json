@@ -22,7 +22,7 @@
       "do_assertions": true,
       "name": "Checking for not having any mailing lists selected",
       "fail": true,
-      "mailing_list": true,
+      "mailing_list": false,
       "unsubscribe": false,
       "email": "email@email.com",
       "expected": "Mailing list selection is required."
@@ -31,7 +31,7 @@
       "do_assertions": true,
       "name": "Checking for successful subscription",
       "fail": false,
-      "mailing_list": false,
+      "mailing_list": true,
       "unsubscribe": false,
       "email": "test@q4websystems.com",
       "expected": "Thank you for signing up for the mailing lists. An activation email will be sent to you shortly."

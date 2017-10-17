@@ -34,8 +34,8 @@ public abstract class AbstractSpec extends util.Functions {
 // Determines which environment the test suite will run on but can be overridden by command line
 //------------------------------------------------------------------------------
     //private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.DEVELOP;
-    private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.BETA;
-    //private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.PRODUCTION;
+    //private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.BETA;
+    private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.PRODUCTION;
 //------------------------------------------------------------------------------
 
     private static final EnvironmentType activeEnvironment = setupEnvironment();
@@ -161,7 +161,7 @@ public abstract class AbstractSpec extends util.Functions {
         driver = new ChromeDriver(capabilities);
 
         driver.manage().timeouts().implicitlyWait(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
-        driver.manage().timeouts().pageLoadTimeout(180, TimeUnit.SECONDS); //Increased to 20 to perhaps reduce timeouts?
+        driver.manage().timeouts().pageLoadTimeout(40, TimeUnit.SECONDS); //Increased to 20 to perhaps reduce timeouts?
         //driver.manage().window().setSize(new Dimension(1400, 1400));
         driver.get(desktopUrl.toString());
 
