@@ -1,5 +1,6 @@
 package pageobjects.EmailAdmin.Compose;
 
+import com.google.api.client.json.Json;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -11,6 +12,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static specs.AbstractSpec.propUIContentAdmin;
 import static specs.AbstractSpec.propUIEmailAdmin;
@@ -23,8 +26,9 @@ import static specs.AbstractSpec.propUIEmailAdmin;
 public class ComposeMailingListMessage extends AbstractPageObject {
     private static By moduleTitle, selectTemplate, selectTo, inputFrom, inputSubject,
             textareaBody, textareaBodyContent, textarea, inputCreatedBy, inputSendTestMessageTo,
-            buttonSendTestEmail, buttonSave, buttonSendEmail,
-            successMsgTestSend, successMsgUpdate, successMsgSend;
+            buttonSendTestEmail, buttonSave, buttonSendEmail, buttonCancel, buttonDelete,
+            successMsgTestSend, successMsgUpdate, successMsgSend, successMsgDelete,
+            spanSentOn;
 
     private static String sPathToFile, sFileJson;
     private static JSONParser parser;
@@ -47,9 +51,13 @@ public class ComposeMailingListMessage extends AbstractPageObject {
         buttonSendTestEmail = By.xpath(propUIEmailAdmin.getProperty("button_SendTestEmail"));
         buttonSave = By.xpath(propUIEmailAdmin.getProperty("button_Save"));
         buttonSendEmail = By.xpath(propUIEmailAdmin.getProperty("button_SendEmail"));
+        buttonCancel = By.xpath(propUIEmailAdmin.getProperty("button_Cancel"));
+        buttonDelete = By.xpath(propUIEmailAdmin.getProperty("button_Delete"));
         successMsgTestSend = By.xpath(propUIEmailAdmin.getProperty("success_Msg_TestSend"));
         successMsgUpdate = By.xpath(propUIEmailAdmin.getProperty("success_Msg_Update"));
         successMsgSend = By.xpath(propUIEmailAdmin.getProperty("success_Msg_Send"));
+        successMsgDelete = By.xpath(propUIEmailAdmin.getProperty("success_Msg_Delete"));
+        spanSentOn = By.xpath(propUIEmailAdmin.getProperty("span_SentOn"));
 
         parser = new JSONParser();
 
@@ -70,7 +78,7 @@ public class ComposeMailingListMessage extends AbstractPageObject {
     }
 
     public String saveMail(JSONObject data, String name) {
-        String template, to, from, subject, created_by, send_test_message_to, body_text;
+        String template, to, from, subject, created_by, body_text;
 
         JSONObject jsonObj = new JSONObject();
         JSONObject jsonMain = new JSONObject();
@@ -121,9 +129,6 @@ public class ComposeMailingListMessage extends AbstractPageObject {
             findElement(inputCreatedBy).sendKeys(created_by);
             jsonObj.put("created_by",created_by);
 
-            send_test_message_to = data.get("send_test_message_to").toString();
-            findElement(inputSendTestMessageTo).sendKeys(send_test_message_to);
-            jsonObj.put("send_test_message_to",send_test_message_to);
 
             findElement(buttonSave).click();
             Thread.sleep(DEFAULT_PAUSE);
@@ -153,10 +158,38 @@ public class ComposeMailingListMessage extends AbstractPageObject {
         return null;
     }
 
-    public String sendTestMail(){
+    public String sendTestMail(JSONObject data, String name){
+        String  send_test_message_to;
+        JSONObject jsonObj = new JSONObject();
+        JSONObject jsonMain = new JSONObject();
+
         try{
+            try {
+                FileReader readFile = new FileReader(sPathToFile + sFileJson);
+                jsonMain = (JSONObject) parser.parse(readFile);
+            } catch (ParseException e) {
+            }
+            waitForElement(buttonCancel);
+            findElement(buttonCancel).click();
+            By editBtn = By.xpath("//td[(text()='"+name+"')]/parent::tr/td/input[contains(@id, 'btnEdit')][contains(@id, 'MailingList')]");
+            waitForElement(editBtn);
+            findElement(editBtn).click();
+
+            send_test_message_to = data.get("send_test_message_to").toString();
+            findElement(inputSendTestMessageTo).sendKeys(send_test_message_to);
+            jsonObj.put("send_test_message_to",send_test_message_to);
             findElement(buttonSendTestEmail).click();
             waitForElementText(successMsgTestSend);
+
+            try {
+                FileWriter writeFile = new FileWriter(sPathToFile + sFileJson);
+                writeFile.write(jsonMain.toJSONString().replace("\\", ""));
+                writeFile.flush();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             return "PASS";
         }
         catch(Exception e){
@@ -167,6 +200,12 @@ public class ComposeMailingListMessage extends AbstractPageObject {
 
     public String updateAndSendMail(JSONObject data, String name){
         try{
+            waitForElement(buttonCancel);
+            findElement(buttonCancel).click();
+            By editBtn = By.xpath("//td[(text()='"+name+"')]/parent::tr/td/input[contains(@id, 'btnEdit')][contains(@id, 'MailingList')]");
+            waitForElement(editBtn);
+            findElement(editBtn).click();
+
             JSONObject jsonObj = new JSONObject();
             JSONObject jsonMain = new JSONObject();
             waitForElement(buttonSave);
@@ -235,6 +274,36 @@ public class ComposeMailingListMessage extends AbstractPageObject {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public String deleteMail(JSONObject data, String name){
+        By editBtn = By.xpath("//td[(text()='"+name+"')]/parent::tr/td/input[contains(@id, 'btnEdit')][contains(@id, 'MailingList')]");
+        waitForElement(buttonDelete);
+        findElement(buttonDelete).click();
+        waitForElement(successMsgDelete);
+        if(checkElementExists(editBtn) == null)
+            return "DELETE SUCCESSFUL";
+        else
+            return null;
+    }
+
+    public String getSentOnInfo(){
+        waitForElement(spanSentOn);
+        return findElement(spanSentOn).getText();
+    }
+
+    public static boolean isValidFormat(String format, String value) {
+        Date date = null;
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat(format);
+            date = sdf.parse(value);
+            if (!value.equals(sdf.format(date))) {
+                date = null;
+            }
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+        return date != null;
     }
 
 

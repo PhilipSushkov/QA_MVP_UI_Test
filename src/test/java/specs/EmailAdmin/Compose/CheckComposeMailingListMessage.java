@@ -1,5 +1,6 @@
 package specs.EmailAdmin.Compose;
 
+import com.sun.jna.platform.win32.OaIdl;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -54,30 +55,65 @@ public class CheckComposeMailingListMessage extends AbstractSpec {
         loginPage.loginUser();
     }
 
-    @Test(dataProvider = DATA , priority = 1)
-    public void checkCompose(JSONObject data) throws Exception{
+    @Test(priority = 1)
+    public void checkTitle() throws Exception{
+        dashboard.openPageFromMenu(emailAdminMenuButton, composeMenuItem);
         final String expectedTitle = "Mailing List Messages Admin";
+        Assert.assertEquals(composeMailingListMessage.getTitle(), expectedTitle, "Actual Mailing List Messages Admin page Title doesn't match to expected");
+    }
+
+
+    @Test(dataProvider = DATA, priority = 2)
+    public void checkDeleteCompose(JSONObject data) throws Exception{
         String sMailingName = data.get(MAIL_NAME).toString();
 
         dashboard.openPageFromMenu(emailAdminMenuButton, composeMenuItem);
-
-        Assert.assertNotNull(composeMailingListMessage.getUrl());
-        Assert.assertEquals(composeMailingListMessage.getTitle(), expectedTitle, "Actual Mailing List Messages Admin page Title doesn't match to expected");
         Assert.assertNotNull(composeMailingListMessage.saveMail(data, sMailingName),"New "+MAIL_NAME+" didn't save properly");
-        Assert.assertNotNull(composeMailingListMessage.sendTestMail(),"New "+MAIL_NAME+" didn't send properly" );
-        Assert.assertNotNull(functions.getSpecificMail("test@q4websystems.com", "testing!" ,data.get(MAIL_NAME).toString()),"New "+MAIL_NAME+" is not received" );
-        functions.deleteMail("test@q4websystems.com", "testing!" ,data.get(MAIL_NAME).toString());
-        Assert.assertNull(functions.getSpecificMail("test@q4websystems.com", "testing!" ,data.get(MAIL_NAME).toString()),"New "+MAIL_NAME+" is not deleted properly" );
+        if (data.get("subject_ch") != null){
+            Assert.assertNotNull(composeMailingListMessage.deleteMail(data, data.get("subject_ch").toString()), "New "+MAIL_NAME+" is not deleted from list properly");
+        }
+        else {
+            Assert.assertNotNull(composeMailingListMessage.deleteMail(data, sMailingName), "New "+MAIL_NAME+" is not deleted from list properly");
+
+        }
+    }
+
+    @Test(dataProvider = DATA , priority = 3)
+    public void checkSaveCompose(JSONObject data) throws Exception{
+        String sMailingName = data.get(MAIL_NAME).toString();
+
+        dashboard.openPageFromMenu(emailAdminMenuButton, composeMenuItem);
+        Assert.assertNotNull(composeMailingListMessage.saveMail(data, sMailingName),"New "+MAIL_NAME+" didn't save properly");
+        Assert.assertEquals(composeMailingListMessage.getSentOnInfo(),"Not Sent","Sent On status should be Not Sent (After Save)");
+    }
+
+    @Test(dataProvider = DATA, priority = 4)
+    public void checkSendTestCompose(JSONObject data) throws Exception{
+        String sMailingName = data.get(MAIL_NAME).toString();
+
+        Assert.assertNotNull(composeMailingListMessage.sendTestMail(data, sMailingName),"New "+MAIL_NAME+" didn't test send properly" );
+        Assert.assertEquals(composeMailingListMessage.getSentOnInfo(),"Not Sent","Sent On status should be Not Sent (After Sent Test Email)");
+        Assert.assertNotNull(functions.getSpecificMail("test@q4websystems.com", "testing!" , sMailingName),"New "+MAIL_NAME+" is not received" );
+        functions.deleteMail("test@q4websystems.com", "testing!" ,sMailingName);
+        Assert.assertNull(functions.getSpecificMail("test@q4websystems.com", "testing!" ,sMailingName),"New "+MAIL_NAME+" is not deleted properly" );
+    }
+
+    @Test(dataProvider = DATA, priority = 5)
+    public void checkUpdateAndSendCompose(JSONObject data) throws Exception{
+        String sMailingName = data.get(MAIL_NAME).toString();
+        dashboard.openPageFromMenu(emailAdminMenuButton, composeMenuItem);
         Assert.assertNotNull(composeMailingListMessage.updateAndSendMail(data, sMailingName),"New "+MAIL_NAME+" didn't update and send properly");
+        Assert.assertTrue(composeMailingListMessage.isValidFormat("yyyy/MM/dd HH:mm:ss",composeMailingListMessage.getSentOnInfo()),"Sent On status is wrong");
+        System.out.println("Email Sent On: " + composeMailingListMessage.getSentOnInfo());
         if (data.get("subject_ch") != null){
             Assert.assertNotNull(functions.getSpecificMail("test@q4websystems.com", "testing!", data.get("subject_ch").toString()), "New " + MAIL_NAME + " is not received");
             functions.deleteMail("test@q4websystems.com", "testing!", data.get("subject_ch").toString());
-            Assert.assertNull(functions.getSpecificMail("test@q4websystems.com", "testing!", data.get("subject_ch").toString()), "New " + MAIL_NAME + " is not deleted properly");
+            Assert.assertNull(functions.getSpecificMail("test@q4websystems.com", "testing!", data.get("subject_ch").toString()), "New " + MAIL_NAME + " is not deleted from mailbox properly");
         }
         else {
-            Assert.assertNotNull(functions.getSpecificMail("test@q4websystems.com", "testing!", data.get(MAIL_NAME).toString()), "New " + MAIL_NAME + " is not received");
-            functions.deleteMail("test@q4websystems.com", "testing!", data.get(MAIL_NAME).toString());
-            Assert.assertNull(functions.getSpecificMail("test@q4websystems.com", "testing!", data.get(MAIL_NAME).toString()), "New " + MAIL_NAME + " is not deleted properly");
+            Assert.assertNotNull(functions.getSpecificMail("test@q4websystems.com", "testing!", sMailingName), "New " + MAIL_NAME + " is not received");
+            functions.deleteMail("test@q4websystems.com", "testing!", sMailingName);
+            Assert.assertNull(functions.getSpecificMail("test@q4websystems.com", "testing!", sMailingName), "New " + MAIL_NAME + " is not deleted from mailbox properly");
         }
     }
 

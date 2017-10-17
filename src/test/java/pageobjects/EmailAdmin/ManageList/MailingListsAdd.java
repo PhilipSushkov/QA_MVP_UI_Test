@@ -6,21 +6,23 @@ import org.json.simple.parser.ParseException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import pageobjects.AbstractPageObject;
-import pageobjects.PageAdmin.WorkflowState;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URL;
 
 import static specs.AbstractSpec.propUIContentAdmin;
 import static specs.AbstractSpec.propUIEmailAdmin;
-/*
+
+/**
+ * Created by charleszheng on 2017-10-17.
+ */
+
 public class MailingListsAdd extends AbstractPageObject {
     private static By moduleTitle, mailingListNameInput, descriptionTextarea, activationEmailSelect;
     private static By unsubscribeEmailSelect, activeCheckbox, publicYesCheckbox, publicNoCheckbox, saveButton,
-                    cancelBtn, addNewLink;
+                    cancelBtn, addNewLink, successMsg;
 
     private static String sPathToFile, sFileJson;
     private static JSONParser parser;
@@ -43,6 +45,7 @@ public class MailingListsAdd extends AbstractPageObject {
         addNewLink = By.xpath(propUIContentAdmin.getProperty("input_AddNew"));
         saveButton = By.xpath(propUIEmailAdmin.getProperty("button_Save"));
         parser = new JSONParser();
+        successMsg = By.xpath(propUIContentAdmin.getProperty("msg_Success"));
 
         sPathToFile = System.getProperty("user.dir") + propUIEmailAdmin.getProperty("dataPath_ManageList");
         sFileJson = propUIEmailAdmin.getProperty("json_ManageList");
@@ -58,11 +61,9 @@ public class MailingListsAdd extends AbstractPageObject {
 
     public String saveMailingLists(JSONObject data, String name) {
         String mailing_list_name, description, activation_email, unsubscribe_email;
-        Boolean active;
+        Boolean active, bool_public;
         JSONObject jsonObj = new JSONObject();
         JSONObject jsonMain = new JSONObject();
-        JSONObject  sObj;
-        JSONObject  aObj;
 
         waitForElement(addNewLink);
         findElement(addNewLink).click();
@@ -81,99 +82,53 @@ public class MailingListsAdd extends AbstractPageObject {
             jsonObj.put("mailing_list_name", mailing_list_name);
 
             description = data.get("description").toString();
-            findElement(des).clear();
-            findElement(eventEndDate).sendKeys(description);
+            findElement(descriptionTextarea).clear();
+            findElement(descriptionTextarea).sendKeys(description);
             jsonObj.put("description", description);
 
-            start_time_hour = data.get("start_time_hour").toString();
-            findElement(startTimeHourSelect).sendKeys(start_time_hour);
-            jsonObj.put("start_time_hour", start_time_hour);
+            activation_email = data.get("activation_email").toString();
+            findElement(activationEmailSelect).clear();
+            findElement(activationEmailSelect).sendKeys(activation_email);
+            jsonObj.put("activation_email", activation_email);
 
-            start_time_min = data.get("start_time_min").toString();
-            findElement(startTimeMinSelect).sendKeys(start_time_min);
-            jsonObj.put("start_time_min", start_time_min);
-
-            end_time_hour = data.get("end_time_hour").toString();
-            findElement(endTimeHourSelect).sendKeys(end_time_hour);
-            jsonObj.put("end_time_hour", end_time_hour);
-
-            end_time_min = data.get("end_time_min").toString();
-            findElement(endTimeMinSelect).sendKeys(end_time_min);
-            jsonObj.put("end_time_min", end_time_min);
-
-            time_zone = data.get("time_zone").toString();
-            findElement(timeZone).sendKeys(time_zone);
-            jsonObj.put("time_zone", time_zone);
-
-            event_title= data.get("event_title").toString();
-            findElement(eventTitle).clear();
-            findElement(eventTitle).sendKeys(event_title);
-            jsonObj.put("event_title", event_title);
-
-            tags = data.get("tags").toString();
-            findElement(tagsInput).clear();
-            findElement(tagsInput).sendKeys(tags);
-            jsonObj.put("tags", tags);
-
-            sObj = (JSONObject) data.get("speakers");
-
-            speaker_name = sObj.get("speaker_name").toString();
-            findElement(speakerName).clear();
-            findElement(speakerName).sendKeys(speaker_name);
-            jsonObj.put("speaker_name", speaker_name);
-
-            speaker_position = sObj.get("speaker_position").toString();
-            findElement(speakerPosition).clear();
-            findElement(speakerPosition).sendKeys(speaker_position);
-            jsonObj.put("speaker_position", speaker_position);
-
-
-            aObj = (JSONObject) data.get("attachments");
-
-            attach_title = aObj.get("attach_title").toString();
-            findElement(attachTitle).clear();
-            findElement(attachTitle).sendKeys(attach_title);
-            jsonObj.put("attach_title", attach_title);
-
-            findElement(attachType).click();
-
-            attach_file = aObj.get("attach_file").toString();
-            findElement(attachFile).clear();
-            findElement(attachFile).sendKeys(attach_file);
-            jsonObj.put("attach_file", attach_file);
-
-
-            findElement(btn_SpeakerOK).click();
-            findElement(btn_AttachOk).click();
+            unsubscribe_email = data.get("unsubscribe_email").toString();
+            findElement(unsubscribeEmailSelect).clear();
+            findElement(unsubscribeEmailSelect).sendKeys(unsubscribe_email);
+            jsonObj.put("unsubscribe_email", unsubscribe_email);
 
             // Save Active checkbox
             active = Boolean.parseBoolean(data.get("active").toString());
             jsonObj.put("active", Boolean.parseBoolean(data.get("active").toString()));
             if (active) {
-                if (!Boolean.parseBoolean(findElement(activeChk).getAttribute("checked"))) {
-                    findElement(activeChk).click();
+                if (!Boolean.parseBoolean(findElement(activeCheckbox).getAttribute("checked"))) {
+                    findElement(activeCheckbox).click();
                 } else {
                 }
             } else {
-                if (!Boolean.parseBoolean(findElement(activeChk).getAttribute("checked"))) {
+                if (!Boolean.parseBoolean(findElement(activeCheckbox).getAttribute("checked"))) {
                 } else {
-                    findElement(activeChk).click();
+                    findElement(activeCheckbox).click();
                 }
             }
 
-            URL url = new URL(getUrl());
-            String[] params = url.getQuery().split("&");
-            JSONObject jsonURLQuery = new JSONObject();
-            for (String param:params) {
-                jsonURLQuery.put(param.split("=")[0], param.split("=")[1]);
+            //Save Public checkbox
+            bool_public = Boolean.parseBoolean(data.get("public").toString());
+            jsonObj.put("public", Boolean.parseBoolean(data.get("public").toString()));
+            if (bool_public) {
+                if (!Boolean.parseBoolean(findElement(publicYesCheckbox).getAttribute("checked"))) {
+                    findElement(publicYesCheckbox).click();
+                } else {
+                }
+            } else {
+                if (!Boolean.parseBoolean(findElement(publicNoCheckbox).getAttribute("checked"))) {
+                } else {
+                    findElement(publicNoCheckbox).click();
+                }
             }
-            jsonObj.put("url_query", jsonURLQuery);
 
-            findElement(saveBtn).click();
+            findElement(saveButton).click();
             Thread.sleep(DEFAULT_PAUSE);
             waitForElement(successMsg);
-
-            jsonObj.put("workflow_state", WorkflowState.IN_PROGRESS.state());
 
             jsonMain.put(name, jsonObj);
 
@@ -188,7 +143,7 @@ public class MailingListsAdd extends AbstractPageObject {
             }
 
             System.out.println(name + ": "+PAGE_NAME+" has been created");
-            return findElement(workflowStateSpan).getText();
+            return "PASS";
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -200,8 +155,3 @@ public class MailingListsAdd extends AbstractPageObject {
 }
 
 
-
-
-
-}
-*/
