@@ -3,7 +3,7 @@
     {
       "do_assertions": true,
       "template": "Press Release Template - English",
-      "to": "Press Release",
+      "to": "Test List",
       "from": "Test <test@q4websystems.com>",
       "subject": "TestMail01",
       "subject_ch": "TestMail03",
@@ -16,7 +16,7 @@
     {
       "do_assertions": true,
       "template": "",
-      "to": "Press Release",
+      "to": "Test List",
       "from": "Test <test@q4websystems.com>",
       "subject": "TestMail02",
       "body_text": "This is a test",
