@@ -1,4 +1,4 @@
-package pageobjects.ContentAdmin.Presentations;
+package pageobjects.ContentAdmin.Events;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.Select;
@@ -21,30 +21,33 @@ import static specs.AbstractSpec.desktopUrl;
 import static specs.AbstractSpec.propUIContentAdmin;
 
 /**
- * Created by charleszheng on 2017-10-11.
+ * Created by charleszheng on 2017-10-12.
  */
 
-public class PresentationAdd extends AbstractPageObject{
-    private static By moduleTitle, timeHourSelect, timeMinSelect, presentationFileInput;
-    private static By pDateInput, tagsInput, publishBtn,pTitle;
-    private static By speakerName, speakerPosition, btn_SpeakerOK, speakerNameChk, speakerPositionChk;
+public class EventAdd extends AbstractPageObject{
+    private static By moduleTitle, startTimeHourSelect, startTimeMinSelect,endTimeHourSelect, endTimeMinSelect;
+    private static By eventStartDate, eventEndDate, tagsInput, publishBtn, eventTitle, timeZone;
+    private static By speakerName, speakerPosition, btn_SpeakerOK, speakerNameChk, speakerPositionChk, speakersAddNewBtn;
+    private static By attachTitle, attachFile, btn_AttachOk, attachTitleChk, attachFileChk, attachAddNewBtn, attachType;
     private static By currentContentSpan;
-    private static By activeChk, saveBtn, revertBtn, cancelBtn, deleteBtn, addNewLink, speakersAddNewBtn;
+    private static By activeChk, saveBtn, revertBtn, cancelBtn, deleteBtn, addNewLink;
     private static By workflowStateSpan, commentsTxt, successMsg, saveAndSubmitBtn;
-    private static By previewLnk;
     private static String sPathToFile, sFileJson;
     private static JSONParser parser;
     private static final long DEFAULT_PAUSE = 2500;
-    private final String PAGE_NAME="Presentation", SPEAKERS="speakers";
+    private final String PAGE_NAME="Event", SPEAKERS="speakers", ATTACHMENTS = "attachments";
 
-    public PresentationAdd(WebDriver driver) {
+    public EventAdd(WebDriver driver) {
         super(driver);
         moduleTitle = By.xpath(propUIContentAdmin.getProperty("spanModule_Title"));
-        timeHourSelect = By.xpath(propUIContentAdmin.getProperty("select_PresentationTimeHH"));
-        timeMinSelect = By.xpath(propUIContentAdmin.getProperty("select_PresentationTimeMM"));
-        presentationFileInput = By.xpath(propUIContentAdmin.getProperty("input_PresentationFile"));
-        pDateInput = By.xpath(propUIContentAdmin.getProperty("input_PresentationDate"));
-        pTitle = By.xpath(propUIContentAdmin.getProperty("input_PresentationTitle"));
+        startTimeHourSelect = By.xpath(propUIContentAdmin.getProperty("select_StartTimeHH"));
+        startTimeMinSelect = By.xpath(propUIContentAdmin.getProperty("select_StartTimeMM"));
+        endTimeHourSelect = By.xpath(propUIContentAdmin.getProperty("select_EndTimeHH"));
+        endTimeMinSelect = By.xpath(propUIContentAdmin.getProperty("select_EndTimeMM"));;
+        eventStartDate = By.xpath(propUIContentAdmin.getProperty("input_StartDate"));
+        eventEndDate = By.xpath(propUIContentAdmin.getProperty("input_EndDate"));
+        eventTitle = By.xpath(propUIContentAdmin.getProperty("input_eventTitle"));
+        timeZone = By.xpath(propUIContentAdmin.getProperty("select_StartTimeZone"));
         tagsInput = By.xpath(propUIContentAdmin.getProperty("input_Tags"));
         activeChk = By.xpath(propUIContentAdmin.getProperty("chk_Active"));
         saveBtn = By.xpath(propUIContentAdmin.getProperty("btn_Save"));
@@ -58,18 +61,25 @@ public class PresentationAdd extends AbstractPageObject{
         successMsg = By.xpath(propUIContentAdmin.getProperty("msg_Success"));
         saveAndSubmitBtn = By.xpath(propUIContentAdmin.getProperty("btn_SaveAndSubmit"));
         currentContentSpan = By.xpath(propUIContentAdmin.getProperty("span_CurrentContent"));
-        previewLnk = By.xpath(propUIContentAdmin.getProperty("lnk_Preview"));
         speakersAddNewBtn = By.xpath(propUIContentAdmin.getProperty("href_AddNewSpeakers"));
         speakerName = By.xpath(propUIContentAdmin.getProperty("input_SpeakerName")) ;
         speakerPosition = By.xpath(propUIContentAdmin.getProperty("input_SpeakerPosition")) ;
         btn_SpeakerOK = By.xpath(propUIContentAdmin.getProperty("btn_SpeakerOK"));
         speakerNameChk = By.xpath(propUIContentAdmin.getProperty("input_SpeakerName_Chk"));
         speakerPositionChk = By.xpath(propUIContentAdmin.getProperty("input_SpeakerPosition_Chk"));
+        attachAddNewBtn = By.xpath(propUIContentAdmin.getProperty("href_AddNewAttachments"));
+        attachTitle = By.xpath(propUIContentAdmin.getProperty("input_AttachmentTitle")) ;
+        attachFile = By.xpath(propUIContentAdmin.getProperty("input_AttachmentPathOnline")) ;
+        btn_AttachOk = By.xpath(propUIContentAdmin.getProperty("btn_AttachmentOK"));
+        attachTitleChk = By.xpath(propUIContentAdmin.getProperty("input_AttachmentTitle_Chk"));
+        attachFileChk = By.xpath(propUIContentAdmin.getProperty("input_AttachmentFile_Chk"));
+        attachType   = By.xpath(propUIContentAdmin.getProperty("input_AttachmentType"));
+
 
         parser = new JSONParser();
 
-        sPathToFile = System.getProperty("user.dir") + propUIContentAdmin.getProperty("dataPath_PresentationList");
-        sFileJson = propUIContentAdmin.getProperty("json_Presentation");
+        sPathToFile = System.getProperty("user.dir") + propUIContentAdmin.getProperty("dataPath_EventList");
+        sFileJson = propUIContentAdmin.getProperty("json_Event");
     }
 
     public String getTitle() {
@@ -80,20 +90,24 @@ public class PresentationAdd extends AbstractPageObject{
         return sTitle;
     }
 
-    public String savePresentation(JSONObject data, String name) {
-        String time_hour, time_min, presentation_file, presentation_date, tags, presentation_title,
+    public String saveEvent(JSONObject data, String name) {
+        String start_time_hour, start_time_min, end_time_hour, end_time_min, event_start_date, event_end_date, time_zone,
+                tags, event_title, attach_title, attach_file,
                 speaker_name, speaker_position;
 
         Boolean active;
         JSONObject jsonObj = new JSONObject();
         JSONObject jsonMain = new JSONObject();
         JSONObject  sObj;
+        JSONObject  aObj;
 
         waitForElement(addNewLink);
         findElement(addNewLink).click();
         waitForElement(saveBtn);
         waitForElement(speakersAddNewBtn);
         findElement(speakersAddNewBtn).click();
+        waitForElement(attachAddNewBtn);
+        findElement(attachAddNewBtn).click();
 
         try {
             try {
@@ -102,23 +116,40 @@ public class PresentationAdd extends AbstractPageObject{
             } catch (ParseException e) {
             }
 
-            presentation_date = data.get("presentation_date").toString();
-            findElement(pDateInput).clear();
-            findElement(pDateInput).sendKeys(presentation_date);
-            jsonObj.put("presentation_date", presentation_date);
+            event_start_date = data.get("event_start_date").toString();
+            findElement(eventStartDate).clear();
+            findElement(eventStartDate).sendKeys(event_start_date);
+            jsonObj.put("event_start_date", event_start_date);
 
-            time_hour = data.get("time_hour").toString();
-            findElement(timeHourSelect).sendKeys(time_hour);
-            jsonObj.put("time_hour", time_hour);
+            event_end_date = data.get("event_end_date").toString();
+            findElement(eventEndDate).clear();
+            findElement(eventEndDate).sendKeys(event_end_date);
+            jsonObj.put("event_end_date", event_end_date);
 
-            time_min = data.get("time_min").toString();
-            findElement(timeMinSelect).sendKeys(time_min);
-            jsonObj.put("time_min", time_min);
+            start_time_hour = data.get("start_time_hour").toString();
+            findElement(startTimeHourSelect).sendKeys(start_time_hour);
+            jsonObj.put("start_time_hour", start_time_hour);
 
-            presentation_title= data.get("presentation_title").toString();
-            findElement(pTitle).clear();
-            findElement(pTitle).sendKeys(presentation_title);
-            jsonObj.put("presentation_title", presentation_title);
+            start_time_min = data.get("start_time_min").toString();
+            findElement(startTimeMinSelect).sendKeys(start_time_min);
+            jsonObj.put("start_time_min", start_time_min);
+
+            end_time_hour = data.get("end_time_hour").toString();
+            findElement(endTimeHourSelect).sendKeys(end_time_hour);
+            jsonObj.put("end_time_hour", end_time_hour);
+
+            end_time_min = data.get("end_time_min").toString();
+            findElement(endTimeMinSelect).sendKeys(end_time_min);
+            jsonObj.put("end_time_min", end_time_min);
+
+            time_zone = data.get("time_zone").toString();
+            findElement(timeZone).sendKeys(time_zone);
+            jsonObj.put("time_zone", time_zone);
+
+            event_title= data.get("event_title").toString();
+            findElement(eventTitle).clear();
+            findElement(eventTitle).sendKeys(event_title);
+            jsonObj.put("event_title", event_title);
 
             tags = data.get("tags").toString();
             findElement(tagsInput).clear();
@@ -137,15 +168,24 @@ public class PresentationAdd extends AbstractPageObject{
             findElement(speakerPosition).sendKeys(speaker_position);
             jsonObj.put("speaker_position", speaker_position);
 
+
+            aObj = (JSONObject) data.get("attachments");
+
+            attach_title = aObj.get("attach_title").toString();
+            findElement(attachTitle).clear();
+            findElement(attachTitle).sendKeys(attach_title);
+            jsonObj.put("attach_title", attach_title);
+
+            findElement(attachType).click();
+
+            attach_file = aObj.get("attach_file").toString();
+            findElement(attachFile).clear();
+            findElement(attachFile).sendKeys(attach_file);
+            jsonObj.put("attach_file", attach_file);
+
+
             findElement(btn_SpeakerOK).click();
-
-            presentation_file = data.get("presentation_file").toString();
-            JavascriptExecutor js = (JavascriptExecutor) driver;
-            WebElement elemSrc =  driver.findElement(presentationFileInput);
-            String filename = presentation_file;
-            js.executeScript("arguments[0].setAttribute(arguments[1], arguments[2]);", elemSrc, "value", "files/"+filename);
-            jsonObj.put("presentation_filename", presentation_file);
-
+            findElement(btn_AttachOk).click();
 
             // Save Active checkbox
             active = Boolean.parseBoolean(data.get("active").toString());
@@ -198,9 +238,9 @@ public class PresentationAdd extends AbstractPageObject{
         return null;
     }
 
-    public String saveAndSubmitPresentation(JSONObject data, String name) throws InterruptedException {
+    public String saveAndSubmitEvent(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
-        By editBtn = By.xpath("//td[(text()='"+name+"')]/parent::tr/td/input[contains(@id, 'imgEdit')][contains(@id, 'Presentation')]");
+        By editBtn = By.xpath("//td[(text()='"+name+"')]/parent::tr/td/input[contains(@id, 'imgEdit')][contains(@id, 'Event')]");
 
         try {
             waitForElement(moduleTitle);
@@ -242,9 +282,10 @@ public class PresentationAdd extends AbstractPageObject{
         return null;
     }
 
-    public Boolean checkPresentation(JSONObject data, String name) throws InterruptedException {
+    public Boolean checkEvent(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
         JSONObject jsonSpeakers = (JSONObject) data.get(SPEAKERS);
+        JSONObject jsonAttachments = (JSONObject) data.get(ATTACHMENTS);
 
         try {
             try {
@@ -260,35 +301,63 @@ public class PresentationAdd extends AbstractPageObject{
 
             // Compare field values with entry data
             try {
-                if (!new Select(findElement(timeHourSelect)).getFirstSelectedOption().getText().trim().equals(data.get("time_hour").toString())) {
-                    System.out.println(findElement(timeHourSelect).getAttribute("value"));
-                    System.out.println(data.get("time_hour").toString());
-                    System.out.println("Fails time hour");
+                if (!new Select(findElement(startTimeHourSelect)).getFirstSelectedOption().getText().trim().equals(data.get("start_time_hour").toString())) {
+                    System.out.println(findElement(startTimeHourSelect).getAttribute("value"));
+                    System.out.println(data.get("start_time_hour").toString());
+                    System.out.println("Fails start time hour");
                     return false;
                 }
             } catch (NullPointerException e) {
             }
 
             try {
-                if (!new Select(findElement(timeMinSelect)).getFirstSelectedOption().getText().trim().equals(data.get("time_min").toString())) {
-                    System.out.println(findElement(timeMinSelect).getAttribute("value"));
-                    System.out.println(data.get("time_Min").toString());
-                    System.out.println("Fails time min");
+                if (!new Select(findElement(startTimeMinSelect)).getFirstSelectedOption().getText().trim().equals(data.get("start_time_min").toString())) {
+                    System.out.println(findElement(startTimeMinSelect).getAttribute("value"));
+                    System.out.println(data.get("start_time_min").toString());
+                    System.out.println("Fails start time min");
                     return false;
                 }
             } catch (NullPointerException e) {
             }
 
             try {
-                if (!findElement(pDateInput).getAttribute("value").equals(data.get("presentation_date").toString())) {
-                    System.out.println("Fails date");
+                if (!new Select(findElement(endTimeHourSelect)).getFirstSelectedOption().getText().trim().equals(data.get("end_time_hour").toString())) {
+                    System.out.println(findElement(endTimeHourSelect).getAttribute("value"));
+                    System.out.println(data.get("end_time_hour").toString());
+                    System.out.println("Fails end time hour");
                     return false;
                 }
             } catch (NullPointerException e) {
             }
 
             try {
-                if (!findElement(pTitle).getAttribute("value").equals(data.get("presentation_title").toString())) {
+                if (!new Select(findElement(endTimeMinSelect)).getFirstSelectedOption().getText().trim().equals(data.get("end_time_min").toString())) {
+                    System.out.println(findElement(endTimeMinSelect).getAttribute("value"));
+                    System.out.println(data.get("end_time_Min").toString());
+                    System.out.println("Fails end time min");
+                    return false;
+                }
+            } catch (NullPointerException e) {
+            }
+
+            try {
+                if (!findElement(eventStartDate).getAttribute("value").equals(data.get("start_date").toString())) {
+                    System.out.println("Fails start date");
+                    return false;
+                }
+            } catch (NullPointerException e) {
+            }
+
+            try {
+                if (!findElement(eventEndDate).getAttribute("value").equals(data.get("end_date").toString())) {
+                    System.out.println("Fails end date");
+                    return false;
+                }
+            } catch (NullPointerException e) {
+            }
+
+            try {
+                if (!findElement(eventTitle).getAttribute("value").equals(data.get("event_title").toString())) {
                     System.out.println("Fails title");
                     return false;
                 }
@@ -320,8 +389,20 @@ public class PresentationAdd extends AbstractPageObject{
             }
 
             try {
-                JavascriptExecutor js = (JavascriptExecutor)driver;
-                if (!js.executeScript("return arguments[0].value;", driver.findElement(presentationFileInput)).equals("files/" + data.get("presentation_file").toString())) {
+                if (!findElement(attachTitleChk).getAttribute("value").trim().equals(jsonAttachments.get("attach_title").toString())) {
+                    System.out.println(findElement(attachTitleChk).getAttribute("value").trim());
+                    System.out.println(jsonAttachments.get("attach_title").toString());
+                    System.out.println("Fails attachment title");
+                    return false;
+                }
+            } catch (NullPointerException e) {
+            }
+
+            try {
+                if (!findElement(attachFileChk).getAttribute("value").trim().equals(jsonAttachments.get("attach_file").toString())) {
+                    System.out.println(findElement(attachFileChk).getAttribute("value").trim());
+                    System.out.println(jsonAttachments.get("attach_file").toString());
+                    System.out.println("Fails attachment file");
                     return false;
                 }
             } catch (NullPointerException e) {
@@ -343,7 +424,7 @@ public class PresentationAdd extends AbstractPageObject{
         return null;
     }
 
-    public String publishPresentation(JSONObject data, String name) throws InterruptedException {
+    public String publishEvent(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
         JSONObject jsonObj = new JSONObject();
 
@@ -380,7 +461,7 @@ public class PresentationAdd extends AbstractPageObject{
             Thread.sleep(DEFAULT_PAUSE*2);
             driver.navigate().refresh();
 
-            System.out.println(jsonObj.get("presentation_title").toString() + ": New "+PAGE_NAME+" has been published");
+            System.out.println(jsonObj.get("event_title").toString() + ": New "+PAGE_NAME+" has been published");
             return findElement(workflowStateSpan).getText();
         } catch (IOException e) {
             e.printStackTrace();
@@ -389,7 +470,7 @@ public class PresentationAdd extends AbstractPageObject{
         return null;
     }
 
-    public String changeAndSubmitPresentation(JSONObject data, String name) throws InterruptedException {
+    public String changeAndSubmitEvent(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
         JSONObject jsonObj = new JSONObject();
 
@@ -407,19 +488,28 @@ public class PresentationAdd extends AbstractPageObject{
             waitForElement(saveAndSubmitBtn);
 
             try {
-                if (!data.get("presentation_title_ch").toString().isEmpty()) {
-                    findElement(pTitle).clear();
-                    findElement(pTitle).sendKeys(data.get("presentation_title_ch").toString());
-                    jsonObj.put("presentation_title", data.get("presentation_title_ch").toString());
+                if (!data.get("event_title_ch").toString().isEmpty()) {
+                    findElement(eventTitle).clear();
+                    findElement(eventTitle).sendKeys(data.get("event_title_ch").toString());
+                    jsonObj.put("event_title", data.get("event_title_ch").toString());
                 }
             } catch (NullPointerException e) {
             }
 
             try {
-                if (!data.get("presentation_date_ch").toString().isEmpty()) {
-                    findElement(pDateInput).clear();
-                    findElement(pDateInput).sendKeys(data.get("presentation_date_ch").toString());
-                    jsonObj.put("presentation_date", data.get("presentation_date_ch").toString());
+                if (!data.get("event_start_date_ch").toString().isEmpty()) {
+                    findElement(eventStartDate).clear();
+                    findElement(eventStartDate).sendKeys(data.get("event_start_date_ch").toString());
+                    jsonObj.put("event_start_date", data.get("event_start_date_ch").toString());
+                }
+            } catch (NullPointerException e) {
+            }
+
+            try {
+                if (!data.get("event_end_date_ch").toString().isEmpty()) {
+                    findElement(eventEndDate).clear();
+                    findElement(eventEndDate).sendKeys(data.get("event_end_date_ch").toString());
+                    jsonObj.put("event_end_date", data.get("event_end_date_ch").toString());
                 }
             } catch (NullPointerException e) {
             }
@@ -433,16 +523,6 @@ public class PresentationAdd extends AbstractPageObject{
             } catch (NullPointerException e) {
             }
 
-            try {
-                if (!data.get("presentation_file_ch").toString().isEmpty()) {
-                    JavascriptExecutor js = (JavascriptExecutor) driver;
-                    WebElement elemSrc =  driver.findElement(presentationFileInput);
-                    String filename = data.get("presentation_file_ch").toString();
-                    js.executeScript("arguments[0].setAttribute(arguments[1], arguments[2]);", elemSrc, "value", "files/"+filename);
-                    jsonObj.put("presentation_filename", filename);
-                }
-            } catch (NullPointerException e) {
-            }
 
             jsonObj.put("active", Boolean.parseBoolean(data.get("active").toString()));
             try {
@@ -485,7 +565,7 @@ public class PresentationAdd extends AbstractPageObject{
             Thread.sleep(DEFAULT_PAUSE);
             waitForElement(workflowStateSpan);
 
-            System.out.println(jsonObj.get("presentation_title").toString() + ": New "+PAGE_NAME+" changes have been submitted");
+            System.out.println(jsonObj.get("event_title").toString() + ": New "+PAGE_NAME+" changes have been submitted");
             return findElement(workflowStateSpan).getText();
         } catch (IOException e) {
             e.printStackTrace();
@@ -494,7 +574,7 @@ public class PresentationAdd extends AbstractPageObject{
         return null;
     }
 
-    public String revertToLivePresentation(String name) throws InterruptedException {
+    public String revertToLiveEvent(String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
         JSONObject jsonObj = new JSONObject();
 
@@ -528,7 +608,7 @@ public class PresentationAdd extends AbstractPageObject{
                 Thread.sleep(DEFAULT_PAUSE);
                 waitForElement(workflowStateSpan);
 
-                System.out.println(jsonObj.get("presentation_title").toString()+ ": "+PAGE_NAME+" has been reverted to Live");
+                System.out.println(jsonObj.get("event_title").toString()+ ": "+PAGE_NAME+" has been reverted to Live");
                 return findElement(workflowStateSpan).getText();
             }
 
@@ -539,9 +619,10 @@ public class PresentationAdd extends AbstractPageObject{
         return null;
     }
 
-    public Boolean checkPresentationCh(JSONObject data, String name) throws InterruptedException {
+    public Boolean checkEventCh(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
         JSONObject jsonSpeakers = (JSONObject) data.get(SPEAKERS);
+        JSONObject jsonAttachments = (JSONObject) data.get(ATTACHMENTS);
 
         try {
             try {
@@ -558,35 +639,63 @@ public class PresentationAdd extends AbstractPageObject{
 
             // Compare field values with entry data
             try {
-                if (!new Select(findElement(timeHourSelect)).getFirstSelectedOption().getText().trim().equals(data.get("time_hour").toString())) {
-                    System.out.println(findElement(timeHourSelect).getAttribute("value"));
-                    System.out.println(data.get("time_hour").toString());
-                    System.out.println("Fails time hour");
+                if (!new Select(findElement(startTimeHourSelect)).getFirstSelectedOption().getText().trim().equals(data.get("start_time_hour").toString())) {
+                    System.out.println(findElement(startTimeHourSelect).getAttribute("value"));
+                    System.out.println(data.get("start_time_hour").toString());
+                    System.out.println("Fails start time hour");
                     return false;
                 }
             } catch (NullPointerException e) {
             }
 
             try {
-                if (!new Select(findElement(timeMinSelect)).getFirstSelectedOption().getText().trim().equals(data.get("time_min").toString())) {
-                    System.out.println(findElement(timeMinSelect).getAttribute("value"));
-                    System.out.println(data.get("time_Min").toString());
-                    System.out.println("Fails time min");
+                if (!new Select(findElement(startTimeMinSelect)).getFirstSelectedOption().getText().trim().equals(data.get("start_time_min").toString())) {
+                    System.out.println(findElement(startTimeMinSelect).getAttribute("value"));
+                    System.out.println(data.get("start_time_min").toString());
+                    System.out.println("Fails start time min");
                     return false;
                 }
             } catch (NullPointerException e) {
             }
 
             try {
-                if (!findElement(pDateInput).getAttribute("value").equals(data.get("presentation_date_ch").toString())) {
-                    System.out.println("Fails date");
+                if (!new Select(findElement(endTimeHourSelect)).getFirstSelectedOption().getText().trim().equals(data.get("end_time_hour").toString())) {
+                    System.out.println(findElement(endTimeHourSelect).getAttribute("value"));
+                    System.out.println(data.get("end_time_hour").toString());
+                    System.out.println("Fails end time hour");
                     return false;
                 }
             } catch (NullPointerException e) {
             }
 
             try {
-                if (!findElement(pTitle).getAttribute("value").equals(data.get("presentation_title_ch").toString())) {
+                if (!new Select(findElement(endTimeMinSelect)).getFirstSelectedOption().getText().trim().equals(data.get("end_time_min").toString())) {
+                    System.out.println(findElement(endTimeMinSelect).getAttribute("value"));
+                    System.out.println(data.get("end_time_min").toString());
+                    System.out.println("Fails end time min");
+                    return false;
+                }
+            } catch (NullPointerException e) {
+            }
+
+            try {
+                if (!findElement(eventStartDate).getAttribute("value").equals(data.get("event_start_date_ch").toString())) {
+                    System.out.println("Fails start date");
+                    return false;
+                }
+            } catch (NullPointerException e) {
+            }
+
+            try {
+                if (!findElement(eventEndDate).getAttribute("value").equals(data.get("event_end_date_ch").toString())) {
+                    System.out.println("Fails end date");
+                    return false;
+                }
+            } catch (NullPointerException e) {
+            }
+
+            try {
+                if (!findElement(eventTitle).getAttribute("value").equals(data.get("event_title_ch").toString())) {
                     System.out.println("Fails title");
                     return false;
                 }
@@ -624,8 +733,14 @@ public class PresentationAdd extends AbstractPageObject{
             }
 
             try {
-                JavascriptExecutor js = (JavascriptExecutor)driver;
-                if (!js.executeScript("return arguments[0].value;", driver.findElement(presentationFileInput)).equals("files/" + data.get("presentation_file_ch").toString())) {
+                if (!findElement(attachTitleChk).getAttribute("value").trim().equals(jsonAttachments.get("attach_title").toString())) {
+                    return false;
+                }
+            } catch (NullPointerException e) {
+            }
+
+            try {
+                if (!findElement(attachFileChk).getAttribute("value").trim().equals(jsonAttachments.get("attach_file").toString())) {
                     return false;
                 }
             } catch (NullPointerException e) {
@@ -639,7 +754,7 @@ public class PresentationAdd extends AbstractPageObject{
             }
 
 
-            System.out.println(obj.get("presentation_title").toString()+ ": New "+PAGE_NAME+" has been checked");
+            System.out.println(obj.get("event_title").toString()+ ": New "+PAGE_NAME+" has been checked");
             return true;
         } catch (IOException e) {
             e.printStackTrace();
@@ -648,7 +763,7 @@ public class PresentationAdd extends AbstractPageObject{
         return null;
     }
 
-    public String setupAsDeletedPresentation(String name) throws InterruptedException {
+    public String setupAsDeletedEvent(String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
         JSONObject jsonObj = new JSONObject();
 
@@ -695,7 +810,7 @@ public class PresentationAdd extends AbstractPageObject{
             file.write(jsonMain.toJSONString().replace("\\", ""));
             file.flush();
 
-            System.out.println(jsonObj.get("presentation_title").toString()+ ": "+PAGE_NAME+" set up as deleted");
+            System.out.println(jsonObj.get("event_title").toString()+ ": "+PAGE_NAME+" set up as deleted");
             return findElement(currentContentSpan).getText();
         } catch (IOException e) {
             e.printStackTrace();
@@ -704,7 +819,7 @@ public class PresentationAdd extends AbstractPageObject{
         return null;
     }
 
-    public String removePresentation(JSONObject data, String name) throws InterruptedException {
+    public String removeEvent(JSONObject data, String name) throws InterruptedException {
         JSONObject jsonMain = new JSONObject();
 
         try {
@@ -760,7 +875,7 @@ public class PresentationAdd extends AbstractPageObject{
         return null;
     }
 
-    public Boolean publicPresentation(JSONObject data, String name) throws InterruptedException {
+    public Boolean publicEvent(JSONObject data, String name) throws InterruptedException {
         try {
             JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sFileJson));
             JSONObject Obj = (JSONObject) jsonObject.get(name);
@@ -789,10 +904,10 @@ public class PresentationAdd extends AbstractPageObject{
                 driver.switchTo().window(tabs.get(1)).close();
                 driver.switchTo().window(tabs.get(0));
 
-                System.out.println(name + ": New Presentation Public has checked");
+                System.out.println(name + ": New Event Public has checked");
                 return true;
             }
-                else {
+            else {
                 driver.switchTo().window(tabs.get(1)).close();
                 driver.switchTo().window(tabs.get(0));
                 return false;
@@ -808,7 +923,7 @@ public class PresentationAdd extends AbstractPageObject{
         return null;
     }
 
-    public Boolean publicPresentationCh(JSONObject data, String name) throws InterruptedException {
+    public Boolean publicEventCh(JSONObject data, String name) throws InterruptedException {
         try {
             JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sFileJson));
             JSONObject Obj = (JSONObject) jsonObject.get(name);
@@ -833,11 +948,11 @@ public class PresentationAdd extends AbstractPageObject{
                 driver.findElement(By.tagName("body")).sendKeys("Keys.ESCAPE");
             }
 
-            if (driver.getTitle().contains(data.get("presentation_title_ch").toString())){
+            if (driver.getTitle().contains(data.get("event_title_ch").toString())){
                 driver.switchTo().window(tabs.get(1)).close();
                 driver.switchTo().window(tabs.get(0));
 
-                System.out.println(data.get("presentation_title_ch").toString() + ": New Presentation Public has checked");
+                System.out.println(data.get("event_title_ch").toString() + ": New Event Public has checked");
                 return true;
             }  else {
                 driver.switchTo().window(tabs.get(1)).close();
@@ -854,96 +969,6 @@ public class PresentationAdd extends AbstractPageObject{
 
         return null;
     }
-
- /*   public Boolean previewPresentation(JSONObject data, String name) throws InterruptedException {
-        try {
-            JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sFileJson));
-            JSONObject Obj = (JSONObject) jsonObject.get(name);
-
-            String pageUrl = getPageUrl(jsonObject, name);
-            driver.get(pageUrl);
-            Thread.sleep(DEFAULT_PAUSE);
-
-            findElement(previewLnk).click();
-
-            Thread.sleep(DEFAULT_PAUSE*3);
-            //    ((JavascriptExecutor)driver).executeScript("window.open()");
-            ArrayList<String> tabs = new ArrayList<> (driver.getWindowHandles());
-            driver.switchTo().window(tabs.get(1));
-            //       driver.get(getPreviewPageUrl(jsonObject,name));
-
-            dashboard.openPageFromMenu(investorBtn, presentationBtn);
-
-            if (findElement(By.xpath("//span[contains(@class,'ModuleHeadline')][contains(text(),'" + name + "')]")) != null) {
-                driver.switchTo().window(tabs.get(1)).close();
-                Thread.sleep(DEFAULT_PAUSE * 3);
-                driver.switchTo().window(tabs.get(0));
-
-                System.out.println(name + ": New Presentation Preview has been checked");
-                return true;
-            } else {
-                driver.switchTo().window(tabs.get(1)).close();
-                Thread.sleep(DEFAULT_PAUSE);
-                driver.switchTo().window(tabs.get(0));
-                return false;
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
-    public Boolean previewPresentationCh(JSONObject data, String name) throws InterruptedException {
-        try {
-            JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sFileJson));
-            JSONObject Obj = (JSONObject) jsonObject.get(name);
-
-            String pageUrl = getPageUrl(jsonObject, name);
-            driver.get(pageUrl);
-            Thread.sleep(DEFAULT_PAUSE);
-
-            findElement(previewLnk).click();
-
-            Thread.sleep(DEFAULT_PAUSE*3);
-            //    ((JavascriptExecutor)driver).executeScript("window.open()");
-            ArrayList<String> tabs = new ArrayList<> (driver.getWindowHandles());
-            driver.switchTo().window(tabs.get(1));
-            //       driver.get(getPreviewPageUrl(jsonObject,name));
-
-            dashboard.openPageFromMenu(investorBtn, presentationBtn);
-
-            if (findElement(By.xpath("//span[contains(@class,'ModuleHeadline')][contains(text(),'" + data.get("presentation_title_ch") + "')]")) != null) {
-                driver.switchTo().window(tabs.get(1)).close();
-                Thread.sleep(DEFAULT_PAUSE * 3);
-                driver.switchTo().window(tabs.get(0));
-
-                System.out.println(data.get("presentation_title_ch") + ": New Presentation Preview has been checked");
-                return true;
-            } else {
-                driver.switchTo().window(tabs.get(1)).close();
-                Thread.sleep(DEFAULT_PAUSE);
-                driver.switchTo().window(tabs.get(0));
-                return false;
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-
-        return null;
-    }*/
 
     public String getPageUrl(JSONObject obj, String name) {
         String sItemID = JsonPath.read(obj, "$.['"+name+"'].url_query.ItemID");
