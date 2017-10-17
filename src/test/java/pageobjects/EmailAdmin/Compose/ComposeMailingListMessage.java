@@ -1,6 +1,9 @@
 package pageobjects.EmailAdmin.Compose;
 
 import com.google.api.client.json.Json;
+import com.sun.mail.gimap.GmailFolder;
+import com.sun.mail.gimap.GmailRawSearchTerm;
+import com.sun.mail.gimap.GmailStore;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -8,12 +11,15 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import pageobjects.AbstractPageObject;
 
+import javax.mail.*;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Properties;
 
 import static specs.AbstractSpec.propUIContentAdmin;
 import static specs.AbstractSpec.propUIEmailAdmin;
@@ -277,14 +283,23 @@ public class ComposeMailingListMessage extends AbstractPageObject {
     }
 
     public String deleteMail(JSONObject data, String name){
+        waitForElement(buttonCancel);
+        findElement(buttonCancel).click();
         By editBtn = By.xpath("//td[(text()='"+name+"')]/parent::tr/td/input[contains(@id, 'btnEdit')][contains(@id, 'MailingList')]");
-        waitForElement(buttonDelete);
-        findElement(buttonDelete).click();
-        waitForElement(successMsgDelete);
-        if(checkElementExists(editBtn) == null)
+        if (checkElementExists(editBtn) == null)
             return "DELETE SUCCESSFUL";
-        else
-            return null;
+        else {
+            waitForElement(editBtn);
+            findElement(editBtn).click();
+
+            waitForElement(buttonDelete);
+            findElement(buttonDelete).click();
+            waitForElement(successMsgDelete);
+            if (checkElementExists(editBtn) == null)
+                return "DELETE SUCCESSFUL";
+            else
+                return null;
+        }
     }
 
     public String getSentOnInfo(){
@@ -304,6 +319,49 @@ public class ComposeMailingListMessage extends AbstractPageObject {
             ex.printStackTrace();
         }
         return date != null;
+    }
+
+    public static Message getSpecificComposeMail(String user, String password, String subjectID) throws InterruptedException, IOException {
+        //Use this one if the email in question has files
+
+        Properties props = System.getProperties();
+        props.setProperty("mail.store.protocol", "gimap");
+        Thread.sleep(10000);
+
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date = new Date();
+        System.out.println("Email checked at: " + dateFormat.format(date));
+
+        try {
+            Session session = Session.getDefaultInstance(props, null);
+            GmailStore store = (GmailStore) session.getStore("gimap");
+            store.connect("imap.gmail.com", user, password);
+            GmailFolder inbox = (GmailFolder) store.getFolder("INBOX");
+            inbox.open(Folder.READ_ONLY);
+            Message[] Messages = inbox.search(new GmailRawSearchTerm("subject:" + subjectID));
+
+            for (int i = 1; i <= 5; i++) {
+                if (Messages != null) {
+                    for (int j = 0; j < Messages.length; j++) {
+                        return Messages[j];
+                    }
+                }
+                else {
+                    System.out.println("attempt #" + i);
+                    Messages = inbox.search(new GmailRawSearchTerm("subject:" + subjectID));
+                    Thread.sleep(10000);
+                }
+            }
+
+            inbox.close(true);
+            store.close();
+
+        } catch (NoSuchProviderException e) {
+            e.printStackTrace();
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 

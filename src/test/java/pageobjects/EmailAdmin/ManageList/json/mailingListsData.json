@@ -3,6 +3,7 @@
     {
       "do_assertions": true,
       "mailing_list_name": "TestMailingList01",
+      "mailing_list_name_ch": "TestMailingList03",
       "description": "This is a test",
       "activation_email": "Activation Email",
       "unsubscribe_email": "Unsubscribe Message",
