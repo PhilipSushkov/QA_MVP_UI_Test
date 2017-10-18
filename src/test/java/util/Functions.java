@@ -306,16 +306,9 @@ public class Functions {
             inbox.open(Folder.READ_ONLY);
             Message[] Messages = inbox.search(new GmailRawSearchTerm("subject:" + subjectID));
 
-            for (int i = 1; i <= 5; i++) {
-                if (Messages != null) {
-                    for (int j = 0; j < Messages.length; j++) {
-                        return Messages[j];
-                    }
-                }
-                else {
-                    System.out.println("attempt #" + i);
-                    Messages = inbox.search(new GmailRawSearchTerm("subject:" + subjectID));
-                    Thread.sleep(10000);
+            if (Messages != null) {
+                for (int i = 0; i < Messages.length; i++) {
+                    return Messages[i];
                 }
             }
 
