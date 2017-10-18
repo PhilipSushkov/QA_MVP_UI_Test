@@ -9,6 +9,19 @@
       "unsubscribe_email": "Unsubscribe Message",
       "active": true,
       "public": true
+    },
+    {
+      "do_assertions": true,
+      "mailing_list_name": "TestMailingList02",
+      "description": "This is a test",
+      "description_ch": "This is a changed description",
+      "activation_email": "Activation Email",
+      "activation_email_ch": "Workflow Email",
+      "unsubscribe_email": "Unsubscribe Message",
+      "active": true,
+      "public": true,
+      "public_ch": false
     }
+
   ]
 }

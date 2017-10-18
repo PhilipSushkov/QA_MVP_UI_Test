@@ -1,1 +1,1 @@
-{"TestMailingList01":{"public":true,"description":"This is a test","active":true,"activation_email":"Activation Email","mailing_list_name":"TestMailingList01","unsubscribe_email":"Unsubscribe Message"}}
+{"TestMailingList02":{"description":"This is a changed description","active":true,"activation_email":"Workflow Email"},"TestMailingList01":{"active":true,"mailing_list_name":"TestMailingList03"}}

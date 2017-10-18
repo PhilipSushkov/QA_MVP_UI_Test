@@ -1,5 +1,6 @@
 package pageobjects.EmailAdmin.ManageList;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -122,8 +123,8 @@ public class MailingListsAdd extends AbstractPageObject {
                 }
             } else {
                 if (!Boolean.parseBoolean(findElement(publicNoCheckbox).getAttribute("checked"))) {
-                } else {
                     findElement(publicNoCheckbox).click();
+                } else {
                 }
             }
 
@@ -155,7 +156,7 @@ public class MailingListsAdd extends AbstractPageObject {
 
     public String editMailingLists(JSONObject data, String name){
         try{
-            By editBtn = By.xpath("//td[(text()='\"+name+\"')]/parent::tr/td/input[contains(@id, 'btnEdit')][contains(@id, 'MailingList')]");
+            By editBtn = By.xpath("//td[(text()='" + name + "')]/parent::tr/td/input[contains(@id, 'btnEdit')][contains(@id, 'MailingList')]");
             waitForElement(editBtn);
             findElement(editBtn).click();
 
@@ -189,7 +190,6 @@ public class MailingListsAdd extends AbstractPageObject {
 
                 try {
                     if (!data.get("activation_email_ch").toString().isEmpty()) {
-                        findElement(activationEmailSelect).clear();
                         findElement(activationEmailSelect).sendKeys(data.get("activation_email_ch").toString());
                         jsonObj.put("activation_email", data.get("activation_email_ch").toString());
                     }
@@ -198,7 +198,6 @@ public class MailingListsAdd extends AbstractPageObject {
 
                 try {
                     if (!data.get("unsubscribe_email_ch").toString().isEmpty()) {
-                        findElement(unsubscribeEmailSelect).clear();
                         findElement(unsubscribeEmailSelect).sendKeys(data.get("unsubscribe_email_ch").toString());
                         jsonObj.put("unsubscribe_email", data.get("unsubscribe_email_ch").toString());
                     }
@@ -224,18 +223,19 @@ public class MailingListsAdd extends AbstractPageObject {
                 } catch (NullPointerException e) {
                 }
 
-                Boolean bool_public = Boolean.parseBoolean(data.get("public_ch").toString());
-                jsonObj.put("public", Boolean.parseBoolean(data.get("public_ch").toString()));
-                if (bool_public) {
+                try{
+                if (Boolean.parseBoolean(data.get("public_ch").toString())) {
                     if (!Boolean.parseBoolean(findElement(publicYesCheckbox).getAttribute("checked"))) {
                         findElement(publicYesCheckbox).click();
                     } else {
                     }
                 } else {
                     if (!Boolean.parseBoolean(findElement(publicNoCheckbox).getAttribute("checked"))) {
-                    } else {
                         findElement(publicNoCheckbox).click();
+                    } else {
                     }
+                }}catch (NullPointerException e){
+                    e.printStackTrace();
                 }
 
                 findElement(saveButton).click();
@@ -271,7 +271,7 @@ public class MailingListsAdd extends AbstractPageObject {
     public Boolean checkMailingLists (JSONObject data, String name){
         JSONObject jsonMain = new JSONObject();
         try {
-            By editBtn = By.xpath("//td[(text()='\"+name+\"')]/parent::tr/td/input[contains(@id, 'btnEdit')][contains(@id, 'MailingList')]");
+            By editBtn = By.xpath("//td[(text()='"+ name +"')]/parent::tr/td/input[contains(@id, 'btnEdit')][contains(@id, 'MailingList')]");
             waitForElement(editBtn);
             findElement(editBtn).click();
             try {
@@ -344,90 +344,108 @@ public class MailingListsAdd extends AbstractPageObject {
         return null;
     }
 
-    public Boolean checkMailingListsCh (JSONObject data, String name){
+    public Boolean checkMailingListsCh (JSONObject data, String name) {
         JSONObject jsonMain = new JSONObject();
+        By editBtn;
         try {
-            By editBtn = By.xpath("//td[(text()='\"+name+\"')]/parent::tr/td/input[contains(@id, 'btnEdit')][contains(@id, 'MailingList')]");
-            waitForElement(editBtn);
-            findElement(editBtn).click();
-            try {
-                FileReader readFile = new FileReader(sPathToFile + sFileJson);
-                jsonMain = (JSONObject) parser.parse(readFile);
-            } catch (ParseException e) {
+            if (data.containsKey("mailing_list_name_ch")) {
+                 editBtn = By.xpath("//td[(text()='" + data.get("mailing_list_name_ch").toString() + "')]/parent::tr/td/input[contains(@id, 'btnEdit')][contains(@id, 'MailingList')]");
+            } else {
+                 editBtn = By.xpath("//td[(text()='" + name + "')]/parent::tr/td/input[contains(@id, 'btnEdit')][contains(@id, 'MailingList')]");
             }
-
-            // Compare field values with entry data
-            try {
-                if (!findElement(mailingListNameInput).getAttribute("value").equals(data.get("mailing_list_name_ch").toString())) {
-                    System.out.println(findElement(mailingListNameInput).getAttribute("value"));
-                    System.out.println(data.get("mailing_list_name_ch").toString());
-                    System.out.println("Fails mailing list name");
-                    return false;
+                waitForElement(editBtn);
+                findElement(editBtn).click();
+                try {
+                    FileReader readFile = new FileReader(sPathToFile + sFileJson);
+                    jsonMain = (JSONObject) parser.parse(readFile);
+                } catch (ParseException e) {
                 }
-            } catch (NullPointerException e) {
-            }
 
-            try {
-                if (!findElement(descriptionTextarea).getAttribute("value").equals(data.get("description_ch").toString())) {
-                    System.out.println(findElement(descriptionTextarea).getAttribute("value"));
-                    System.out.println(data.get("description_ch").toString());
-                    System.out.println("Fails description");
-                    return false;
+                // Compare field values with entry data
+                try {
+                    if (!findElement(mailingListNameInput).getAttribute("value").equals(data.get("mailing_list_name_ch").toString())) {
+                        System.out.println(findElement(mailingListNameInput).getAttribute("value"));
+                        System.out.println(data.get("mailing_list_name_ch").toString());
+                        System.out.println("Fails mailing list name");
+                        return false;
+                    }
+                } catch (NullPointerException e) {
                 }
-            } catch (NullPointerException e) {
-            }
 
-            try {
-                if (!new Select(findElement(activationEmailSelect)).getFirstSelectedOption().getText().trim().equals(data.get("activation_email_ch").toString())) {
-                    System.out.println(findElement(activationEmailSelect).getAttribute("value"));
-                    System.out.println(data.get("activation_email_ch").toString());
-                    System.out.println("Fails activation email");
-                    return false;
+                try {
+                    if (!findElement(descriptionTextarea).getAttribute("value").equals(data.get("description_ch").toString())) {
+                        System.out.println(findElement(descriptionTextarea).getAttribute("value"));
+                        System.out.println(data.get("description_ch").toString());
+                        System.out.println("Fails description");
+                        return false;
+                    }
+                } catch (NullPointerException e) {
                 }
-            } catch (NullPointerException e) {
-            }
 
-            try {
-                if (!new Select(findElement(unsubscribeEmailSelect)).getFirstSelectedOption().getText().trim().equals(data.get("unsubscribe_email_ch").toString())) {
-                    System.out.println(findElement(unsubscribeEmailSelect).getAttribute("value"));
-                    System.out.println(data.get("unsubscribe_email_ch").toString());
-                    System.out.println("Fails unsubscribe email");
-                    return false;
+                try {
+                    if (!new Select(findElement(activationEmailSelect)).getFirstSelectedOption().getText().trim().equals(data.get("activation_email_ch").toString())) {
+                        System.out.println(findElement(activationEmailSelect).getAttribute("value"));
+                        System.out.println(data.get("activation_email_ch").toString());
+                        System.out.println("Fails activation email");
+                        return false;
+                    }
+                } catch (NullPointerException e) {
                 }
-            } catch (NullPointerException e) {
-            }
 
-            try {
-                if (!findElement(activeCheckbox).getAttribute("checked").equals(data.get("active_ch").toString())) {
-                    return false;
+                try {
+                    if (!new Select(findElement(unsubscribeEmailSelect)).getFirstSelectedOption().getText().trim().equals(data.get("unsubscribe_email_ch").toString())) {
+                        System.out.println(findElement(unsubscribeEmailSelect).getAttribute("value"));
+                        System.out.println(data.get("unsubscribe_email_ch").toString());
+                        System.out.println("Fails unsubscribe email");
+                        return false;
+                    }
+                } catch (NullPointerException e) {
                 }
-            } catch (NullPointerException e) {
-            }
 
-            try {
-                if (!findElement(publicYesCheckbox).getAttribute("checked").equals(data.get("public_ch").toString())) {
-                    return false;
+                try {
+                    if (!findElement(activeCheckbox).getAttribute("checked").equals(data.get("active_ch").toString())) {
+                        System.out.println("Fails active");
+                        return false;
+                    }
+                } catch (NullPointerException e) {
                 }
-            } catch (NullPointerException e) {
-            }
 
-            System.out.println(name+ ": New "+PAGE_NAME+" has been checked");
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
+                try {
+                    if (!findElement(publicYesCheckbox).getAttribute("checked").equals(data.get("public_ch").toString())) {
+                        System.out.println("Fails public");
+                        return false;
+                    }
+                } catch (NullPointerException e) {
+                }
+
+                System.out.println(name + ": New " + PAGE_NAME + " has been checked");
+                return true;
+            } catch(IOException e){
+                e.printStackTrace();
+            } catch(NullPointerException e){
+                e.printStackTrace();
         }
+            return null;
 
-        return null;
     }
 
     public String deleteMailingLists (JSONObject data, String name) {
-        By editBtn = By.xpath("//td[(text()='"+name+"')]/parent::tr/td/input[contains(@id, 'btnEdit')][contains(@id, 'MailingList')]");
-        waitForElement(deleteBtn);
-        findElement(deleteBtn).click();
-        waitForElement(successMsgDelete);
-        if(checkElementExists(editBtn) == null)
-            return "DELETE SUCCESSFUL";
-        else
+        By editBtn;
+        try {
+            if (data.containsKey("mailing_list_name_ch")) {
+                editBtn = By.xpath("//td[(text()='" + data.get("mailing_list_name_ch").toString() + "')]/parent::tr/td/input[contains(@id, 'btnEdit')][contains(@id, 'MailingList')]");
+            } else {
+                editBtn = By.xpath("//td[(text()='" + name + "')]/parent::tr/td/input[contains(@id, 'btnEdit')][contains(@id, 'MailingList')]");
+            }
+            findElement(editBtn).click();
+            waitForElement(deleteBtn);
+            findElement(deleteBtn).click();
+            waitForElement(successMsgDelete);
+            if (checkElementExists(editBtn) == null)
+                return "DELETE SUCCESSFUL";
+        } catch(NullPointerException e){
+            e.printStackTrace();
+        }
             return null;
     }
 

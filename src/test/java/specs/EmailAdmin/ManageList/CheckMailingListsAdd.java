@@ -6,10 +6,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.openqa.selenium.By;
 import org.testng.Assert;
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 import pageobjects.Dashboard.Dashboard;
 import pageobjects.EmailAdmin.ManageList.MailingListsAdd;
 import pageobjects.LoginPage.LoginPage;
@@ -54,28 +51,35 @@ public class CheckMailingListsAdd extends AbstractSpec{
         loginPage.loginUser();
     }
 
-    @Test(dataProvider = DATA, priority = 1)
+    @BeforeMethod
+    public void beforeMethod() throws Exception{
+        dashboard.openPageFromMenu(emailAdminMenuButton, manageListMenuItem);
+    }
+
+    @Test(priority = 1)
+    public void checkTitle() throws Exception{
+        final String expectedTitle = "Mailing Lists Edit";
+        Assert.assertEquals(mailingListsAdd.getTitle(), expectedTitle, "Actual Mailing Lists Edit page Title doesn't match to expected");
+    }
+
+
+    @Test(dataProvider = DATA, priority = 2)
     public void checkSaveMailingLists(JSONObject data) throws Exception{
         String sMailingListName = data.get(MAIL_NAME).toString();
-        dashboard.openPageFromMenu(emailAdminMenuButton, manageListMenuItem);
         Assert.assertNotNull(mailingListsAdd.saveMailingLists(data, sMailingListName), "New "+MAIL_NAME+" didn't save properly");
-        dashboard.openPageFromMenu(emailAdminMenuButton, manageListMenuItem);
         Assert.assertTrue(mailingListsAdd.checkMailingLists(data, sMailingListName),"New "+MAIL_NAME+" Check fails (After Save)");
     }
 
-    @Test(dataProvider = DATA, priority = 2)
+    @Test(dataProvider = DATA, priority = 3)
     public void checkEditMailingLists(JSONObject data) throws Exception {
         String sMailingListName = data.get(MAIL_NAME).toString();
-        dashboard.openPageFromMenu(emailAdminMenuButton, manageListMenuItem);
         Assert.assertNotNull(mailingListsAdd.editMailingLists(data, sMailingListName),"New "+MAIL_NAME+" Edit fails" );
-        dashboard.openPageFromMenu(emailAdminMenuButton, manageListMenuItem);
         Assert.assertTrue(mailingListsAdd.checkMailingListsCh(data,sMailingListName),"New "+MAIL_NAME+" Check fails (After Edit)");
     }
 
-    @Test(dataProvider = DATA, priority = 3)
+    @Test(dataProvider = DATA, priority = 4)
     public void checkDeleteMailingLists(JSONObject data) throws Exception {
         String sMailingListName = data.get(MAIL_NAME).toString();
-        dashboard.openPageFromMenu(emailAdminMenuButton, manageListMenuItem);
         Assert.assertNotNull(mailingListsAdd.deleteMailingLists(data, sMailingListName),"New "+MAIL_NAME+" Delete fails" );
     }
 
