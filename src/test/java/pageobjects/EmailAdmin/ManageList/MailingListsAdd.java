@@ -206,7 +206,7 @@ public class MailingListsAdd extends AbstractPageObject {
 
                 jsonObj.put("active", Boolean.parseBoolean(data.get("active").toString()));
                 try {
-                    // Save Active checkbox
+                    // Edit Active checkbox
                     if (Boolean.parseBoolean(data.get("active_ch").toString())) {
                         if (!Boolean.parseBoolean(findElement(activeCheckbox).getAttribute("checked"))) {
                             findElement(activeCheckbox).click();
@@ -224,14 +224,17 @@ public class MailingListsAdd extends AbstractPageObject {
                 }
 
                 try{
+                    // Edit Public checkbox
                 if (Boolean.parseBoolean(data.get("public_ch").toString())) {
                     if (!Boolean.parseBoolean(findElement(publicYesCheckbox).getAttribute("checked"))) {
                         findElement(publicYesCheckbox).click();
+                        jsonObj.put("public", true);
                     } else {
                     }
                 } else {
                     if (!Boolean.parseBoolean(findElement(publicNoCheckbox).getAttribute("checked"))) {
                         findElement(publicNoCheckbox).click();
+                        jsonObj.put("public", false);
                     } else {
                     }
                 }}catch (NullPointerException e){
@@ -418,7 +421,7 @@ public class MailingListsAdd extends AbstractPageObject {
                 } catch (NullPointerException e) {
                 }
 
-                System.out.println(name + ": New " + PAGE_NAME + " has been checked");
+                System.out.println(": New " + PAGE_NAME + " has been checked");
                 return true;
             } catch(IOException e){
                 e.printStackTrace();
