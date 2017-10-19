@@ -140,6 +140,19 @@
     </test>
 
 
+    <!-- Content Admin -->
+    <test name="CheckMailingListsAdd">
+        <classes>
+            <class name="specs.EmailAdmin.ManageList.CheckMailingListsAdd" />
+        </classes>
+    </test>
+    <test name="CheckSubscriberAdd">
+        <classes>
+            <class name="specs.EmailAdmin.Subscribers.CheckSubscriberAdd" />
+        </classes>
+    </test>
+
+
     <test name="CreateNewUser">
         <classes>
             <class name="specs.SystemAdmin.UserList.CreateNewUser" />

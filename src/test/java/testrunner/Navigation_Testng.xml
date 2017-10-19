@@ -393,6 +393,11 @@
             <class name="specs.EmailAdmin.CategoryList.CheckCategoryList" />
         </classes>
     </test>
+    <test name="CheckComposeMailingListMessage">
+        <classes>
+            <class name="specs.EmailAdmin.Compose.CheckComposeMailingListMessage" />
+        </classes>
+    </test>
 
 
     <!-- Email Admin Edit part -->
