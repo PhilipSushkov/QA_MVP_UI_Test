@@ -19,7 +19,7 @@ Feature: Create a press release
 
   Scenario: Publish a press release
     Given that there exists a press release with the status “For Approval”
-    And I am on the Press Release List page
+    And I am, on the Press Release List page
     When I select the press release’s checkbox
     And I click “Publish”
     Then the press release’s status become “Live” or “Live - Publish Pending”

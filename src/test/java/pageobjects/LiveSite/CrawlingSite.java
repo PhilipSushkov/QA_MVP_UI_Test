@@ -1,6 +1,17 @@
 package pageobjects.LiveSite;
 
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
+import org.apache.http.Header;
+import org.apache.http.HttpHeaders;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.cookie.BasicClientCookie;
+import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.HttpContext;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -14,6 +25,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * Created by philipsushkov on 2017-03-28.
@@ -55,6 +67,41 @@ public class CrawlingSite {
         return sVersion;
     }
 
+    public Boolean getSslTrust() throws InterruptedException {
+        boolean result = false;
+
+        try {
+            //phDriver.get("https://www.sslshopper.com/ssl-checker.html#hostname="+getSiteUrl());
+            phDriver.get("https://www.sslshopper.com/ssl-checker.html#hostname="+sSite);
+            Thread.sleep(DEFAULT_PAUSE);
+            WebElement elementTitle = phDriver.findElement(By.xpath("//h3[contains(text(), 'resolves to')]"));
+
+            if (elementTitle!=null) {
+                try {
+                    WebElement elementRes = phDriver.findElement(By.xpath("//td[@class='failed']"));
+                    System.out.println("You got the failed message");
+                    result = false;
+                } catch (NoSuchElementException e1) {
+                    result = true;
+                }
+                catch (WebDriverException e3) {
+                    result = true;
+                }
+            } else {
+                System.out.println("The correct title is not found");
+                result = false;
+            }
+
+
+        } catch (WebDriverException e2) {
+            e2.printStackTrace();
+        } catch (Exception e4) {
+            e4.printStackTrace();
+        }
+
+        return result;
+    }
+
     public String getSiteUrl() throws Exception {
         String sUrl = "Not Defined";
         String sSiteFull = Functions.UrlAddSlash(sSite, sSlash, sHttp);
@@ -74,6 +121,52 @@ public class CrawlingSite {
         saveSiteUrl(sUrl);
         return sUrl;
     }
+
+
+    public String getXCacheStatus(String sSiteFull) throws Exception {
+        String sXCacheStatus = "Not Defined";
+        //String sSiteFull = Functions.UrlAddSlash(sSite, sSlash, sHttp);
+
+        try {
+            HttpGet httpGet = new HttpGet(sSiteFull);
+
+            //httpGet.setHeader(HttpHeaders.HOST, sSite);
+            httpGet.setHeader(HttpHeaders.CONTENT_TYPE, "text/html; charset=utf-8");
+            httpGet.setHeader(HttpHeaders.CONNECTION, "keep-alive");
+            httpGet.setHeader(HttpHeaders.USER_AGENT, "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:45.0) Gecko/20100101 Firefox/45.0");
+            httpGet.setHeader(HttpHeaders.ACCEPT, "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+            httpGet.setHeader(HttpHeaders.CACHE_CONTROL, "max-age=0");
+
+            HttpClient httpClient = HttpClientBuilder.create().build();
+
+            try {
+                HttpResponse response = httpClient.execute(httpGet);
+                Header[] headers = response.getAllHeaders();
+                for (Header header : headers) {
+                    if (header.getName().equals("X-Cache-status")) {
+                        sXCacheStatus = header.getValue();
+                    }
+                }
+            } catch(IOException e)
+            {
+                saveXCacheStatus(sXCacheStatus);
+            } catch(Exception e)
+            {
+                saveXCacheStatus(sXCacheStatus);
+            }
+
+        } catch (TimeoutException e) {
+            return "TimeoutException";
+        } catch (WebDriverException e) {
+            saveXCacheStatus(sXCacheStatus);
+            return sXCacheStatus;
+        }
+
+        System.out.println(sSite + " X-Cache-Status: " + sXCacheStatus);
+        saveXCacheStatus(sXCacheStatus);
+        return sXCacheStatus;
+    }
+
 
     public String getSiteVersionAfter() throws Exception {
         String sVersion = "Not Defined";
@@ -115,6 +208,50 @@ public class CrawlingSite {
         return sUrl;
     }
 
+    public String getXCacheStatusAfter(String sSiteFull) throws Exception {
+        String sXCacheStatus = "Not Defined";
+        //String sSiteFull = Functions.UrlAddSlash(sSite, sSlash, sHttp);
+
+        try {
+            HttpGet httpGet = new HttpGet(sSiteFull);
+
+            //httpGet.setHeader(HttpHeaders.HOST, sSite);
+            httpGet.setHeader(HttpHeaders.CONTENT_TYPE, "text/html; charset=utf-8");
+            httpGet.setHeader(HttpHeaders.CONNECTION, "keep-alive");
+            httpGet.setHeader(HttpHeaders.USER_AGENT, "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:45.0) Gecko/20100101 Firefox/45.0");
+            httpGet.setHeader(HttpHeaders.ACCEPT, "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+            httpGet.setHeader(HttpHeaders.CACHE_CONTROL, "max-age=0");
+
+            HttpClient httpClient = HttpClientBuilder.create().build();
+
+            try {
+                HttpResponse response = httpClient.execute(httpGet);
+                Header[] headers = response.getAllHeaders();
+                for (Header header : headers) {
+                    if (header.getName().equals("X-Cache-status")) {
+                        sXCacheStatus = header.getValue();
+                    }
+                }
+            } catch(IOException e)
+            {
+                saveXCacheStatusAfter(sXCacheStatus);
+            } catch(Exception e)
+            {
+                saveXCacheStatusAfter(sXCacheStatus);
+            }
+
+        } catch (TimeoutException e) {
+            return "TimeoutException";
+        } catch (WebDriverException e) {
+            saveXCacheStatusAfter(sXCacheStatus);
+            return sXCacheStatus;
+        }
+
+        System.out.println(sSite + " X-Cache-Status: " + sXCacheStatus);
+        saveXCacheStatusAfter(sXCacheStatus);
+        return sXCacheStatus;
+    }
+
     public String getSiteVersionCookie(String sCookie) throws Exception {
         String sVersion = "Not Defined";
         String sSiteFull = Functions.UrlAddSlash(sSite, sSlash, sHttp);
@@ -151,6 +288,33 @@ public class CrawlingSite {
 
         jsonObjSite.put("domain", sSite);
         jsonObjSite.put("version_before", sVersion);
+
+        try {
+            FileWriter file = new FileWriter(sPathToFile + sSite + ".json");
+            file.write(jsonObjSite.toJSONString().replace("\\", ""));
+            file.flush();
+            file.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void saveXCacheStatus(String sXCacheStatus) throws Exception {
+        JSONObject jsonObjSite = new JSONObject();
+        //System.out.println(sPathToFile + sSite + ".json");
+
+        try {
+            jsonObjSite = (JSONObject) parser.parse(new FileReader(sPathToFile + sSite + ".json"));
+        } catch (ParseException e) {
+        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
+        }
+
+        jsonObjSite.put("X_Cache_Status_Before", sXCacheStatus);
 
         try {
             FileWriter file = new FileWriter(sPathToFile + sSite + ".json");
@@ -232,6 +396,33 @@ public class CrawlingSite {
         }
 
         jsonObjSite.put("Url_after", sUrl);
+
+        try {
+            FileWriter file = new FileWriter(sPathToFile + sSite + ".json");
+            file.write(jsonObjSite.toJSONString().replace("\\", ""));
+            file.flush();
+            file.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void saveXCacheStatusAfter(String sXCacheStatus) throws Exception {
+        JSONObject jsonObjSite = new JSONObject();
+        //System.out.println(sPathToFile + sSite + ".json");
+
+        try {
+            jsonObjSite = (JSONObject) parser.parse(new FileReader(sPathToFile + sSite + ".json"));
+        } catch (ParseException e) {
+        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
+        }
+
+        jsonObjSite.put("X_Cache_Status_After", sXCacheStatus);
 
         try {
             FileWriter file = new FileWriter(sPathToFile + sSite + ".json");

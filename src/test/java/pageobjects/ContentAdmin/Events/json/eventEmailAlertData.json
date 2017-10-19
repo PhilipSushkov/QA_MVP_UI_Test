@@ -29,7 +29,7 @@
       "filter_type": "exclude",
       "filter_title": "",
       "filter_body": "This is a test of an event.",
-      "event_title": "QaEnsco - TESTEVENT ID: ",
+      "event_title": "TESTEVENT ID: ",
       "mailing_list": "Test List",
       "mailing_list_language": " - English",
       "email_account": "test@q4websystems.com",
