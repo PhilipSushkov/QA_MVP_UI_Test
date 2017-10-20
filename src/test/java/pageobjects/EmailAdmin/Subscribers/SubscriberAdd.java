@@ -1,7 +1,5 @@
 package pageobjects.EmailAdmin.Subscribers;
 
-import org.apache.commons.lang.ObjectUtils;
-import org.apache.xerces.impl.dv.xs.AbstractDateTimeDV;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -26,9 +24,8 @@ public class SubscriberAdd extends AbstractPageObject {
     private static By moduleTitle, emailAddressInput, firstNameInput, lastNameInput, companyInput;
     private static By titleInput, activeCheckbox, validatedCheckbox, address1Input, saveButton, keywordInput;
     private static By address2Input, cityInput, provinceInput, postalCodeInput, countrySelect;
-    private static By regionInput, telephoneNoInput, faxNoInput, heardOfFromSelect, notesTextarea,
+    private static By regionInput, telephoneNoInput, faxNoInput, notesTextarea,
             cancelBtn, deleteBtn, addNewLink, successMsg, successMsgDelete, searchBtn;
-    ;
 
     private static String sPathToFile, sFileJson;
     private static JSONParser parser;
@@ -65,7 +62,6 @@ public class SubscriberAdd extends AbstractPageObject {
         regionInput = By.xpath(propUIEmailAdmin.getProperty("input_Region"));
         telephoneNoInput = By.xpath(propUIEmailAdmin.getProperty("input_TelephoneNo"));
         faxNoInput = By.xpath(propUIEmailAdmin.getProperty("input_FaxNo"));
-        heardOfFromSelect = By.xpath(propUIEmailAdmin.getProperty("select_HeardOfFrom"));
 
         notesTextarea = By.xpath(propUIEmailAdmin.getProperty("txtarea_Notes"));
 

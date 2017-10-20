@@ -440,6 +440,7 @@ public class MailingListsAdd extends AbstractPageObject {
             } else {
                 editBtn = By.xpath("//td[(text()='" + name + "')]/parent::tr/td/input[contains(@id, 'btnEdit')][contains(@id, 'MailingList')]");
             }
+            waitForElement(editBtn);
             findElement(editBtn).click();
             waitForElement(deleteBtn);
             findElement(deleteBtn).click();

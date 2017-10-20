@@ -1,4 +1,4 @@
-package specs.EmailAdmin.Subscribers;
+package specs.EmailAdmin.EmailAlertList;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -8,7 +8,7 @@ import org.openqa.selenium.By;
 import org.testng.Assert;
 import org.testng.annotations.*;
 import pageobjects.Dashboard.Dashboard;
-import pageobjects.EmailAdmin.Subscribers.SubscriberAdd;
+import pageobjects.EmailAdmin.EmailAlertList.EmailAlertListAdd;
 import pageobjects.LoginPage.LoginPage;
 import specs.AbstractSpec;
 
@@ -21,30 +21,29 @@ import java.util.ArrayList;
  * Created by charleszheng on 2017-10-17.
  */
 
-public class CheckSubscriberAdd extends AbstractSpec{
-
-    private static By emailAdminMenuButton, subscriberMenuItem, addNewLink;
+public class CheckEmailAlertListAdd extends AbstractSpec{
+    private static By emailAdminMenuButton, emailAlertListMenuButton, addNewLink;
     private static LoginPage loginPage;
     private static Dashboard dashboard;
-    private static SubscriberAdd subscriberAdd;
+    private static EmailAlertListAdd emailAlertListAdd;
 
     private static String sPathToFile, sDataFileJson;
     private static JSONParser parser;
 
-    private final String DATA="getData", SUBSCRIBER_NAME="email_address";
+    private final String DATA="getData", EMAIL_ALERT_NAME="description";
 
     @BeforeTest
     public void setUp() throws Exception {
         emailAdminMenuButton = By.xpath(propUIEmailAdmin.getProperty("btnMenu_EmailAdmin"));
-        subscriberMenuItem = By.xpath(propUIEmailAdmin.getProperty("btnMenu_Subscribers"));
+        emailAlertListMenuButton = By.xpath(propUIEmailAdmin.getProperty("btnMenu_EmailAlertList"));
         addNewLink = By.xpath(propUIEmailAdmin.getProperty("input_AddNew"));
 
         loginPage = new LoginPage(driver);
         dashboard = new Dashboard(driver);
-        subscriberAdd = new SubscriberAdd(driver);
+        emailAlertListAdd = new EmailAlertListAdd(driver);
 
-        sPathToFile = System.getProperty("user.dir") + propUIEmailAdmin.getProperty("dataPath_Subscriber");
-        sDataFileJson = propUIEmailAdmin.getProperty("json_SubscriberData");
+        sPathToFile = System.getProperty("user.dir") + propUIEmailAdmin.getProperty("dataPath_EmailAlertList");
+        sDataFileJson = propUIEmailAdmin.getProperty("json_EmailAlertData");
 
         parser = new JSONParser();
 
@@ -53,35 +52,34 @@ public class CheckSubscriberAdd extends AbstractSpec{
 
     @BeforeMethod
     public void beforeMethod() throws Exception{
-        dashboard.openPageFromMenu(emailAdminMenuButton, subscriberMenuItem);
+        dashboard.openPageFromMenu(emailAdminMenuButton, emailAlertListMenuButton);
     }
 
     @Test(priority = 1)
     public void checkTitle() throws Exception{
-        final String expectedTitle = "Subscriber Edit";
-        Assert.assertEquals(subscriberAdd.getTitle(), expectedTitle, "Actual Subscriber Edit page Title doesn't match to expected");
+        final String expectedTitle = "Workflow Email Edit";
+        Assert.assertEquals(emailAlertListAdd.getTitle(), expectedTitle, "Actual Workflow Email Edit page Title doesn't match to expected");
     }
 
 
     @Test(dataProvider = DATA, priority = 2)
-    public void checkSaveSubscriber(JSONObject data) throws Exception{
-        String sSubscriberName = data.get(SUBSCRIBER_NAME).toString();
-        Assert.assertNotNull(subscriberAdd.saveSubscriber(data, sSubscriberName), "New "+SUBSCRIBER_NAME+" didn't save properly");
-        Assert.assertTrue(subscriberAdd.checkSubscriber(data, sSubscriberName),"New "+SUBSCRIBER_NAME+" Check fails (After Save)");
+    public void checkSaveEmailAlertList(JSONObject data) throws Exception{
+        String sEmailAlertListName = data.get(EMAIL_ALERT_NAME).toString();
+        Assert.assertNotNull(emailAlertListAdd.saveEmailAlertList(data, sEmailAlertListName), "New "+EMAIL_ALERT_NAME+" didn't save properly");
+        Assert.assertTrue(emailAlertListAdd.checkEmailAlertList(data, sEmailAlertListName),"New "+EMAIL_ALERT_NAME+" Check fails (After Save)");
     }
 
     @Test(dataProvider = DATA, priority = 3)
-    public void checkEditSubscriber(JSONObject data) throws Exception {
-        String sSubscriberName = data.get(SUBSCRIBER_NAME).toString();
-        Assert.assertNotNull(subscriberAdd.editSubscriber(data, sSubscriberName),"New "+SUBSCRIBER_NAME+" Edit fails" );
-        Assert.assertTrue(subscriberAdd.checkSubscriberCh(data,sSubscriberName),"New "+SUBSCRIBER_NAME+" Check fails (After Edit) " +
-                "NOTE: KNOWN BUG REGARDING COUNTRY FAIL : https://q4websystems.atlassian.net/browse/WEB-13163");
+    public void checkEditEmailAlertList(JSONObject data) throws Exception {
+        String sEmailAlertListName = data.get(EMAIL_ALERT_NAME).toString();
+        Assert.assertNotNull(emailAlertListAdd.editEmailAlertList(data, sEmailAlertListName),"New "+EMAIL_ALERT_NAME+" Edit fails" );
+        Assert.assertTrue(emailAlertListAdd.checkEmailAlertListCh(data,sEmailAlertListName),"New "+EMAIL_ALERT_NAME+" Check fails (After Edit) ");
     }
 
     @Test(dataProvider = DATA, priority = 4)
-    public void checkDeleteSubscriber(JSONObject data) throws Exception {
-        String sSubscriberName = data.get(SUBSCRIBER_NAME).toString();
-        Assert.assertNotNull(subscriberAdd.deleteSubscriber(data, sSubscriberName),"New "+SUBSCRIBER_NAME+" Delete fails" );
+    public void checkDeleteEmailAlertList(JSONObject data) throws Exception {
+        String sEmailAlertListName = data.get(EMAIL_ALERT_NAME).toString();
+        Assert.assertNotNull(emailAlertListAdd.deleteEmailAlertList(data, sEmailAlertListName),"New "+EMAIL_ALERT_NAME+" Delete fails" );
     }
 
     @AfterTest
@@ -95,7 +93,7 @@ public class CheckSubscriberAdd extends AbstractSpec{
 
         try {
             JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToFile + sDataFileJson));
-            JSONArray jsonArray = (JSONArray) jsonObject.get("subscriber");
+            JSONArray jsonArray = (JSONArray) jsonObject.get("email_alert");
             ArrayList<Object> zoom = new ArrayList();
 
             for (int i = 0; i < jsonArray.size(); i++) {
@@ -122,5 +120,4 @@ public class CheckSubscriberAdd extends AbstractSpec{
 
         return null;
     }
-
 }
