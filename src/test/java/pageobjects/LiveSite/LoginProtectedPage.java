@@ -15,7 +15,7 @@ import static specs.AbstractSpec.propUIPublicSite;
 /* Designed for chicagotest.s3.q4web.com/admin/
 * Before running automation, please setup admin site
 * Instructions given in:
-* /Users/juntianz/Downloads/QA-WebCMS-Test/src/test/java/specs/PublicSite/login_protected_page.feature
+* /QA-WebCMS-Test/src/test/java/specs/PublicSite/login_protected_page.feature
 */
 
 public class LoginProtectedPage extends AbstractPageObject{
@@ -35,6 +35,7 @@ public class LoginProtectedPage extends AbstractPageObject{
     private final By originPageEdit;
     private final By targetPageTab;
     private final By targetPageEdit;
+    private final By pageUrl;
 
     public LoginProtectedPage(WebDriver driver){
         super(driver);
@@ -46,6 +47,7 @@ public class LoginProtectedPage extends AbstractPageObject{
         targetPageTab = By.xpath("//span[text()='Investors']");
         originPageEdit = By.xpath("//td[text()='- " + ORIGINPAGE + "']/parent::tr/td/input[contains(@id, 'Imagebutton')]");
         targetPageEdit = By.xpath("//td[text()='-- " + TARGETPAGE + "']/parent::tr/td/input[contains(@id, 'Imagebutton')]");
+        pageUrl = By.xpath(propUIPublicSite.getProperty("pageUrl"));
     }
 
     public boolean targetPageAccessible(String targetPageUrl) throws InterruptedException{
@@ -133,9 +135,9 @@ public class LoginProtectedPage extends AbstractPageObject{
         findElement(originPageTab).click();
         waitForElement(originPageEdit);
         findElement(originPageEdit).click();
-        waitForElement(By.xpath("//span[contains(@id,'PageUrl')]"));
+        waitForElement(pageUrl);
         Thread.sleep(DEFAULT_PAUSE);
-        return findElement(By.xpath("//span[contains(@id,'PageUrl')]")).getText();
+        return findElement(pageUrl).getText();
     }
 
     public String getTargetPageUrl() throws InterruptedException{
@@ -143,9 +145,9 @@ public class LoginProtectedPage extends AbstractPageObject{
         findElement(targetPageTab).click();
         waitForElement(targetPageEdit);
         findElement(targetPageEdit).click();
-        waitForElement(By.xpath("//span[contains(@id,'PageUrl')]"));
+        waitForElement(pageUrl);
         Thread.sleep(DEFAULT_PAUSE);
-        return findElement(By.xpath("//span[contains(@id,'PageUrl')]")).getText();
+        return findElement(pageUrl).getText();
     }
 
 }
