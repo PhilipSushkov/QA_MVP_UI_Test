@@ -8,7 +8,6 @@ import org.openqa.selenium.By;
 import org.testng.Assert;
 import org.testng.annotations.*;
 import pageobjects.Dashboard.Dashboard;
-import pageobjects.EmailAdmin.ManageList.MailingListsAdd;
 import pageobjects.EmailAdmin.Subscribers.SubscriberAdd;
 import pageobjects.LoginPage.LoginPage;
 import specs.AbstractSpec;
@@ -65,21 +64,22 @@ public class CheckSubscriberAdd extends AbstractSpec{
 
 
     @Test(dataProvider = DATA, priority = 2)
-    public void checkSaveMailingLists(JSONObject data) throws Exception{
+    public void checkSaveSubscriber(JSONObject data) throws Exception{
         String sSubscriberName = data.get(SUBSCRIBER_NAME).toString();
         Assert.assertNotNull(subscriberAdd.saveSubscriber(data, sSubscriberName), "New "+SUBSCRIBER_NAME+" didn't save properly");
         Assert.assertTrue(subscriberAdd.checkSubscriber(data, sSubscriberName),"New "+SUBSCRIBER_NAME+" Check fails (After Save)");
     }
 
     @Test(dataProvider = DATA, priority = 3)
-    public void checkEditMailingLists(JSONObject data) throws Exception {
+    public void checkEditSubscriber(JSONObject data) throws Exception {
         String sSubscriberName = data.get(SUBSCRIBER_NAME).toString();
         Assert.assertNotNull(subscriberAdd.editSubscriber(data, sSubscriberName),"New "+SUBSCRIBER_NAME+" Edit fails" );
-        Assert.assertTrue(subscriberAdd.checkSubscriberCh(data,sSubscriberName),"New "+SUBSCRIBER_NAME+" Check fails (After Edit)");
+        Assert.assertTrue(subscriberAdd.checkSubscriberCh(data,sSubscriberName),"New "+SUBSCRIBER_NAME+" Check fails (After Edit) " +
+                "NOTE: KNOWN BUG REGARDING COUNTRY FAIL : https://q4websystems.atlassian.net/browse/WEB-13163");
     }
 
     @Test(dataProvider = DATA, priority = 4)
-    public void checkDeleteMailingLists(JSONObject data) throws Exception {
+    public void checkDeleteSubscriber(JSONObject data) throws Exception {
         String sSubscriberName = data.get(SUBSCRIBER_NAME).toString();
         Assert.assertNotNull(subscriberAdd.deleteSubscriber(data, sSubscriberName),"New "+SUBSCRIBER_NAME+" Delete fails" );
     }
