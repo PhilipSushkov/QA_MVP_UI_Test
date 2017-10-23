@@ -16,7 +16,7 @@
     {
       "do_assertions": true,
       "template_name": "TemplateTest03",
-      "subject": "SubjectTest01",
+      "subject": "SubjectTest02",
       "from": "Test <test@q4websystems.com>",
       "test_email": "test@q4websystems.com",
       "test_email_type": "Financial Report",

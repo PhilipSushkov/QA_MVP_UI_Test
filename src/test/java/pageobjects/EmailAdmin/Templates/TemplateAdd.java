@@ -510,7 +510,7 @@ public class TemplateAdd extends AbstractPageObject{
 
         Properties props = System.getProperties();
         props.setProperty("mail.store.protocol", "gimap");
-        Thread.sleep(10000);
+        Thread.sleep(20000);
 
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date = new Date();
@@ -522,9 +522,8 @@ public class TemplateAdd extends AbstractPageObject{
             store.connect("imap.gmail.com", user, password);
             GmailFolder inbox = (GmailFolder) store.getFolder("INBOX");
             inbox.open(Folder.READ_ONLY);
-            Message[] Messages = inbox.search(new GmailRawSearchTerm("subject:" + subjectID));
-
             for (int i = 1; i <= 5; i++) {
+                Message[] Messages = inbox.search(new GmailRawSearchTerm("subject:" + subjectID));
                 if (Messages != null) {
                     for (int j = 0; j < Messages.length; j++) {
                         return Messages[j];

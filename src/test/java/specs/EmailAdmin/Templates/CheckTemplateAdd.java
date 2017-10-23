@@ -75,9 +75,9 @@ public class CheckTemplateAdd extends AbstractSpec{
         String sTemplateName = data.get(TEMPLATE_NAME).toString();
 
         Assert.assertNotNull(templateAdd.sendTestMail(data, sTemplateName),"New "+sTemplateName+" didn't test send properly" );
-        Assert.assertNotNull(templateAdd.getSpecificComposeMail("test@q4websystems.com", "testing!" , data.get("subject").toString()),"New "+TEMPLATE_NAME+" is not received" );
+        Assert.assertNotNull(templateAdd.getSpecificComposeMail("test@q4websystems.com", "testing!" , data.get("subject").toString()),"New "+sTemplateName+" is not received" );
         functions.deleteMail("test@q4websystems.com", "testing!" ,data.get("subject").toString());
-        Assert.assertNull(templateAdd.getSpecificComposeMail("test@q4websystems.com", "testing!" ,data.get("subject").toString()),"New "+TEMPLATE_NAME+" is not deleted properly" );
+        Assert.assertNull(templateAdd.getSpecificComposeMail("test@q4websystems.com", "testing!" ,data.get("subject").toString()),"New "+sTemplateName+" is not deleted properly" );
     }
 
     @Test(dataProvider = DATA, priority = 4)
