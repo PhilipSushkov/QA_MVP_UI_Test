@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="Web CMS Suite PGEcorp Price Validation" parallel="tests" thread-count="1">
-
-    <!-- CheckPGEcorp -->
+<suite name="PGEcorp Price Validation">
     <test name="CheckPGEcorp">
         <classes>
             <class name="specs.PublicSite.CheckPGEcorp" />
         </classes>
     </test>
-
 </suite>
