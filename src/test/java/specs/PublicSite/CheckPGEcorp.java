@@ -28,9 +28,12 @@ public class CheckPGEcorp extends AbstractSpec {
 
         Thread.sleep(DEFAULT_PAUSE);
 
+        System.out.println(" --- START --- ");
+
         System.out.println(new Date());
         System.out.println("Stock Price Original: " + StockPriceOriginal);
         System.out.println("Stock Date Original: " + StockDateOriginal);
+        System.out.println(" ------ ");
 
         Thread.sleep(1500000);
 
@@ -45,10 +48,12 @@ public class CheckPGEcorp extends AbstractSpec {
         System.out.println(new Date());
         System.out.println("Stock Price Updated: " + StockPriceUpdated);
         System.out.println("Stock Date Updated: " + StockDateUpdated);
+        System.out.println(" ------ ");
 
 
         Assert.assertNotEquals(StockPriceOriginal, StockPriceUpdated, "Stock Price value shouldn't be equal");
         Assert.assertNotEquals(StockDateOriginal, StockDateUpdated, "Stock Date value shouldn't be equal");
+        System.out.println(" --- FINISH --- ");
 
 
     }
