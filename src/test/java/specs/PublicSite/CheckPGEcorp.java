@@ -7,6 +7,8 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import specs.AbstractSpec;
 
+import java.util.Date;
+
 public class CheckPGEcorp extends AbstractSpec {
     private static final long DEFAULT_PAUSE = 2000;
 
@@ -26,6 +28,7 @@ public class CheckPGEcorp extends AbstractSpec {
 
         Thread.sleep(DEFAULT_PAUSE);
 
+        System.out.println(new Date());
         System.out.println("Stock Price Original: " + StockPriceOriginal);
         System.out.println("Stock Date Original: " + StockDateOriginal);
 
@@ -37,6 +40,7 @@ public class CheckPGEcorp extends AbstractSpec {
 
         Thread.sleep(DEFAULT_PAUSE);
 
+        System.out.println(new Date());
         System.out.println("Stock Price Updated: " + StockPriceUpdated);
         System.out.println("Stock Date Updated: " + StockDateUpdated);
 
