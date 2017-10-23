@@ -16,7 +16,7 @@ public class CheckPGEcorp extends AbstractSpec {
         Thread.sleep(DEFAULT_PAUSE);
     }
 
-    @Test (threadPoolSize = 1, invocationCount = 10, timeOut = 1800000)
+    @Test (threadPoolSize = 1, invocationCount = 10)
     public void checkStockPriceUpdates() throws InterruptedException {
         //Assert.assertEquals(homePage.getVersionNumber(), Q4WebVersionNumber, "Displayed version number is incorrect");
 
@@ -29,6 +29,7 @@ public class CheckPGEcorp extends AbstractSpec {
         System.out.println("Stock Price Original: " + StockPriceOriginal);
         System.out.println("Stock Date Original: " + StockDateOriginal);
 
+        Thread.sleep(1500000);
 
         // Updated data
         String StockPriceUpdated = driver.findElement(By.xpath("//a[contains(@class, 'StockPrice')]")).getText();
