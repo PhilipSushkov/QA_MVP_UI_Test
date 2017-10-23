@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<suite name="Price Upadates">
-    <test name="Gold Price API Test">
+<suite name="Price Updates">
+    <test name="CheckPGEcorp test">
         <classes>
-            <class name ="specs.api.GoldPriceCheckTest" />
+            <class name ="specs.PublicSite.CheckPGEcorp" />
         </classes>
     </test>
 </suite>
