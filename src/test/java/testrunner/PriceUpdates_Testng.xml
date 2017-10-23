@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="PGEcorp Price Validation">
+<suite name="Price Upadates">
     <test name="Gold Price API Test">
         <classes>
             <class name ="specs.api.GoldPriceCheckTest" />
