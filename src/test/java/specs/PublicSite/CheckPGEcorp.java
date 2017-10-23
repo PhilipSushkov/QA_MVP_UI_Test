@@ -34,6 +34,8 @@ public class CheckPGEcorp extends AbstractSpec {
 
         Thread.sleep(1500000);
 
+        driver.navigate().refresh();
+
         // Updated data
         String StockPriceUpdated = driver.findElement(By.xpath("//a[contains(@class, 'StockPrice')]")).getText();
         String StockDateUpdated = driver.findElement(By.xpath("//span[(@class='StockDate')]")).getText();
