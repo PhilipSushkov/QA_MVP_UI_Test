@@ -24,7 +24,7 @@ public class CheckPressReleaseFilter {
     public void testFilterApi() {
         try {
             FiltersAPI.addFilter();
-            FiltersAPI.getAllFilters();
+            //FiltersAPI.getAllFilters();
         }
         catch (Exception e){
             e.printStackTrace();
