@@ -20,7 +20,7 @@ public class FiltersAPI {
                     .header("x-api-key", "w90bwvYsrg8eEtTbFsPsManZM8aOWLPGKjGhZ0Ue")
                     .header("x-q4org-id", "ea98f2a4d7c94bf294bb929d67c266e5")
                     .header("content-type", "application/json")
-                    .body(jsonObject)
+                    .body(obj)
                     .asJson();
             System.out.println(response.getBody());
             return true;

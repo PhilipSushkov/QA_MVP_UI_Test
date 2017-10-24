@@ -19,7 +19,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class CheckPressReleaseFilter extends ApiAbstractSpec {
+public class CheckPressReleaseFilter {
     @Test
     public void testFilterApi() {
         try {
