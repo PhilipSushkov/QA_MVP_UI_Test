@@ -1,0 +1,73 @@
+{
+  "name": "VictorTesting1234",
+  "terms": [
+    {
+      "type": "ANY",
+      "termType": "METADATA",
+      "sortOrder":1,
+      "termData":[
+        {
+          "dataType": "METADATATYPE",
+          "term":"misc"
+        },
+        {
+          "dataType": "METADATAVALUE",
+          "term":"misc"
+        }
+      ]
+    },
+    {
+      "type": "NOT",
+      "termType": "TICKER",
+      "sortOrder":2,
+      "termData":[
+        {
+          "dataType": "SYMBOL",
+          "term":"TSLA"
+        },
+        {
+          "dataType": "MIC",
+          "term":"XNAS"
+        }
+      ]
+    },
+    {
+      "type": "ALL",
+      "termType": "TICKER",
+      "sortOrder":3,
+      "termData":[
+        {
+          "dataType": "SYMBOL",
+          "term":"AAPL"
+        },
+        {
+          "dataType": "MIC",
+          "term":"XNAS"
+        }
+      ]
+    },
+    {
+      "type": "NOT",
+      "termType": "TEXT",
+      "sortOrder":1,
+      "termData":[
+        {
+          "dataType": "TEXT",
+          "term":"misc"
+        }
+      ]
+    }
+  ],
+  "includeMentions": true,
+  "active": true,
+  "Language": "de",
+  "providerServices": [
+    {
+      "id": 4,
+      "Provider": "Marketwire - Canada",
+      "Service": "XHTML Press Releases - English",
+      "FriendlyName": null
+    }
+  ],
+  "userEmail": "victorl@q4websystems.com"
+}
