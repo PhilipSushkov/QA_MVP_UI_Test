@@ -643,6 +643,26 @@ public class CrawlingSite {
         return sTradeDate;
     }
 
+    public String getTradeDate30() throws Exception {
+        String sTradeDate30 = "Not Defined";
+        String sSiteFull = Functions.UrlAddSlash(sSite, sSlash, sHttp);
+
+        try {
+            phDriver.get(sSiteFull);
+            Thread.sleep(DEFAULT_PAUSE);
+            sTradeDate30 = phDriver.findElement(By.xpath("//span[contains(@id, 'lblTradeDate')]")).getText();
+        } catch (TimeoutException e) {
+            return "TimeoutException";
+        } catch (WebDriverException e) {
+            saveTradeDate30(sTradeDate30);
+            return sTradeDate30;
+        }
+
+        System.out.println(sSite + ": " + sTradeDate30);
+        saveTradeDate(sTradeDate30);
+        return sTradeDate30;
+    }
+
     public String getStockPrice() throws Exception {
         String sStockPrice = "Not Defined";
         String sSiteFull = Functions.UrlAddSlash(sSite, sSlash, sHttp);
@@ -650,7 +670,9 @@ public class CrawlingSite {
         try {
             phDriver.get(sSiteFull);
             Thread.sleep(DEFAULT_PAUSE);
-            sStockPrice = phDriver.findElement(By.xpath("//span[contains(@id, 'lblPrice')]")).getText();
+            //sStockPrice = phDriver.findElement(By.xpath("//a/span[contains(@id, 'lblPrice')]")).getText();
+            //sStockPrice = phDriver.findElement(By.xpath("//span[substring(@id,string-length(@id) - string-length('lblPrice')+1,string-length(@id))='lblPrice']/@id")).getText();
+            sStockPrice = phDriver.findElement(By.xpath("//a[(@class='StockPrice')]|//a/span[contains(@id, 'lblPrice')]|//a[contains(@id, 'hrefPrice')]")).getAttribute("innerText");
         } catch (TimeoutException e) {
             return "TimeoutException";
         } catch (WebDriverException e) {
@@ -661,6 +683,26 @@ public class CrawlingSite {
         System.out.println(sSite + ": " + sStockPrice);
         saveStockPrice(sStockPrice);
         return sStockPrice;
+    }
+
+    public String getStockPrice30() throws Exception {
+        String sStockPrice30 = "Not Defined";
+        String sSiteFull = Functions.UrlAddSlash(sSite, sSlash, sHttp);
+
+        try {
+            phDriver.get(sSiteFull);
+            Thread.sleep(DEFAULT_PAUSE);
+            sStockPrice30 = phDriver.findElement(By.xpath("//a[(@class='StockPrice')]|//a/span[contains(@id, 'lblPrice')]|//a[contains(@id, 'hrefPrice')]")).getAttribute("innerText");
+        } catch (TimeoutException e) {
+            return "TimeoutException";
+        } catch (WebDriverException e) {
+            saveStockPrice(sStockPrice30);
+            return sStockPrice30;
+        }
+
+        System.out.println(sSite + ": " + sStockPrice30);
+        saveStockPrice30(sStockPrice30);
+        return sStockPrice30;
     }
 
     public void saveTradeDate(String sTradeDate) throws Exception {
@@ -691,6 +733,33 @@ public class CrawlingSite {
 
     }
 
+    public void saveTradeDate30(String sTradeDate30) throws Exception {
+        JSONObject jsonObjSite = new JSONObject();
+        //System.out.println(sPathToFile + sSite + ".json");
+
+        try {
+            jsonObjSite = (JSONObject) parser.parse(new FileReader(sPathToFile + sSite + ".json"));
+        } catch (ParseException e) {
+        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
+        }
+
+        jsonObjSite.put("trade_date30", sTradeDate30);
+
+        try {
+            FileWriter file = new FileWriter(sPathToFile + sSite + ".json");
+            file.write(jsonObjSite.toJSONString().replace("\\", ""));
+            file.flush();
+            file.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     public void saveStockPrice(String sStockPrice) throws Exception {
         JSONObject jsonObjSite = new JSONObject();
         //System.out.println(sPathToFile + sSite + ".json");
@@ -704,6 +773,33 @@ public class CrawlingSite {
 
         jsonObjSite.put("domain", sSite);
         jsonObjSite.put("stock_price", sStockPrice);
+
+        try {
+            FileWriter file = new FileWriter(sPathToFile + sSite + ".json");
+            file.write(jsonObjSite.toJSONString().replace("\\", ""));
+            file.flush();
+            file.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void saveStockPrice30(String sStockPrice) throws Exception {
+        JSONObject jsonObjSite = new JSONObject();
+        //System.out.println(sPathToFile + sSite + ".json");
+
+        try {
+            jsonObjSite = (JSONObject) parser.parse(new FileReader(sPathToFile + sSite + ".json"));
+        } catch (ParseException e) {
+        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
+        }
+
+        jsonObjSite.put("stock_price30", sStockPrice);
 
         try {
             FileWriter file = new FileWriter(sPathToFile + sSite + ".json");

@@ -58,7 +58,7 @@ public class CheckCrawlingSite {
         after = AfterExtentManager.GetExtent();
         checkPrice = PriceExtentManager.GetExtent();
 
-        sDataSiteJson_n = propUIPublicSite.getProperty("json_SiteData_0");
+        sDataSiteJson_n = propUIPublicSite.getProperty("json_SiteData_1");
         //sDataSiteJson_n = propUIPublicSite.getProperty("json_SiteDataSsl");
         //sDataSiteJson_n = propUIPublicSite.getProperty("json_NgnixSiteData");
         sDataSiteSsl = propUIPublicSite.getProperty("json_SiteDataSsl");
@@ -188,15 +188,8 @@ public class CheckCrawlingSite {
 
         ExtentTest test = checkPrice.createTest("Check Trade Date & Stock Price result for " + site);
 
-        if (! ((sTradeDate.equals("")) || (sTradeDate.equals("Not Defined"))) ) {
-            test.log(Status.PASS, "Trade Date: " + sTradeDate);
-            Assert.assertTrue(true);
-        } else {
-            test.log(Status.FAIL, "Trade Date is Not Defined");
-            Assert.assertTrue(false);
-        }
 
-        if (! ((sStockPrice.equals("")) || (sStockPrice.equals("Not Defined"))) ) {
+        if (! ((sStockPrice.equals("")) || (sStockPrice.equals("Not Defined")) || (sTradeDate.equals("TimeoutException"))) ) {
             test.log(Status.PASS, "Stock Price: " + sStockPrice);
             Assert.assertTrue(true);
         } else {
@@ -204,10 +197,19 @@ public class CheckCrawlingSite {
             Assert.assertTrue(false);
         }
 
+
+        if (! ((sTradeDate.equals("")) || (sTradeDate.equals("Not Defined")) || (sTradeDate.equals("TimeoutException"))) ) {
+            test.log(Status.PASS, "Trade Date: " + sTradeDate);
+            Assert.assertTrue(true);
+        } else {
+            test.log(Status.FAIL, "Trade Date is Not Defined");
+            Assert.assertTrue(false);
+        }
+
     }
 
-    /*
-    @Test(dataProvider=SITE_DATA_2, threadPoolSize=NUM_THREADS, priority=1, enabled=false)
+
+    @Test(dataProvider=SITE_DATA_2, threadPoolSize=NUM_THREADS, priority=1, enabled=true)
     public void checkStockPriceHeader30(String site) throws Exception {
         String sTradeDate30 = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getTradeDate30();
         String sStockPrice30 = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getStockPrice30();
@@ -223,14 +225,15 @@ public class CheckCrawlingSite {
         } catch (IOException e) {
         }
 
+        /*
         String sTradeDate = jsonObjSite.get("trade_date").toString();
         String sStockPrice = jsonObjSite.get("stock_price").toString();
 
         Assert.assertEquals(sTradeDate30, sTradeDate, "Trade Date value doesn't update for " + site);
         Assert.assertEquals(sStockPrice30, sStockPrice, "Stock Price value doesn't update for " + site);
+        */
 
     }
-    */
 
 
     @AfterMethod

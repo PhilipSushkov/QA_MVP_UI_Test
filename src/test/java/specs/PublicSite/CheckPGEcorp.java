@@ -15,7 +15,7 @@ public class CheckPGEcorp extends AbstractSpec {
     @BeforeTest
     public void goToPGEcorpSite() throws InterruptedException {
         //driver.get("http://investor.pgecorp.com/"); thirdpointre.bm
-        driver.get("http://thirdpointre.bm/");
+        driver.get("http://first-quantum.com/");
         Thread.sleep(DEFAULT_PAUSE);
     }
 
@@ -24,8 +24,9 @@ public class CheckPGEcorp extends AbstractSpec {
         //Assert.assertEquals(homePage.getVersionNumber(), Q4WebVersionNumber, "Displayed version number is incorrect");
 
         // Original data
-        String StockPriceOriginal = driver.findElement(By.xpath("//a[contains(@class, 'StockPrice')]")).getText();
-        String StockDateOriginal = driver.findElement(By.xpath("//span[(@class='StockDate')]")).getText();
+        //String StockPriceOriginal = driver.findElement(By.xpath("//a[contains(@class, 'StockPrice')]")).getText();
+        String StockPriceOriginal = driver.findElement(By.xpath("//a[(@class='StockPrice')]|//a/span[contains(@id, 'lblPrice')]|//a[contains(@id, 'hrefPrice')]")).getAttribute("innerText");
+        //String StockDateOriginal = driver.findElement(By.xpath("//span[(@class='StockDate')]")).getText();
         //String StockDateOriginal = driver.findElement(By.xpath("//span[contains(@id, 'lblTradeDate')]")).getText();
 
         Thread.sleep(DEFAULT_PAUSE);
@@ -34,7 +35,7 @@ public class CheckPGEcorp extends AbstractSpec {
 
         System.out.println(new Date());
         System.out.println("Stock Price Original: " + StockPriceOriginal);
-        System.out.println("Stock Date Original: " + StockDateOriginal);
+        //System.out.println("Stock Date Original: " + StockDateOriginal);
         System.out.println(" ------ ");
 
         Thread.sleep(1500);
@@ -54,7 +55,7 @@ public class CheckPGEcorp extends AbstractSpec {
 
 
         Assert.assertNotEquals(StockPriceOriginal, StockPriceUpdated, "Stock Price value shouldn't be equal");
-        Assert.assertNotEquals(StockDateOriginal, StockDateUpdated, "Stock Date value shouldn't be equal");
+        //Assert.assertNotEquals(StockDateOriginal, StockDateUpdated, "Stock Date value shouldn't be equal");
         System.out.println(" --- FINISH --- ");
 
 
