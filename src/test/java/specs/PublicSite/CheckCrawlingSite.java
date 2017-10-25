@@ -38,7 +38,7 @@ public class CheckCrawlingSite {
     private static final String PATHTO_PUBLICSITE_PROP = "PublicSite/PublicSiteMap.properties";
     public static Properties propUIPublicSite;
     private static final String SITE_DATA="siteData", SITE_DATA_2="siteData2", MODULE_DATA="moduleData", SITE_DATA_SSL="siteDataSsl";
-    private static ExtentReports extent, cookieExtent, after;
+    private static ExtentReports extent, cookieExtent, after, checkPrice;
 
 
     @BeforeTest
@@ -56,9 +56,11 @@ public class CheckCrawlingSite {
         extent = ExtentManager.GetExtent();
         cookieExtent = CookieExtentManager.GetExtent();
         after = AfterExtentManager.GetExtent();
+        checkPrice = PriceExtentManager.GetExtent();
 
-        sDataSiteJson_n = propUIPublicSite.getProperty("json_NgnixSiteData");
+        sDataSiteJson_n = propUIPublicSite.getProperty("json_SiteData_0");
         //sDataSiteJson_n = propUIPublicSite.getProperty("json_SiteDataSsl");
+        //sDataSiteJson_n = propUIPublicSite.getProperty("json_NgnixSiteData");
         sDataSiteSsl = propUIPublicSite.getProperty("json_SiteDataSsl");
     }
 
@@ -183,8 +185,28 @@ public class CheckCrawlingSite {
     public void checkStockPriceHeader(String site) throws Exception {
         String sTradeDate = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getTradeDate();
         String sStockPrice = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getStockPrice();
+
+        ExtentTest test = checkPrice.createTest("Check Trade Date & Stock Price result for " + site);
+
+        if (! (sTradeDate.equals("")) || (sTradeDate.equals("Not Defined")) ) {
+            test.log(Status.PASS, "Trade Date: " + sTradeDate);
+            Assert.assertTrue(true);
+        } else {
+            test.log(Status.FAIL, "Trade Date is Not Defined");
+            Assert.assertTrue(false);
+        }
+
+        if (! (sStockPrice.equals("")) || (sStockPrice.equals("Not Defined")) ) {
+            test.log(Status.PASS, "Stock Price: " + sStockPrice);
+            Assert.assertTrue(true);
+        } else {
+            test.log(Status.FAIL, "Stock Price is Not Defined");
+            Assert.assertTrue(false);
+        }
+
     }
 
+    /*
     @Test(dataProvider=SITE_DATA_2, threadPoolSize=NUM_THREADS, priority=1, enabled=false)
     public void checkStockPriceHeader30(String site) throws Exception {
         String sTradeDate30 = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getTradeDate30();
@@ -208,6 +230,7 @@ public class CheckCrawlingSite {
         Assert.assertEquals(sStockPrice30, sStockPrice, "Stock Price value doesn't update for " + site);
 
     }
+    */
 
 
     @AfterMethod

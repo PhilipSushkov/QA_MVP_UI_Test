@@ -622,4 +622,101 @@ public class CrawlingSite {
 
         return true;
     }
+
+    public String getTradeDate() throws Exception {
+        String sTradeDate = "Not Defined";
+        String sSiteFull = Functions.UrlAddSlash(sSite, sSlash, sHttp);
+
+        try {
+            phDriver.get(sSiteFull);
+            Thread.sleep(DEFAULT_PAUSE);
+            sTradeDate = phDriver.findElement(By.xpath("//span[contains(@id, 'lblTradeDate')]")).getText();
+        } catch (TimeoutException e) {
+            return "TimeoutException";
+        } catch (WebDriverException e) {
+            saveTradeDate(sTradeDate);
+            return sTradeDate;
+        }
+
+        System.out.println(sSite + ": " + sTradeDate);
+        saveTradeDate(sTradeDate);
+        return sTradeDate;
+    }
+
+    public String getStockPrice() throws Exception {
+        String sStockPrice = "Not Defined";
+        String sSiteFull = Functions.UrlAddSlash(sSite, sSlash, sHttp);
+
+        try {
+            phDriver.get(sSiteFull);
+            Thread.sleep(DEFAULT_PAUSE);
+            sStockPrice = phDriver.findElement(By.xpath("//span[contains(@id, 'lblPrice')]")).getText();
+        } catch (TimeoutException e) {
+            return "TimeoutException";
+        } catch (WebDriverException e) {
+            saveStockPrice(sStockPrice);
+            return sStockPrice;
+        }
+
+        System.out.println(sSite + ": " + sStockPrice);
+        saveStockPrice(sStockPrice);
+        return sStockPrice;
+    }
+
+    public void saveTradeDate(String sTradeDate) throws Exception {
+        JSONObject jsonObjSite = new JSONObject();
+        //System.out.println(sPathToFile + sSite + ".json");
+
+        try {
+            jsonObjSite = (JSONObject) parser.parse(new FileReader(sPathToFile + sSite + ".json"));
+        } catch (ParseException e) {
+        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
+        }
+
+        jsonObjSite.put("domain", sSite);
+        jsonObjSite.put("trade_date", sTradeDate);
+
+        try {
+            FileWriter file = new FileWriter(sPathToFile + sSite + ".json");
+            file.write(jsonObjSite.toJSONString().replace("\\", ""));
+            file.flush();
+            file.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void saveStockPrice(String sStockPrice) throws Exception {
+        JSONObject jsonObjSite = new JSONObject();
+        //System.out.println(sPathToFile + sSite + ".json");
+
+        try {
+            jsonObjSite = (JSONObject) parser.parse(new FileReader(sPathToFile + sSite + ".json"));
+        } catch (ParseException e) {
+        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
+        }
+
+        jsonObjSite.put("domain", sSite);
+        jsonObjSite.put("stock_price", sStockPrice);
+
+        try {
+            FileWriter file = new FileWriter(sPathToFile + sSite + ".json");
+            file.write(jsonObjSite.toJSONString().replace("\\", ""));
+            file.flush();
+            file.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 }
