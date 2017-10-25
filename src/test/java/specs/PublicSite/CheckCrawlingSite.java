@@ -57,8 +57,8 @@ public class CheckCrawlingSite {
         cookieExtent = CookieExtentManager.GetExtent();
         after = AfterExtentManager.GetExtent();
 
-        //sDataSiteJson_n = propUIPublicSite.getProperty("json_NgnixSiteData");
-        sDataSiteJson_n = propUIPublicSite.getProperty("json_SiteDataSsl");
+        sDataSiteJson_n = propUIPublicSite.getProperty("json_NgnixSiteData");
+        //sDataSiteJson_n = propUIPublicSite.getProperty("json_SiteDataSsl");
         sDataSiteSsl = propUIPublicSite.getProperty("json_SiteDataSsl");
     }
 
@@ -171,11 +171,44 @@ public class CheckCrawlingSite {
         System.out.println("Module: " + moduleName + " " +id);
     }
 
-    @Test(dataProvider=SITE_DATA_SSL, priority=6, enabled=true)
+    @Test(dataProvider=SITE_DATA_SSL, priority=6, enabled=false)
     public void checkSslSertificates(String site) throws Exception {
         crawlingSite = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile);
         Assert.assertTrue(crawlingSite.getSslTrust(), "Some Ssl Certificates are failed: " + site);
     }
+
+
+
+    @Test(dataProvider=SITE_DATA_2, threadPoolSize=NUM_THREADS, priority=1, enabled=true)
+    public void checkStockPriceHeader(String site) throws Exception {
+        String sTradeDate = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getTradeDate();
+        String sStockPrice = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getStockPrice();
+    }
+
+    @Test(dataProvider=SITE_DATA_2, threadPoolSize=NUM_THREADS, priority=1, enabled=false)
+    public void checkStockPriceHeader30(String site) throws Exception {
+        String sTradeDate30 = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getTradeDate30();
+        String sStockPrice30 = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getStockPrice30();
+
+        JSONObject jsonObjSite = new JSONObject();
+        //System.out.println(sPathToFile + sSite + ".json");
+
+        JSONParser parser30 = new JSONParser();
+        try {
+            jsonObjSite = (JSONObject) parser30.parse(new FileReader(sPathToFile + site + ".json"));
+        } catch (ParseException e) {
+        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
+        }
+
+        String sTradeDate = jsonObjSite.get("trade_date").toString();
+        String sStockPrice = jsonObjSite.get("stock_price").toString();
+
+        Assert.assertEquals(sTradeDate30, sTradeDate, "Trade Date value doesn't update for " + site);
+        Assert.assertEquals(sStockPrice30, sStockPrice, "Stock Price value doesn't update for " + site);
+
+    }
+
 
     @AfterMethod
     public void afterMethod(ITestResult result) {
