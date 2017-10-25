@@ -188,7 +188,7 @@ public class CheckCrawlingSite {
 
         ExtentTest test = checkPrice.createTest("Check Trade Date & Stock Price result for " + site);
 
-        if (! (sTradeDate.equals("")) || (sTradeDate.equals("Not Defined")) ) {
+        if (! ((sTradeDate.equals("")) || (sTradeDate.equals("Not Defined"))) ) {
             test.log(Status.PASS, "Trade Date: " + sTradeDate);
             Assert.assertTrue(true);
         } else {
@@ -196,7 +196,7 @@ public class CheckCrawlingSite {
             Assert.assertTrue(false);
         }
 
-        if (! (sStockPrice.equals("")) || (sStockPrice.equals("Not Defined")) ) {
+        if (! ((sStockPrice.equals("")) || (sStockPrice.equals("Not Defined"))) ) {
             test.log(Status.PASS, "Stock Price: " + sStockPrice);
             Assert.assertTrue(true);
         } else {
@@ -384,6 +384,7 @@ public class CheckCrawlingSite {
         extent.flush();
         cookieExtent.flush();
         after.flush();
+        checkPrice.flush();
     }
 }
 
