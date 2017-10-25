@@ -788,7 +788,7 @@ public class CrawlingSite {
 
     }
 
-    public void saveStockPrice30(String sStockPrice) throws Exception {
+    public void saveStockPrice30(String sStockPrice30) throws Exception {
         JSONObject jsonObjSite = new JSONObject();
         //System.out.println(sPathToFile + sSite + ".json");
 
@@ -799,7 +799,7 @@ public class CrawlingSite {
         } catch (IOException e) {
         }
 
-        jsonObjSite.put("stock_price30", sStockPrice);
+        jsonObjSite.put("stock_price30", sStockPrice30);
 
         try {
             FileWriter file = new FileWriter(sPathToFile + sSite + ".json");
