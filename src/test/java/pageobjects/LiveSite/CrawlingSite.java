@@ -23,6 +23,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -773,6 +774,7 @@ public class CrawlingSite {
 
         jsonObjSite.put("domain", sSite);
         jsonObjSite.put("stock_price", sStockPrice);
+        jsonObjSite.put("stock_price_time", new Date().toString());
 
         try {
             FileWriter file = new FileWriter(sPathToFile + sSite + ".json");
@@ -800,6 +802,7 @@ public class CrawlingSite {
         }
 
         jsonObjSite.put("stock_price30", sStockPrice30);
+        jsonObjSite.put("stock_price_time30", new Date().toString());
 
         try {
             FileWriter file = new FileWriter(sPathToFile + sSite + ".json");

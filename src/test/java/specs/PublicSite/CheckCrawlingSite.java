@@ -15,10 +15,7 @@ import pageobjects.LiveSite.CrawlingSite;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Properties;
+import java.util.*;
 
 import util.Functions;
 import util.LocalDriverManager;
@@ -58,7 +55,7 @@ public class CheckCrawlingSite {
         after = AfterExtentManager.GetExtent();
         checkPrice = PriceExtentManager.GetExtent();
 
-        sDataSiteJson_n = propUIPublicSite.getProperty("json_SiteData_1");
+        sDataSiteJson_n = propUIPublicSite.getProperty("json_SiteData_2");
         //sDataSiteJson_n = propUIPublicSite.getProperty("json_SiteDataSsl");
         //sDataSiteJson_n = propUIPublicSite.getProperty("json_NgnixSiteData");
         sDataSiteSsl = propUIPublicSite.getProperty("json_SiteDataSsl");
@@ -232,17 +229,18 @@ public class CheckCrawlingSite {
 
             //String sTradeDate = jsonObjSite.get("trade_date").toString();
             String sStockPrice = jsonObjSite.get("stock_price").toString();
+            String sStockPriceTime = jsonObjSite.get("stock_price_time").toString();
 
             if ( !(sStockPrice30.equals(sStockPrice)) ) {
                 test.log(Status.PASS, "Stock Price updates: " + sStockPrice30);
                 Assert.assertTrue(true);
             } else {
-                test.log(Status.FAIL, "Stock Price doesn't update: " + sStockPrice30);
+                test.log(Status.FAIL, "Stock Price doesn't update. Original:  " +sStockPrice + ", time: " +sStockPriceTime+". Latest: " + sStockPrice30 + ", time: " + new Date().toString());
                 Assert.assertTrue(false);
             }
         } else {
-            test.log(Status.FAIL, "Stock Price is Not Defined");
-            Assert.assertTrue(false);
+            test.log(Status.PASS, "Stock Price is Not Defined");
+            Assert.assertTrue(true);
         }
 
         /*

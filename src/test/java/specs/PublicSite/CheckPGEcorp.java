@@ -14,19 +14,19 @@ public class CheckPGEcorp extends AbstractSpec {
 
     @BeforeTest
     public void goToPGEcorpSite() throws InterruptedException {
-        //driver.get("http://investor.pgecorp.com/"); thirdpointre.bm
-        driver.get("http://first-quantum.com/");
+        driver.get("http://investor.pgecorp.com/");
+        //driver.get("http://first-quantum.com/");
         Thread.sleep(DEFAULT_PAUSE);
     }
 
-    @Test (threadPoolSize = 1, invocationCount = 2)
+    @Test (threadPoolSize = 1, invocationCount = 20)
     public void checkStockPriceUpdates() throws InterruptedException {
         //Assert.assertEquals(homePage.getVersionNumber(), Q4WebVersionNumber, "Displayed version number is incorrect");
 
         // Original data
-        //String StockPriceOriginal = driver.findElement(By.xpath("//a[contains(@class, 'StockPrice')]")).getText();
-        String StockPriceOriginal = driver.findElement(By.xpath("//a[(@class='StockPrice')]|//a/span[contains(@id, 'lblPrice')]|//a[contains(@id, 'hrefPrice')]")).getAttribute("innerText");
-        //String StockDateOriginal = driver.findElement(By.xpath("//span[(@class='StockDate')]")).getText();
+        String StockPriceOriginal = driver.findElement(By.xpath("//a[contains(@class, 'StockPrice')]")).getText();
+        //String StockPriceOriginal = driver.findElement(By.xpath("//a[(@class='StockPrice')]|//a/span[contains(@id, 'lblPrice')]|//a[contains(@id, 'hrefPrice')]")).getAttribute("innerText");
+        String StockDateOriginal = driver.findElement(By.xpath("//span[(@class='StockDate')]")).getText();
         //String StockDateOriginal = driver.findElement(By.xpath("//span[contains(@id, 'lblTradeDate')]")).getText();
 
         Thread.sleep(DEFAULT_PAUSE);
@@ -38,7 +38,7 @@ public class CheckPGEcorp extends AbstractSpec {
         //System.out.println("Stock Date Original: " + StockDateOriginal);
         System.out.println(" ------ ");
 
-        Thread.sleep(1500);
+        Thread.sleep(1500000);
 
         driver.navigate().refresh();
 
