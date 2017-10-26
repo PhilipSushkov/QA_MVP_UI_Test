@@ -55,7 +55,7 @@ public class CheckCrawlingSite {
         after = AfterExtentManager.GetExtent();
         checkPrice = PriceExtentManager.GetExtent();
 
-        sDataSiteJson_n = propUIPublicSite.getProperty("json_SiteData_2");
+        sDataSiteJson_n = propUIPublicSite.getProperty("json_SiteData_7");
         //sDataSiteJson_n = propUIPublicSite.getProperty("json_SiteDataSsl");
         //sDataSiteJson_n = propUIPublicSite.getProperty("json_NgnixSiteData");
         sDataSiteSsl = propUIPublicSite.getProperty("json_SiteDataSsl");
