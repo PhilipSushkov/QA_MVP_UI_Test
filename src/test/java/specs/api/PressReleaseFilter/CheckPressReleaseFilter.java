@@ -23,8 +23,13 @@ public class CheckPressReleaseFilter {
     @Test
     public void testFilterApi() {
         try {
-            FiltersAPI.addFilter();
+            String UUID = FiltersAPI.addFilter();
+            System.out.println("UUID: " + UUID);
+            //FiltersAPI.editFilter(UUID);
             //FiltersAPI.getAllFilters();
+            //FiltersAPI.getOneFilter(UUID);
+            FiltersAPI.deleteFilter(UUID);
+            FiltersAPI.fieldCheck("TERMTYPE");
         }
         catch (Exception e){
             e.printStackTrace();

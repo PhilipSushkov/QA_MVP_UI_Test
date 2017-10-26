@@ -1,0 +1,258 @@
+{
+  "data": [
+    {
+      "name": "sortOrder NEGATIVE",
+      "terms": [
+        {
+          "type": "ALL",
+          "termType": "METADATA",
+          "sortOrder":-10,
+          "termData":[
+            {
+              "dataType": "METADATATYPE",
+              "term":"misc"
+            },
+            {
+              "dataType": "METADATAVALUE",
+              "term":"misc"
+            }
+          ]
+        },
+        {
+          "type": "ANY",
+          "termType": "TICKER",
+          "sortOrder":1,
+          "termData":[
+            {
+              "dataType": "SYMBOL",
+              "term":"AAPL"
+            },
+            {
+              "dataType": "MIC",
+              "term":"XNAS"
+            }
+          ]
+        }
+      ],
+      "includeMentions": true,
+      "active": true,
+      "Language": "en",
+      "providerServices": [
+        {
+          "id": 1
+        }
+      ],
+      "userEmail": "test@q4websystems.com",
+      "expectedResults": [
+        {
+          "Success": false,
+          "Message": "SortOrder must be greater than 0.\n"
+        }
+      ]
+    },
+    {
+      "name": "sortOrder ZERO",
+      "terms": [
+        {
+          "type": "ALL",
+          "termType": "METADATA",
+          "sortOrder":0,
+          "termData":[
+            {
+              "dataType": "METADATATYPE",
+              "term":"misc"
+            },
+            {
+              "dataType": "METADATAVALUE",
+              "term":"misc"
+            }
+          ]
+        },
+        {
+          "type": "ANY",
+          "termType": "TICKER",
+          "sortOrder":1,
+          "termData":[
+            {
+              "dataType": "SYMBOL",
+              "term":"AAPL"
+            },
+            {
+              "dataType": "MIC",
+              "term":"XNAS"
+            }
+          ]
+        }
+      ],
+      "includeMentions": true,
+      "active": true,
+      "Language": "en",
+      "providerServices": [
+        {
+          "id": 1
+        }
+      ],
+      "userEmail": "test@q4websystems.com",
+      "expectedResults": [
+        {
+          "Success": false,
+          "Message": "SortOrder must be greater than 0.\n"
+        }
+      ]
+    },
+    {
+      "name": "sortOrder POSITIVE",
+      "terms": [
+        {
+          "type": "ALL",
+          "termType": "METADATA",
+          "sortOrder":10,
+          "termData":[
+            {
+              "dataType": "METADATATYPE",
+              "term":"misc"
+            },
+            {
+              "dataType": "METADATAVALUE",
+              "term":"misc"
+            }
+          ]
+        },
+        {
+          "type": "ANY",
+          "termType": "TICKER",
+          "sortOrder":1,
+          "termData":[
+            {
+              "dataType": "SYMBOL",
+              "term":"AAPL"
+            },
+            {
+              "dataType": "MIC",
+              "term":"XNAS"
+            }
+          ]
+        }
+      ],
+      "includeMentions": true,
+      "active": true,
+      "Language": "en",
+      "providerServices": [
+        {
+          "id": 1
+        }
+      ],
+      "userEmail": "test@q4websystems.com",
+      "expectedResults": [
+        {
+          "Data": {
+            "Id": "979d0912634d481e60dc08d51c94de27"
+          },
+          "Success": true
+        }
+      ]
+    },
+    {
+      "name": "sortOrder INT MAX",
+      "terms": [
+        {
+          "type": "ALL",
+          "termType": "METADATA",
+          "sortOrder":2147483647,
+          "termData":[
+            {
+              "dataType": "METADATATYPE",
+              "term":"misc"
+            },
+            {
+              "dataType": "METADATAVALUE",
+              "term":"misc"
+            }
+          ]
+        },
+        {
+          "type": "ANY",
+          "termType": "TICKER",
+          "sortOrder":1,
+          "termData":[
+            {
+              "dataType": "SYMBOL",
+              "term":"AAPL"
+            },
+            {
+              "dataType": "MIC",
+              "term":"XNAS"
+            }
+          ]
+        }
+      ],
+      "includeMentions": true,
+      "active": true,
+      "Language": "en",
+      "providerServices": [
+        {
+          "id": 1
+        }
+      ],
+      "userEmail": "test@q4websystems.com",
+      "expectedResults": [
+        {
+          "Data": {
+            "Id": "979d0912634d481e60dc08d51c94de27"
+          },
+          "Success": true
+        }
+      ]
+    },
+    {
+      "name": "sortOrder GREATER THAN INT MAX",
+      "terms": [
+        {
+          "type": "ALL",
+          "termType": "METADATA",
+          "sortOrder":2147483648,
+          "termData":[
+            {
+              "dataType": "METADATATYPE",
+              "term":"misc"
+            },
+            {
+              "dataType": "METADATAVALUE",
+              "term":"misc"
+            }
+          ]
+        },
+        {
+          "type": "ANY",
+          "termType": "TICKER",
+          "sortOrder":1,
+          "termData":[
+            {
+              "dataType": "SYMBOL",
+              "term":"AAPL"
+            },
+            {
+              "dataType": "MIC",
+              "term":"XNAS"
+            }
+          ]
+        }
+      ],
+      "includeMentions": true,
+      "active": true,
+      "Language": "en",
+      "providerServices": [
+        {
+          "id": 1
+        }
+      ],
+      "userEmail": "test@q4websystems.com",
+      "expectedResults": [
+        {
+          "Success": false,
+          "Message": "JSON integer 2147483648 is too large or small for an Int32. Path 'terms[0].sortOrder', line 7, position 32."
+        }
+      ]
+    }
+  ]
+}

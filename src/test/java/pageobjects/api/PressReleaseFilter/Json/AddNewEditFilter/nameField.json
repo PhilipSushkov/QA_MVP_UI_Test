@@ -1,0 +1,76 @@
+{
+  "data": [
+    {
+      "name": "",
+      "terms": [
+        {
+          "type": "ANY",
+          "termType": "TICKER",
+          "sortOrder":3,
+          "termData":[
+            {
+              "dataType": "SYMBOL",
+              "term":"AAPL"
+            },
+            {
+              "dataType": "MIC",
+              "term":"XNAS"
+            }
+          ]
+        }
+      ],
+      "includeMentions": true,
+      "active": true,
+      "Language": "en",
+      "providerServices": [
+        {
+          "id": 1
+        }
+      ],
+      "userEmail": "test@q4websystems.com",
+      "expectedResults": [
+        {
+          "Success": false,
+          "Message": "Name is required.\n"
+        }
+      ]
+    },
+    {
+      "name": "Valid name",
+      "terms": [
+        {
+          "type": "ANY",
+          "termType": "TICKER",
+          "sortOrder":3,
+          "termData":[
+            {
+              "dataType": "SYMBOL",
+              "term":"AAPL"
+            },
+            {
+              "dataType": "MIC",
+              "term":"XNAS"
+            }
+          ]
+        }
+      ],
+      "includeMentions": true,
+      "active": true,
+      "Language": "en",
+      "providerServices": [
+        {
+          "id": 1
+        }
+      ],
+      "userEmail": "test@q4websystems.com",
+      "expectedResults": [
+        {
+          "Data": {
+            "Id": "7589e784d19948755ace08d51c7c16fb"
+          },
+          "Success": true
+        }
+      ]
+    }
+  ]
+}

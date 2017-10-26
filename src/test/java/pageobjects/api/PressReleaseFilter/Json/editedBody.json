@@ -1,5 +1,5 @@
 {
-  "name": "VictorTesting10:37AM",
+  "name": "VictorTesting - Edited",
   "terms": [
     {
       "type": "ANY",
@@ -8,11 +8,11 @@
       "termData":[
         {
           "dataType": "METADATATYPE",
-          "term":"misc"
+          "term":"misc - edited"
         },
         {
           "dataType": "METADATAVALUE",
-          "term":"misc"
+          "term":"misc - edited"
         }
       ]
     },
@@ -53,7 +53,7 @@
       "termData":[
         {
           "dataType": "TEXT",
-          "term":"misc"
+          "term":"misc - edited"
         }
       ]
     }
