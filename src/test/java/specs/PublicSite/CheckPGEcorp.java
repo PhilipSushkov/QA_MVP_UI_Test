@@ -48,7 +48,7 @@ public class CheckPGEcorp extends AbstractSpec {
         results.add(" ------ ");
 
 
-        Thread.sleep(1500000);
+        Thread.sleep(150000);
 
         driver.navigate().refresh();
 
@@ -70,6 +70,11 @@ public class CheckPGEcorp extends AbstractSpec {
         results.add(" ------ ");
 
 
+        if (StockPriceOriginal.equals(StockPriceUpdated)) {
+            results.add("TEST FAILED. You need to invalidate the cache for " + URL);
+        } else {
+            results.add("TEST PASSED");
+        }
         Assert.assertNotEquals(StockPriceOriginal, StockPriceUpdated, "Stock Price value shouldn't be equal");
         //Assert.assertNotEquals(StockDateOriginal, StockDateUpdated, "Stock Date value shouldn't be equal");
         System.out.println(" --- FINISH --- ");
