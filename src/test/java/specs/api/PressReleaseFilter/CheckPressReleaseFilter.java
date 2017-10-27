@@ -4,6 +4,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.testng.Assert;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.DataProvider;
@@ -23,13 +24,18 @@ public class CheckPressReleaseFilter {
     @Test
     public void testFilterApi() {
         try {
-            String UUID = FiltersAPI.addFilter();
-            System.out.println("UUID: " + UUID);
+            //String UUID = FiltersAPI.addFilter();
+            //System.out.println("UUID: " + UUID);
             //FiltersAPI.editFilter(UUID);
             //FiltersAPI.getAllFilters();
             //FiltersAPI.getOneFilter(UUID);
-            FiltersAPI.deleteFilter(UUID);
-            FiltersAPI.fieldCheck("TERMTYPE");
+            //FiltersAPI.deleteFilter(UUID);
+            Assert.assertTrue(FiltersAPI.fieldCheck("NAME"));
+            Assert.assertTrue(FiltersAPI.fieldCheck("TERMTYPE"));
+            Assert.assertTrue(FiltersAPI.fieldCheck("TERM"));
+            Assert.assertTrue(FiltersAPI.fieldCheck("TYPE"));
+            Assert.assertTrue(FiltersAPI.fieldCheck("SORTORDER"));
+            Assert.assertTrue(FiltersAPI.fieldCheck("ID"));
         }
         catch (Exception e){
             e.printStackTrace();

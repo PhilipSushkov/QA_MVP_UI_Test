@@ -82,7 +82,7 @@
           "termData":[
             {
               "dataType": "TEXT",
-              "term":"misc"
+              "term":""
             }
           ]
         },

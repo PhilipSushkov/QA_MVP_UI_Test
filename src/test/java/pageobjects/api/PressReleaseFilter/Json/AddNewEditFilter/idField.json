@@ -56,7 +56,7 @@
         {
           "type": "ALL",
           "termType": "METADATA",
-          "sortOrder":0,
+          "sortOrder":1,
           "termData":[
             {
               "dataType": "METADATATYPE",

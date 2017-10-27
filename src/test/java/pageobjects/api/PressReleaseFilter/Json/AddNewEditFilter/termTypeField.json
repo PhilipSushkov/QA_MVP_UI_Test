@@ -58,7 +58,7 @@
       "expectedResults": [
         {
           "Success": false,
-          "Message": "DataType is required.\nDataType 'INVALID' must be either Mic, Symbol, MetadataType, MetadataValue or Text.\n"
+          "Message": "DataType 'INVALID' must be either Mic, Symbol, MetadataType, MetadataValue or Text.\n"
         }
       ]
     },

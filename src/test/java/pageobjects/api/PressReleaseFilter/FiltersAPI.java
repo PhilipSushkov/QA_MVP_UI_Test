@@ -1,5 +1,6 @@
 package pageobjects.api.PressReleaseFilter;
 
+import cucumber.deps.com.thoughtworks.xstream.mapper.Mapper;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -15,6 +16,7 @@ import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.*;
 
 import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
@@ -53,10 +55,10 @@ public class FiltersAPI {
     public static String getOneFilterResponsePath = System.getProperty("user.dir") + "/src/test/java/pageobjects/api/PressReleaseFilter/Json/getOneFilterResponse.json";
     public static String deleteFilterResponsePath = System.getProperty("user.dir") + "/src/test/java/pageobjects/api/PressReleaseFilter/Json/deleteFilterResponse.json";
 
-    public static String addFilter () throws Exception {
-        JSONParser parser = new JSONParser();
+    public static JSONObject addFilter (JSONObject jsonObject) throws Exception {
+        /*JSONParser parser = new JSONParser();
         Object obj = parser.parse(new FileReader(System.getProperty("user.dir") + "/src/test/java/pageobjects/api/PressReleaseFilter/Json/body.json"));
-        JSONObject jsonObject = (JSONObject) obj;
+        JSONObject jsonObject = (JSONObject) obj;*/
         StringBuffer result = new StringBuffer();
         String UUID = new String();
 
@@ -90,12 +92,12 @@ public class FiltersAPI {
         JSONParser responseParser = new JSONParser();
         JSONObject jsonResponse = (JSONObject) responseParser.parse(result.toString());
 
-        JSONObject dataObject = (JSONObject) jsonResponse.get("Data");
+        //JSONObject dataObject = (JSONObject) jsonResponse.get("Data");
 
-        UUID = dataObject.get("Id").toString();
+        //UUID = dataObject.get("Id").toString();
 
-        System.out.println("Printing POST response");
-        System.out.println(jsonResponse);
+        //System.out.println("Printing POST response");
+        //System.out.println(jsonResponse);
         try (FileWriter file = new FileWriter(addFilterResponsePath)) {
             file.write(jsonResponse.toJSONString());
             file.flush();
@@ -103,8 +105,8 @@ public class FiltersAPI {
         catch (IOException e) {
             e.printStackTrace();
         }
-
-        return UUID;
+        //UUID = "10";
+        return jsonResponse;
     }
 
     public static Boolean editFilter (String UUID) throws Exception {
@@ -256,8 +258,8 @@ public class FiltersAPI {
 
         JSONParser responseParser = new JSONParser();
         JSONObject jsonResponse = (JSONObject) responseParser.parse(result.toString());
-        System.out.println("Printing DELETE response");
-        System.out.println(jsonResponse);
+        //System.out.println("Printing DELETE response");
+        //System.out.println(jsonResponse);
         try (FileWriter file = new FileWriter(deleteFilterResponsePath)) {
             file.write(jsonResponse.toJSONString());
             file.flush();
@@ -270,6 +272,9 @@ public class FiltersAPI {
 
     public static boolean fieldCheck (String field) {
         String dataSetPath;
+        Boolean pass = true;
+        int ii=0;
+
         switch (field) {
             case "NAME":
                 dataSetPath = nameFieldPath;
@@ -297,14 +302,74 @@ public class FiltersAPI {
         JSONParser parser = new JSONParser();
         try {
             JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(dataSetPath));
-        }
-        catch (FileNotFoundException e) {e.printStackTrace();}
-        catch (IOException e) {e.printStackTrace();}
-        catch (ParseException e) {e.printStackTrace();}
-        catch (NullPointerException e) {e.printStackTrace();}
+            JSONArray data = (JSONArray) jsonObject.get("data");
+            for(ii=0; ii < data.size(); ii++) {
+                String name = null;
+                String message = null;
+                String messageExpected = null;
+                int idActualLength = 0;
+                int idExpectedLength = 0;
+                JSONObject dataGroup = (JSONObject) data.get(ii);
 
-        //temp
-        return true;
+                JSONObject jsonResponse = FiltersAPI.addFilter(dataGroup);
+                //System.out.println(jsonResponse);
+
+                ////ACTUAL RESULTS////
+                Boolean success = (Boolean) jsonResponse.get("Success");
+                if (!success) {
+                    message = jsonResponse.get("Message").toString();
+                } else {
+                    JSONObject Data = (JSONObject) jsonResponse.get("Data");
+                    String id = Data.get("Id").toString();
+                    idActualLength = id.length();
+                    deleteFilter(id);
+                }
+
+                ////EXPECTED RESULTS////
+                JSONArray dataExpectedArray = (JSONArray) dataGroup.get("expectedResults");
+                JSONObject dataExpected = (JSONObject) dataExpectedArray.get(0);
+                Boolean successExpected = (Boolean) dataExpected.get("Success");
+                if (!successExpected) {
+                    messageExpected = dataExpected.get("Message").toString();
+                } else {
+                    JSONObject DataExpected = (JSONObject) dataExpected.get("Data");
+                    String idExpected = DataExpected.get("Id").toString();
+                    idExpectedLength = idExpected.length();
+                }
+
+                name = dataGroup.get("name").toString();
+                System.out.println("TESTING: " + name);
+                System.out.println("Actual Response: " + jsonResponse);
+                System.out.println("Expected Response: " + dataExpected);
+
+                if ((success && successExpected && idActualLength == idExpectedLength) || (success == successExpected && message.equals(messageExpected))) {
+                    System.out.println("RESULT: " + name + "    ----> PASS");
+                } else {
+                    System.out.println("RESULT: " + name + "    ----> FAIL");
+                    pass = false;
+                }
+                System.out.println();
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (pass) {
+            System.out.println("****" + field + " TESTING PASS****");
+        }
+        else {
+            System.out.println("****" + field + " TESTING FAIL****");
+        }
+        System.out.println(ii + " CASES TESTED\n");
+        return pass;
 
     }
     
