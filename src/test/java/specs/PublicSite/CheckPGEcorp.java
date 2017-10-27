@@ -48,7 +48,7 @@ public class CheckPGEcorp extends AbstractSpec {
         results.add(" ------ ");
 
 
-        Thread.sleep(150000);
+        Thread.sleep(1500000);
 
         driver.navigate().refresh();
 
