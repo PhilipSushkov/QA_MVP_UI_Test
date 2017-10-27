@@ -33,7 +33,8 @@ public abstract class SendEmailLinkedListPGE {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress("test@q4websystems.com"));
             message.setRecipients(Message.RecipientType.TO,
-                    InternetAddress.parse("philips@q4websystems.com"));
+                    //InternetAddress.parse("philips@q4websystems.com"));
+                    InternetAddress.parse("karenl@q4websystems.com"));
             message.setSubject("PGE Corp Stock Quote Header Update " + new Date());
             BodyPart messageBodyPart = new MimeBodyPart();
             messageBodyPart.setText("PGE Corp Stock Quote Header Check Report / " + new Date() + "\n");
