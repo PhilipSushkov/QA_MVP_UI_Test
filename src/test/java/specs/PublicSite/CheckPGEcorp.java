@@ -19,7 +19,7 @@ public class CheckPGEcorp extends AbstractSpec {
         Thread.sleep(DEFAULT_PAUSE);
     }
 
-    @Test (threadPoolSize = 1, invocationCount = 20)
+    @Test (threadPoolSize = 1, invocationCount = 2)
     public void checkStockPriceUpdates() throws InterruptedException {
         //Assert.assertEquals(homePage.getVersionNumber(), Q4WebVersionNumber, "Displayed version number is incorrect");
 
