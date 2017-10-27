@@ -8,14 +8,17 @@ import org.testng.annotations.Test;
 import specs.AbstractSpec;
 
 import java.util.Date;
+import java.util.LinkedList;
+import static util.SendEmailLinkedListPGE.sendEmail;
 
 public class CheckPGEcorp extends AbstractSpec {
     private static final long DEFAULT_PAUSE = 2000;
+    private static final String URL = "http://investor.pgecorp.com/";
+    private static LinkedList<String> results = new LinkedList<String>();
 
     @BeforeTest
     public void goToPGEcorpSite() throws InterruptedException {
-        driver.get("http://investor.pgecorp.com/");
-        //driver.get("http://first-quantum.com/");
+        driver.get(URL);
         Thread.sleep(DEFAULT_PAUSE);
     }
 
@@ -31,12 +34,19 @@ public class CheckPGEcorp extends AbstractSpec {
 
         Thread.sleep(DEFAULT_PAUSE);
 
-        System.out.println(" --- START --- ");
+        System.out.println(" --- START " + URL + " --- ");
+        results.add(" --- START " + URL + " --- ");
 
         System.out.println(new Date());
         System.out.println("Stock Price Original: " + StockPriceOriginal);
+        results.add("Stock Price Original: " + StockPriceOriginal);
+
         //System.out.println("Stock Date Original: " + StockDateOriginal);
+        //results.add("Stock Date Original: " + StockDateOriginal);
+
         System.out.println(" ------ ");
+        results.add(" ------ ");
+
 
         Thread.sleep(1500000);
 
@@ -49,14 +59,21 @@ public class CheckPGEcorp extends AbstractSpec {
         Thread.sleep(DEFAULT_PAUSE);
 
         System.out.println(new Date());
+
         System.out.println("Stock Price Updated: " + StockPriceUpdated);
+        results.add("Stock Price Updated: " + StockPriceUpdated);
+
         System.out.println("Stock Date Updated: " + StockDateUpdated);
+        results.add("Stock Date Updated: " + StockDateUpdated);
+
         System.out.println(" ------ ");
+        results.add(" ------ ");
 
 
         Assert.assertNotEquals(StockPriceOriginal, StockPriceUpdated, "Stock Price value shouldn't be equal");
         //Assert.assertNotEquals(StockDateOriginal, StockDateUpdated, "Stock Date value shouldn't be equal");
         System.out.println(" --- FINISH --- ");
+        results.add(" --- FINISH --- ");
 
 
     }
@@ -64,6 +81,7 @@ public class CheckPGEcorp extends AbstractSpec {
 
     @AfterTest
     public void tearDown() {
+        sendEmail(results);
     }
 
 
