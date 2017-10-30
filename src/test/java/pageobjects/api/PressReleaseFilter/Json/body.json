@@ -1,73 +1,52 @@
-{
-  "name": "VictorTesting10:37AM",
-  "terms": [
-    {
-      "type": "ANY",
-      "termType": "METADATA",
-      "sortOrder":1,
-      "termData":[
+ {
+      "name": "Correct body",
+      "terms": [
         {
-          "dataType": "METADATATYPE",
-          "term":"misc"
+          "type": "ALL",
+          "termType": "METADATA",
+          "sortOrder":1,
+          "termData":[
+            {
+              "dataType": "METADATATYPE",
+              "term":"misc"
+            },
+            {
+              "dataType": "METADATAVALUE",
+              "term":"misc"
+            }
+          ]
         },
         {
-          "dataType": "METADATAVALUE",
-          "term":"misc"
+          "type": "ANY",
+          "termType": "TICKER",
+          "sortOrder":1,
+          "termData":[
+            {
+              "dataType": "SYMBOL",
+              "term":"AAPL"
+            },
+            {
+              "dataType": "MIC",
+              "term":"XNAS"
+            }
+          ]
+        }
+      ],
+      "includeMentions": true,
+      "active": true,
+      "Language": "en",
+      "providerServices": [
+        {
+          "id": 10
+        }
+      ],
+      "userEmail": "test@q4websystems.com",
+      "expectedResults": [
+        {
+          "Data": {
+            "Id": "979d0912634d481e60dc08d51c94de27"
+          },
+          "Success": true
         }
       ]
-    },
-    {
-      "type": "NOT",
-      "termType": "TICKER",
-      "sortOrder":2,
-      "termData":[
-        {
-          "dataType": "SYMBOL",
-          "term":"TSLA"
-        },
-        {
-          "dataType": "MIC",
-          "term":"XNAS"
-        }
-      ]
-    },
-    {
-      "type": "ANY",
-      "termType": "TICKER",
-      "sortOrder":3,
-      "termData":[
-        {
-          "dataType": "SYMBOL",
-          "term":"AAPL"
-        },
-        {
-          "dataType": "MIC",
-          "term":"XNAS"
-        }
-      ]
-    },
-    {
-      "type": "NOT",
-      "termType": "TEXT",
-      "sortOrder":1,
-      "termData":[
-        {
-          "dataType": "TEXT",
-          "term":"misc"
-        }
-      ]
-    }
-  ],
-  "includeMentions": true,
-  "active": true,
-  "Language": "de",
-  "providerServices": [
-    {
-      "id": 4,
-      "Provider": "Marketwire - Canada",
-      "Service": "XHTML Press Releases - English",
-      "FriendlyName": null
-    }
-  ],
-  "userEmail": "victorl@q4websystems.com"
-}
+ }

@@ -1,0 +1,183 @@
+{
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "type": "object",
+  "id": "http://example.com/example.json",
+  "required": [
+    "Data",
+    "Success"
+  ],
+  "properties": {
+    "Data": {
+      "required": [
+        "Id",
+        "OrgId",
+        "CreateDate",
+        "UpdateDate",
+        "Name",
+        "Terms",
+        "ProviderServices",
+        "Language"
+      ],
+      "type": "object",
+      "id": "/properties/Data",
+      "properties": {
+        "Id": {
+          "default": "",
+          "description": "An explanation about the purpose of this instance.",
+          "type": "string",
+          "id": "/properties/Data/properties/Id",
+          "title": "The Id Schema."
+        },
+        "OrgId": {
+          "default": "",
+          "description": "An explanation about the purpose of this instance.",
+          "type": "string",
+          "id": "/properties/Data/properties/OrgId",
+          "title": "The Orgid Schema."
+        },
+        "CreateDate": {
+          "default": "",
+          "description": "An explanation about the purpose of this instance.",
+          "type": "string",
+          "id": "/properties/Data/properties/CreateDate",
+          "title": "The Createdate Schema."
+        },
+        "UpdateDate": {
+          "default": "",
+          "description": "An explanation about the purpose of this instance.",
+          "type": "string",
+          "id": "/properties/Data/properties/UpdateDate",
+          "title": "The Updatedate Schema."
+        },
+        "Name": {
+          "default": "",
+          "description": "An explanation about the purpose of this instance.",
+          "type": "string",
+          "id": "/properties/Data/properties/Name",
+          "title": "The Name Schema."
+        },
+        "Terms": {
+          "items": {
+            "required": [
+              "Type",
+              "TermType",
+              "SortOrder",
+              "TermData"
+            ],
+            "type": "object",
+            "id": "/properties/Data/properties/Terms/items",
+            "properties": {
+              "Type": {
+                "default": "",
+                "description": "An explanation about the purpose of this instance.",
+                "type": "string",
+                "id": "/properties/Data/properties/Terms/items/properties/Type",
+                "title": "The Type Schema."
+              },
+              "TermType": {
+                "default": "",
+                "description": "An explanation about the purpose of this instance.",
+                "type": "string",
+                "id": "/properties/Data/properties/Terms/items/properties/TermType",
+                "title": "The Termtype Schema."
+              },
+              "SortOrder": {
+                "default": 0,
+                "description": "An explanation about the purpose of this instance.",
+                "type": "integer",
+                "id": "/properties/Data/properties/Terms/items/properties/SortOrder",
+                "title": "The Sortorder Schema."
+              },
+              "TermData": {
+                "items": {
+                  "required": [
+                    "DataType",
+                    "Term"
+                  ],
+                  "type": "object",
+                  "id": "/properties/Data/properties/Terms/items/properties/TermData/items",
+                  "properties": {
+                    "DataType": {
+                      "default": "",
+                      "description": "An explanation about the purpose of this instance.",
+                      "type": "string",
+                      "id": "/properties/Data/properties/Terms/items/properties/TermData/items/properties/DataType",
+                      "title": "The Datatype Schema."
+                    },
+                    "Term": {
+                      "default": "",
+                      "description": "An explanation about the purpose of this instance.",
+                      "type": "string",
+                      "id": "/properties/Data/properties/Terms/items/properties/TermData/items/properties/Term",
+                      "title": "The Term Schema."
+                    }
+                  }
+                },
+                "type": "array",
+                "id": "/properties/Data/properties/Terms/items/properties/TermData"
+              }
+            }
+          },
+          "type": "array",
+          "id": "/properties/Data/properties/Terms"
+        },
+        "ProviderServices": {
+          "items": {
+            "required": [
+              "Id"
+            ],
+            "type": "object",
+            "id": "/properties/Data/properties/ProviderServices/items",
+            "properties": {
+              "Id": {
+                "default": 0,
+                "description": "An explanation about the purpose of this instance.",
+                "type": "integer",
+                "id": "/properties/Data/properties/ProviderServices/items/properties/Id",
+                "title": "The Id Schema."
+              }
+            }
+          },
+          "type": "array",
+          "id": "/properties/Data/properties/ProviderServices"
+        },
+        "IncludeMentions": {
+          "default": false,
+          "description": "An explanation about the purpose of this instance.",
+          "type": "boolean",
+          "id": "/properties/Data/properties/IncludeMentions",
+          "title": "The Includementions Schema."
+        },
+        "Language": {
+          "default": "",
+          "description": "An explanation about the purpose of this instance.",
+          "type": "string",
+          "id": "/properties/Data/properties/Language",
+          "title": "The Language Schema."
+        },
+        "Active": {
+          "default": false,
+          "description": "An explanation about the purpose of this instance.",
+          "type": "boolean",
+          "id": "/properties/Data/properties/Active",
+          "title": "The Active Schema."
+        },
+        "UserEmail": {
+          "default": "",
+          "description": "An explanation about the purpose of this instance.",
+          "type": "string",
+          "id": "/properties/Data/properties/UserEmail",
+          "title": "The Useremail Schema."
+        }
+      }
+    },
+    "Success": {
+      "default": false,
+      "description": "An explanation about the purpose of this instance.",
+      "type": "boolean",
+      "id": "/properties/Success",
+      "title": "The Success Schema."
+    }
+  }
+}
