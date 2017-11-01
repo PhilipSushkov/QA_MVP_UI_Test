@@ -1,87 +1,105 @@
 package pageobjects.api.PressReleaseFilter;
 
-import com.mongodb.util.JSON;
-import cucumber.deps.com.thoughtworks.xstream.mapper.Mapper;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.*;
 
-import org.apache.http.Header;
-import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.protocol.HttpClientContext;
-import org.apache.http.impl.client.BasicCookieStore;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.cookie.BasicClientCookie;
-import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.protocol.HttpContext;
-import org.json.simple.parser.ParseException;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import util.Functions;
+import static specs.AbstractSpec.propFilterAPI;
+
 
 import static util.Functions.getSchemaValidation;
 
-
 public class FiltersAPI {
-    public static String url = "https://flfa9qo2eb.execute-api.us-east-1.amazonaws.com/dev/v1/filters";
-    public static String xApiKey = "w90bwvYsrg8eEtTbFsPsManZM8aOWLPGKjGhZ0Ue";
-    public static String xQ4OrgId = "ea98f2a4d7c94bf294bb929d67c266e5";
-    public static String contentType = "application/json";
+    private static String url;
+    private static String xApiKey;
+    private static String xQ4OrgId;
+    private static String contentType;
 
-    public static String workingBodyPath = System.getProperty("user.dir") + "/src/test/java/pageobjects/api/PressReleaseFilter/Json/body.json";
-    public static String nameFieldPath = System.getProperty("user.dir") + "/src/test/java/pageobjects/api/PressReleaseFilter/Json/AddNewEditFilter/nameField.json";
-    public static String termTypeFieldPath  = System.getProperty("user.dir") + "/src/test/java/pageobjects/api/PressReleaseFilter/Json/AddNewEditFilter/termTypeField.json";
-    public static String termFieldPath = System.getProperty("user.dir") + "/src/test/java/pageobjects/api/PressReleaseFilter/Json/AddNewEditFilter/termField.json";
-    public static String typeFieldPath = System.getProperty("user.dir") + "/src/test/java/pageobjects/api/PressReleaseFilter/Json/AddNewEditFilter/typeField.json";
-    public static String sortOrderFieldPath = System.getProperty("user.dir") + "/src/test/java/pageobjects/api/PressReleaseFilter/Json/AddNewEditFilter/sortOrderField.json";
-    public static String idFieldPath = System.getProperty("user.dir") + "/src/test/java/pageobjects/api/PressReleaseFilter/Json/AddNewEditFilter/idField.json";
+    private static String workingBodyPath;
+    private static String nameFieldPath;
+    private static String termTypeFieldPath;
+    private static String termFieldPath;
+    private static String typeFieldPath;
+    private static String sortOrderFieldPath;
+    private static String idFieldPath;
 
-    public static String addFilterResponsePath = System.getProperty("user.dir") + "/src/test/java/pageobjects/api/PressReleaseFilter/Json/AddNewEditFilter/addFilterResponse.json";
-    public static String editFilterResponsePath = System.getProperty("user.dir") + "/src/test/java/pageobjects/api/PressReleaseFilter/Json/AddNewEditFilter/editFilterResponse.json";
-    public static String getAllFiltersResponsePath = System.getProperty("user.dir") + "/src/test/java/pageobjects/api/PressReleaseFilter/Json/GetAllFilters/getAllFiltersResponse.json";
-    public static String getOneFilterResponsePath = System.getProperty("user.dir") + "/src/test/java/pageobjects/api/PressReleaseFilter/Json/GetOneFilter/getOneFilterResponse.json";
-    public static String deleteFilterResponsePath = System.getProperty("user.dir") + "/src/test/java/pageobjects/api/PressReleaseFilter/Json/DeleteFilter/deleteFilterResponse.json";
+    private static String addFilterResponsePath;
+    private static String editFilterResponsePath;
+    private static String getAllFiltersResponsePath;
+    private static String getOneFilterResponsePath;
+    private static String deleteFilterResponsePath;
 
-    public static String expectedDeleteFilterResponse = System.getProperty("user.dir") + "/src/test/java/pageobjects/api/PressReleaseFilter/Json/DeleteFilter/expectedDeleteFilterResponse.json";
-    public static String expectedGetOneFilterResponse = System.getProperty("user.dir") + "/src/test/java/pageobjects/api/PressReleaseFilter/Json/GetOneFilter/expectedGetOneFilterResponse.json";
-    //public static String expectedGetOneFilterResponseFileName = "expectedGetOneFilterResponse.json";
-    //public static String expectedGetOneFilterResponsePartialPath = System.getProperty("user.dir") + "/src/test/java/pageobjects/api/PressReleaseFilter/Json/GetOneFilter/";
+    private static String expectedDeleteFilterResponse;
+    private static String expectedGetOneFilterResponse;
 
-    public static String getOneFilterResponseFileName = "getOneFilterResponse.json";
-    public static String getOneFilterResponsePartialPath = System.getProperty("user.dir") + "/src/test/java/pageobjects/api/PressReleaseFilter/Json/GetOneFilter/";
+    private static String getOneFilterResponseFileName;
+    private static String getOneFilterResponsePartialPath;
 
-    public static String getOneFilterSchemaFileName = "getOneFilterSchema.json";
-    public static String getOneFilterSchemaPartialPath = System.getProperty("user.dir") + "/src/test/java/pageobjects/api/PressReleaseFilter/Json/GetOneFilter/";
+    private static String getOneFilterSchemaFileName;
+    private static String getOneFilterSchemaPartialPath;
 
-    public static String getAllFiltersResponseFileName = "getAllFiltersResponse.json";
-    public static String getAllFiltersResponsePartialPath = System.getProperty("user.dir") + "/src/test/java/pageobjects/api/PressReleaseFilter/Json/GetAllFilters/";
+    private static String getAllFiltersResponseFileName;
+    private static String getAllFiltersResponsePartialPath;
 
-    public static String getAllFiltersSchemaFileName = "getAllFiltersSchema.json";
-    public static String getAllFiltersSchemaPartialPath = System.getProperty("user.dir") + "/src/test/java/pageobjects/api/PressReleaseFilter/Json/GetAllFilters/";
+    private static String getAllFiltersSchemaFileName;
+    private static String getAllFiltersSchemaPartialPath;
 
-    public static String placeholderUUID = "*********PlaceholderUUID********";
-    public static String shortUUID = "***ShortUUID***";
-    public static String longUUID = "********************LongUUID********************";
+    private static String placeholderUUID;
+    private static String shortUUID;
+    private static String longUUID;
 
-    public static JSONObject addEditFilter (String mode, JSONObject jsonObject, String UUID) throws Exception{
+    public FiltersAPI() {
+        url = propFilterAPI.getProperty("urlProp");
+        xApiKey = propFilterAPI.getProperty("xApiKeyProp");
+        xQ4OrgId = propFilterAPI.getProperty("xQ4OrgIdProp");
+        contentType = propFilterAPI.getProperty("contentTypeProp");
+
+        workingBodyPath = System.getProperty("user.dir") + propFilterAPI.getProperty("workingBodyPathProp");
+        nameFieldPath = System.getProperty("user.dir") + propFilterAPI.getProperty("nameFieldPathProp");
+        termTypeFieldPath = System.getProperty("user.dir") + propFilterAPI.getProperty("termTypeFieldPathProp");
+        termFieldPath = System.getProperty("user.dir") + propFilterAPI.getProperty("termFieldPathProp");
+        typeFieldPath = System.getProperty("user.dir") + propFilterAPI.getProperty("typeFieldPathProp");
+        sortOrderFieldPath = System.getProperty("user.dir") + propFilterAPI.getProperty("sortOrderFieldPathProp");
+        idFieldPath = System.getProperty("user.dir") + propFilterAPI.getProperty("idFieldPathProp");
+
+        addFilterResponsePath = System.getProperty("user.dir") + propFilterAPI.getProperty("addFilterResponsePathProp");
+        editFilterResponsePath = System.getProperty("user.dir") + propFilterAPI.getProperty("editFilterResponsePathProp");
+        getAllFiltersResponsePath = System.getProperty("user.dir") + propFilterAPI.getProperty("getAllFiltersResponsePathProp");
+        getOneFilterResponsePath = System.getProperty("user.dir") + propFilterAPI.getProperty("getOneFilterResponsePathProp");
+        deleteFilterResponsePath = System.getProperty("user.dir") + propFilterAPI.getProperty("deleteFilterResponsePathProp");
+
+        expectedDeleteFilterResponse = System.getProperty("user.dir") + propFilterAPI.getProperty("expectedDeleteFilterResponseProp");
+        expectedGetOneFilterResponse = System.getProperty("user.dir") + propFilterAPI.getProperty("expectedGetOneFilterResponseProp");
+
+        getOneFilterResponseFileName = propFilterAPI.getProperty("getOneFilterResponseFileNameProp");
+        getOneFilterResponsePartialPath = System.getProperty("user.dir") + propFilterAPI.getProperty("getOneFilterResponsePartialPathProp");
+
+        getOneFilterSchemaFileName = propFilterAPI.getProperty("getOneFilterSchemaFileNameProp");
+        getOneFilterSchemaPartialPath = System.getProperty("user.dir") + propFilterAPI.getProperty("getOneFilterSchemaPartialPathProp");
+
+        getAllFiltersResponseFileName = propFilterAPI.getProperty("getAllFiltersResponseFileNameProp");
+        getAllFiltersResponsePartialPath = System.getProperty("user.dir") + propFilterAPI.getProperty("getAllFiltersResponsePartialPathProp");
+
+        getAllFiltersSchemaFileName = propFilterAPI.getProperty("getAllFiltersSchemaFileNameProp");
+        getAllFiltersSchemaPartialPath = System.getProperty("user.dir") + propFilterAPI.getProperty("getAllFiltersSchemaPartialPathProp");
+
+        placeholderUUID = propFilterAPI.getProperty("placeholderUUIDProp");
+        shortUUID = propFilterAPI.getProperty("shortUUIDProp");
+        longUUID = propFilterAPI.getProperty("longUUIDProp");
+    }
+
+    public JSONObject addEditFilter (String mode, JSONObject jsonObject, String UUID) throws Exception{
         StringBuffer result = new StringBuffer();
         String responsePath = null;
         String payload;
@@ -140,7 +158,7 @@ public class FiltersAPI {
         return jsonResponse;
     }
 
-    public static JSONObject getFilters (String mode, String UUID) throws Exception{
+    public JSONObject getFilters (String mode, String UUID) throws Exception{
         StringBuffer result = new StringBuffer();
         String requestPath = null;
         String responsePath = null;
@@ -191,7 +209,7 @@ public class FiltersAPI {
         return jsonResponse;
     }
 
-    public static JSONObject deleteFilter (String UUID) throws Exception {
+    public JSONObject deleteFilter (String UUID) throws Exception {
         StringBuffer result = new StringBuffer();
 
         try {
@@ -229,7 +247,7 @@ public class FiltersAPI {
         return jsonResponse;
     }
 
-    public static String dataSetPathSelector (String field) {
+    public String dataSetPathSelector (String field) {
         String dataSetPath;
         switch (field) {
             case "NAME":
@@ -257,7 +275,7 @@ public class FiltersAPI {
         return dataSetPath;
     }
 
-    public static boolean addFilterCheck (String field) {
+    public boolean addFilterCheck (String field) {
         String dataSetPath = dataSetPathSelector(field);
         Boolean pass = true;
         int ii=0;
@@ -301,8 +319,8 @@ public class FiltersAPI {
 
                 name = dataGroup.get("name").toString();
                 System.out.println("TESTING Add for: " + name);
-                System.out.println("Actual Response: " + jsonResponse);
-                System.out.println("Expected Response: " + dataExpected);
+                System.out.println("Actual Response:\t" + jsonResponse);
+                System.out.println("Expected Response:\t" + dataExpected);
 
                 if ((success && successExpected && idActualLength == idExpectedLength) || (!success && !successExpected && message.equals(messageExpected))) {
                     System.out.println("RESULT: " + name + "    ----> PASS");
@@ -326,7 +344,7 @@ public class FiltersAPI {
         return pass;
     }
 
-    public static boolean editFilterCheck (String field) {
+    public boolean editFilterCheck (String field) {
         String dataSetPath = dataSetPathSelector(field);
         Boolean pass = true;
         int ii=0;
@@ -370,8 +388,8 @@ public class FiltersAPI {
 
                 name = dataGroup.get("name").toString();
                 System.out.println("TESTING Edit for: " + name);
-                System.out.println("Actual Response: " + jsonResponse);
-                System.out.println("Expected Response: " + dataExpected);
+                System.out.println("Actual Response:\t" + jsonResponse);
+                System.out.println("Expected Response:\t" + dataExpected);
 
                 if ((!success && !successExpected && message.equals(messageExpected)) || (success && successExpected)) {
                     System.out.println("RESULT: " + name + "    ----> PASS");
@@ -397,7 +415,7 @@ public class FiltersAPI {
 
     }
 
-    public static boolean deleteFilterCheck(String mode) throws Exception{
+    public boolean deleteFilterCheck(String mode) throws Exception{
         String testUUID = null;
         String UUID = null;
         Boolean repeat = false;
@@ -466,8 +484,8 @@ public class FiltersAPI {
             pass = false;
 
         System.out.println("TESTING Delete for: " + mode);
-        System.out.println("Actual Response: " + expectedResponseObject);
-        System.out.println("Expected Response: " + jsonResponse);
+        System.out.println("Actual Response:\t" + expectedResponseObject);
+        System.out.println("Expected Response:\t" + jsonResponse);
 
         if(pass)
             System.out.println("RESULT: " + mode + "    ----> PASS");
@@ -478,7 +496,7 @@ public class FiltersAPI {
         return pass;
     }
 
-    public static boolean getOneFilterCheck(String mode) throws Exception {
+    public boolean getOneFilterCheck(String mode) throws Exception {
         String testUUID = null;
         String UUID = null;
         Boolean pass = false;
@@ -534,8 +552,8 @@ public class FiltersAPI {
             actualMessageResponse = jsonResponse.get("Message").toString();
         }
 
-        System.out.println("Actual Response: " + jsonResponse);
-        System.out.println("Expected Response: " + expectedResponseObject);
+        System.out.println("Actual Response:\t" + jsonResponse);
+        System.out.println("Expected Response:\t" + expectedResponseObject);
 
         if(mode.equals("VALID") && actualSuccessResponse.equals(expectedSuccessResponse)) {
             pass = getSchemaValidation(getOneFilterSchemaPartialPath, getOneFilterResponsePartialPath, getOneFilterSchemaFileName, getOneFilterResponseFileName);
@@ -558,8 +576,8 @@ public class FiltersAPI {
         return pass;
     }
 
-    public static boolean getAllFiltersCheck () throws Exception {
-        Boolean pass = false;
+    public boolean getAllFiltersCheck () throws Exception {
+        Boolean pass;
 
         System.out.println("TESTING Get All Filters Schema");
         getFilters("ALL", placeholderUUID);
