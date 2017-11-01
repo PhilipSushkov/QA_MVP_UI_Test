@@ -24,6 +24,7 @@ import java.util.logging.Filter;
 public class CheckPressReleaseFilter {
     private static FiltersAPI filtersApi;
 
+    @BeforeTest
     public void setUp() throws Exception {
         filtersApi = new FiltersAPI();
     }
@@ -43,15 +44,15 @@ public class CheckPressReleaseFilter {
         }
     }
 
-    /*@Test
-    public void editFilterTest() {
+    @Test
+    public static void editFilterTest() {
         try {
-            Assert.assertTrue(FiltersAPI.editFilterCheck("NAME"));
-            Assert.assertTrue(FiltersAPI.editFilterCheck("TERMTYPE"));
-            Assert.assertTrue(FiltersAPI.editFilterCheck("TERM"));
-            Assert.assertTrue(FiltersAPI.editFilterCheck("TYPE"));
-            Assert.assertTrue(FiltersAPI.editFilterCheck("SORTORDER"));
-            Assert.assertTrue(FiltersAPI.editFilterCheck("ID"));
+            Assert.assertTrue(filtersApi.editFilterCheck("NAME"));
+            Assert.assertTrue(filtersApi.editFilterCheck("TERMTYPE"));
+            Assert.assertTrue(filtersApi.editFilterCheck("TERM"));
+            Assert.assertTrue(filtersApi.editFilterCheck("TYPE"));
+            Assert.assertTrue(filtersApi.editFilterCheck("SORTORDER"));
+            Assert.assertTrue(filtersApi.editFilterCheck("ID"));
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -59,13 +60,13 @@ public class CheckPressReleaseFilter {
     }
 
     @Test
-    public void deleteFilterTest() {
+    public static void deleteFilterTest() {
         try {
-            Assert.assertTrue(FiltersAPI.deleteFilterCheck("INVALID"));
-            Assert.assertTrue(FiltersAPI.deleteFilterCheck("SHORT"));
-            Assert.assertTrue(FiltersAPI.deleteFilterCheck("LONG"));
-            Assert.assertTrue(FiltersAPI.deleteFilterCheck("VALID"));
-            Assert.assertTrue(FiltersAPI.deleteFilterCheck("REPEAT"));
+            Assert.assertTrue(filtersApi.deleteFilterCheck("INVALID"));
+            Assert.assertTrue(filtersApi.deleteFilterCheck("SHORT"));
+            Assert.assertTrue(filtersApi.deleteFilterCheck("LONG"));
+            Assert.assertTrue(filtersApi.deleteFilterCheck("VALID"));
+            Assert.assertTrue(filtersApi.deleteFilterCheck("REPEAT"));
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -73,12 +74,12 @@ public class CheckPressReleaseFilter {
     }
 
     @Test
-    public void getOneFilterTest() {
+    public static void getOneFilterTest() {
         try {
-            Assert.assertTrue(FiltersAPI.getOneFilterCheck("INVALID"));
-            Assert.assertTrue(FiltersAPI.getOneFilterCheck("SHORT"));
-            Assert.assertTrue(FiltersAPI.getOneFilterCheck("LONG"));
-            Assert.assertTrue(FiltersAPI.getOneFilterCheck("VALID"));
+            Assert.assertTrue(filtersApi.getOneFilterCheck("INVALID"));
+            Assert.assertTrue(filtersApi.getOneFilterCheck("SHORT"));
+            Assert.assertTrue(filtersApi.getOneFilterCheck("LONG"));
+            Assert.assertTrue(filtersApi.getOneFilterCheck("VALID"));
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -86,13 +87,13 @@ public class CheckPressReleaseFilter {
     }
 
     @Test
-    public void getAllFiltersTest() {
+    public static void getAllFiltersTest() {
         try {
-            Assert.assertTrue(FiltersAPI.getAllFiltersCheck());
+            Assert.assertTrue(filtersApi.getAllFiltersCheck());
         }
         catch (Exception e) {
             e.printStackTrace();
         }
-    }*/
+    }
 
 }

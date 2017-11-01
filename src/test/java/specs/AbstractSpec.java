@@ -95,8 +95,6 @@ public abstract class AbstractSpec extends util.Functions {
     public static Properties propUIModulesHR;
     private static final String PATHTO_MODULESMAIL_PROP = "Modules/Mail/Mail.properties";
     public static Properties propUIModulesMail;
-    private static final String PATHTO_FILTER_API_PROP = "api/propFilterAPI.properties";
-    public static Properties propFilterAPI;
 
     @BeforeTest
     public void init(final ITestContext testContext) throws Exception {
@@ -289,7 +287,6 @@ public abstract class AbstractSpec extends util.Functions {
         propUIModulesSearch = ConnectToPropUI(PATHTO_MODULESSEARCH_PROP);
         propUIModulesHR = ConnectToPropUI(PATHTO_MODULESHR_PROP);
         propUIModulesMail = ConnectToPropUI(PATHTO_MODULESMAIL_PROP);
-        propFilterAPI = ConnectToPropUI(PATHTO_FILTER_API_PROP);
     }
 
 }

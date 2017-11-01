@@ -15,9 +15,9 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 
 import java.io.*;
-import static specs.AbstractSpec.propFilterAPI;
+import java.util.Properties;
 
-
+import static util.Functions.ConnectToPropUI;
 import static util.Functions.getSchemaValidation;
 
 public class FiltersAPI {
@@ -59,47 +59,48 @@ public class FiltersAPI {
     private static String shortUUID;
     private static String longUUID;
 
-    public FiltersAPI() {
-        url = propFilterAPI.getProperty("urlProp");
-        xApiKey = propFilterAPI.getProperty("xApiKeyProp");
-        xQ4OrgId = propFilterAPI.getProperty("xQ4OrgIdProp");
-        contentType = propFilterAPI.getProperty("contentTypeProp");
+    public FiltersAPI() throws Exception {
+        Properties filterApiProperties = ConnectToPropUI("api/propFilterAPI.properties");
+        url = filterApiProperties.getProperty("urlProp");
+        xApiKey = filterApiProperties.getProperty("xApiKeyProp");
+        xQ4OrgId = filterApiProperties.getProperty("xQ4OrgIdProp");
+        contentType = filterApiProperties.getProperty("contentTypeProp");
 
-        workingBodyPath = System.getProperty("user.dir") + propFilterAPI.getProperty("workingBodyPathProp");
-        nameFieldPath = System.getProperty("user.dir") + propFilterAPI.getProperty("nameFieldPathProp");
-        termTypeFieldPath = System.getProperty("user.dir") + propFilterAPI.getProperty("termTypeFieldPathProp");
-        termFieldPath = System.getProperty("user.dir") + propFilterAPI.getProperty("termFieldPathProp");
-        typeFieldPath = System.getProperty("user.dir") + propFilterAPI.getProperty("typeFieldPathProp");
-        sortOrderFieldPath = System.getProperty("user.dir") + propFilterAPI.getProperty("sortOrderFieldPathProp");
-        idFieldPath = System.getProperty("user.dir") + propFilterAPI.getProperty("idFieldPathProp");
+        workingBodyPath = System.getProperty("user.dir") + filterApiProperties.getProperty("workingBodyPathProp");
+        nameFieldPath = System.getProperty("user.dir") + filterApiProperties.getProperty("nameFieldPathProp");
+        termTypeFieldPath = System.getProperty("user.dir") + filterApiProperties.getProperty("termTypeFieldPathProp");
+        termFieldPath = System.getProperty("user.dir") + filterApiProperties.getProperty("termFieldPathProp");
+        typeFieldPath = System.getProperty("user.dir") + filterApiProperties.getProperty("typeFieldPathProp");
+        sortOrderFieldPath = System.getProperty("user.dir") + filterApiProperties.getProperty("sortOrderFieldPathProp");
+        idFieldPath = System.getProperty("user.dir") + filterApiProperties.getProperty("idFieldPathProp");
 
-        addFilterResponsePath = System.getProperty("user.dir") + propFilterAPI.getProperty("addFilterResponsePathProp");
-        editFilterResponsePath = System.getProperty("user.dir") + propFilterAPI.getProperty("editFilterResponsePathProp");
-        getAllFiltersResponsePath = System.getProperty("user.dir") + propFilterAPI.getProperty("getAllFiltersResponsePathProp");
-        getOneFilterResponsePath = System.getProperty("user.dir") + propFilterAPI.getProperty("getOneFilterResponsePathProp");
-        deleteFilterResponsePath = System.getProperty("user.dir") + propFilterAPI.getProperty("deleteFilterResponsePathProp");
+        addFilterResponsePath = System.getProperty("user.dir") + filterApiProperties.getProperty("addFilterResponsePathProp");
+        editFilterResponsePath = System.getProperty("user.dir") + filterApiProperties.getProperty("editFilterResponsePathProp");
+        getAllFiltersResponsePath = System.getProperty("user.dir") + filterApiProperties.getProperty("getAllFiltersResponsePathProp");
+        getOneFilterResponsePath = System.getProperty("user.dir") + filterApiProperties.getProperty("getOneFilterResponsePathProp");
+        deleteFilterResponsePath = System.getProperty("user.dir") + filterApiProperties.getProperty("deleteFilterResponsePathProp");
 
-        expectedDeleteFilterResponse = System.getProperty("user.dir") + propFilterAPI.getProperty("expectedDeleteFilterResponseProp");
-        expectedGetOneFilterResponse = System.getProperty("user.dir") + propFilterAPI.getProperty("expectedGetOneFilterResponseProp");
+        expectedDeleteFilterResponse = System.getProperty("user.dir") + filterApiProperties.getProperty("expectedDeleteFilterResponseProp");
+        expectedGetOneFilterResponse = System.getProperty("user.dir") + filterApiProperties.getProperty("expectedGetOneFilterResponseProp");
 
-        getOneFilterResponseFileName = propFilterAPI.getProperty("getOneFilterResponseFileNameProp");
-        getOneFilterResponsePartialPath = System.getProperty("user.dir") + propFilterAPI.getProperty("getOneFilterResponsePartialPathProp");
+        getOneFilterResponseFileName = filterApiProperties.getProperty("getOneFilterResponseFileNameProp");
+        getOneFilterResponsePartialPath = System.getProperty("user.dir") + filterApiProperties.getProperty("getOneFilterResponsePartialPathProp");
 
-        getOneFilterSchemaFileName = propFilterAPI.getProperty("getOneFilterSchemaFileNameProp");
-        getOneFilterSchemaPartialPath = System.getProperty("user.dir") + propFilterAPI.getProperty("getOneFilterSchemaPartialPathProp");
+        getOneFilterSchemaFileName = filterApiProperties.getProperty("getOneFilterSchemaFileNameProp");
+        getOneFilterSchemaPartialPath = System.getProperty("user.dir") + filterApiProperties.getProperty("getOneFilterSchemaPartialPathProp");
 
-        getAllFiltersResponseFileName = propFilterAPI.getProperty("getAllFiltersResponseFileNameProp");
-        getAllFiltersResponsePartialPath = System.getProperty("user.dir") + propFilterAPI.getProperty("getAllFiltersResponsePartialPathProp");
+        getAllFiltersResponseFileName = filterApiProperties.getProperty("getAllFiltersResponseFileNameProp");
+        getAllFiltersResponsePartialPath = System.getProperty("user.dir") + filterApiProperties.getProperty("getAllFiltersResponsePartialPathProp");
 
-        getAllFiltersSchemaFileName = propFilterAPI.getProperty("getAllFiltersSchemaFileNameProp");
-        getAllFiltersSchemaPartialPath = System.getProperty("user.dir") + propFilterAPI.getProperty("getAllFiltersSchemaPartialPathProp");
+        getAllFiltersSchemaFileName = filterApiProperties.getProperty("getAllFiltersSchemaFileNameProp");
+        getAllFiltersSchemaPartialPath = System.getProperty("user.dir") + filterApiProperties.getProperty("getAllFiltersSchemaPartialPathProp");
 
-        placeholderUUID = propFilterAPI.getProperty("placeholderUUIDProp");
-        shortUUID = propFilterAPI.getProperty("shortUUIDProp");
-        longUUID = propFilterAPI.getProperty("longUUIDProp");
+        placeholderUUID = filterApiProperties.getProperty("placeholderUUIDProp");
+        shortUUID = filterApiProperties.getProperty("shortUUIDProp");
+        longUUID = filterApiProperties.getProperty("longUUIDProp");
     }
-
-    public JSONObject addEditFilter (String mode, JSONObject jsonObject, String UUID) throws Exception{
+    
+    public static JSONObject addEditFilter (String mode, JSONObject jsonObject, String UUID) throws Exception{
         StringBuffer result = new StringBuffer();
         String responsePath = null;
         String payload;
@@ -158,7 +159,7 @@ public class FiltersAPI {
         return jsonResponse;
     }
 
-    public JSONObject getFilters (String mode, String UUID) throws Exception{
+    public static JSONObject getFilters (String mode, String UUID) throws Exception{
         StringBuffer result = new StringBuffer();
         String requestPath = null;
         String responsePath = null;
@@ -209,7 +210,7 @@ public class FiltersAPI {
         return jsonResponse;
     }
 
-    public JSONObject deleteFilter (String UUID) throws Exception {
+    public static JSONObject deleteFilter (String UUID) throws Exception {
         StringBuffer result = new StringBuffer();
 
         try {
@@ -247,7 +248,7 @@ public class FiltersAPI {
         return jsonResponse;
     }
 
-    public String dataSetPathSelector (String field) {
+    public static String dataSetPathSelector (String field) {
         String dataSetPath;
         switch (field) {
             case "NAME":
@@ -275,7 +276,7 @@ public class FiltersAPI {
         return dataSetPath;
     }
 
-    public boolean addFilterCheck (String field) {
+    public static boolean addFilterCheck (String field) {
         String dataSetPath = dataSetPathSelector(field);
         Boolean pass = true;
         int ii=0;
@@ -344,7 +345,7 @@ public class FiltersAPI {
         return pass;
     }
 
-    public boolean editFilterCheck (String field) {
+    public static boolean editFilterCheck (String field) {
         String dataSetPath = dataSetPathSelector(field);
         Boolean pass = true;
         int ii=0;
@@ -415,7 +416,7 @@ public class FiltersAPI {
 
     }
 
-    public boolean deleteFilterCheck(String mode) throws Exception{
+    public static boolean deleteFilterCheck(String mode) throws Exception{
         String testUUID = null;
         String UUID = null;
         Boolean repeat = false;
@@ -496,7 +497,7 @@ public class FiltersAPI {
         return pass;
     }
 
-    public boolean getOneFilterCheck(String mode) throws Exception {
+    public static boolean getOneFilterCheck(String mode) throws Exception {
         String testUUID = null;
         String UUID = null;
         Boolean pass = false;
@@ -576,7 +577,7 @@ public class FiltersAPI {
         return pass;
     }
 
-    public boolean getAllFiltersCheck () throws Exception {
+    public static boolean getAllFiltersCheck () throws Exception {
         Boolean pass;
 
         System.out.println("TESTING Get All Filters Schema");
