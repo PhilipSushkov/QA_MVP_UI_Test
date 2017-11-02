@@ -99,7 +99,7 @@ public class FiltersAPI {
         shortUUID = filterApiProperties.getProperty("shortUUIDProp");
         longUUID = filterApiProperties.getProperty("longUUIDProp");
     }
-    
+
     public static JSONObject addEditFilter (String mode, JSONObject jsonObject, String UUID) throws Exception{
         StringBuffer result = new StringBuffer();
         String responsePath = null;
