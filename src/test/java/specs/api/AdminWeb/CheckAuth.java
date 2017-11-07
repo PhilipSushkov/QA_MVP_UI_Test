@@ -15,7 +15,7 @@ import util.LocalDriverManager;
  */
 
 public class CheckAuth extends ApiAbstractSpec {
-    private static Auth auth;
+   // private static Auth auth;
 
     @BeforeTest
     public void setUp() throws InterruptedException {

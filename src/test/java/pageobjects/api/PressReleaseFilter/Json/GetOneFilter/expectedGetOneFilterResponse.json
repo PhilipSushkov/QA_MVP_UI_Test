@@ -1,0 +1,17 @@
+{
+  "INVALID":{
+    "Success": false,
+    "Message": "Invalid Filter ID."
+  },
+  "SHORT":{
+    "Success": false,
+    "Message": "Invalid Filter ID."
+  },
+  "LONG":{
+    "Success": false,
+    "Message": "Invalid Filter ID."
+  },
+  "VALID":{
+    "Success": true
+  }
+}

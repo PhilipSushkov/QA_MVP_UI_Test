@@ -1,9 +1,7 @@
 package util;
 
 public enum EnvironmentType {
-
-  //BETA("facebook.s1.q4web.newtest/"), //chicagotest url
-  //BETA("qachicagotest.s1.q4web.newtest/admin/"), //facebookrelease url
+  
   //DEVELOP("fbreverseproxy.s1.q4web.dev/admin/"),
   //DEVELOP("ensco.s1.q4web.newtest/admin/"),
   DEVELOP("qaensco.s1.q4web.newtest/admin/"),

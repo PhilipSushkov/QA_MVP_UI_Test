@@ -1,0 +1,741 @@
+{
+  "data": [
+    {
+      "name": "send ANY ticker",
+      "terms": [
+        {
+          "type": "ANY",
+          "termType": "TICKER",
+          "sortOrder":1,
+          "termData":[
+            {
+              "dataType": "SYMBOL",
+              "term":"AAPL"
+            },
+            {
+              "dataType": "MIC",
+              "term":"XNAS"
+            }
+          ]
+        }
+      ],
+      "includeMentions": true,
+      "active": true,
+      "Language": "en",
+      "providerServices": [
+        {
+          "id": 1
+        }
+      ],
+      "userEmail": "test@q4websystems.com",
+      "expectedResults": [
+        {
+          "Data": {
+            "Id": "7589e784d19948755ace08d51c7c16fb"
+          },
+          "Success": true
+        }
+      ]
+    },
+    {
+      "name": "send ALL ticker",
+      "terms": [
+        {
+          "type": "ALL",
+          "termType": "TICKER",
+          "sortOrder":1,
+          "termData":[
+            {
+              "dataType": "SYMBOL",
+              "term":"AAPL"
+            },
+            {
+              "dataType": "MIC",
+              "term":"XNAS"
+            }
+          ]
+        }
+      ],
+      "includeMentions": true,
+      "active": true,
+      "Language": "en",
+      "providerServices": [
+        {
+          "id": 1
+        }
+      ],
+      "userEmail": "test@q4websystems.com",
+      "expectedResults": [
+        {
+          "Data": {
+            "Id": "7589e784d19948755ace08d51c7c16fb"
+          },
+          "Success": true
+        }
+      ]
+    },
+    {
+      "name": "send NOT ticker",
+      "terms": [
+        {
+          "type": "NOT",
+          "termType": "TICKER",
+          "sortOrder":1,
+          "termData":[
+            {
+              "dataType": "SYMBOL",
+              "term":"AAPL"
+            },
+            {
+              "dataType": "MIC",
+              "term":"XNAS"
+            }
+          ]
+        }
+      ],
+      "includeMentions": true,
+      "active": true,
+      "Language": "en",
+      "providerServices": [
+        {
+          "id": 1
+        }
+      ],
+      "userEmail": "test@q4websystems.com",
+      "expectedResults": [
+        {
+          "Success": false,
+          "Message": "At least one filter term that is of filter type Any or All is required."
+        }
+      ]
+    },
+    {
+      "name": "send INVALID ticker",
+      "terms": [
+        {
+          "type": "INVALID",
+          "termType": "TICKER",
+          "sortOrder":1,
+          "termData":[
+            {
+              "dataType": "SYMBOL",
+              "term":"AAPL"
+            },
+            {
+              "dataType": "MIC",
+              "term":"XNAS"
+            }
+          ]
+        }
+      ],
+      "includeMentions": true,
+      "active": true,
+      "Language": "en",
+      "providerServices": [
+        {
+          "id": 1
+        }
+      ],
+      "userEmail": "test@q4websystems.com",
+      "expectedResults": [
+        {
+          "Success": false,
+          "Message": "Type 'INVALID' must be either Any, All or Not.\n"
+        }
+      ]
+    },
+    {
+      "name": "send blank type ticker",
+      "terms": [
+        {
+          "type": "",
+          "termType": "TICKER",
+          "sortOrder":1,
+          "termData":[
+            {
+              "dataType": "SYMBOL",
+              "term":"AAPL"
+            },
+            {
+              "dataType": "MIC",
+              "term":"XNAS"
+            }
+          ]
+        }
+      ],
+      "includeMentions": true,
+      "active": true,
+      "Language": "en",
+      "providerServices": [
+        {
+          "id": 1
+        }
+      ],
+      "userEmail": "test@q4websystems.com",
+      "expectedResults": [
+        {
+          "Success": false,
+          "Message": "Type is required.\nType '' must be either Any, All or Not.\n"
+        }
+      ]
+    },
+    {
+      "name": "send ANY text",
+      "terms": [
+        {
+          "type": "ANY",
+          "termType": "TEXT",
+          "sortOrder":1,
+          "termData":[
+            {
+              "dataType": "TEXT",
+              "term":"misc"
+            }
+          ]
+        },
+        {
+          "type": "ANY",
+          "termType": "TICKER",
+          "sortOrder":1,
+          "termData":[
+            {
+              "dataType": "SYMBOL",
+              "term":"AAPL"
+            },
+            {
+              "dataType": "MIC",
+              "term":"XNAS"
+            }
+          ]
+        }
+      ],
+      "includeMentions": true,
+      "active": true,
+      "Language": "en",
+      "providerServices": [
+        {
+          "id": 1
+        }
+      ],
+      "userEmail": "test@q4websystems.com",
+      "expectedResults": [
+        {
+          "Data": {
+            "Id": "0fdb42a7ae24442f5ad008d51c7c16fb"
+          },
+          "Success": true
+        }
+      ]
+    },
+    {
+      "name": "send ALL text",
+      "terms": [
+        {
+          "type": "ALL",
+          "termType": "TEXT",
+          "sortOrder":1,
+          "termData":[
+            {
+              "dataType": "TEXT",
+              "term":"misc"
+            }
+          ]
+        },
+        {
+          "type": "ANY",
+          "termType": "TICKER",
+          "sortOrder":1,
+          "termData":[
+            {
+              "dataType": "SYMBOL",
+              "term":"AAPL"
+            },
+            {
+              "dataType": "MIC",
+              "term":"XNAS"
+            }
+          ]
+        }
+      ],
+      "includeMentions": true,
+      "active": true,
+      "Language": "en",
+      "providerServices": [
+        {
+          "id": 1
+        }
+      ],
+      "userEmail": "test@q4websystems.com",
+      "expectedResults": [
+        {
+          "Data": {
+            "Id": "0fdb42a7ae24442f5ad008d51c7c16fb"
+          },
+          "Success": true
+        }
+      ]
+    },
+    {
+      "name": "send NOT text",
+      "terms": [
+        {
+          "type": "NOT",
+          "termType": "TEXT",
+          "sortOrder":1,
+          "termData":[
+            {
+              "dataType": "TEXT",
+              "term":"misc"
+            }
+          ]
+        },
+        {
+          "type": "ANY",
+          "termType": "TICKER",
+          "sortOrder":1,
+          "termData":[
+            {
+              "dataType": "SYMBOL",
+              "term":"AAPL"
+            },
+            {
+              "dataType": "MIC",
+              "term":"XNAS"
+            }
+          ]
+        }
+      ],
+      "includeMentions": true,
+      "active": true,
+      "Language": "en",
+      "providerServices": [
+        {
+          "id": 1
+        }
+      ],
+      "userEmail": "test@q4websystems.com",
+      "expectedResults": [
+        {
+          "Data": {
+            "Id": "0fdb42a7ae24442f5ad008d51c7c16fb"
+          },
+          "Success": true
+        }
+      ]
+    },
+    {
+      "name": "send NOT text, NO ticker",
+      "terms": [
+        {
+          "type": "NOT",
+          "termType": "TEXT",
+          "sortOrder":1,
+          "termData":[
+            {
+              "dataType": "TEXT",
+              "term":"misc"
+            }
+          ]
+        }
+      ],
+      "includeMentions": true,
+      "active": true,
+      "Language": "en",
+      "providerServices": [
+        {
+          "id": 1
+        }
+      ],
+      "userEmail": "test@q4websystems.com",
+      "expectedResults": [
+        {
+          "Success": false,
+          "Message": "At least one filter term that is of filter type Any or All is required."
+        }
+      ]
+    },
+    {
+      "name": "send INVALID text",
+      "terms": [
+        {
+          "type": "INVALID",
+          "termType": "TEXT",
+          "sortOrder":1,
+          "termData":[
+            {
+              "dataType": "TEXT",
+              "term":"misc"
+            }
+          ]
+        },
+        {
+          "type": "ANY",
+          "termType": "TICKER",
+          "sortOrder":1,
+          "termData":[
+            {
+              "dataType": "SYMBOL",
+              "term":"AAPL"
+            },
+            {
+              "dataType": "MIC",
+              "term":"XNAS"
+            }
+          ]
+        }
+      ],
+      "includeMentions": true,
+      "active": true,
+      "Language": "en",
+      "providerServices": [
+        {
+          "id": 1
+        }
+      ],
+      "userEmail": "test@q4websystems.com",
+      "expectedResults": [
+        {
+          "Success": false,
+          "Message": "Type 'INVALID' must be either Any, All or Not.\n"
+        }
+      ]
+    },
+    {
+      "name": "send blank type text",
+      "terms": [
+        {
+          "type": "",
+          "termType": "TEXT",
+          "sortOrder":1,
+          "termData":[
+            {
+              "dataType": "TEXT",
+              "term":"misc"
+            }
+          ]
+        },
+        {
+          "type": "ANY",
+          "termType": "TICKER",
+          "sortOrder":1,
+          "termData":[
+            {
+              "dataType": "SYMBOL",
+              "term":"AAPL"
+            },
+            {
+              "dataType": "MIC",
+              "term":"XNAS"
+            }
+          ]
+        }
+      ],
+      "includeMentions": true,
+      "active": true,
+      "Language": "en",
+      "providerServices": [
+        {
+          "id": 1
+        }
+      ],
+      "userEmail": "test@q4websystems.com",
+      "expectedResults": [
+        {
+          "Success": false,
+          "Message": "Type is required.\nType '' must be either Any, All or Not.\n"
+        }
+      ]
+    },
+    {
+      "name": "send ANY metadata",
+      "terms": [
+        {
+          "type": "ANY",
+          "termType": "METADATA",
+          "sortOrder":1,
+          "termData":[
+            {
+              "dataType": "METADATAVALUE",
+              "term":"misc"
+            },
+            {
+              "dataType": "METADATATYPE",
+              "term":"misc"
+            }
+          ]
+        },
+        {
+          "type": "ANY",
+          "termType": "TICKER",
+          "sortOrder":1,
+          "termData":[
+            {
+              "dataType": "SYMBOL",
+              "term":"AAPL"
+            },
+            {
+              "dataType": "MIC",
+              "term":"XNAS"
+            }
+          ]
+        }
+      ],
+      "includeMentions": true,
+      "active": true,
+      "Language": "en",
+      "providerServices": [
+        {
+          "id": 1
+        }
+      ],
+      "userEmail": "test@q4websystems.com",
+      "expectedResults": [
+        {
+          "Data": {
+            "Id": "0fdb42a7ae24442f5ad008d51c7c16fb"
+          },
+          "Success": true
+        }
+      ]
+    },
+    {
+      "name": "send ALL metadata",
+      "terms": [
+        {
+          "type": "ALL",
+          "termType": "METADATA",
+          "sortOrder":1,
+          "termData":[
+            {
+              "dataType": "METADATAVALUE",
+              "term":"misc"
+            },
+            {
+              "dataType": "METADATATYPE",
+              "term":"misc"
+            }
+          ]
+        },
+        {
+          "type": "ANY",
+          "termType": "TICKER",
+          "sortOrder":1,
+          "termData":[
+            {
+              "dataType": "SYMBOL",
+              "term":"AAPL"
+            },
+            {
+              "dataType": "MIC",
+              "term":"XNAS"
+            }
+          ]
+        }
+      ],
+      "includeMentions": true,
+      "active": true,
+      "Language": "en",
+      "providerServices": [
+        {
+          "id": 1
+        }
+      ],
+      "userEmail": "test@q4websystems.com",
+      "expectedResults": [
+        {
+          "Data": {
+            "Id": "0fdb42a7ae24442f5ad008d51c7c16fb"
+          },
+          "Success": true
+        }
+      ]
+    },
+    {
+      "name": "send NOT metadata",
+      "terms": [
+        {
+          "type": "NOT",
+          "termType": "METADATA",
+          "sortOrder":1,
+          "termData":[
+            {
+              "dataType": "METADATAVALUE",
+              "term":"misc"
+            },
+            {
+              "dataType": "METADATATYPE",
+              "term":"misc"
+            }
+          ]
+        },
+        {
+          "type": "ANY",
+          "termType": "TICKER",
+          "sortOrder":1,
+          "termData":[
+            {
+              "dataType": "SYMBOL",
+              "term":"AAPL"
+            },
+            {
+              "dataType": "MIC",
+              "term":"XNAS"
+            }
+          ]
+        }
+      ],
+      "includeMentions": true,
+      "active": true,
+      "Language": "en",
+      "providerServices": [
+        {
+          "id": 1
+        }
+      ],
+      "userEmail": "test@q4websystems.com",
+      "expectedResults": [
+        {
+          "Data": {
+            "Id": "0fdb42a7ae24442f5ad008d51c7c16fb"
+          },
+          "Success": true
+        }
+      ]
+    },
+    {
+      "name": "send NOT metadata, NO ticker",
+      "terms": [
+        {
+          "type": "NOT",
+          "termType": "METADATA",
+          "sortOrder":1,
+          "termData":[
+            {
+              "dataType": "METADATAVALUE",
+              "term":"misc"
+            },
+            {
+              "dataType": "METADATATYPE",
+              "term":"misc"
+            }
+          ]
+        }
+      ],
+      "includeMentions": true,
+      "active": true,
+      "Language": "en",
+      "providerServices": [
+        {
+          "id": 1
+        }
+      ],
+      "userEmail": "test@q4websystems.com",
+      "expectedResults": [
+        {
+          "Success": false,
+          "Message": "At least one filter term that is of filter type Any or All is required."
+        }
+      ]
+    },
+    {
+      "name": "send INVALID metadata",
+      "terms": [
+        {
+          "type": "INVALID",
+          "termType": "METADATA",
+          "sortOrder":1,
+          "termData":[
+            {
+              "dataType": "METADATAVALUE",
+              "term":"misc"
+            },
+            {
+              "dataType": "METADATATYPE",
+              "term":"misc"
+            }
+          ]
+        },
+        {
+          "type": "ANY",
+          "termType": "TICKER",
+          "sortOrder":1,
+          "termData":[
+            {
+              "dataType": "SYMBOL",
+              "term":"AAPL"
+            },
+            {
+              "dataType": "MIC",
+              "term":"XNAS"
+            }
+          ]
+        }
+      ],
+      "includeMentions": true,
+      "active": true,
+      "Language": "en",
+      "providerServices": [
+        {
+          "id": 1
+        }
+      ],
+      "userEmail": "test@q4websystems.com",
+      "expectedResults": [
+        {
+          "Success": false,
+          "Message": "Type 'INVALID' must be either Any, All or Not.\n"
+        }
+      ]
+    },
+    {
+      "name": "send blank type metadata",
+      "terms": [
+        {
+          "type": "",
+          "termType": "METADATA",
+          "sortOrder":1,
+          "termData":[
+            {
+              "dataType": "METADATAVALUE",
+              "term":"misc"
+            },
+            {
+              "dataType": "METADATATYPE",
+              "term":"misc"
+            }
+          ]
+        },
+        {
+          "type": "ANY",
+          "termType": "TICKER",
+          "sortOrder":1,
+          "termData":[
+            {
+              "dataType": "SYMBOL",
+              "term":"AAPL"
+            },
+            {
+              "dataType": "MIC",
+              "term":"XNAS"
+            }
+          ]
+        }
+      ],
+      "includeMentions": true,
+      "active": true,
+      "Language": "en",
+      "providerServices": [
+        {
+          "id": 1
+        }
+      ],
+      "userEmail": "test@q4websystems.com",
+      "expectedResults": [
+        {
+          "Success": false,
+          "Message": "Type is required.\nType '' must be either Any, All or Not.\n"
+        }
+      ]
+    }
+  ]
+}
