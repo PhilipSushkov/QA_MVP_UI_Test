@@ -78,9 +78,12 @@ public class PressReleases extends AbstractPageObject {
         return element;
     }
 
-    public PressReleaseEdit editPressRelease(String headline){
+    public PressReleaseEdit editPressRelease(String headline) throws InterruptedException {
         By pressReleaseEditButton = By.xpath("//td[contains(text(),'"+headline+"')]/preceding-sibling::td/input[contains(@id,'imgEdit')]");
 
+        System.out.println("//td[contains(text(),'"+headline+"')]/preceding-sibling::td/input[contains(@id,'imgEdit')]");
+
+        Thread.sleep(2000);
         findElement(pressReleaseEditButton).click();
 
         return new PressReleaseEdit(getDriver());

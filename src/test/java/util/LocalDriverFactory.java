@@ -5,7 +5,6 @@ package util;
  */
 
 import net.lightbody.bmp.BrowserMobProxy;
-import net.lightbody.bmp.BrowserMobProxyServer;
 import net.lightbody.bmp.client.ClientUtil;
 import org.openqa.selenium.Proxy;
 import org.openqa.selenium.WebDriver;
@@ -25,9 +24,9 @@ import java.util.logging.Logger;
 public class LocalDriverFactory {
     public static final long DEFAULT_TIMEOUT = 5L;
 
-    public static WebDriver createInstance(String browserName, BrowserMobProxy proxy) {
+    public static WebDriver createInstance(String browserName) {
         WebDriver driver = null;
-        Proxy selProxy = ClientUtil.createSeleniumProxy(proxy);
+        //Proxy selProxy = ClientUtil.createSeleniumProxy(proxy);
 
         switch (browserName) {
             case "chrome":
@@ -38,8 +37,8 @@ public class LocalDriverFactory {
                 options.addArguments("no-sandbox");
                 capabilities.setCapability(ChromeOptions.CAPABILITY, options);
 
-                capabilities.setCapability(CapabilityType.PROXY, selProxy);
-                capabilities.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
+                //capabilities.setCapability(CapabilityType.PROXY, selProxy);
+                //capabilities.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
 
                 LoggingPreferences loggingprefs = new LoggingPreferences();
                 loggingprefs.enable(LogType.BROWSER, Level.ALL);
@@ -48,7 +47,7 @@ public class LocalDriverFactory {
                 driver = new ChromeDriver(capabilities);
 
                 driver.manage().timeouts().implicitlyWait(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
-                driver.manage().timeouts().pageLoadTimeout(45, TimeUnit.SECONDS); //Increased to 20 to perhaps reduce timeouts?
+                driver.manage().timeouts().pageLoadTimeout(60, TimeUnit.SECONDS); //Increased to 20 to perhaps reduce timeouts?
 
                 return driver;
 

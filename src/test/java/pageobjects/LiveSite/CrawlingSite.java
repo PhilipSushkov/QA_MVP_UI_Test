@@ -1,6 +1,17 @@
 package pageobjects.LiveSite;
 
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
+import org.apache.http.Header;
+import org.apache.http.HttpHeaders;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.cookie.BasicClientCookie;
+import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.HttpContext;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -12,8 +23,10 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * Created by philipsushkov on 2017-03-28.
@@ -24,7 +37,7 @@ public class CrawlingSite {
     private String sSite, sPathToFile;
     private static final String sSlash = "/";
     private static final String sHttp = "http://";
-    private static final long DEFAULT_PAUSE = 1500;
+    private static final long DEFAULT_PAUSE = 2500;
     private JSONParser parser;
 
     public CrawlingSite(WebDriver phDriver, String sSite, String sPathToFile) {
@@ -46,12 +59,198 @@ public class CrawlingSite {
         } catch (TimeoutException e) {
             return "TimeoutException";
         } catch (WebDriverException e) {
-            return "Not Defined";
+            saveSiteVersion(sVersion);
+            return sVersion;
         }
 
         System.out.println(sSite + ": " + sVersion);
         saveSiteVersion(sVersion);
         return sVersion;
+    }
+
+    public Boolean getSslTrust() throws InterruptedException {
+        boolean result = false;
+
+        try {
+            //phDriver.get("https://www.sslshopper.com/ssl-checker.html#hostname="+getSiteUrl());
+            phDriver.get("https://www.sslshopper.com/ssl-checker.html#hostname="+sSite);
+            Thread.sleep(DEFAULT_PAUSE);
+            WebElement elementTitle = phDriver.findElement(By.xpath("//h3[contains(text(), 'resolves to')]"));
+
+            if (elementTitle!=null) {
+                try {
+                    WebElement elementRes = phDriver.findElement(By.xpath("//td[@class='failed']"));
+                    System.out.println("You got the failed message");
+                    result = false;
+                } catch (NoSuchElementException e1) {
+                    result = true;
+                }
+                catch (WebDriverException e3) {
+                    result = true;
+                }
+            } else {
+                System.out.println("The correct title is not found");
+                result = false;
+            }
+
+
+        } catch (WebDriverException e2) {
+            e2.printStackTrace();
+        } catch (Exception e4) {
+            e4.printStackTrace();
+        }
+
+        return result;
+    }
+
+    public String getSiteUrl() throws Exception {
+        String sUrl = "Not Defined";
+        String sSiteFull = Functions.UrlAddSlash(sSite, sSlash, sHttp);
+
+        try {
+            phDriver.get(sSiteFull);
+            Thread.sleep(DEFAULT_PAUSE);
+            sUrl = phDriver.getCurrentUrl();
+        } catch (TimeoutException e) {
+            return "TimeoutException";
+        } catch (WebDriverException e) {
+            saveSiteUrl(sUrl);
+            return sUrl;
+        }
+
+        System.out.println(sSite + ": " + sUrl);
+        saveSiteUrl(sUrl);
+        return sUrl;
+    }
+
+
+    public String getXCacheStatus(String sSiteFull) throws Exception {
+        String sXCacheStatus = "Not Defined";
+        //String sSiteFull = Functions.UrlAddSlash(sSite, sSlash, sHttp);
+
+        try {
+            HttpGet httpGet = new HttpGet(sSiteFull);
+
+            //httpGet.setHeader(HttpHeaders.HOST, sSite);
+            httpGet.setHeader(HttpHeaders.CONTENT_TYPE, "text/html; charset=utf-8");
+            httpGet.setHeader(HttpHeaders.CONNECTION, "keep-alive");
+            httpGet.setHeader(HttpHeaders.USER_AGENT, "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:45.0) Gecko/20100101 Firefox/45.0");
+            httpGet.setHeader(HttpHeaders.ACCEPT, "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+            httpGet.setHeader(HttpHeaders.CACHE_CONTROL, "max-age=0");
+
+            HttpClient httpClient = HttpClientBuilder.create().build();
+
+            try {
+                HttpResponse response = httpClient.execute(httpGet);
+                Header[] headers = response.getAllHeaders();
+                for (Header header : headers) {
+                    if (header.getName().equals("X-Cache-status")) {
+                        sXCacheStatus = header.getValue();
+                    }
+                }
+            } catch(IOException e)
+            {
+                saveXCacheStatus(sXCacheStatus);
+            } catch(Exception e)
+            {
+                saveXCacheStatus(sXCacheStatus);
+            }
+
+        } catch (TimeoutException e) {
+            return "TimeoutException";
+        } catch (WebDriverException e) {
+            saveXCacheStatus(sXCacheStatus);
+            return sXCacheStatus;
+        }
+
+        System.out.println(sSite + " X-Cache-Status: " + sXCacheStatus);
+        saveXCacheStatus(sXCacheStatus);
+        return sXCacheStatus;
+    }
+
+
+    public String getSiteVersionAfter() throws Exception {
+        String sVersion = "Not Defined";
+        String sSiteFull = Functions.UrlAddSlash(sSite, sSlash, sHttp);
+
+        try {
+            phDriver.get(sSiteFull);
+            Thread.sleep(DEFAULT_PAUSE);
+            sVersion = Functions.GetVersion(phDriver);
+        } catch (TimeoutException e) {
+            return "TimeoutException";
+        } catch (WebDriverException e) {
+            saveSiteVersionAfter(sVersion);
+            return sVersion;
+        }
+
+        System.out.println(sSite + ": " + sVersion);
+        saveSiteVersionAfter(sVersion);
+        return sVersion;
+    }
+
+    public String getSiteUrlAfter() throws Exception {
+        String sUrl = "Not Defined";
+        String sSiteFull = Functions.UrlAddSlash(sSite, sSlash, sHttp);
+
+        try {
+            phDriver.get(sSiteFull);
+            Thread.sleep(DEFAULT_PAUSE);
+            sUrl = phDriver.getCurrentUrl();
+        } catch (TimeoutException e) {
+            return "TimeoutException";
+        } catch (WebDriverException e) {
+            saveSiteUrlAfter(sUrl);
+            return sUrl;
+        }
+
+        System.out.println(sSite + ": " + sUrl);
+        saveSiteUrlAfter(sUrl);
+        return sUrl;
+    }
+
+    public String getXCacheStatusAfter(String sSiteFull) throws Exception {
+        String sXCacheStatus = "Not Defined";
+        //String sSiteFull = Functions.UrlAddSlash(sSite, sSlash, sHttp);
+
+        try {
+            HttpGet httpGet = new HttpGet(sSiteFull);
+
+            //httpGet.setHeader(HttpHeaders.HOST, sSite);
+            httpGet.setHeader(HttpHeaders.CONTENT_TYPE, "text/html; charset=utf-8");
+            httpGet.setHeader(HttpHeaders.CONNECTION, "keep-alive");
+            httpGet.setHeader(HttpHeaders.USER_AGENT, "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:45.0) Gecko/20100101 Firefox/45.0");
+            httpGet.setHeader(HttpHeaders.ACCEPT, "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+            httpGet.setHeader(HttpHeaders.CACHE_CONTROL, "max-age=0");
+
+            HttpClient httpClient = HttpClientBuilder.create().build();
+
+            try {
+                HttpResponse response = httpClient.execute(httpGet);
+                Header[] headers = response.getAllHeaders();
+                for (Header header : headers) {
+                    if (header.getName().equals("X-Cache-status")) {
+                        sXCacheStatus = header.getValue();
+                    }
+                }
+            } catch(IOException e)
+            {
+                saveXCacheStatusAfter(sXCacheStatus);
+            } catch(Exception e)
+            {
+                saveXCacheStatusAfter(sXCacheStatus);
+            }
+
+        } catch (TimeoutException e) {
+            return "TimeoutException";
+        } catch (WebDriverException e) {
+            saveXCacheStatusAfter(sXCacheStatus);
+            return sXCacheStatus;
+        }
+
+        System.out.println(sSite + " X-Cache-Status: " + sXCacheStatus);
+        saveXCacheStatusAfter(sXCacheStatus);
+        return sXCacheStatus;
     }
 
     public String getSiteVersionCookie(String sCookie) throws Exception {
@@ -89,7 +288,142 @@ public class CrawlingSite {
         }
 
         jsonObjSite.put("domain", sSite);
-        jsonObjSite.put("version", sVersion);
+        jsonObjSite.put("version_before", sVersion);
+
+        try {
+            FileWriter file = new FileWriter(sPathToFile + sSite + ".json");
+            file.write(jsonObjSite.toJSONString().replace("\\", ""));
+            file.flush();
+            file.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void saveXCacheStatus(String sXCacheStatus) throws Exception {
+        JSONObject jsonObjSite = new JSONObject();
+        //System.out.println(sPathToFile + sSite + ".json");
+
+        try {
+            jsonObjSite = (JSONObject) parser.parse(new FileReader(sPathToFile + sSite + ".json"));
+        } catch (ParseException e) {
+        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
+        }
+
+        jsonObjSite.put("X_Cache_Status_Before", sXCacheStatus);
+
+        try {
+            FileWriter file = new FileWriter(sPathToFile + sSite + ".json");
+            file.write(jsonObjSite.toJSONString().replace("\\", ""));
+            file.flush();
+            file.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void saveSiteUrl(String sUrl) throws Exception {
+        JSONObject jsonObjSite = new JSONObject();
+        //System.out.println(sPathToFile + sSite + ".json");
+
+        try {
+            jsonObjSite = (JSONObject) parser.parse(new FileReader(sPathToFile + sSite + ".json"));
+        } catch (ParseException e) {
+        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
+        }
+
+        jsonObjSite.put("Url_before", sUrl);
+
+        try {
+            FileWriter file = new FileWriter(sPathToFile + sSite + ".json");
+            file.write(jsonObjSite.toJSONString().replace("\\", ""));
+            file.flush();
+            file.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void saveSiteVersionAfter(String sVersion) throws Exception {
+        JSONObject jsonObjSite = new JSONObject();
+        //System.out.println(sPathToFile + sSite + ".json");
+
+        try {
+            jsonObjSite = (JSONObject) parser.parse(new FileReader(sPathToFile + sSite + ".json"));
+        } catch (ParseException e) {
+        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
+        }
+
+        jsonObjSite.put("version_after", sVersion);
+
+        try {
+            FileWriter file = new FileWriter(sPathToFile + sSite + ".json");
+            file.write(jsonObjSite.toJSONString().replace("\\", ""));
+            file.flush();
+            file.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void saveSiteUrlAfter(String sUrl) throws Exception {
+        JSONObject jsonObjSite = new JSONObject();
+        //System.out.println(sPathToFile + sSite + ".json");
+
+        try {
+            jsonObjSite = (JSONObject) parser.parse(new FileReader(sPathToFile + sSite + ".json"));
+        } catch (ParseException e) {
+        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
+        }
+
+        jsonObjSite.put("Url_after", sUrl);
+
+        try {
+            FileWriter file = new FileWriter(sPathToFile + sSite + ".json");
+            file.write(jsonObjSite.toJSONString().replace("\\", ""));
+            file.flush();
+            file.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void saveXCacheStatusAfter(String sXCacheStatus) throws Exception {
+        JSONObject jsonObjSite = new JSONObject();
+        //System.out.println(sPathToFile + sSite + ".json");
+
+        try {
+            jsonObjSite = (JSONObject) parser.parse(new FileReader(sPathToFile + sSite + ".json"));
+        } catch (ParseException e) {
+        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
+        }
+
+        jsonObjSite.put("X_Cache_Status_After", sXCacheStatus);
 
         try {
             FileWriter file = new FileWriter(sPathToFile + sSite + ".json");
@@ -289,4 +623,199 @@ public class CrawlingSite {
 
         return true;
     }
+
+    public String getTradeDate() throws Exception {
+        String sTradeDate = "Not Defined";
+        String sSiteFull = Functions.UrlAddSlash(sSite, sSlash, sHttp);
+
+        try {
+            phDriver.get(sSiteFull);
+            Thread.sleep(DEFAULT_PAUSE);
+            sTradeDate = phDriver.findElement(By.xpath("//span[contains(@id, 'lblTradeDate')]")).getText();
+        } catch (TimeoutException e) {
+            return "TimeoutException";
+        } catch (WebDriverException e) {
+            saveTradeDate(sTradeDate);
+            return sTradeDate;
+        }
+
+        System.out.println(sSite + ": " + sTradeDate);
+        saveTradeDate(sTradeDate);
+        return sTradeDate;
+    }
+
+    public String getTradeDate30() throws Exception {
+        String sTradeDate30 = "Not Defined";
+        String sSiteFull = Functions.UrlAddSlash(sSite, sSlash, sHttp);
+
+        try {
+            phDriver.get(sSiteFull);
+            Thread.sleep(DEFAULT_PAUSE);
+            sTradeDate30 = phDriver.findElement(By.xpath("//span[contains(@id, 'lblTradeDate')]")).getText();
+        } catch (TimeoutException e) {
+            return "TimeoutException";
+        } catch (WebDriverException e) {
+            saveTradeDate30(sTradeDate30);
+            return sTradeDate30;
+        }
+
+        System.out.println(sSite + ": " + sTradeDate30);
+        saveTradeDate(sTradeDate30);
+        return sTradeDate30;
+    }
+
+    public String getStockPrice() throws Exception {
+        String sStockPrice = "Not Defined";
+        String sSiteFull = Functions.UrlAddSlash(sSite, sSlash, sHttp);
+
+        try {
+            phDriver.get(sSiteFull);
+            Thread.sleep(DEFAULT_PAUSE);
+            //sStockPrice = phDriver.findElement(By.xpath("//a/span[contains(@id, 'lblPrice')]")).getText();
+            //sStockPrice = phDriver.findElement(By.xpath("//span[substring(@id,string-length(@id) - string-length('lblPrice')+1,string-length(@id))='lblPrice']/@id")).getText();
+            sStockPrice = phDriver.findElement(By.xpath("//a[(@class='StockPrice')]|//a/span[contains(@id, 'lblPrice')]|//a[contains(@id, 'hrefPrice')]")).getAttribute("innerText");
+        } catch (TimeoutException e) {
+            return "TimeoutException";
+        } catch (WebDriverException e) {
+            saveStockPrice(sStockPrice);
+            return sStockPrice;
+        }
+
+        System.out.println(sSite + ": " + sStockPrice);
+        saveStockPrice(sStockPrice);
+        return sStockPrice;
+    }
+
+    public String getStockPrice30() throws Exception {
+        String sStockPrice30 = "Not Defined";
+        String sSiteFull = Functions.UrlAddSlash(sSite, sSlash, sHttp);
+
+        try {
+            phDriver.get(sSiteFull);
+            Thread.sleep(DEFAULT_PAUSE);
+            sStockPrice30 = phDriver.findElement(By.xpath("//a[(@class='StockPrice')]|//a/span[contains(@id, 'lblPrice')]|//a[contains(@id, 'hrefPrice')]")).getAttribute("innerText");
+        } catch (TimeoutException e) {
+            return "TimeoutException";
+        } catch (WebDriverException e) {
+            saveStockPrice(sStockPrice30);
+            return sStockPrice30;
+        }
+
+        System.out.println(sSite + ": " + sStockPrice30);
+        saveStockPrice30(sStockPrice30);
+        return sStockPrice30;
+    }
+
+    public void saveTradeDate(String sTradeDate) throws Exception {
+        JSONObject jsonObjSite = new JSONObject();
+        //System.out.println(sPathToFile + sSite + ".json");
+
+        try {
+            jsonObjSite = (JSONObject) parser.parse(new FileReader(sPathToFile + sSite + ".json"));
+        } catch (ParseException e) {
+        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
+        }
+
+        jsonObjSite.put("domain", sSite);
+        jsonObjSite.put("trade_date", sTradeDate);
+
+        try {
+            FileWriter file = new FileWriter(sPathToFile + sSite + ".json");
+            file.write(jsonObjSite.toJSONString().replace("\\", ""));
+            file.flush();
+            file.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void saveTradeDate30(String sTradeDate30) throws Exception {
+        JSONObject jsonObjSite = new JSONObject();
+        //System.out.println(sPathToFile + sSite + ".json");
+
+        try {
+            jsonObjSite = (JSONObject) parser.parse(new FileReader(sPathToFile + sSite + ".json"));
+        } catch (ParseException e) {
+        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
+        }
+
+        jsonObjSite.put("trade_date30", sTradeDate30);
+
+        try {
+            FileWriter file = new FileWriter(sPathToFile + sSite + ".json");
+            file.write(jsonObjSite.toJSONString().replace("\\", ""));
+            file.flush();
+            file.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void saveStockPrice(String sStockPrice) throws Exception {
+        JSONObject jsonObjSite = new JSONObject();
+        //System.out.println(sPathToFile + sSite + ".json");
+
+        try {
+            jsonObjSite = (JSONObject) parser.parse(new FileReader(sPathToFile + sSite + ".json"));
+        } catch (ParseException e) {
+        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
+        }
+
+        jsonObjSite.put("domain", sSite);
+        jsonObjSite.put("stock_price", sStockPrice);
+        jsonObjSite.put("stock_price_time", new Date().toString());
+
+        try {
+            FileWriter file = new FileWriter(sPathToFile + sSite + ".json");
+            file.write(jsonObjSite.toJSONString().replace("\\", ""));
+            file.flush();
+            file.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void saveStockPrice30(String sStockPrice30) throws Exception {
+        JSONObject jsonObjSite = new JSONObject();
+        //System.out.println(sPathToFile + sSite + ".json");
+
+        try {
+            jsonObjSite = (JSONObject) parser.parse(new FileReader(sPathToFile + sSite + ".json"));
+        } catch (ParseException e) {
+        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
+        }
+
+        jsonObjSite.put("stock_price30", sStockPrice30);
+        jsonObjSite.put("stock_price_time30", new Date().toString());
+
+        try {
+            FileWriter file = new FileWriter(sPathToFile + sSite + ".json");
+            file.write(jsonObjSite.toJSONString().replace("\\", ""));
+            file.flush();
+            file.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 }

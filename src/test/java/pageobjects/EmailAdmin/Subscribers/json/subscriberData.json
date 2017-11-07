@@ -1,0 +1,52 @@
+{
+  "subscriber": [
+    {
+      "do_assertions": true,
+      "email_address": "test@q4websystems.com",
+      "first_name": "Testy",
+      "last_name": "Test",
+      "company": "Q4 Inc.",
+      "title": "QA",
+      "address_line1": "Address line1",
+      "address_line2": "Address line2",
+      "city": "Toronto",
+      "province": "ON",
+      "postal_code": "XXX XXX",
+      "country": "Canada",
+      "region": "NA",
+      "telephone_no": "123456",
+      "fax_no": "654321",
+      "notes": "This is a test",
+      "mailing_lists": "Press Release",
+      "mailing_lists_ch": "Test List",
+      "categories": " ",
+      "active": true,
+      "validated": true,
+      "validated_ch": false
+    },
+    {
+      "do_assertions": true,
+      "email_address": "test1@q4websystems.com",
+      "email_address_ch": "test2@q4websystems.com",
+      "first_name": "Testy",
+      "last_name": "Test",
+      "company": "Q4 Inc.",
+      "title": "QA",
+      "address_line1": "Address line1",
+      "address_line2": "Address line2",
+      "city": "Toronto",
+      "province": "ON",
+      "postal_code": "XXX XXX",
+      "country": "Canada",
+      "region": "NA",
+      "telephone_no": "123456",
+      "fax_no": "654321",
+      "notes": "This is a test",
+      "mailing_lists": "Press Release",
+      "categories": "my category",
+      "categories_ch" : " ",
+      "active": true,
+      "validated": true
+    }
+  ]
+}

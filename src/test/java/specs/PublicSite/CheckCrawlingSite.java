@@ -15,10 +15,7 @@ import pageobjects.LiveSite.CrawlingSite;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Properties;
+import java.util.*;
 
 import util.Functions;
 import util.LocalDriverManager;
@@ -31,14 +28,14 @@ public class CheckCrawlingSite {
     private static CrawlingSite crawlingSite;
     private static String sPathToFile, sDataSiteJson, sDataModuleJson;
     private static String sSiteVersion, sSiteVersionCookie, sCookie;
-    private static String sDataSiteJson_notLive, sDataSiteJson_n;
+    private static String sDataSiteJson_notLive, sDataSiteJson_n, sDataSiteSsl;
     private static JSONParser parser;
 
-    private static final int NUM_THREADS = 3;
+    private static final int NUM_THREADS = 7;
     private static final String PATHTO_PUBLICSITE_PROP = "PublicSite/PublicSiteMap.properties";
     public static Properties propUIPublicSite;
-    private static final String SITE_DATA="siteData", SITE_DATA_2="siteData2", MODULE_DATA="moduleData";
-    private static ExtentReports extent, cookieExtent;
+    private static final String SITE_DATA="siteData", SITE_DATA_2="siteData2", MODULE_DATA="moduleData", SITE_DATA_SSL="siteDataSsl";
+    private static ExtentReports extent, cookieExtent, after, checkPrice;
 
 
     @BeforeTest
@@ -55,23 +52,79 @@ public class CheckCrawlingSite {
         parser = new JSONParser();
         extent = ExtentManager.GetExtent();
         cookieExtent = CookieExtentManager.GetExtent();
+        after = AfterExtentManager.GetExtent();
+        checkPrice = PriceExtentManager.GetExtent();
 
-        sDataSiteJson_n = propUIPublicSite.getProperty("json_SiteData_7");
+        sDataSiteJson_n = propUIPublicSite.getProperty("json_SiteData_1");
+        //sDataSiteJson_n = propUIPublicSite.getProperty("json_SiteDataSsl");
+        //sDataSiteJson_n = propUIPublicSite.getProperty("json_NgnixSiteData");
+        sDataSiteSsl = propUIPublicSite.getProperty("json_SiteDataSsl");
     }
 
-    @Test(dataProvider=SITE_DATA_2, threadPoolSize=NUM_THREADS, priority=1, enabled=true)
+    @Test(dataProvider=SITE_DATA_2, threadPoolSize=NUM_THREADS, priority=1, enabled=false)
     public void checkSiteVersion(String site) throws Exception {
         //crawlingSite = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile);
         String sVersionActual = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getSiteVersion();
+        String sUrlActual = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getSiteUrl();
+        String sXCacheStatus = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getXCacheStatus(sUrlActual);
         ExtentTest test = extent.createTest("Check version result for " + site);
 
         if (sVersionActual.equals(sSiteVersion)) {
             test.log(Status.PASS, "Site Version number is valid: " + sSiteVersion);
+            test.log(Status.PASS, "Site Url: " + sUrlActual);
+            test.log(Status.PASS, "Site X-Cache-Status: " + sXCacheStatus);
         } else {
             test.log(Status.FAIL, "Actual Version number is wrong: " + sVersionActual + ". Supposed to be: " + sSiteVersion);
         }
 
         Assert.assertEquals(sVersionActual, sSiteVersion, "Site Version number is not correct for " + site);
+
+    }
+
+    @Test(dataProvider=SITE_DATA_2, threadPoolSize=NUM_THREADS, priority=1, enabled=false)
+    public void checkSiteVersionAfter(String site) throws Exception {
+        //crawlingSite = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile);
+        String sSiteVersionAfter = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getSiteVersionAfter();
+        String sUrlAfter = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getSiteUrlAfter();
+        String sXCacheStatusAfter = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getXCacheStatusAfter(sUrlAfter);
+        ExtentTest test = after.createTest("Check version result for " + site);
+
+
+        JSONObject jsonObjSite = new JSONObject();
+        //System.out.println(sPathToFile + sSite + ".json");
+
+        JSONParser parserAfter = new JSONParser();
+        try {
+            jsonObjSite = (JSONObject) parserAfter.parse(new FileReader(sPathToFile + site + ".json"));
+        } catch (ParseException e) {
+        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
+        }
+
+        String sSiteVersionBefore = jsonObjSite.get("version_before").toString();
+        String sSiteUrlBefore = jsonObjSite.get("Url_before").toString();
+        String sSiteXCacheStatusBefore = jsonObjSite.get("X_Cache_Status_Before").toString();
+
+        if (sSiteVersionAfter.equals(sSiteVersionBefore)) {
+            test.log(Status.PASS, "After Site Version number is valid: " + sSiteVersionBefore);
+        } else {
+            test.log(Status.FAIL, "After Site Version number is wrong: " + sSiteVersionAfter + ". Supposed to be: " + sSiteVersionBefore);
+        }
+
+        if (sUrlAfter.equals(sSiteUrlBefore)) {
+            test.log(Status.PASS, "After Site Url is valid: " + sSiteUrlBefore);
+        } else {
+            test.log(Status.FAIL, "After Site Url is wrong: " + sUrlAfter + ". Supposed to be: " + sSiteUrlBefore);
+        }
+
+        if (sXCacheStatusAfter.equals(sSiteXCacheStatusBefore)) {
+            test.log(Status.PASS, "After Site X-Cache-Status is valid: " + sSiteXCacheStatusBefore);
+        } else {
+            test.log(Status.FAIL, "After Site X-Cache-Status is wrong: " + sXCacheStatusAfter + ". Supposed to be: " + sSiteXCacheStatusBefore);
+        }
+
+        Assert.assertEquals(sSiteVersionAfter, sSiteVersionBefore, "After Site Version number is not correct for " + site);
+        Assert.assertEquals(sUrlAfter, sSiteUrlBefore, "After Site Url is not correct for " + site);
 
     }
 
@@ -109,13 +162,104 @@ public class CheckCrawlingSite {
         Assert.assertTrue(crawlingSite.getSiteModule(), "Some Modules on the site didn't find " + site);
     }
 
-    @Test(dataProvider=MODULE_DATA, priority=5, enabled=false)
+    @Test(dataProvider=MODULE_DATA, priority=6, enabled=false)
     public void checkModule(JSONObject module) throws Exception {
         String moduleName = module.get("name").toString();
 
         Long id = Thread.currentThread().getId();
         System.out.println("Module: " + moduleName + " " +id);
     }
+
+    @Test(dataProvider=SITE_DATA_SSL, priority=7, enabled=false)
+    public void checkSslSertificates(String site) throws Exception {
+        crawlingSite = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile);
+        Assert.assertTrue(crawlingSite.getSslTrust(), "Some Ssl Certificates are failed: " + site);
+    }
+
+
+
+    @Test(dataProvider=SITE_DATA_2, threadPoolSize=NUM_THREADS, priority=8, enabled=false)
+    public void checkStockPriceHeader(String site) throws Exception {
+        String sTradeDate = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getTradeDate();
+        String sStockPrice = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getStockPrice();
+
+        ExtentTest test = checkPrice.createTest("Check Trade Date & Stock Price result for " + site);
+
+
+        if (! ((sStockPrice.equals("")) || (sStockPrice.equals("Not Defined")) || (sStockPrice.equals("TimeoutException"))) ) {
+            test.log(Status.PASS, "Stock Price: " + sStockPrice);
+            Assert.assertTrue(true);
+        } else {
+            test.log(Status.FAIL, "Stock Price is Not Defined");
+            Assert.assertTrue(false);
+        }
+
+        /*
+        if (! ((sTradeDate.equals("")) || (sTradeDate.equals("Not Defined")) || (sTradeDate.equals("TimeoutException"))) ) {
+            test.log(Status.PASS, "Trade Date: " + sTradeDate);
+            Assert.assertTrue(true);
+        } else {
+            test.log(Status.FAIL, "Trade Date is Not Defined");
+            Assert.assertTrue(false);
+        }
+        */
+
+    }
+
+
+    @Test(dataProvider=SITE_DATA_2, threadPoolSize=NUM_THREADS, priority=9, enabled=true)
+    public void checkStockPriceHeader30(String site) throws Exception {
+        //String sTradeDate30 = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getTradeDate30();
+        String sStockPrice30 = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getStockPrice30();
+
+        ExtentTest test = checkPrice.createTest("Check Trade Date & Stock Price updates for " + site);
+
+        if (! ((sStockPrice30.equals("")) || (sStockPrice30.equals("Not Defined")) || (sStockPrice30.equals("TimeoutException"))) ) {
+
+            JSONObject jsonObjSite = new JSONObject();
+            //System.out.println(sPathToFile + sSite + ".json");
+
+            JSONParser parser30 = new JSONParser();
+            try {
+                jsonObjSite = (JSONObject) parser30.parse(new FileReader(sPathToFile + site + ".json"));
+            } catch (ParseException e) {
+            } catch (FileNotFoundException e) {
+            } catch (IOException e) {
+            }
+
+            //String sTradeDate = jsonObjSite.get("trade_date").toString();
+            String sStockPrice = jsonObjSite.get("stock_price").toString();
+            String sStockPriceTime = jsonObjSite.get("stock_price_time").toString();
+
+            if ( !(sStockPrice30.equals(sStockPrice)) ) {
+                test.log(Status.PASS, "Stock Price updates: " + sStockPrice30);
+                Assert.assertTrue(true);
+            } else {
+                test.log(Status.FAIL, "Stock Price doesn't update. Original:  " +sStockPrice + ", time: " +sStockPriceTime+". Latest: " + sStockPrice30 + ", time: " + new Date().toString());
+                Assert.assertTrue(false);
+            }
+        } else {
+            test.log(Status.PASS, "Stock Price is Not Defined");
+            Assert.assertTrue(true);
+        }
+
+        /*
+        if (! ((sTradeDate30.equals("")) || (sTradeDate30.equals("Not Defined")) || (sTradeDate30.equals("TimeoutException"))) ) {
+            if ( !(sTradeDate30.equals(sTradeDate)) ) {
+                test.log(Status.PASS, "Trade Date updates: " + sTradeDate30);
+                Assert.assertTrue(true);
+            } else {
+                test.log(Status.FAIL, "Trade Date doesn't update: " + sTradeDate30);
+                Assert.assertTrue(false);
+            }
+        } else {
+            test.log(Status.FAIL, "Trade Date is Not Defined");
+            Assert.assertTrue(false);
+        }
+        */
+
+    }
+
 
     @AfterMethod
     public void afterMethod(ITestResult result) {
@@ -199,6 +343,36 @@ public class CheckCrawlingSite {
         return null;
     }
 
+    @DataProvider(name=SITE_DATA_SSL, parallel=true)
+    public Object[][] siteDataSsl() {
+
+        try {
+            JSONArray jsonArray = (JSONArray) parser.parse(new FileReader(sPathToFile + sDataSiteSsl));
+            ArrayList<String> zoom = new ArrayList();
+
+            for (Iterator<JSONObject> iterator = jsonArray.iterator(); iterator.hasNext();) {
+                JSONObject jsonObject = iterator.next();
+                zoom.add(jsonObject.get("Site").toString());
+            }
+
+            Object[][] newSites = new Object[zoom.size()][1];
+            for (int i = 0; i < zoom.size(); i++) {
+                newSites[i][0] = zoom.get(i);
+            }
+
+            return newSites;
+
+        }  catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
     @DataProvider(name=MODULE_DATA)
     public Object[][] moduleData() {
 
@@ -237,6 +411,8 @@ public class CheckCrawlingSite {
         //phDriver.quit();
         extent.flush();
         cookieExtent.flush();
+        after.flush();
+        checkPrice.flush();
     }
 }
 

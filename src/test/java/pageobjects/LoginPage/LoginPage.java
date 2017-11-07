@@ -33,10 +33,7 @@ public class LoginPage extends Page {
         waitForElementToAppear(emailField);
 
         findElement(emailField).sendKeys("admintest"+randNum);
-        findElement(passwordField).sendKeys("qwerty@01_");
-
-        //findElement(emailField).sendKeys("dannyl" /*+randNum*/);
-        //findElement(passwordField).sendKeys("q4pass1234!");
+        findElement(passwordField).sendKeys("qwerty@01!");
 
         //findElement(emailField).sendKeys("philips");
         //findElement(passwordField).sendKeys("qwerty@01");
@@ -49,6 +46,9 @@ public class LoginPage extends Page {
 
         //findElement(emailField).sendKeys("rt450");
         //indElement(passwordField).sendKeys("q4pass1234!");
+
+        //findElement(emailField).sendKeys("juntianz");
+        //findElement(passwordField).sendKeys("q4pass1234!");
 
         Thread.sleep(DEFAULT_PAUSE);
         retryClick(loginButton);

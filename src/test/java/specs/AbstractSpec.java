@@ -42,7 +42,7 @@ public abstract class AbstractSpec extends util.Functions {
 
     private static final String BROWSER_STACK_URL = "http://jencampbell2:6jEURzbszfaWhLJc7XWx@hub.browserstack.com/wd/hub";
     private static final String BUILD_ID = RandomStringUtils.randomAlphanumeric(6);
-    public static final long DEFAULT_TIMEOUT = 5L;
+    public static final long DEFAULT_TIMEOUT = 25L;
     private static final long DEFAULT_PAUSE = 1500;
 
     public static URL desktopUrl, desktopUrlPublic;
@@ -161,7 +161,7 @@ public abstract class AbstractSpec extends util.Functions {
         driver = new ChromeDriver(capabilities);
 
         driver.manage().timeouts().implicitlyWait(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
-        driver.manage().timeouts().pageLoadTimeout(180, TimeUnit.SECONDS); //Increased to 20 to perhaps reduce timeouts?
+        driver.manage().timeouts().pageLoadTimeout(120, TimeUnit.SECONDS); //Increased to 20 to perhaps reduce timeouts?
         //driver.manage().window().setSize(new Dimension(1400, 1400));
         driver.get(desktopUrl.toString());
 
