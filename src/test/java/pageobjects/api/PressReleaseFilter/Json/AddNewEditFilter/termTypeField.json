@@ -1,6 +1,24 @@
 {
   "data": [
     {
+      "name": "sending NO TERMS",
+      "includeMentions": true,
+      "active": true,
+      "Language": "en",
+      "providerServices": [
+        {
+          "id": 1
+        }
+      ],
+      "userEmail": "test@q4websystems.com",
+      "expectedResults": [
+        {
+          "Success": false,
+          "Message": "Terms are required.\n"
+        }
+      ]
+    },
+    {
       "name": "send termType TICKER, dataType BLANK",
       "terms": [
         {
@@ -89,7 +107,7 @@
       "expectedResults": [
         {
           "Success": false,
-          "Message": "At least one Ticker that is not of filter type Not with one Mic and one Symbol is required."
+          "Message": "Filter terms of type Ticker must have exactly one Mic and one Symbol."
         }
       ]
     },
@@ -120,7 +138,7 @@
       "expectedResults": [
         {
           "Success": false,
-          "Message": "At least one Ticker that is not of filter type Not with one Mic and one Symbol is required."
+          "Message": "Filter terms of type Ticker must have exactly one Mic and one Symbol."
         }
       ]
     },
@@ -151,7 +169,7 @@
       "expectedResults": [
         {
           "Success": false,
-          "Message": "At least one Ticker that is not of filter type Not with one Mic and one Symbol is required."
+          "Message": "Filter terms of type Ticker must have exactly one Mic and one Symbol."
         }
       ]
     },
@@ -182,7 +200,7 @@
       "expectedResults": [
         {
           "Success": false,
-          "Message": "At least one Ticker that is not of filter type Not with one Mic and one Symbol is required."
+          "Message": "Filter terms of type Ticker must have exactly one Mic and one Symbol."
         }
       ]
     },
@@ -213,7 +231,7 @@
       "expectedResults": [
         {
           "Success": false,
-          "Message": "At least one Ticker that is not of filter type Not with one Mic and one Symbol is required."
+          "Message": "Filter terms of type Ticker must have exactly one Mic and one Symbol."
         }
       ]
     },
@@ -249,6 +267,39 @@
         {
           "Data": {
             "Id": "563fe864609945c55ad508d51c7c16fb"
+          },
+          "Success": true
+        }
+      ]
+    },
+    {
+      "name": "sending ONLY TEXT term",
+      "includeMentions": true,
+      "terms" : [
+        {
+          "type": "ANY",
+          "termType": "TEXT",
+          "sortOrder":1,
+          "termData":[
+            {
+              "dataType": "TEXT",
+              "term":"misc"
+            }
+          ]
+        }
+      ],
+      "active": true,
+      "Language": "en",
+      "providerServices": [
+        {
+          "id": 1
+        }
+      ],
+      "userEmail": "test@q4websystems.com",
+      "expectedResults": [
+        {
+          "Data": {
+            "Id": "685cfb1b2825403f1e3108d522c40184"
           },
           "Success": true
         }
@@ -625,6 +676,43 @@
         {
           "Success": false,
           "Message": "Filter terms of type Text must have exactly one Text data."
+        }
+      ]
+    },
+    {
+      "name": "sending ONLY METADATA term",
+      "terms": [
+        {
+          "type": "ALL",
+          "termType": "METADATA",
+          "sortOrder":1,
+          "termData":[
+            {
+              "dataType": "METADATATYPE",
+              "term":"misc"
+            },
+            {
+              "dataType": "METADATAVALUE",
+              "term":"misc"
+            }
+          ]
+        }
+      ],
+      "includeMentions": true,
+      "active": true,
+      "Language": "en",
+      "providerServices": [
+        {
+          "id": 1
+        }
+      ],
+      "userEmail": "test@q4websystems.com",
+      "expectedResults": [
+        {
+          "Data": {
+            "Id": "0623368a10a4466cf52e08d51c857ad1"
+          },
+          "Success": true
         }
       ]
     },
