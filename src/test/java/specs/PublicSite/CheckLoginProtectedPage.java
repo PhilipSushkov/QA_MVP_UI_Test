@@ -17,6 +17,7 @@ import specs.AbstractSpec;
 
 
 // Stock Information page on Chicagotest must be protected
+// Anonymous must not have Read privileges for Stock Information page
 
 public class CheckLoginProtectedPage extends AbstractSpec {
    private static  LoginProtectedPage loginProtectedPage;
