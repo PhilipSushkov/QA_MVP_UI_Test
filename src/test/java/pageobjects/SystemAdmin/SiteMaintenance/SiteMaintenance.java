@@ -18,6 +18,7 @@ public class SiteMaintenance extends AbstractPageObject {
     private static By selNewPasswordReuseLimit, btnUpdatePasswordReuseLimit, spanPasswordReuseLimit;
     private static By spanSendGridStatus, spanPressReleasePublishing, spanTwoFactorAuthentication, spanIFrames;
     private static By btnSendGrid, inpSendGridAPIKey, btnUpdateApi, spanNewswireImageResizeStatus, btnNewswireImageResize;
+    private static By inpResizeWidthInp, inpResizeHeightInp, btnNewswireImageResizeUpdate;
 
 
     public SiteMaintenance(WebDriver driver) {
@@ -39,6 +40,9 @@ public class SiteMaintenance extends AbstractPageObject {
         btnUpdateApi = By.xpath(propUISystemAdmin.getProperty("btn_UpdateApi"));
         spanNewswireImageResizeStatus = By.xpath(propUISystemAdmin.getProperty("span_NewswireImageResizeStatus"));
         btnNewswireImageResize = By.xpath(propUISystemAdmin.getProperty("btn_NewswireImageResize"));
+        inpResizeWidthInp = By.xpath(propUISystemAdmin.getProperty("inp_ResizeWidthInp"));
+        inpResizeHeightInp = By.xpath(propUISystemAdmin.getProperty("inp_ResizeHeightInp"));
+        btnNewswireImageResizeUpdate = By.xpath(propUISystemAdmin.getProperty("btn_NewswireImageResizeUpdate"));
     }
 
     public String getUrl() {
@@ -314,6 +318,45 @@ public class SiteMaintenance extends AbstractPageObject {
         try {
             wait.until(ExpectedConditions.visibilityOf(findElement(btnNewswireImageResize)));
             element = findElement(btnNewswireImageResize);
+        } catch (ElementNotFoundException e) {
+        } catch (ElementNotVisibleException e) {
+        }
+
+        return element;
+    }
+
+    public WebElement getResizeWidthInp() {
+        WebElement element = null;
+
+        try {
+            wait.until(ExpectedConditions.visibilityOf(findElement(inpResizeWidthInp)));
+            element = findElement(inpResizeWidthInp);
+        } catch (ElementNotFoundException e) {
+        } catch (ElementNotVisibleException e) {
+        }
+
+        return element;
+    }
+
+    public WebElement getResizeHeightInp() {
+        WebElement element = null;
+
+        try {
+            wait.until(ExpectedConditions.visibilityOf(findElement(inpResizeHeightInp)));
+            element = findElement(inpResizeHeightInp);
+        } catch (ElementNotFoundException e) {
+        } catch (ElementNotVisibleException e) {
+        }
+
+        return element;
+    }
+
+    public WebElement getNewswireImageResizeUpdateBtn() {
+        WebElement element = null;
+
+        try {
+            wait.until(ExpectedConditions.visibilityOf(findElement(btnNewswireImageResizeUpdate)));
+            element = findElement(btnNewswireImageResizeUpdate);
         } catch (ElementNotFoundException e) {
         } catch (ElementNotVisibleException e) {
         }

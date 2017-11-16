@@ -77,6 +77,9 @@ public class CheckSiteMaintenance extends AbstractSpec {
         // PR Newswire image resize
         Assert.assertTrue(siteMaintenance.getNewswireImageResizeStatus(), "Newswire Image Resize status value doesn't correct");
         Assert.assertNotNull(siteMaintenance.getNewswireImageResizeBtn(), "Newswire Image Resize status button doesn't exist");
+        Assert.assertNotNull(siteMaintenance.getResizeWidthInp(), "Resize Width input doesn't exist");
+        Assert.assertNotNull(siteMaintenance.getResizeHeightInp(), "Resize Height input doesn't exist");
+        Assert.assertNotNull(siteMaintenance.getNewswireImageResizeUpdateBtn(), "Newswire Image Resize Update button doesn't exist");
     }
 
     @AfterTest
