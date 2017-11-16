@@ -47,10 +47,30 @@ public class CheckSiteMaintenance extends AbstractSpec {
         Assert.assertEquals(siteMaintenance.getTitle(), expectedTitle, "Actual PDF Template Edit page Title doesn't match to expected");
 
         //System.out.println(new SiteMaintenance(driver).getGoLiveButton().getText() );
+
+        //Website Status
         Assert.assertNotNull(siteMaintenance.getGoLiveButton(), "Go Live Button doesn't exist");
+
+        // Press Release Publishing via Login
         Assert.assertNotNull(siteMaintenance.getOneTouchButton(), "One Touch Button doesn't exist");
+        Assert.assertTrue(siteMaintenance.getPressReleasePublishingStatus(), "Press Release Publishing status value doesn't correct");
+
+        // Two-Factor Authentication
         Assert.assertNotNull(siteMaintenance.getTwoFactorAuthenticationButton(), "Two Factor Authentication Button doesn't exist");
+        Assert.assertTrue(siteMaintenance.getTwoFactorAuthenticationStatus(), "Two Factor Authentication status value doesn't correct");
+
+        // Site Security Settings
         Assert.assertNotNull(siteMaintenance.getIFramesButton(), "IFrames Button doesn't exist");
+        Assert.assertTrue(siteMaintenance.getIFramesStatus(), "iFrames status value doesn't correct");
+
+        // Password Settings
+        Assert.assertNotNull(siteMaintenance.getPasswordReuseLimitList(), "Password Reuse Limit drop down list doesn't exist");
+        Assert.assertNotNull(siteMaintenance.getPasswordLimitUpdateBtn(), "Password Limit Update button doesn't exist");
+        Assert.assertTrue(siteMaintenance.getPasswordReuseLimit(), "Password Reuse Limit value doesn't correct");
+
+        // Mail: SendGrid
+        Assert.assertTrue(siteMaintenance.getSendGridStatus(), "SendGrid status value doesn't correct");
+
     }
 
     @AfterTest
