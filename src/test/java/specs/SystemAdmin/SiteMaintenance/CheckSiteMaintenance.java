@@ -70,7 +70,13 @@ public class CheckSiteMaintenance extends AbstractSpec {
 
         // Mail: SendGrid
         Assert.assertTrue(siteMaintenance.getSendGridStatus(), "SendGrid status value doesn't correct");
+        Assert.assertNotNull(siteMaintenance.getSendGridBtn(), "SendGrid status button doesn't exist");
+        Assert.assertNotNull(siteMaintenance.getSendGridAPIKeyInp(), "SendGrid API Key input doesn't exist");
+        Assert.assertNotNull(siteMaintenance.getUpdateApiBtn(), "Update API Key button doesn't exist");
 
+        // PR Newswire image resize
+        Assert.assertTrue(siteMaintenance.getNewswireImageResizeStatus(), "Newswire Image Resize status value doesn't correct");
+        Assert.assertNotNull(siteMaintenance.getNewswireImageResizeBtn(), "Newswire Image Resize status button doesn't exist");
     }
 
     @AfterTest

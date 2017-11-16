@@ -17,6 +17,7 @@ public class SiteMaintenance extends AbstractPageObject {
     private static By moduleTitle, btnGoLive, btnOneTouch, btnTwoFactorAuthentication, btnIFrames;
     private static By selNewPasswordReuseLimit, btnUpdatePasswordReuseLimit, spanPasswordReuseLimit;
     private static By spanSendGridStatus, spanPressReleasePublishing, spanTwoFactorAuthentication, spanIFrames;
+    private static By btnSendGrid, inpSendGridAPIKey, btnUpdateApi, spanNewswireImageResizeStatus, btnNewswireImageResize;
 
 
     public SiteMaintenance(WebDriver driver) {
@@ -33,6 +34,11 @@ public class SiteMaintenance extends AbstractPageObject {
         spanPressReleasePublishing = By.xpath(propUISystemAdmin.getProperty("span_PressReleasePublishing"));
         spanTwoFactorAuthentication = By.xpath(propUISystemAdmin.getProperty("span_TwoFactorAuthentication"));
         spanIFrames = By.xpath(propUISystemAdmin.getProperty("span_IFrames"));
+        btnSendGrid = By.xpath(propUISystemAdmin.getProperty("btn_SendGrid"));
+        inpSendGridAPIKey = By.xpath(propUISystemAdmin.getProperty("inp_SendGridAPIKey"));
+        btnUpdateApi = By.xpath(propUISystemAdmin.getProperty("btn_UpdateApi"));
+        spanNewswireImageResizeStatus = By.xpath(propUISystemAdmin.getProperty("span_NewswireImageResizeStatus"));
+        btnNewswireImageResize = By.xpath(propUISystemAdmin.getProperty("btn_NewswireImageResize"));
     }
 
     public String getUrl() {
@@ -238,6 +244,81 @@ public class SiteMaintenance extends AbstractPageObject {
         }
 
         return checkTwoFactorAuthenticationStatus;
+    }
+
+    public WebElement getSendGridBtn() {
+        WebElement element = null;
+
+        try {
+            wait.until(ExpectedConditions.visibilityOf(findElement(btnSendGrid)));
+            element = findElement(btnSendGrid);
+        } catch (ElementNotFoundException e) {
+        } catch (ElementNotVisibleException e) {
+        }
+
+        return element;
+    }
+
+    public WebElement getSendGridAPIKeyInp() {
+        WebElement element = null;
+
+        try {
+            wait.until(ExpectedConditions.visibilityOf(findElement(inpSendGridAPIKey)));
+            element = findElement(inpSendGridAPIKey);
+        } catch (ElementNotFoundException e) {
+        } catch (ElementNotVisibleException e) {
+        }
+
+        return element;
+    }
+
+    public WebElement getUpdateApiBtn() {
+        WebElement element = null;
+
+        try {
+            wait.until(ExpectedConditions.visibilityOf(findElement(btnUpdateApi)));
+            element = findElement(btnUpdateApi);
+        } catch (ElementNotFoundException e) {
+        } catch (ElementNotVisibleException e) {
+        }
+
+        return element;
+    }
+
+    public Boolean getNewswireImageResizeStatus() {
+        Boolean checkNewswireImageResizeStatus = false;
+        String[] arrayStatus = {"ENABLED", "DISABLED"};
+
+        try {
+            wait.until(ExpectedConditions.visibilityOf(findElement(spanNewswireImageResizeStatus)));
+
+            String iStatus = findElement(spanNewswireImageResizeStatus).getText();
+
+            for (int i=0; i<arrayStatus.length; i++) {
+                if (iStatus.equals(arrayStatus[i])) {
+                    checkNewswireImageResizeStatus = true;
+                    break;
+                }
+            }
+
+        } catch (ElementNotFoundException e) {
+        } catch (ElementNotVisibleException e) {
+        }
+
+        return checkNewswireImageResizeStatus;
+    }
+
+    public WebElement getNewswireImageResizeBtn() {
+        WebElement element = null;
+
+        try {
+            wait.until(ExpectedConditions.visibilityOf(findElement(btnNewswireImageResize)));
+            element = findElement(btnNewswireImageResize);
+        } catch (ElementNotFoundException e) {
+        } catch (ElementNotVisibleException e) {
+        }
+
+        return element;
     }
 
 }
