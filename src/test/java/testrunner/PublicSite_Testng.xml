@@ -76,4 +76,9 @@
             <class name="specs.PublicSite.CheckJobApplicationsPage" />
         </classes>
     </test>
+    <test name="CheckLoginProtectedPage">
+        <classes>
+            <class name="specs.PublicSite.CheckLoginProtectedPage" />
+        </classes>
+    </test>
 </suite>
