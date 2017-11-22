@@ -41,6 +41,7 @@ public class EventTimezone extends AbstractPageObject{
     private static By startTimeHourSelect, startTimeMinSelect,endTimeHourSelect, endTimeMinSelect;
     private static By eventStartDate, eventEndDate, publishBtn, eventTitle, timeZone, timeZoneDisplay;
     private static By moduleTime, tabEvent, iconRSS, calendarDownload, moduleHeadline;
+    private static By startAA, endAA;
     private static By currentContentSpan;
     private static By activeChk, saveBtn, deleteBtn, addNewLink;
     private static By workflowStateSpan, commentsTxt, saveAndSubmitBtn;
@@ -55,7 +56,6 @@ public class EventTimezone extends AbstractPageObject{
         startTimeMinSelect = By.xpath(propUIContentAdmin.getProperty("select_StartTimeMM"));
         endTimeHourSelect = By.xpath(propUIContentAdmin.getProperty("select_EndTimeHH"));
         endTimeMinSelect = By.xpath(propUIContentAdmin.getProperty("select_EndTimeMM"));
-        ;
         eventStartDate = By.xpath(propUIContentAdmin.getProperty("input_StartDate"));
         eventEndDate = By.xpath(propUIContentAdmin.getProperty("input_EndDate"));
         eventTitle = By.xpath(propUIContentAdmin.getProperty("input_eventTitle"));
@@ -75,6 +75,8 @@ public class EventTimezone extends AbstractPageObject{
         iconRSS = By.xpath(propUIContentAdmin.getProperty("icon_RSS"));
         calendarDownload = By.xpath(propUIContentAdmin.getProperty("link_CalendarDownload"));
         moduleHeadline = By.xpath(propUIContentAdmin.getProperty("module_Headline"));
+        startAA = By.xpath(propUIContentAdmin.getProperty("select_StartTimeAM"));
+        endAA = By.xpath(propUIContentAdmin.getProperty("select_EndTimeAM"));
 
         PathToJsonFile = System.getProperty("user.dir") + propUIContentAdmin.getProperty("dataPath_EventList");
         pathToFile = System.getProperty("user.dir") + propUIContentAdmin.getProperty("dataPath_EventFileList");
@@ -89,13 +91,14 @@ public class EventTimezone extends AbstractPageObject{
         String time_zone, event_title;
         Boolean active;
         DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-        DateFormat hourFormat = new SimpleDateFormat("HH");
+        DateFormat hourFormat = new SimpleDateFormat("h");
         DateFormat minuteFormat = new SimpleDateFormat("mm");
+        DateFormat amFormat = new SimpleDateFormat("aa");
         Calendar cal = Calendar.getInstance();
+        cal = getCalUnderTimeZone(data.get("time_zone").toString(), cal);
         waitForElement(addNewLink);
         findElement(addNewLink).click();
         waitForElement(saveBtn);
-
         try {
             cal.add(Calendar.MINUTE, 5);
 
@@ -106,14 +109,18 @@ public class EventTimezone extends AbstractPageObject{
             findElement(eventEndDate).sendKeys(dateFormat.format(cal.getTime()));
 
             findElement(startTimeHourSelect).sendKeys(hourFormat.format(cal.getTime()));
-
+            System.out.println(hourFormat.format(cal.getTime()));
             findElement(startTimeMinSelect).sendKeys(minuteFormat.format(cal.getTime()));
+
+            findElement(startAA).sendKeys(amFormat.format(cal.getTime()));
 
             cal.add(Calendar.MINUTE, 5);
 
             findElement(endTimeHourSelect).sendKeys(hourFormat.format(cal.getTime()));
 
             findElement(endTimeMinSelect).sendKeys(minuteFormat.format(cal.getTime()));
+
+            findElement(endAA).sendKeys(amFormat.format(cal.getTime()));
 
             time_zone = data.get("time_zone").toString();
             findElement(timeZone).sendKeys(time_zone);
@@ -281,6 +288,8 @@ public class EventTimezone extends AbstractPageObject{
         waitForElement(tabEvent);
         findElement(tabEvent).click();
 
+        Thread.sleep(1000*60*5);
+
         waitForElement(iconRSS);
         String URLValue = findElement(iconRSS).getAttribute("href");
 
@@ -314,12 +323,10 @@ public class EventTimezone extends AbstractPageObject{
             CalendarBuilder builder = new CalendarBuilder();
             net.fortuna.ical4j.model.Calendar calendar = builder.build(fin);
             ComponentList cl = calendar.getComponents();
-            System.out.println(cl.size());
             Component vTimezone = cl.getComponent("VTIMEZONE");
             String tzname = vTimezone.toString();
-            if (!tzname.contains(timeZoneDisplayName)){
+            if (!tzname.contains("EST")){
                 System.out.println(tzname);
-                System.out.println(timeZoneDisplayName);
                 return false;
             }
 
@@ -354,7 +361,7 @@ public class EventTimezone extends AbstractPageObject{
     }
 
     public boolean isMovedToPastEvent(JSONObject data, String name) throws InterruptedException {
-        Thread.sleep(1000*60*10);
+        Thread.sleep(1000*60*5);
         String response = new String();
         try {
             response = getHttp(chicagotestPastEventUrl);
@@ -459,5 +466,31 @@ public class EventTimezone extends AbstractPageObject{
         return result.toString();
     }
 
+    private static Calendar getCalUnderTimeZone(String timeZone, Calendar cal){
+        switch(timeZone){
+            case "(UTC-08:00) Pacific Standard Time":
+                cal.add(Calendar.HOUR, -3);
+                return cal;
+            case "(UTC-07:00) Mountain Standard Time":
+                cal.add(Calendar.HOUR, -2);
+                return cal;
+            case "(UTC-06:00) Central Standard Time":
+                cal.add(Calendar.HOUR, -1);
+                return cal;
+            case "(UTC-05:00) Eastern Standard Time":
+                return cal;
+            case "(UTC-04:00) Atlantic Standard Time":
+                cal.add(Calendar.HOUR, 1);
+                return cal;
+            case "(UTC+00:00) Greenwich Standard Time":
+                cal.add(Calendar.HOUR, 5);
+                return cal;
+            case "(UTC+02:00) E. Europe Standard Time":
+                cal.add(Calendar.HOUR, 7);
+                return cal;
+            default:
+                return null;
+        }
+    }
 
 }
