@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * Created by charleszheng on 2017-10-17.
+ * Created by charleszheng on 2017-10-20.
  */
 
 public class CheckEmailAlertListAdd extends AbstractSpec{

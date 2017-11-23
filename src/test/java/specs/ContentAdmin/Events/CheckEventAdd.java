@@ -58,7 +58,6 @@ public class CheckEventAdd extends AbstractSpec {
     @Test(dataProvider=DATA, priority=1, enabled=true)
     public void saveEvent(JSONObject data) {
         String expectedTitleEdit = "Event / Webcast Edit";
-
         sEventTitle = data.get("event_title").toString();
         Assert.assertEquals(eventAdd.getTitle(), expectedTitleEdit, "Actual "+PAGE_NAME+" Edit page Title doesn't match to expected");
         Assert.assertEquals(eventAdd.saveEvent(data, sEventTitle), WorkflowState.IN_PROGRESS.state(), "New "+PAGE_NAME+" didn't save properly");
