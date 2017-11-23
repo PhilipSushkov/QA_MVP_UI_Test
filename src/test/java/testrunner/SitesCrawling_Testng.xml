@@ -5,7 +5,7 @@
         <listener class-name="util.WebDriverListener"></listener>
     </listeners>
     <test name="CheckCrawlingSite">
-        <parameter name="browserName" value="chrome"></parameter>
+        <parameter name="browserName" value="phantom"></parameter>
         <classes>
             <class name="specs.PublicSite.CheckCrawlingSite" />
         </classes>

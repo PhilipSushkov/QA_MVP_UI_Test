@@ -150,7 +150,7 @@ public class CheckCrawlingSite {
         Assert.assertTrue(crawlingSite.getSiteMap(), "sitemap.ashx file doesn't exist for " + site);
     }
 
-    @Test(dataProvider=SITE_DATA, threadPoolSize=NUM_THREADS, priority=4, enabled=false)
+    @Test(dataProvider=SITE_DATA, threadPoolSize=NUM_THREADS, priority=4, enabled=true)
     public void crawlSiteModule(String site) throws Exception {
         crawlingSite = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile);
         Assert.assertTrue(crawlingSite.mapSiteModule(sDataModuleJson), "Mapping Site-Modules isn't done properly " + site);
@@ -207,7 +207,7 @@ public class CheckCrawlingSite {
     }
 
 
-    @Test(dataProvider=SITE_DATA_2, threadPoolSize=NUM_THREADS, priority=9, enabled=true)
+    @Test(dataProvider=SITE_DATA_2, threadPoolSize=NUM_THREADS, priority=9, enabled=false)
     public void checkStockPriceHeader30(String site) throws Exception {
         //String sTradeDate30 = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getTradeDate30();
         String sStockPrice30 = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getStockPrice30();
