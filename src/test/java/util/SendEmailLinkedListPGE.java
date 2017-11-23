@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Properties;
 
-public abstract class SendEmailLinkedList {
+public abstract class SendEmailLinkedListPGE {
     public static boolean sendEmail(LinkedList<String> testingResult) {
         final String username = "test@q4websystems.com";
         final String password = "testing!";
@@ -33,10 +33,11 @@ public abstract class SendEmailLinkedList {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress("test@q4websystems.com"));
             message.setRecipients(Message.RecipientType.TO,
-                    InternetAddress.parse("victorl@q4inc.com"));
-            message.setSubject("Gold Price Check Report " + new Date());
+                    //InternetAddress.parse("philips@q4websystems.com"));
+                    InternetAddress.parse("karenl@q4websystems.com"));
+            message.setSubject("PGE Corp Stock Quote Header Update " + new Date());
             BodyPart messageBodyPart = new MimeBodyPart();
-            messageBodyPart.setText("Gold Price Check Report / " + new Date() + "\n");
+            messageBodyPart.setText("PGE Corp Stock Quote Header Check Report / " + new Date() + "\n");
             Multipart multipart = new MimeMultipart();
             multipart.addBodyPart(messageBodyPart);
             Iterator<String> itr = testingResult.iterator();

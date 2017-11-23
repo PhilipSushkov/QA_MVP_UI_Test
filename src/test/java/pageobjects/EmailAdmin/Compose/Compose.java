@@ -24,7 +24,7 @@ public class Compose extends AbstractPageObject {
         selectTo = By.xpath(propUIEmailAdmin.getProperty("select_To"));
         inputFrom = By.xpath(propUIEmailAdmin.getProperty("input_From"));
         inputSubject = By.xpath(propUIEmailAdmin.getProperty("input_Subject"));
-        textareaBodyText = By.xpath(propUIEmailAdmin.getProperty("textarea_BodyText"));
+        textareaBodyText = By.xpath(propUIEmailAdmin.getProperty("textarea_Body"));
         inputCreatedBy = By.xpath(propUIEmailAdmin.getProperty("input_CreatedBy"));
         buttonSendTestEmail = By.xpath(propUIEmailAdmin.getProperty("button_SendTestEmail"));
         buttonSave = By.xpath(propUIEmailAdmin.getProperty("button_Save"));

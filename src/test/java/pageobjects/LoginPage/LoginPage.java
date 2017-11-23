@@ -35,9 +35,6 @@ public class LoginPage extends Page {
         findElement(emailField).sendKeys("admintest"+randNum);
         findElement(passwordField).sendKeys("qwerty@01!");
 
-        //findElement(emailField).sendKeys("dannyl" /*+randNum*/);
-        //findElement(passwordField).sendKeys("q4pass1234!");
-
         //findElement(emailField).sendKeys("philips");
         //findElement(passwordField).sendKeys("qwerty@01");
 

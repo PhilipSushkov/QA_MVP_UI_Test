@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="Web CMS Suite Smoke" parallel="tests" thread-count="3">
+<suite name="Web CMS Suite Smoke" parallel="tests" thread-count="2">
     <test name="CreateInvalidateCache">
         <classes>
             <class name="specs.Dashboard.CheckInvalidateCache" />
@@ -16,4 +16,13 @@
             <class name="specs.SystemAdmin.SiteMaintenance.CheckFunctionalBtn" />
         </classes>
     </test>
+
+    <!--
+    <test name="CheckLoginProtectedPage">
+        <classes>
+            <class name="specs.PublicSite.CheckLoginProtectedPage" />
+        </classes>
+    </test>
+    -->
+
 </suite>

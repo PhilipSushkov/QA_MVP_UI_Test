@@ -39,7 +39,6 @@ public class Auth extends util.Functions {
         //To hide warnings logs from execution console.
         Logger logger = Logger.getLogger("");
         logger.setLevel(Level.OFF);
-
         sPathToFile = System.getProperty("user.dir") + propAPI.getProperty("dataPath_Auth");
         sDataFileJson = propAPI.getProperty("jsonData_Auth");
         client = HttpClientBuilder.create().build();

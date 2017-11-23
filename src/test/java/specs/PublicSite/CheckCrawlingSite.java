@@ -15,10 +15,7 @@ import pageobjects.LiveSite.CrawlingSite;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Properties;
+import java.util.*;
 
 import util.Functions;
 import util.LocalDriverManager;
@@ -38,7 +35,7 @@ public class CheckCrawlingSite {
     private static final String PATHTO_PUBLICSITE_PROP = "PublicSite/PublicSiteMap.properties";
     public static Properties propUIPublicSite;
     private static final String SITE_DATA="siteData", SITE_DATA_2="siteData2", MODULE_DATA="moduleData", SITE_DATA_SSL="siteDataSsl";
-    private static ExtentReports extent, cookieExtent, after;
+    private static ExtentReports extent, cookieExtent, after, checkPrice;
 
 
     @BeforeTest
@@ -56,9 +53,11 @@ public class CheckCrawlingSite {
         extent = ExtentManager.GetExtent();
         cookieExtent = CookieExtentManager.GetExtent();
         after = AfterExtentManager.GetExtent();
+        checkPrice = PriceExtentManager.GetExtent();
 
+        sDataSiteJson_n = propUIPublicSite.getProperty("json_SiteData_1");
+        //sDataSiteJson_n = propUIPublicSite.getProperty("json_SiteDataSsl");
         //sDataSiteJson_n = propUIPublicSite.getProperty("json_NgnixSiteData");
-        sDataSiteJson_n = propUIPublicSite.getProperty("json_SiteDataSsl");
         sDataSiteSsl = propUIPublicSite.getProperty("json_SiteDataSsl");
     }
 
@@ -163,7 +162,7 @@ public class CheckCrawlingSite {
         Assert.assertTrue(crawlingSite.getSiteModule(), "Some Modules on the site didn't find " + site);
     }
 
-    @Test(dataProvider=MODULE_DATA, priority=5, enabled=false)
+    @Test(dataProvider=MODULE_DATA, priority=6, enabled=false)
     public void checkModule(JSONObject module) throws Exception {
         String moduleName = module.get("name").toString();
 
@@ -171,11 +170,96 @@ public class CheckCrawlingSite {
         System.out.println("Module: " + moduleName + " " +id);
     }
 
-    @Test(dataProvider=SITE_DATA_SSL, priority=6, enabled=true)
+    @Test(dataProvider=SITE_DATA_SSL, priority=7, enabled=false)
     public void checkSslSertificates(String site) throws Exception {
         crawlingSite = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile);
         Assert.assertTrue(crawlingSite.getSslTrust(), "Some Ssl Certificates are failed: " + site);
     }
+
+
+
+    @Test(dataProvider=SITE_DATA_2, threadPoolSize=NUM_THREADS, priority=8, enabled=false)
+    public void checkStockPriceHeader(String site) throws Exception {
+        String sTradeDate = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getTradeDate();
+        String sStockPrice = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getStockPrice();
+
+        ExtentTest test = checkPrice.createTest("Check Trade Date & Stock Price result for " + site);
+
+
+        if (! ((sStockPrice.equals("")) || (sStockPrice.equals("Not Defined")) || (sStockPrice.equals("TimeoutException"))) ) {
+            test.log(Status.PASS, "Stock Price: " + sStockPrice);
+            Assert.assertTrue(true);
+        } else {
+            test.log(Status.FAIL, "Stock Price is Not Defined");
+            Assert.assertTrue(false);
+        }
+
+        /*
+        if (! ((sTradeDate.equals("")) || (sTradeDate.equals("Not Defined")) || (sTradeDate.equals("TimeoutException"))) ) {
+            test.log(Status.PASS, "Trade Date: " + sTradeDate);
+            Assert.assertTrue(true);
+        } else {
+            test.log(Status.FAIL, "Trade Date is Not Defined");
+            Assert.assertTrue(false);
+        }
+        */
+
+    }
+
+
+    @Test(dataProvider=SITE_DATA_2, threadPoolSize=NUM_THREADS, priority=9, enabled=true)
+    public void checkStockPriceHeader30(String site) throws Exception {
+        //String sTradeDate30 = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getTradeDate30();
+        String sStockPrice30 = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getStockPrice30();
+
+        ExtentTest test = checkPrice.createTest("Check Trade Date & Stock Price updates for " + site);
+
+        if (! ((sStockPrice30.equals("")) || (sStockPrice30.equals("Not Defined")) || (sStockPrice30.equals("TimeoutException"))) ) {
+
+            JSONObject jsonObjSite = new JSONObject();
+            //System.out.println(sPathToFile + sSite + ".json");
+
+            JSONParser parser30 = new JSONParser();
+            try {
+                jsonObjSite = (JSONObject) parser30.parse(new FileReader(sPathToFile + site + ".json"));
+            } catch (ParseException e) {
+            } catch (FileNotFoundException e) {
+            } catch (IOException e) {
+            }
+
+            //String sTradeDate = jsonObjSite.get("trade_date").toString();
+            String sStockPrice = jsonObjSite.get("stock_price").toString();
+            String sStockPriceTime = jsonObjSite.get("stock_price_time").toString();
+
+            if ( !(sStockPrice30.equals(sStockPrice)) ) {
+                test.log(Status.PASS, "Stock Price updates: " + sStockPrice30);
+                Assert.assertTrue(true);
+            } else {
+                test.log(Status.FAIL, "Stock Price doesn't update. Original:  " +sStockPrice + ", time: " +sStockPriceTime+". Latest: " + sStockPrice30 + ", time: " + new Date().toString());
+                Assert.assertTrue(false);
+            }
+        } else {
+            test.log(Status.PASS, "Stock Price is Not Defined");
+            Assert.assertTrue(true);
+        }
+
+        /*
+        if (! ((sTradeDate30.equals("")) || (sTradeDate30.equals("Not Defined")) || (sTradeDate30.equals("TimeoutException"))) ) {
+            if ( !(sTradeDate30.equals(sTradeDate)) ) {
+                test.log(Status.PASS, "Trade Date updates: " + sTradeDate30);
+                Assert.assertTrue(true);
+            } else {
+                test.log(Status.FAIL, "Trade Date doesn't update: " + sTradeDate30);
+                Assert.assertTrue(false);
+            }
+        } else {
+            test.log(Status.FAIL, "Trade Date is Not Defined");
+            Assert.assertTrue(false);
+        }
+        */
+
+    }
+
 
     @AfterMethod
     public void afterMethod(ITestResult result) {
@@ -328,6 +412,7 @@ public class CheckCrawlingSite {
         extent.flush();
         cookieExtent.flush();
         after.flush();
+        checkPrice.flush();
     }
 }
 
