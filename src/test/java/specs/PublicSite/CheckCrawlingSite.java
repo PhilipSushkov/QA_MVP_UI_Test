@@ -35,7 +35,7 @@ public class CheckCrawlingSite {
     private static final String PATHTO_PUBLICSITE_PROP = "PublicSite/PublicSiteMap.properties";
     public static Properties propUIPublicSite;
     private static final String SITE_DATA="siteData", SITE_DATA_2="siteData2", MODULE_DATA="moduleData", SITE_DATA_SSL="siteDataSsl";
-    private static ExtentReports extent, cookieExtent, after, checkPrice;
+    private static ExtentReports extent, cookieExtent, after, checkPrice, checkSiteHealth;
 
 
     @BeforeTest
@@ -54,6 +54,7 @@ public class CheckCrawlingSite {
         cookieExtent = CookieExtentManager.GetExtent();
         after = AfterExtentManager.GetExtent();
         checkPrice = PriceExtentManager.GetExtent();
+        checkSiteHealth = SiteHealthManager.GetExtent();
 
         sDataSiteJson_n = propUIPublicSite.getProperty("json_SiteData_1");
         //sDataSiteJson_n = propUIPublicSite.getProperty("json_SiteDataSsl");
@@ -150,16 +151,17 @@ public class CheckCrawlingSite {
         Assert.assertTrue(crawlingSite.getSiteMap(), "sitemap.ashx file doesn't exist for " + site);
     }
 
-    @Test(dataProvider=SITE_DATA, threadPoolSize=NUM_THREADS, priority=4, enabled=true)
+    @Test(dataProvider=SITE_DATA, threadPoolSize=NUM_THREADS, priority=4, enabled=false)
     public void crawlSiteModule(String site) throws Exception {
         crawlingSite = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile);
         Assert.assertTrue(crawlingSite.mapSiteModule(sDataModuleJson), "Mapping Site-Modules isn't done properly " + site);
     }
 
-    @Test(dataProvider=SITE_DATA, threadPoolSize=NUM_THREADS, priority=5, enabled=false)
+    @Test(dataProvider=SITE_DATA, threadPoolSize=NUM_THREADS, priority=5, enabled=true)
     public void checkSiteModule(String site) throws Exception {
         crawlingSite = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile);
-        Assert.assertTrue(crawlingSite.getSiteModule(), "Some Modules on the site didn't find " + site);
+        //Assert.assertTrue(crawlingSite.getSiteModule(checkSiteHealth), "Some Modules on the site didn't find " + site);
+        checkSiteHealth = crawlingSite.getSiteModule();
     }
 
     @Test(dataProvider=MODULE_DATA, priority=6, enabled=false)
@@ -175,7 +177,6 @@ public class CheckCrawlingSite {
         crawlingSite = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile);
         Assert.assertTrue(crawlingSite.getSslTrust(), "Some Ssl Certificates are failed: " + site);
     }
-
 
 
     @Test(dataProvider=SITE_DATA_2, threadPoolSize=NUM_THREADS, priority=8, enabled=false)
@@ -413,6 +414,7 @@ public class CheckCrawlingSite {
         cookieExtent.flush();
         after.flush();
         checkPrice.flush();
+        checkSiteHealth.flush();
     }
 }
 

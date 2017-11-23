@@ -1,5 +1,8 @@
 package pageobjects.LiveSite;
 
+import com.aventstack.extentreports.ExtentReports;
+import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.Status;
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
@@ -17,6 +20,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.openqa.selenium.*;
+import pageobjects.PageObject;
 import util.Functions;
 
 import java.io.FileNotFoundException;
@@ -595,7 +599,10 @@ public class CrawlingSite {
     }
 
 
-    public boolean getSiteModule() throws Exception {
+    public ExtentReports getSiteModule() {
+        ExtentReports checkSiteHealth = null;
+        ExtentTest test = checkSiteHealth.createTest("Health Checking for " + sSite);
+
         JSONObject jsonObjSite;
         JSONObject jsonListModule = new JSONObject();
         JSONArray jsonModuleNames = new JSONArray();
@@ -616,12 +623,25 @@ public class CrawlingSite {
             JSONObject jsonObjModule = (JSONObject) jsonListModule.get(sModuleName);
             JSONArray jsonListUrl = (JSONArray) jsonObjModule.get("url");
             for (int i=0; i<jsonListUrl.size(); i++) {
-                System.out.println(jsonListUrl.get(i));
+                phDriver.get(jsonListUrl.get(i).toString());
+                try {
+                    phDriver.findElement(By.xpath(jsonObjModule.get("xpath").toString()));
+                } catch (ElementNotVisibleException e) {
+                    System.out.println(jsonObjModule.get("xpath").toString() + ": False");
+                } catch (Exception e) {
+                    System.out.println(jsonObjModule.get("xpath").toString() + ": False");
+                    test.log(Status.FAIL, "Element doesn't exist: " + jsonObjModule.get("xpath").toString());
+
+                }
+                System.out.println(jsonObjModule.get("xpath").toString());
+                test.log(Status.PASS, "Element exists: " + jsonObjModule.get("xpath").toString());
+                //System.out.println(jsonListUrl.get(i));
+
             }
         }
 
 
-        return true;
+        return checkSiteHealth;
     }
 
     public String getTradeDate() throws Exception {
