@@ -1,10 +1,7 @@
 package pageobjects.LiveSite;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import pageobjects.AbstractPageObject;
-import org.openqa.selenium.JavascriptExecutor;
 
 /**
  * Created by sarahr on 3/17/2017.
@@ -18,6 +15,8 @@ public class SearchPage extends AbstractPageObject{
     By searchModuleTitle = By.xpath("//span[contains(@class,'ModuleTitle') and contains(string(),'Search Results')]");
     By pageTwoResults = By.xpath("//div[contains(@class,'SearchResultsPaging')]//a[contains(string(),'2')]");
     By previewToolbar = By.xpath("//div[contains(@class,'PreviewToolBar')]");
+    By moduleTitle = By.xpath("//div[contains(@class,'SearchResultsContainer')]//span[contains(@class,'ModuleTitle')]");
+
 
     public SearchPage(WebDriver driver) {
         super(driver);
@@ -30,14 +29,14 @@ public class SearchPage extends AbstractPageObject{
 
     public String searchSomething(String searchTerm){
         waitForElement(searchBar);
-        findElement(searchBar).click();
-        findElement(searchBar).clear();
-        findElement(searchBar).sendKeys(searchTerm);
+        findVisibleElement(searchBar).click();
+        findVisibleElement(searchBar).clear();
+        findVisibleElement(searchBar).sendKeys(searchTerm);
 
         waitForElement(searchButton);
-        findElement(searchButton).click();
+        findVisibleElement(searchButton).click();
 
-        return findElement(searchSummaryResults).getText();
+        return findVisibleElement(searchSummaryResults).getText();
     }
 
     public boolean isTermInResults(String searchTerm){
@@ -77,6 +76,26 @@ public class SearchPage extends AbstractPageObject{
             return false;
         }
 
+    }
+
+    public String getModuleTitle(){
+        try{
+            waitForElement(moduleTitle);
+            return findElement(moduleTitle).getText();
+        } catch (NoSuchElementException e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public boolean getPopUpWindow(){
+        try{
+            driver.switchTo().alert();
+            // If it reaches here, it found a popup
+        } catch(org.openqa.selenium.NoAlertPresentException e){
+            return false;
+        }
+        return true;
     }
 
 }
