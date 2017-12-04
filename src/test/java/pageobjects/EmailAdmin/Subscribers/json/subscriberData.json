@@ -2,7 +2,7 @@
   "subscriber": [
     {
       "do_assertions": true,
-      "email_address": "test@q4websystems.com",
+      "email_address": "test_01@q4websystems.com",
       "first_name": "Testy",
       "last_name": "Test",
       "company": "Q4 Inc.",
@@ -26,8 +26,8 @@
     },
     {
       "do_assertions": true,
-      "email_address": "test1@q4websystems.com",
-      "email_address_ch": "test2@q4websystems.com",
+      "email_address": "test_02@q4websystems.com",
+      "email_address_ch": "test_03@q4websystems.com",
       "first_name": "Testy",
       "last_name": "Test",
       "company": "Q4 Inc.",
