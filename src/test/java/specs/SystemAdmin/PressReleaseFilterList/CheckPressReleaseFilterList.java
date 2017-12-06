@@ -34,7 +34,7 @@ public class CheckPressReleaseFilterList extends AbstractSpec {
     }
 
     @Test
-    public void checkGenericStorageList() throws Exception {
+    public void checkPressReleaseFilterList() throws Exception {
         final String expectedTitle = "Press Release Filter List";
         final Integer expectedSize = 1;
 

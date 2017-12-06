@@ -60,6 +60,11 @@
             <class name="specs.SystemAdmin.WorkflowEmailList.CheckWorkflowEmailList" />
         </classes>
     </test>
+    <test name="CheckPressReleaseFilterList">
+        <classes>
+            <class name="specs.SystemAdmin.PressReleaseFilterList.CheckPressReleaseFilterList" />
+        </classes>
+    </test>
 
 
     <!-- System Admin Edit part -->
@@ -86,6 +91,11 @@
     <test name="CheckUserGroupEdit">
         <classes>
             <class name="specs.SystemAdmin.UserGroupList.CheckUserGroupEdit" />
+        </classes>
+    </test>
+    <test name="CheckPressReleaseFilterEdit">
+        <classes>
+            <class name="specs.SystemAdmin.PressReleaseFilterList.CheckPressReleaseFilterEdit" />
         </classes>
     </test>
 

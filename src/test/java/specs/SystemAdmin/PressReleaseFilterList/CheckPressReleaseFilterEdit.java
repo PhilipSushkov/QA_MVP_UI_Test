@@ -32,7 +32,7 @@ public class CheckPressReleaseFilterEdit extends AbstractSpec {
     }
 
     @Test
-    public void checkGenericStorageEdit() throws Exception {
+    public void checkPressReleaseFilterEdit() throws Exception {
         final String expectedTitle = "Press Release Filter Edit";
 
         Assert.assertNotNull(pressReleaseFilterEdit.getUrl());
