@@ -43,10 +43,12 @@ public class CheckPressReleaseFilterEdit extends AbstractSpec {
         Assert.assertNotNull(pressReleaseFilterEdit.getANYTermsTxt(), "ANY Terms text field doesn't exist");
         Assert.assertNotNull(pressReleaseFilterEdit.getALLTermsTxt(), "ALL Terms text field doesn't exist");
         Assert.assertNotNull(pressReleaseFilterEdit.getNOTTermsTxt(), "NOT Terms text field doesn't exist");
+        Assert.assertNotNull(pressReleaseFilterEdit.getTagsTxt(), "Tags text field doesn't exist");
 
         Assert.assertNotNull(pressReleaseFilterEdit.getANYIconPlus(), "ANY Plus icon doesn't exist");
         Assert.assertNotNull(pressReleaseFilterEdit.getALLIconPlus(), "ALL Plus icon doesn't exist");
         Assert.assertNotNull(pressReleaseFilterEdit.getNOTIconPlus(), "NOT Plus icon doesn't exist");
+        Assert.assertNotNull(pressReleaseFilterEdit.getTagsIconPlus(), "Tags Plus icon doesn't exist");
 
         Assert.assertTrue(pressReleaseFilterEdit.getNewswires(), "Some Newswires channels don't exist");
     }
