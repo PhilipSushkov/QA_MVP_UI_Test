@@ -9,18 +9,13 @@ import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.protocol.HttpClientContext;
-import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.cookie.BasicClientCookie;
-import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.protocol.HttpContext;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.openqa.selenium.*;
-import pageobjects.PageObject;
+import org.openqa.selenium.interactions.Actions;
 import util.Functions;
 
 import java.io.FileNotFoundException;
@@ -61,7 +56,16 @@ public class CrawlingSite {
             Thread.sleep(DEFAULT_PAUSE);
             sVersion = Functions.GetVersion(phDriver);
         } catch (TimeoutException e) {
-            return "TimeoutException";
+            Actions action = new Actions(phDriver);
+            action.sendKeys(Keys.ESCAPE);
+
+            try {
+                sVersion = Functions.GetVersion(phDriver);
+            }
+            catch (WebDriverException e1) {
+                return "Can not get Version Number";
+            }
+
         } catch (WebDriverException e) {
             saveSiteVersion(sVersion);
             return sVersion;

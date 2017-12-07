@@ -4,9 +4,6 @@ package util;
  * Created by philipsushkov on 2016-11-29.
  */
 
-import net.lightbody.bmp.BrowserMobProxy;
-import net.lightbody.bmp.client.ClientUtil;
-import org.openqa.selenium.Proxy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -62,7 +59,7 @@ public class LocalDriverFactory {
                 driver = new PhantomJSDriver(caps);
 
                 driver.manage().timeouts().implicitlyWait(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
-                driver.manage().timeouts().pageLoadTimeout(45, TimeUnit.SECONDS); //Increased to 20 to perhaps reduce timeouts?
+                driver.manage().timeouts().pageLoadTimeout(60, TimeUnit.SECONDS); //Increased to 20 to perhaps reduce timeouts?
 
                 return driver;
 

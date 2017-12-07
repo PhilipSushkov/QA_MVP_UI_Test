@@ -1,11 +1,16 @@
 package util;
 
 import com.jayway.jsonpath.JsonPath;
+import com.sun.mail.gimap.GmailFolder;
+import com.sun.mail.gimap.GmailRawSearchTerm;
+import com.sun.mail.gimap.GmailStore;
 import de.sstoehr.harreader.HarReader;
 import de.sstoehr.harreader.HarReaderException;
 import net.lightbody.bmp.BrowserMobProxy;
 import net.lightbody.bmp.core.har.Har;
 import org.apache.commons.io.FileUtils;
+import org.everit.json.schema.Schema;
+import org.everit.json.schema.loader.SchemaLoader;
 import org.im4java.core.CompareCmd;
 import org.im4java.core.IMOperation;
 import org.im4java.process.StandardStream;
@@ -15,28 +20,18 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.openqa.selenium.*;
+import pageobjects.api.AdminWeb.RequestDataObj;
+import pageobjects.api.AdminWeb.ResponseDataObj;
 
+import javax.mail.*;
+import javax.mail.search.SubjectTerm;
+import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
 import java.net.HttpURLConnection;
-import javax.net.ssl.HttpsURLConnection;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
-import java.util.Properties;
-
-import org.everit.json.schema.Schema;
-import org.everit.json.schema.loader.SchemaLoader;
-
-import javax.mail.*;
-import javax.mail.search.SubjectTerm;
-import com.sun.mail.gimap.GmailFolder;
-import com.sun.mail.gimap.GmailRawSearchTerm;
-import com.sun.mail.gimap.GmailStore;
-import org.openqa.selenium.interactions.Pause;
-import pageobjects.api.AdminWeb.RequestDataObj;
-import pageobjects.api.AdminWeb.ResponseDataObj;
 
 /**
  * Created by philipsushkov on 2016-12-08.
@@ -179,8 +174,12 @@ public class Functions {
 
     public static String GetVersion(WebDriver driver) {
         JavascriptExecutor js = (JavascriptExecutor) driver;
-        String sVersion = js.executeScript("return GetVersionNumber();").toString();
-        return sVersion;
+        try {
+            String sVersion = js.executeScript("return GetVersionNumber();").toString();
+            return sVersion;
+        } catch (WebDriverException e) {
+            return "Can not get Version Number";
+        }
     }
 
     public static int GetResponseCode(String urlString) throws IOException {

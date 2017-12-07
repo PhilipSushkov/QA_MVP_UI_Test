@@ -11,14 +11,13 @@ import org.testng.Assert;
 import org.testng.ITestResult;
 import org.testng.annotations.*;
 import pageobjects.LiveSite.CrawlingSite;
+import util.Functions;
+import util.LocalDriverManager;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
-
-import util.Functions;
-import util.LocalDriverManager;
 
 /**
  * Created by philipsushkov on 2017-03-28.
@@ -28,7 +27,7 @@ public class CheckCrawlingSite {
     private static CrawlingSite crawlingSite;
     private static String sPathToFile, sDataSiteJson, sDataModuleJson;
     private static String sSiteVersion, sSiteVersionCookie, sCookie;
-    private static String sDataSiteJson_notLive, sDataSiteJson_n, sDataSiteSsl;
+    private static String sDataSiteJson_notLive, sDataSiteJson_Live, sDataSiteJson_n, sDataSiteSsl;
     private static JSONParser parser;
 
     private static final int NUM_THREADS = 7;
@@ -47,6 +46,7 @@ public class CheckCrawlingSite {
         sCookie = propUIPublicSite.getProperty("versionCookie");
         sDataSiteJson = propUIPublicSite.getProperty("json_SiteData");
         sDataSiteJson_notLive = propUIPublicSite.getProperty("json_SiteData_notLive");
+        sDataSiteJson_Live = propUIPublicSite.getProperty("json_SiteData_Live");
         sDataModuleJson = propUIPublicSite.getProperty("json_ModuleData");
 
         parser = new JSONParser();
@@ -62,18 +62,18 @@ public class CheckCrawlingSite {
         sDataSiteSsl = propUIPublicSite.getProperty("json_SiteDataSsl");
     }
 
-    @Test(dataProvider=SITE_DATA_2, threadPoolSize=NUM_THREADS, priority=1, enabled=false)
+    @Test(dataProvider=SITE_DATA_2, threadPoolSize=NUM_THREADS, priority=1, enabled=true)
     public void checkSiteVersion(String site) throws Exception {
         //crawlingSite = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile);
         String sVersionActual = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getSiteVersion();
         String sUrlActual = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getSiteUrl();
-        String sXCacheStatus = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getXCacheStatus(sUrlActual);
+        //String sXCacheStatus = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile).getXCacheStatus(sUrlActual);
         ExtentTest test = extent.createTest("Check version result for " + site);
 
         if (sVersionActual.equals(sSiteVersion)) {
             test.log(Status.PASS, "Site Version number is valid: " + sSiteVersion);
             test.log(Status.PASS, "Site Url: " + sUrlActual);
-            test.log(Status.PASS, "Site X-Cache-Status: " + sXCacheStatus);
+            //test.log(Status.PASS, "Site X-Cache-Status: " + sXCacheStatus);
         } else {
             test.log(Status.FAIL, "Actual Version number is wrong: " + sVersionActual + ". Supposed to be: " + sSiteVersion);
         }
@@ -157,7 +157,7 @@ public class CheckCrawlingSite {
         Assert.assertTrue(crawlingSite.mapSiteModule(sDataModuleJson), "Mapping Site-Modules isn't done properly " + site);
     }
 
-    @Test(dataProvider=SITE_DATA, threadPoolSize=NUM_THREADS, priority=5, enabled=true)
+    @Test(dataProvider=SITE_DATA, threadPoolSize=NUM_THREADS, priority=5, enabled=false)
     public void checkSiteModule(String site) throws Exception {
         crawlingSite = new CrawlingSite(LocalDriverManager.getDriver(), site, sPathToFile);
         //Assert.assertTrue(crawlingSite.getSiteModule(checkSiteHealth), "Some Modules on the site didn't find " + site);
@@ -318,7 +318,8 @@ public class CheckCrawlingSite {
     public Object[][] siteData2() {
 
         try {
-            JSONArray jsonArray = (JSONArray) parser.parse(new FileReader(sPathToFile + sDataSiteJson_n));
+            //JSONArray jsonArray = (JSONArray) parser.parse(new FileReader(sPathToFile + sDataSiteJson_n));
+            JSONArray jsonArray = (JSONArray) parser.parse(new FileReader(sPathToFile + sDataSiteJson_Live));
             ArrayList<String> zoom = new ArrayList();
 
             for (Iterator<JSONObject> iterator = jsonArray.iterator(); iterator.hasNext();) {

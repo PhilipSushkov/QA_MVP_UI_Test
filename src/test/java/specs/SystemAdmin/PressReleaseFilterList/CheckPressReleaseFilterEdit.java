@@ -47,6 +47,8 @@ public class CheckPressReleaseFilterEdit extends AbstractSpec {
         Assert.assertNotNull(pressReleaseFilterEdit.getANYIconPlus(), "ANY Plus icon doesn't exist");
         Assert.assertNotNull(pressReleaseFilterEdit.getALLIconPlus(), "ALL Plus icon doesn't exist");
         Assert.assertNotNull(pressReleaseFilterEdit.getNOTIconPlus(), "NOT Plus icon doesn't exist");
+
+        Assert.assertTrue(pressReleaseFilterEdit.getNewswires(), "Some Newswires channels don't exist");
     }
 
     @AfterTest
