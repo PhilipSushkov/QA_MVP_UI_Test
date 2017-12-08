@@ -54,6 +54,8 @@ public class CheckPressReleaseFilterEdit extends AbstractSpec {
         Assert.assertNotNull(pressReleaseFilterEdit.getLanguageSel(), "Language select element doesn't exist");
         Assert.assertNotNull(pressReleaseFilterEdit.getCategorySel(), "Category select element doesn't exist");
         Assert.assertTrue(pressReleaseFilterEdit.getCheckBoxSet(), "Mentions or Active checkbox elements or Last Updated label don't exist");
+
+        Assert.assertTrue(pressReleaseFilterEdit.getButtonsSet(), "Cancel, Delete, Test or Save buttons don't exist");
     }
 
     @AfterTest

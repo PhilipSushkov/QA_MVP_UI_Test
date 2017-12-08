@@ -11,7 +11,7 @@ public class PressReleaseFilterEdit extends AbstractPageObject {
     private static By moduleTitle, filterNameInp, anyTermsTxt, allTermsTxt, notTermsTxt;
     private static By anyIconPlus, allIconPlus, notIconPlus, accordionTitleSpan, tagsTxt;
     private static By tagsIconPlus, languageSel, categorySel, mentionsLabel, activeLabel;
-    private static By lastUpdatedSpan;
+    private static By lastUpdatedSpan, prCancelBtn, prDeleteBtn, prTestBtn, prSaveBtn;
     private static final long DEFAULT_PAUSE = 2000;
 
     public PressReleaseFilterEdit(WebDriver driver) {
@@ -35,6 +35,12 @@ public class PressReleaseFilterEdit extends AbstractPageObject {
         mentionsLabel = By.xpath(propUISystemAdmin.getProperty("label_Mentions"));
         activeLabel = By.xpath(propUISystemAdmin.getProperty("label_Active"));
         lastUpdatedSpan = By.xpath(propUISystemAdmin.getProperty("span_LastUpdated"));
+
+        prCancelBtn = By.xpath(propUISystemAdmin.getProperty("btn_PRCancel"));
+        prDeleteBtn = By.xpath(propUISystemAdmin.getProperty("btn_PRDelete"));
+        prTestBtn = By.xpath(propUISystemAdmin.getProperty("btn_PRTest"));
+        prSaveBtn = By.xpath(propUISystemAdmin.getProperty("btn_PRSave"));
+
     }
 
     public String getTitle() {
@@ -243,6 +249,31 @@ public class PressReleaseFilterEdit extends AbstractPageObject {
         }
 
         return bCheckBox;
+    }
+
+    public Boolean getButtonsSet() {
+        Boolean bButtons = false;
+
+        try {
+            waitForElement(prCancelBtn);
+            findElement(prCancelBtn);
+
+            waitForElement(prDeleteBtn);
+            findElement(prDeleteBtn);
+
+            waitForElement(prTestBtn);
+            findElement(prTestBtn);
+
+            waitForElement(prSaveBtn);
+            findElement(prSaveBtn);
+
+            bButtons = true;
+        } catch (ElementNotFoundException e) {
+        } catch (ElementNotVisibleException e) {
+        } catch (TimeoutException e) {
+        }
+
+        return bButtons;
     }
 
 }
