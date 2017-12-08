@@ -51,6 +51,9 @@ public class CheckPressReleaseFilterEdit extends AbstractSpec {
         Assert.assertNotNull(pressReleaseFilterEdit.getTagsIconPlus(), "Tags Plus icon doesn't exist");
 
         Assert.assertTrue(pressReleaseFilterEdit.getNewswires(), "Some Newswires channels don't exist");
+        Assert.assertNotNull(pressReleaseFilterEdit.getLanguageSel(), "Language select element doesn't exist");
+        Assert.assertNotNull(pressReleaseFilterEdit.getCategorySel(), "Category select element doesn't exist");
+        Assert.assertTrue(pressReleaseFilterEdit.getCheckBoxSet(), "Mentions or Active checkbox elements or Last Updated label don't exist");
     }
 
     @AfterTest

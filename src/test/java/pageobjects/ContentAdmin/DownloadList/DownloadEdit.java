@@ -218,9 +218,9 @@ public class DownloadEdit extends AbstractPageObject {
             waitForElement(downloadPagesLink);
 
             quickLinkPages = true;
-        } catch (ElementNotFoundException e1) {
-        } catch (ElementNotVisibleException e2) {
-        } catch (TimeoutException e3) {
+        } catch (ElementNotFoundException e) {
+        } catch (ElementNotVisibleException e) {
+        } catch (TimeoutException e) {
         }
 
         return quickLinkPages;

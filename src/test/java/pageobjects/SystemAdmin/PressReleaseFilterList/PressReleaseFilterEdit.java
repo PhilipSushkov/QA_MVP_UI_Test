@@ -10,7 +10,8 @@ import static specs.AbstractSpec.propUISystemAdmin;
 public class PressReleaseFilterEdit extends AbstractPageObject {
     private static By moduleTitle, filterNameInp, anyTermsTxt, allTermsTxt, notTermsTxt;
     private static By anyIconPlus, allIconPlus, notIconPlus, accordionTitleSpan, tagsTxt;
-    private static By tagsIconPlus;
+    private static By tagsIconPlus, languageSel, categorySel, mentionsLabel, activeLabel;
+    private static By lastUpdatedSpan;
     private static final long DEFAULT_PAUSE = 2000;
 
     public PressReleaseFilterEdit(WebDriver driver) {
@@ -29,6 +30,11 @@ public class PressReleaseFilterEdit extends AbstractPageObject {
         tagsIconPlus = By.xpath(propUISystemAdmin.getProperty("icon_PlusTags"));
 
         accordionTitleSpan = By.xpath(propUISystemAdmin.getProperty("span_AccordionTitle"));
+        languageSel = By.xpath(propUISystemAdmin.getProperty("select_Language"));
+        categorySel = By.xpath(propUISystemAdmin.getProperty("select_Category"));
+        mentionsLabel = By.xpath(propUISystemAdmin.getProperty("label_Mentions"));
+        activeLabel = By.xpath(propUISystemAdmin.getProperty("label_Active"));
+        lastUpdatedSpan = By.xpath(propUISystemAdmin.getProperty("span_LastUpdated"));
     }
 
     public String getTitle() {
@@ -187,6 +193,56 @@ public class PressReleaseFilterEdit extends AbstractPageObject {
         }
 
         return true;
+    }
+
+    public WebElement getLanguageSel() {
+        WebElement element = null;
+
+        try {
+            waitForElement(languageSel);
+            element = findElement(languageSel);
+        } catch (ElementNotFoundException e) {
+        } catch (ElementNotVisibleException e) {
+        } catch (TimeoutException e) {
+        }
+
+        return element;
+    }
+
+    public WebElement getCategorySel() {
+        WebElement element = null;
+
+        try {
+            waitForElement(categorySel);
+            element = findElement(categorySel);
+        } catch (ElementNotFoundException e) {
+        } catch (ElementNotVisibleException e) {
+        } catch (TimeoutException e) {
+        }
+
+        return element;
+    }
+
+    public Boolean getCheckBoxSet() {
+        Boolean bCheckBox = false;
+
+        try {
+            waitForElement(mentionsLabel);
+            findElement(mentionsLabel);
+
+            waitForElement(activeLabel);
+            findElement(activeLabel);
+
+            waitForElement(lastUpdatedSpan);
+            findElement(lastUpdatedSpan);
+
+            bCheckBox = true;
+        } catch (ElementNotFoundException e) {
+        } catch (ElementNotVisibleException e) {
+        } catch (TimeoutException e) {
+        }
+
+        return bCheckBox;
     }
 
 }
