@@ -261,6 +261,46 @@ public class CheckCrawlingSite {
 
     }
 
+    @Test(priority=11, enabled=false)
+    public void Sample_TestMaps() {
+        Map<String, String> objMap = new HashMap<String, String>();
+
+        objMap.put("Name", "Suzuki");
+        objMap.put("Power", "220");
+        objMap.put("Type", "2-wheeler");
+        objMap.put("Price", "85000");
+
+        System.out.println("Elements of the Map:");
+        System.out.println(objMap);
+
+        System.out.println(objMap.keySet()+": "+objMap.keySet().size());
+        System.out.println(objMap.values());
+
+    }
+
+    @Test(priority=12, enabled=false)
+    public void Sample_CompareMaps() {
+        Map<String, String> hm1 = new HashMap<String, String>();
+        hm1.put("BOF", "SAPF");
+        hm1.put("BOM", "SAPM");
+        hm1.put("BOL", "SAPL");
+
+        Map<String, String> hm2 = new HashMap<String, String>();
+        hm2.put("BOF", "Data1");
+        hm2.put("BOL", "Data2");
+
+        Map<String, String> hm3 = new HashMap<String, String>();
+
+        for (String key : hm1.keySet()) {
+            if (hm2.containsKey(key)) {
+                hm3.put(hm1.get(key), hm2.get(key));
+            }
+        }
+
+        System.out.println(hm3);
+
+    }
+
 
     @AfterMethod
     public void afterMethod(ITestResult result) {
