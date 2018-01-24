@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<suite name="Gold Price API Test Suite">
-    <test name="Gold Price API Test">
-        <classes>
-            <class name ="specs.api.GoldPriceCheckTest" />
-        </classes>
-    </test>
-</suite>
