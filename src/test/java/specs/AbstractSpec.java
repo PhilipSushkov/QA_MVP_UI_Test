@@ -53,48 +53,8 @@ public abstract class AbstractSpec extends util.Functions {
     public static String sessionID = null;
 
     // Declare Properties files for every section
-    private static final String PATHTO_SYSTEMADMIN_PROP = "SystemAdmin/SystemAdminMap.properties";
-    public static Properties propUISystemAdmin;
-    private static final String PATHTO_SITEADMIN_PROP = "SiteAdmin/SiteAdminMap.properties";
-    public static Properties propUISiteAdmin;
-    private static final String PATHTO_CONTENTADMIN_PROP = "ContentAdmin/ContentAdminMap.properties";
-    public static Properties propUIContentAdmin;
-    private static final String PATHTO_EMAILADMIN_PROP = "EmailAdmin/EmailAdminMap.properties";
-    public static Properties propUIEmailAdmin;
     private static final String PATHTO_COMMON_PROP = "CommonMap.properties";
     public static Properties propUICommon;
-    private static final String PATHTO_PUBLICSITE_PROP = "PublicSite/PublicSiteMap.properties";
-    public static Properties propUIPublicSite;
-    private static final String PATHTO_SOCIALMEDIA_PROP = "SocialMedia/SocialMediaMap.properties";
-    public static Properties propUISocialMedia;
-    private static final String PATHTO_PAGEADMIN_PROP = "PageAdmin/PageAdminMap.properties";
-    public static Properties propUIPageAdmin;
-    private static final String PATHTO_MODULES_PROP = "Modules/Modules.properties";
-    public static Properties propUIModules;
-    private static final String PATHTO_MODULESFEED_PROP = "Modules/Feed/Feed.properties";
-    public static Properties propUIModulesFeed;
-    private static final String PATHTO_MODULESPRESSRELEASE_PROP = "Modules/PressRelease/PressRelease.properties";
-    public static Properties propUIModulesPressRelease;
-    private static final String PATHTO_MODULESPRESENTATION_PROP = "Modules/Presentation/Presentation.properties";
-    public static Properties propUIModulesPresentation;
-    private static final String PATHTO_MODULESEVENT_PROP = "Modules/Event/Event.properties";
-    public static Properties propUIModulesEvent;
-    private static final String PATHTO_MODULESCORE_PROP = "Modules/Core/Core.properties";
-    public static Properties propUIModulesCore;
-    private static final String PATHTO_MODULESFAQ_PROP = "Modules/Faq/Faq.properties";
-    public static Properties propUIModulesFaq;
-    private static final String PATHTO_MODULESPERSON_PROP = "Modules/Person/Person.properties";
-    public static Properties propUIModulesPerson;
-    private static final String PATHTO_MODULESREPORT_PROP = "Modules/Report/Report.properties";
-    public static Properties propUIModulesReport;
-    private static final String PATHTO_API_PROP = "api/ApiMap.properties";
-    public static Properties propAPI;
-    private static final String PATHTO_MODULESSEARCH_PROP = "Modules/Search/Search.properties";
-    public static Properties propUIModulesSearch;
-    private static final String PATHTO_MODULESHR_PROP = "Modules/HR/HR.properties";
-    public static Properties propUIModulesHR;
-    private static final String PATHTO_MODULESMAIL_PROP = "Modules/Mail/Mail.properties";
-    public static Properties propUIModulesMail;
 
     @BeforeTest
     public void init(final ITestContext testContext) throws Exception {
@@ -102,7 +62,6 @@ public abstract class AbstractSpec extends util.Functions {
             setupEnvironment();
 
             desktopUrl = new URL(activeEnvironment.getProtocol() + activeEnvironment.getHost());
-            desktopUrlPublic = new URL("http://chicagotest.q4web.com/");
 
             LOG.info("ENV URL: " + desktopUrl);
 
@@ -266,27 +225,7 @@ public abstract class AbstractSpec extends util.Functions {
     }
 
     public static void setupPropUI() throws IOException {
-        propUISystemAdmin = ConnectToPropUI(PATHTO_SYSTEMADMIN_PROP);
-        propUISiteAdmin = ConnectToPropUI(PATHTO_SITEADMIN_PROP);
-        propUIContentAdmin = ConnectToPropUI(PATHTO_CONTENTADMIN_PROP);
-        propUIEmailAdmin = ConnectToPropUI(PATHTO_EMAILADMIN_PROP);
         propUICommon = ConnectToPropUI(PATHTO_COMMON_PROP);
-        propUIPublicSite = ConnectToPropUI(PATHTO_PUBLICSITE_PROP);
-        propUISocialMedia = ConnectToPropUI(PATHTO_SOCIALMEDIA_PROP);
-        propUIPageAdmin = ConnectToPropUI(PATHTO_PAGEADMIN_PROP);
-        propUIModules = ConnectToPropUI(PATHTO_MODULES_PROP);
-        propUIModulesFeed = ConnectToPropUI(PATHTO_MODULESFEED_PROP);
-        propUIModulesPressRelease = ConnectToPropUI(PATHTO_MODULESPRESSRELEASE_PROP);
-        propUIModulesPresentation = ConnectToPropUI(PATHTO_MODULESPRESENTATION_PROP);
-        propUIModulesEvent = ConnectToPropUI(PATHTO_MODULESEVENT_PROP);
-        propUIModulesCore = ConnectToPropUI(PATHTO_MODULESCORE_PROP);
-        propUIModulesFaq = ConnectToPropUI(PATHTO_MODULESFAQ_PROP);
-        propUIModulesReport = ConnectToPropUI(PATHTO_MODULESREPORT_PROP);
-        propUIModulesPerson = ConnectToPropUI(PATHTO_MODULESPERSON_PROP);
-        propAPI = ConnectToPropUI(PATHTO_API_PROP);
-        propUIModulesSearch = ConnectToPropUI(PATHTO_MODULESSEARCH_PROP);
-        propUIModulesHR = ConnectToPropUI(PATHTO_MODULESHR_PROP);
-        propUIModulesMail = ConnectToPropUI(PATHTO_MODULESMAIL_PROP);
     }
 
 }
