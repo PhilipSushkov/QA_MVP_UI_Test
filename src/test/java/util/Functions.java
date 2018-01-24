@@ -20,8 +20,6 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.openqa.selenium.*;
-import pageobjects.api.AdminWeb.RequestDataObj;
-import pageobjects.api.AdminWeb.ResponseDataObj;
 
 import javax.mail.*;
 import javax.mail.search.SubjectTerm;
@@ -419,37 +417,6 @@ public class Functions {
         }
 
         return null;
-    }
-
-    public static ResponseDataObj setResponseDataObj(BrowserMobProxy sProxy, JSONObject data, String sPathToFile) throws IOException, ParseException {
-        ResponseDataObj responseDataObj = new ResponseDataObj();
-        RequestDataObj requestDataObj = new RequestDataObj(sProxy, data.get("method").toString(), data.get("content_type").toString(), getUrlFromApiData(data));
-
-        if (requestDataObj.getHttpGet() != null) {
-            responseDataObj.setResponseTime(requestDataObj.getHttpClient(), requestDataObj.getHttpGet());
-            System.out.println("Response Time of "+data.get("api_request_name").toString()+" is: " + responseDataObj.getResponseTime() + " ms");
-
-            responseDataObj.setResponseCode(responseDataObj.getHttpResponse());
-            System.out.println("Response Code of "+data.get("api_request_name").toString()+" is: " + responseDataObj.getResponseCode());
-
-            responseDataObj.setJsonResponse(responseDataObj.getHttpResponse());
-            //System.out.println("JSON Response of "+data.get("api_request_name").toString()+" is: \n" + responseDataObj.getJsonResponse());
-
-            try {
-                FileWriter writeFile = new FileWriter(sPathToFile + "result_" + data.get("api_request_name").toString() + ".json");
-                writeFile.write(responseDataObj.getJsonResponse().toJSONString().replace("\\", ""));
-                writeFile.flush();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return responseDataObj;
-        } else {
-            return null;
-        }
-
     }
 
     public static boolean getSchemaValidation (String sPathToSchema, String sPathToFile, String sSchemaFileName, String sResultFileName) throws IOException, ParseException {

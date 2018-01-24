@@ -1,14 +1,10 @@
 package pageobjects;
 
-import net.lightbody.bmp.BrowserMobProxy;
-import net.lightbody.bmp.core.har.Har;
 import org.apache.commons.collections4.Predicate;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import pageobjects.LoginPage.LoginPage;
-import util.Functions;
 
 public class AbstractPageObject implements PageObject {
 
@@ -55,14 +51,6 @@ public class AbstractPageObject implements PageObject {
     public long getScrollPositionY(){
         JavascriptExecutor executor = (JavascriptExecutor) driver;
         return (Long) executor.executeScript("return window.pageYOffset;");
-    }
-
-    //Logout from Admin site
-    public LoginPage logoutFromAdmin(){
-        final By logoutButton = By.xpath("//li/a[contains(text(),'Logout')]");
-        waitForElement(logoutButton);
-        findElement(logoutButton).click();
-        return new LoginPage(driver);
     }
 
     // Get current URL
