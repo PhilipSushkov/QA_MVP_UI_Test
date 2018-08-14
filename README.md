@@ -1,4 +1,4 @@
-q4webdriver
+Demoqa.com - Magic Mouse 
 ==============
 
 **Intellij Setup**
@@ -19,9 +19,3 @@ module for q4webdriver, if not add one.
 7. If there is an issue with maven go to View > Tool Windows > Maven Projects and reimport or add a project by selecting the pom.xml
 
 8. If there is an issue with Git, restart intellij and look for the popup to 'Add Git Root'
-
-
-
-curl -H "Content-Type: application/json" -d '{"build_parameters": {"TEST_ENV":"BETA","SUITE_NAME":"SmokeTest"}}' https://circleci.com/api/v1/project/PatrickPriestley/q4testsuite/tree/master?circle-token=5439aa08dd79b73f2f13535f252c0d69dbb31edb
-
-curl -H "Content-Type: application/json" -d '{"build_parameters": {"TEST_ENV":"PRODUCTION","SUITE_NAME":"SmokeTest"}}' https://circleci.com/api/v1/project/q4mobile/QA-WebCMS-Test/tree/smoke_test?circle-token=685a07c8591a4d41b3f9be3d2c1b5b7d5fa51594
