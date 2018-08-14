@@ -1,6 +1,0 @@
-Using YAHOO, Testing SPOT Within Delta -> PASS
-Using TRADINGVIEW, Testing SPOT Within Delta -> PASS
-Using YAHOO, Testing OPEN Within Delta -> PASS
-Using TRADINGVIEW, Testing OPEN Within Delta -> PASS
-Using YAHOO, Testing CLOSE Within Delta -> PASS
-Using TRADINGVIEW, Testing CLOSE Within Delta -> PASS
