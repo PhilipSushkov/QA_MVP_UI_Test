@@ -13,7 +13,6 @@ public class AbstractPageObject implements PageObject {
     private final Predicate<WebElement> displayedElementPredicate = new Predicate<WebElement>() {
         @Override
         public boolean evaluate(WebElement t) {
-
             return t.isDisplayed();
         }
     };
