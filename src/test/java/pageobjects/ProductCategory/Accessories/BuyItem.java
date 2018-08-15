@@ -13,14 +13,16 @@ import static specs.AbstractSpec.propUIProdCategory;
  **/
 
 public class BuyItem extends AbstractPageObject {
-    private static By productCategoryHref, accessoriesHref;
+    private static By productCategoryHref, accessoriesHref, checkoutHref;
     private static String sAddToCart = propUIProdCategory.getProperty("btn_AddToCart");
+    private static String sAddedItem = propUIProdCategory.getProperty("p_AddedItem");
 
     public BuyItem(WebDriver driver) {
         super(driver);
 
         productCategoryHref = By.xpath(propUIProdCategory.getProperty("href_ProductCategory"));
         accessoriesHref = By.xpath(propUIProdCategory.getProperty("href_Accessories"));
+        checkoutHref = By.xpath(propUIProdCategory.getProperty("href_Checkout"));
     }
 
     public void OpenAccessoriesSection() throws InterruptedException {
@@ -33,20 +35,33 @@ public class BuyItem extends AbstractPageObject {
 
     // Click on Add to Cart for just Magic Mouse
     public void addToCart(JSONObject data) {
-        // Click on Add To Cart button
-        By addToCartBtn = By.xpath(String.format(sAddToCart, data.get("term").toString()));
-        waitForElement(addToCartBtn);
-        findElement(addToCartBtn).click();
+        String sItem = data.get("item").toString();
 
-        // Wait the confirmation message that the item has been added
-        By addedItemP = By.xpath("//a[text()='Magic Mouse']/../following-sibling::form//p[text()='Item has been added to your cart!']");
-        WebElement addedItemElement = new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOfElementLocated(addedItemP));
-        System.out.println(addedItemElement.getText());
+        try {
+            // Click on Add To Cart button
+            By addToCartBtn = By.xpath(String.format(sAddToCart, sItem));
+            waitForElement(addToCartBtn);
+            findElement(addToCartBtn).click();
 
-        // Click on Checkout link
-        By checkoutHref = By.xpath("//a[@title='Checkout']");
-        findElement(checkoutHref).click();
-        System.out.println(driver.getTitle());
+            // Wait the confirmation message that the item has been added
+            By addedItemP = By.xpath(String.format(sAddedItem, sItem));
+            WebElement addedItemElement = new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOfElementLocated(addedItemP));
+            //System.out.println(addedItemElement.getText());
+
+            // Click on Checkout link
+            findElement(checkoutHref).click();
+            //System.out.println(driver.getTitle());
+        } catch (ElementNotFoundException e) {
+            e.printStackTrace();
+        } catch (ElementNotVisibleException e) {
+            e.printStackTrace();
+        } catch (TimeoutException e) {
+            System.out.println(driver.getCurrentUrl());
+            e.printStackTrace();
+        }
+
+
+
 
         // Confirm that we have 1 Magic Mouse in our Checkout page
         By itemQuantity = By.xpath("//div[@id='checkout_page_container']/.//a[text()='Magic Mouse']/../following-sibling::td//input[@name='quantity'][@type='text']");

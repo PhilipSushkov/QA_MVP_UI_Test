@@ -45,7 +45,8 @@ public class CheckBuyItem extends AbstractSpec {
         Log.info(method.getName() + " test is starting.");
 
         // Create the report
-        ExtentTest test = buyItemRep.createTest("Item Name: " + data.get("name").toString() +"<br>" + data.get("description").toString());
+        ExtentTest test = buyItemRep.createTest("Item Name: " + data.get("name").toString() +"<br>"
+                + data.get("description").toString());
 
         System.out.println(driver.getTitle());
 
