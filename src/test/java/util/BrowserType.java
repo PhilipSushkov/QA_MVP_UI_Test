@@ -2,10 +2,8 @@ package util;
 
 public enum BrowserType {
 
-  CHROME("chrome", "60"),
-  FIREFOX("firefox", "45"),
-  OPERA("opera", "12"),
-  SAFARI("safari", "9"),
+  CHROME("chrome", "68"),
+  FIREFOX("firefox", "52"),
   INTERNET_EXPLORER("internet explorer", "11");
 
   private final String name;

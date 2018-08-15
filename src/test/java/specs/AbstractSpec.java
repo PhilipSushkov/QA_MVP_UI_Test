@@ -1,5 +1,9 @@
 package specs;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.*;
 import org.testng.ITestContext;
@@ -7,8 +11,11 @@ import org.testng.ITestResult;
 import org.testng.annotations.*;
 import util.EnvironmentType;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
@@ -123,6 +130,39 @@ public abstract class AbstractSpec extends util.Functions {
 
     public static void setupPropUI() throws IOException {
         propUIProdCategory = ConnectToPropUI(PATHTO_PRODCATEGORY_PROP);
+    }
+
+    public Object[][] genericProvider(String dataType, String sPathToDataFile) {
+        JSONParser parser = new JSONParser();
+
+        try {
+            JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToDataFile));
+            JSONArray data = (JSONArray) jsonObject.get(dataType);
+            ArrayList<Object> zoom = new ArrayList();
+
+            for (int i = 0; i < data.size(); i++) {
+                JSONObject pageObj = (JSONObject) data.get(i);
+                if (Boolean.parseBoolean(pageObj.get("do_assertions").toString())) {
+                    zoom.add(data.get(i));
+                }
+            }
+
+            Object[][] newData = new Object[zoom.size()][1];
+            for (int i = 0; i < zoom.size(); i++) {
+                newData[i][0] = zoom.get(i);
+            }
+
+            return newData;
+
+        }  catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
 }
