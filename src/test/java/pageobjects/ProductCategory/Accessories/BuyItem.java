@@ -17,15 +17,7 @@ public class BuyItem extends AbstractPageObject {
 
 
     public void OpenAccessoriesSection() throws InterruptedException {
-        try {
-            openPageFromMenu(productCategoryHref, accessoriesHref);
-        } catch (ElementNotFoundException e) {
-            e.printStackTrace();
-        } catch (ElementNotVisibleException e) {
-            e.printStackTrace();
-        } catch (TimeoutException e) {
-            e.printStackTrace();
-        }
+        openPageFromMenu(productCategoryHref, accessoriesHref);
     }
 
 
