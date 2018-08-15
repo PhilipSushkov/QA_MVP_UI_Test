@@ -1,6 +1,7 @@
 package specs.ProductCategory.Accessories;
 
 import com.aventstack.extentreports.ExtentReports;
+import com.aventstack.extentreports.ExtentTest;
 import org.json.simple.JSONObject;
 import org.testng.annotations.*;
 import org.testng.asserts.SoftAssert;
@@ -42,7 +43,13 @@ public class CheckBuyItem extends AbstractSpec {
     @Test(dataProvider=BUY_ITEM_DATA, priority=1)
     public void checkBuyItem(JSONObject data, Method method) throws InterruptedException {
         Log.info(method.getName() + " test is starting.");
+
+        // Create the report
+        ExtentTest test = buyItemRep.createTest("Item Name: " + data.get("name").toString() +"<br>" + data.get("description").toString());
+
         System.out.println(driver.getTitle());
+
+        buyItem.addToCart(data);
 
         // Split test cases for negative and positive
         switch (data.get("test_type").toString()) {
