@@ -25,13 +25,14 @@ public class CheckBuyItem extends AbstractSpec {
 
     @BeforeMethod
     public void beforeMethod() {
+        buyItem.OpenAccessoriesSection();
     }
 
     // Check Buy Item functionality, positive and negative test cases
     @Test(dataProvider=BUY_ITEM_DATA, priority=1)
     public void checkBuyItem(JSONObject data) throws InterruptedException {
 
-
+        System.out.println(driver.getTitle());
 
     }
 
