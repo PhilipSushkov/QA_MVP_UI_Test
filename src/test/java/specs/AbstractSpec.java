@@ -31,23 +31,22 @@ public abstract class AbstractSpec extends util.Functions {
     public static final long DEFAULT_TIMEOUT = 25L;
     private static final long DEFAULT_PAUSE = 1500;
 
-    public static URL desktopUrl;
+    public static URL storeUrl;
     protected WebDriver driver;
     private static boolean setupIsDone = false;
     private static final Logger LOG = Logger.getLogger(AbstractSpec.class.getName());
 
     // Declare Properties files for every section
-    private static final String PATHTO_COMMON_PROP = "CommonMap.properties";
-    public static Properties propUICommon;
+    private static final String PATHTO_PRODCATEGORY_PROP = "ProductCategory/ProductCategory.properties";
+    public static Properties propUIProdCategory;
 
     @BeforeTest
     public void init(final ITestContext testContext) throws Exception {
         if (!setupIsDone) {
             setupEnvironment();
 
-            desktopUrl = new URL(activeEnvironment.getProtocol() + activeEnvironment.getHost());
-
-            LOG.info("ENV URL: " + desktopUrl);
+            storeUrl = new URL(activeEnvironment.getProtocol() + activeEnvironment.getHost());
+            LOG.info("ENV URL: " + storeUrl);
 
             setupIsDone = true;
         }
@@ -68,45 +67,20 @@ public abstract class AbstractSpec extends util.Functions {
     }
 
     private void setupChromeDriver() throws InterruptedException {
-        DesiredCapabilities capabilities = DesiredCapabilities.chrome();
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("incognito");
-        options.addArguments("no-sandbox");
-        capabilities.setCapability(ChromeOptions.CAPABILITY, options);
-        driver = new ChromeDriver(capabilities);
+        ChromeOptions ChromeOptions = new ChromeOptions();
 
-        driver.manage().timeouts().implicitlyWait(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
-        driver.manage().timeouts().pageLoadTimeout(120, TimeUnit.SECONDS); //Increased to 20 to perhaps reduce timeouts?
-        //driver.manage().window().setSize(new Dimension(1400, 1400));
-        driver.get(desktopUrl.toString());
-
-        //System.out.println(driver.getCurrentUrl());
-
-        int attempts = 5;
-        for (int i=0; i<attempts; i++) {
-            if (!driver.getCurrentUrl().contains(desktopUrl.toString())) {
-                System.out.println("Home site page didn't download yet: "+desktopUrl.toString());
-                //System.out.println(driver.getCurrentUrl());
-                driver.navigate().refresh();
-                driver.get(desktopUrl.toString());
-                Thread.sleep(DEFAULT_PAUSE);
-            } else {
-                break;
-            }
+        if (System.getProperty("os.name").equals("Windows 10")) {
+            ChromeOptions.addArguments("window-size=1024,768", "--no-sandbox", "--incognito");
+        } else {
+            ChromeOptions.addArguments("--headless", "window-size=1024,768", "--no-sandbox", "--incognito", "--disable-gpu");
         }
 
-    }
-
-    private void setupFirefoxLocalDriver() {
-        FirefoxProfile firefoxProfile = new FirefoxProfile();
-        firefoxProfile.setPreference("browser.privatebrowsing.autostart", true);
-        driver = new FirefoxDriver();
+        driver = new ChromeDriver(ChromeOptions);
         driver.manage().timeouts().implicitlyWait(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
-        driver.manage().timeouts().pageLoadTimeout(40, TimeUnit.SECONDS); //Increased to 20 to perhaps reduce timeouts?
-        driver.manage().window().setSize(new Dimension(1400, 1400));
-        driver.get(desktopUrl.toString());
+        driver.manage().timeouts().pageLoadTimeout(45, TimeUnit.SECONDS); //Increased to 45 to perhaps reduce timeouts?
+        driver.get(storeUrl.toString());
+        Thread.sleep(DEFAULT_PAUSE);
     }
-
 
     @AfterMethod
     public void afterMethod(ITestResult result) {
@@ -140,7 +114,7 @@ public abstract class AbstractSpec extends util.Functions {
         return activeEnvironment;
     }
 
-    private static EnvironmentType setupEnvironment () {
+    private static EnvironmentType setupEnvironment() {
 
         String overrideEnvironment = System.getProperty("environment");
             if (overrideEnvironment != null) {
@@ -155,7 +129,7 @@ public abstract class AbstractSpec extends util.Functions {
         }
 
     public static void setupPropUI() throws IOException {
-        propUICommon = ConnectToPropUI(PATHTO_COMMON_PROP);
+        propUIProdCategory = ConnectToPropUI(PATHTO_PRODCATEGORY_PROP);
     }
 
 }

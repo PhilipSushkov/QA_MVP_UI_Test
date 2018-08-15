@@ -23,7 +23,6 @@ public class LocalDriverFactory {
 
     public static WebDriver createInstance(String browserName) {
         WebDriver driver = null;
-        //Proxy selProxy = ClientUtil.createSeleniumProxy(proxy);
 
         switch (browserName) {
             case "chrome":
