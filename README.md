@@ -1,4 +1,4 @@
-q4webdriver
+store.demoqa.com - Magic Mouse
 ==============
 
 **Intellij Setup**
