@@ -1,12 +1,7 @@
 package specs;
 
-import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxProfile;
-import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.chrome.*;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
 import org.testng.annotations.*;
@@ -20,12 +15,10 @@ import java.util.logging.Logger;
 
 public abstract class AbstractSpec extends util.Functions {
 
-// Determines which environment the test suite will run on but can be overridden by command line
-//------------------------------------------------------------------------------
+    // Determines which environment the test suite will run on but can be overridden by command line
     //private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.DEV;
     private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.QA;
     //private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.PROD;
-//------------------------------------------------------------------------------
 
     private static final EnvironmentType activeEnvironment = setupEnvironment();
     public static final long DEFAULT_TIMEOUT = 25L;

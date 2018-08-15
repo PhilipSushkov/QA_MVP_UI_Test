@@ -23,7 +23,6 @@ public class Functions {
             propUI = new Properties();
             currentDir = System.getProperty("user.dir") + "/src/test/java/specs/";
             propUI.load(new FileInputStream(currentDir + sPathSharedUIMap));
-            //System.out.println("File "+currentDir + sPathSharedUIMap+" load properly!");
         } catch (IOException e) {
             System.out.println("File "+currentDir + sPathSharedUIMap+" didn't load properly!");
         }

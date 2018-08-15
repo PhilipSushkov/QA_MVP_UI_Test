@@ -1,6 +1,5 @@
 package util;
 
-
 public enum BrowserType {
 
   CHROME("chrome", "60"),
@@ -18,12 +17,10 @@ public enum BrowserType {
   }
 
   public String getName() {
-
     return name;
   }
 
   public String getLatestVersion() {
-
     return latestVersion;
   }
 }
