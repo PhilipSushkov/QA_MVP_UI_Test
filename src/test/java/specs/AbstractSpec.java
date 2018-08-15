@@ -20,6 +20,10 @@ import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
+/**
+ * Created by PSUSHKOV on Aug, 2018
+ **/
+
 public abstract class AbstractSpec extends util.Functions {
 
     // Determines which environment the test suite will run on but can be overridden by command line

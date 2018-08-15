@@ -5,13 +5,19 @@ import org.json.simple.JSONObject;
 import org.testng.annotations.*;
 import org.testng.asserts.SoftAssert;
 import pageobjects.ProductCategory.Accessories.BuyItem;
+import pageobjects.ProductCategory.Accessories.Checkout;
 import specs.AbstractSpec;
 import util.Log;
 
 import java.lang.reflect.Method;
 
+/**
+ * Created by PSUSHKOV on Aug, 2018
+ **/
+
 public class CheckBuyItem extends AbstractSpec {
     private static BuyItem buyItem;
+    private static Checkout checkout;
     private static ExtentReports buyItemRep;
     private static String sPathToFile, sDataFileJson;
 
@@ -20,6 +26,7 @@ public class CheckBuyItem extends AbstractSpec {
     @BeforeTest
     public void setUp() {
         buyItem = new BuyItem(driver);
+        checkout = new Checkout(driver);
 
         sPathToFile = System.getProperty("user.dir") + propUIProdCategory.getProperty("dataPath_BuyItem");
         sDataFileJson = propUIProdCategory.getProperty("json_BuyItemData");
@@ -36,6 +43,18 @@ public class CheckBuyItem extends AbstractSpec {
     public void checkBuyItem(JSONObject data, Method method) throws InterruptedException {
         Log.info(method.getName() + " test is starting.");
         System.out.println(driver.getTitle());
+
+        // Split test cases for negative and positive
+        switch (data.get("test_type").toString()) {
+            case "positive":
+
+
+                break;
+            case "negative":
+
+                break;
+        }
+
 
     }
 

@@ -3,16 +3,18 @@ package pageobjects.ProductCategory.Accessories;
 import org.openqa.selenium.*;
 import pageobjects.AbstractPageObject;
 import util.Log;
+
 import static specs.AbstractSpec.propUIProdCategory;
 
 /**
  * Created by PSUSHKOV on Aug, 2018
  **/
 
-public class BuyItem extends AbstractPageObject {
+
+public class Checkout extends AbstractPageObject {
     private static By productCategoryHref, accessoriesHref;
 
-    public BuyItem(WebDriver driver) {
+    public Checkout(WebDriver driver) {
         super(driver);
 
         productCategoryHref = By.xpath(propUIProdCategory.getProperty("href_ProductCategory"));
@@ -27,6 +29,5 @@ public class BuyItem extends AbstractPageObject {
             Log.error("Accessories Section has not been open!");
         }
     }
-
 
 }

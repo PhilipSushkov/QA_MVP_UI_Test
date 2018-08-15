@@ -5,6 +5,10 @@ import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
 import specs.AbstractSpec;
 
+/**
+ * Created by PSUSHKOV on Aug, 2018
+ **/
+
 public class RepBuyItem {
     private static ExtentReports extent;
     private static ExtentTest test;
