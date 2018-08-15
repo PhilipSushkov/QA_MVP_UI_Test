@@ -24,7 +24,7 @@ public class CheckBuyItem extends AbstractSpec {
     }
 
     @BeforeMethod
-    public void beforeMethod() {
+    public void beforeMethod() throws InterruptedException {
         buyItem.OpenAccessoriesSection();
     }
 

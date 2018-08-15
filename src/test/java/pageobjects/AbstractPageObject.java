@@ -17,7 +17,7 @@ public class AbstractPageObject implements PageObject {
         }
     };
 
-    private static final long DEFAULT_PAUSE = 1500;
+    private static final long DEFAULT_PAUSE = 1000;
     private static final int ATTEMPTS = 5;
 
     public AbstractPageObject(WebDriver driver) {
@@ -84,7 +84,7 @@ public class AbstractPageObject implements PageObject {
         }
     }
 
-    public void openPageFromMenu(By menuButton, By menuItem) throws Exception {
+    public void openPageFromMenu(By menuButton, By menuItem) throws InterruptedException {
         Actions action = new Actions(driver);
         wait.until(ExpectedConditions.visibilityOf(findElement(menuButton)));
 
