@@ -6,6 +6,9 @@ import org.testng.annotations.*;
 import org.testng.asserts.SoftAssert;
 import pageobjects.ProductCategory.Accessories.BuyItem;
 import specs.AbstractSpec;
+import util.Log;
+
+import java.lang.reflect.Method;
 
 public class CheckBuyItem extends AbstractSpec {
     private static BuyItem buyItem;
@@ -30,8 +33,8 @@ public class CheckBuyItem extends AbstractSpec {
 
     // Check Buy Item functionality, positive and negative test cases
     @Test(dataProvider=BUY_ITEM_DATA, priority=1)
-    public void checkBuyItem(JSONObject data) throws InterruptedException {
-
+    public void checkBuyItem(JSONObject data, Method method) throws InterruptedException {
+        Log.info(method.getName() + " test is starting.");
         System.out.println(driver.getTitle());
 
     }

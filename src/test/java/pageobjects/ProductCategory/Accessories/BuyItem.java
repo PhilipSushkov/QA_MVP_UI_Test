@@ -2,6 +2,8 @@ package pageobjects.ProductCategory.Accessories;
 
 import org.openqa.selenium.*;
 import pageobjects.AbstractPageObject;
+import util.Log;
+
 import static specs.AbstractSpec.propUIProdCategory;
 
 public class BuyItem extends AbstractPageObject {
@@ -17,7 +19,11 @@ public class BuyItem extends AbstractPageObject {
 
 
     public void OpenAccessoriesSection() throws InterruptedException {
-        openPageFromMenu(productCategoryHref, accessoriesHref);
+        if (openPageFromMenu(productCategoryHref, accessoriesHref)) {
+            Log.info("Accessories Section has been open successfully");
+        } else {
+            Log.error("Accessories Section has not been open!");
+        }
     }
 
 
