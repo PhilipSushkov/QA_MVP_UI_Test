@@ -7,7 +7,13 @@
     "description": "Positive #1, buy a Magic Mouse",
     "contacts": {
       "email": "SophiaAzevedoLima@armyspy.com",
-      "firstName": "Sophia"
+      "firstName": "Sophia",
+      "lastName": "Lima",
+      "address": "1512 Rua Sizenando Nabuco",
+      "city": "São Paulo",
+      "stateProvince": "SP",
+      "country": "Brazil",
+      "postalCode": "03570-060"
     },
     "expCheckoutTitle": "Checkout",
     "expItemQuantity": 1

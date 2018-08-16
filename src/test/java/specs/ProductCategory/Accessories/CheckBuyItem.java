@@ -38,6 +38,7 @@ public class CheckBuyItem extends AbstractSpec {
 
     @BeforeMethod
     public void beforeMethod() throws InterruptedException {
+        // #2 Open Accessories Section on the website
         buyItem.OpenAccessoriesSection();
     }
 
@@ -50,10 +51,11 @@ public class CheckBuyItem extends AbstractSpec {
         ExtentTest test = buyItemRep.createTest("Item Name: " + data.get("name").toString() +"<br>"
                 + data.get("description").toString());
 
+        // #3 Click on Add to Cart button
         buyItem.addToCart(data);
 
-        // Could be used SoftAssert option as well
-        // Check if we are on Checkout page
+        // #4 Could be used SoftAssert option as well
+        // #4 Check if we are on Checkout page
         String expCheckoutPageTitle = data.get("expCheckoutTitle").toString();
         String actCheckoutPageTitle = checkout.getTitle();
         if (actCheckoutPageTitle.contains(expCheckoutPageTitle)) {
@@ -64,7 +66,7 @@ public class CheckBuyItem extends AbstractSpec {
         }
         Assert.assertTrue(actCheckoutPageTitle.contains(expCheckoutPageTitle), "Actual Checkout Page Title doesn't contain expected one");
 
-        // Check if we have Magic Mouse item for Checkout
+        // #4 Check if we have Magic Mouse item for Checkout
         String expItemName = data.get("item").toString();
         String actItemName = checkout.getItemName(data);
         if (actItemName.equals(expItemName)) {
@@ -75,7 +77,7 @@ public class CheckBuyItem extends AbstractSpec {
         }
         Assert.assertEquals(actItemName, expItemName, "Actual Item Name doesn't equal to expected");
 
-        // Check if a quantity of Magic Mouse item equals to 1 for Checkout
+        // #4 Check if a quantity of Magic Mouse item equals to 1 for Checkout
         long expItemQuantity = Long.parseLong(data.get("expItemQuantity").toString());
         long actItemQuantity = checkout.getItemQuantity(data);
         if (actItemQuantity == expItemQuantity) {
@@ -87,12 +89,16 @@ public class CheckBuyItem extends AbstractSpec {
         Assert.assertTrue(actItemQuantity == expItemQuantity, "Actual Item Quantity: " + actItemQuantity
                 + " doesn't equal to expected: " + expItemQuantity);
 
+        // #5 Click on Continue button
         checkout.clickContinue();
 
         // Split test cases for negative and positive
         switch (data.get("test_type").toString()) {
             case "positive":
+
+                // #6 Enter test data needed for email, billing/contact details
                 checkout.fillUpData((JSONObject) data.get("contacts"));
+
 
                 break;
             case "negative":
