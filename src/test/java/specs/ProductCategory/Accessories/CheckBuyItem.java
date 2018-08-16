@@ -2,7 +2,9 @@ package specs.ProductCategory.Accessories;
 
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.Status;
 import org.json.simple.JSONObject;
+import org.testng.Assert;
 import org.testng.annotations.*;
 import org.testng.asserts.SoftAssert;
 import pageobjects.ProductCategory.Accessories.BuyItem;
@@ -48,9 +50,18 @@ public class CheckBuyItem extends AbstractSpec {
         ExtentTest test = buyItemRep.createTest("Item Name: " + data.get("name").toString() +"<br>"
                 + data.get("description").toString());
 
-        System.out.println(driver.getTitle());
-
         buyItem.addToCart(data);
+
+        String expCheckoutPageTitle = data.get("expCheckoutTitle").toString();
+        String actCheckoutPageTitle = checkout.getTitle();
+        if (actCheckoutPageTitle.contains(expCheckoutPageTitle)) {
+            test.log(Status.PASS, "Actual Checkout Page Title contains expected one: <b>" + actCheckoutPageTitle + "</b>");
+        } else {
+            test.log(Status.FAIL, "Actual Checkout Page Title doesn't contains expected one: <b>" + actCheckoutPageTitle + "</b>. " +
+                    "Supposed to be: <b>" + expCheckoutPageTitle + "</b>");
+        }
+        Assert.assertTrue(actCheckoutPageTitle.contains(expCheckoutPageTitle), "Actual Checkout Page Title doesn't contain expected one");
+
 
         // Split test cases for negative and positive
         switch (data.get("test_type").toString()) {

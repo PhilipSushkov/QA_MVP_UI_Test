@@ -33,7 +33,7 @@ public class BuyItem extends AbstractPageObject {
         }
     }
 
-    // Click on Add to Cart for just Magic Mouse
+    // Click on Add to Cart button for just Magic Mouse
     public void addToCart(JSONObject data) {
         String sItem = data.get("item").toString();
 
@@ -50,19 +50,21 @@ public class BuyItem extends AbstractPageObject {
 
             // Click on Checkout link
             findElement(checkoutHref).click();
-            //System.out.println(driver.getTitle());
+            Log.info("Add To Cart button has been clicked successfully");
         } catch (ElementNotFoundException e) {
             e.printStackTrace();
+            Log.error("Add To Cart button: ElementNotFoundException occurred");
         } catch (ElementNotVisibleException e) {
             e.printStackTrace();
+            Log.error("Add To Cart button: ElementNotVisibleException occurred");
         } catch (TimeoutException e) {
-            System.out.println(driver.getCurrentUrl());
             e.printStackTrace();
+            Log.error("Add To Cart button: TimeoutException occurred");
         }
 
 
 
-
+        /*
         // Confirm that we have 1 Magic Mouse in our Checkout page
         By itemQuantity = By.xpath("//div[@id='checkout_page_container']/.//a[text()='Magic Mouse']/../following-sibling::td//input[@name='quantity'][@type='text']");
         waitForElement(itemQuantity);
@@ -77,6 +79,7 @@ public class BuyItem extends AbstractPageObject {
         By calculateH2 = By.xpath("//h2[text()='Calculate Shipping Price']");
         waitForElement(calculateH2);
         System.out.println(findElement(calculateH2).getText());
+        */
     }
 
 

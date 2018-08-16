@@ -4,7 +4,8 @@
     "name": "buyMagicMouse_1",
     "item": "Magic Mouse",
     "test_type": "positive",
-    "description": "Positive #1, buy a Magic Mouse"
+    "description": "Positive #1, buy a Magic Mouse",
+    "expCheckoutTitle": "Checkout"
   },
     {
       "do_assertions": true,
@@ -12,6 +13,7 @@
       "item": "Magic Mouse",
       "test_type": "negative",
       "description": "Negative #1, wrong data for buying a Magic Mouse"
+      "expCheckoutTitle": "Checkout"
     }
   ]
 }

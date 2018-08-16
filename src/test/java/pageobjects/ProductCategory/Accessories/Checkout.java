@@ -12,22 +12,18 @@ import static specs.AbstractSpec.propUIProdCategory;
 
 
 public class Checkout extends AbstractPageObject {
-    private static By productCategoryHref, accessoriesHref;
+    private static By continueBtn;
 
     public Checkout(WebDriver driver) {
         super(driver);
 
-        productCategoryHref = By.xpath(propUIProdCategory.getProperty("href_ProductCategory"));
-        accessoriesHref = By.xpath(propUIProdCategory.getProperty("href_Accessories"));
+        continueBtn = By.xpath(propUIProdCategory.getProperty("href_Continue"));
     }
 
 
-    public void OpenAccessoriesSection() throws InterruptedException {
-        if (openPageFromMenu(productCategoryHref, accessoriesHref)) {
-            Log.info("Accessories Section has been open successfully");
-        } else {
-            Log.error("Accessories Section has not been open!");
-        }
+    public String getTitle() {
+        waitForElement(continueBtn);
+        return driver.getTitle();
     }
 
 }
