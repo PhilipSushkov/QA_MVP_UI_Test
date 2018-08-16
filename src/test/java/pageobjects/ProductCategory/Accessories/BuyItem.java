@@ -65,11 +65,6 @@ public class BuyItem extends AbstractPageObject {
 
 
         /*
-        // Confirm that we have 1 Magic Mouse in our Checkout page
-        By itemQuantity = By.xpath("//div[@id='checkout_page_container']/.//a[text()='Magic Mouse']/../following-sibling::td//input[@name='quantity'][@type='text']");
-        waitForElement(itemQuantity);
-        WebElement itemCheckoutElement = findElement(itemQuantity);
-        System.out.println("Quantity: " + itemCheckoutElement.getAttribute("value"));
 
         // Click on Continue button
         By continueBtn = By.xpath("//a/span[text()='Continue']");

@@ -13,8 +13,9 @@ import static specs.AbstractSpec.propUIProdCategory;
 
 
 public class Checkout extends AbstractPageObject {
-    private static By continueBtn, itemCheckoutHref;
+    private static By continueBtn;
     private static String sItemCheckout = propUIProdCategory.getProperty("href_ItemCheckout");
+    private static String sItemQuantity = propUIProdCategory.getProperty("inp_ItemQuantity");
 
     public Checkout(WebDriver driver) {
         super(driver);
@@ -59,6 +60,27 @@ public class Checkout extends AbstractPageObject {
         }
 
         return null;
+    }
+
+    public long getItemQuantity(JSONObject data) {
+        String sItem = data.get("item").toString();
+
+        try {
+            By itemQuantityInp = By.xpath(String.format(sItemQuantity, sItem));
+            waitForElement(itemQuantityInp);
+            return Long.parseLong(findElement(itemQuantityInp).getAttribute("value"));
+        } catch (ElementNotFoundException e) {
+            e.printStackTrace();
+            Log.error("Checkout. Get Item Quantity: ElementNotFoundException occurred");
+        } catch (ElementNotVisibleException e) {
+            e.printStackTrace();
+            Log.error("Checkout. Get Item Quantity: ElementNotVisibleException occurred");
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+            Log.error("Checkout. Get Item Quantity: TimeoutException occurred");
+        }
+
+        return 0;
     }
 
 }

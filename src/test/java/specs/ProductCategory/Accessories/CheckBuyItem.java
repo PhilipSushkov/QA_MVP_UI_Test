@@ -52,7 +52,7 @@ public class CheckBuyItem extends AbstractSpec {
 
         buyItem.addToCart(data);
 
-
+        // Could be used SoftAssert option as well
         // Check if we are on Checkout page
         String expCheckoutPageTitle = data.get("expCheckoutTitle").toString();
         String actCheckoutPageTitle = checkout.getTitle();
@@ -64,8 +64,7 @@ public class CheckBuyItem extends AbstractSpec {
         }
         Assert.assertTrue(actCheckoutPageTitle.contains(expCheckoutPageTitle), "Actual Checkout Page Title doesn't contain expected one");
 
-
-        // Check if we have Magic Mouse item for checkout
+        // Check if we have Magic Mouse item for Checkout
         String expItemName = data.get("item").toString();
         String actItemName = checkout.getItemName(data);
         if (actItemName.equals(expItemName)) {
@@ -76,6 +75,17 @@ public class CheckBuyItem extends AbstractSpec {
         }
         Assert.assertEquals(actItemName, expItemName, "Actual Item Name doesn't equal to expected");
 
+        // Check if a quantity of Magic Mouse item equals to 1 for Checkout
+        long expItemQuantity = Long.parseLong(data.get("expItemQuantity").toString());
+        long actItemQuantity = checkout.getItemQuantity(data);
+        if (actItemQuantity == expItemQuantity) {
+            test.log(Status.PASS, "Actual Item Quantity equals to expected: <b>" + actItemQuantity + "</b>");
+        } else {
+            test.log(Status.FAIL, "Actual Item Quantity: <b>" + actItemQuantity + "</b> doesn't equal to expected: <b>"
+                    + expItemQuantity + "</b>");
+        }
+        Assert.assertTrue(actItemQuantity == expItemQuantity, "Actual Item Quantity: " + actItemQuantity
+                + " doesn't equal to expected: " + expItemQuantity);
 
         // Split test cases for negative and positive
         switch (data.get("test_type").toString()) {
