@@ -43,7 +43,7 @@ public class CheckBuyItem extends AbstractSpec {
 
     // Check Buy Item functionality, positive and negative test cases
     @Test(dataProvider=BUY_ITEM_DATA, priority=1)
-    public void checkBuyItem(JSONObject data, Method method) throws InterruptedException {
+    public void checkBuyItem(JSONObject data, Method method) {
         Log.info(method.getName() + " test is starting.");
 
         // Create the report
@@ -52,6 +52,8 @@ public class CheckBuyItem extends AbstractSpec {
 
         buyItem.addToCart(data);
 
+
+        // Check if we are on Checkout page
         String expCheckoutPageTitle = data.get("expCheckoutTitle").toString();
         String actCheckoutPageTitle = checkout.getTitle();
         if (actCheckoutPageTitle.contains(expCheckoutPageTitle)) {
@@ -61,6 +63,18 @@ public class CheckBuyItem extends AbstractSpec {
                     "Supposed to be: <b>" + expCheckoutPageTitle + "</b>");
         }
         Assert.assertTrue(actCheckoutPageTitle.contains(expCheckoutPageTitle), "Actual Checkout Page Title doesn't contain expected one");
+
+
+        // Check if we have Magic Mouse item for checkout
+        String expItemName = data.get("item").toString();
+        String actItemName = checkout.getItemName(data);
+        if (actItemName.equals(expItemName)) {
+            test.log(Status.PASS, "Actual Item Name equals to expected: <b>" + actItemName + "</b>");
+        } else {
+            test.log(Status.FAIL, "Actual Item Name doesn't equal to expected: <b>" + actItemName + "</b>. " +
+                    "Supposed to be: <b>" + expItemName + "</b>");
+        }
+        Assert.assertEquals(actItemName, expItemName, "Actual Item Name doesn't equal to expected");
 
 
         // Split test cases for negative and positive
