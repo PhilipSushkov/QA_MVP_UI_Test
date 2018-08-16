@@ -14,7 +14,7 @@ import static specs.AbstractSpec.propUIProdCategory;
 
 public class Checkout extends AbstractPageObject {
     private static By continueBtn, emailInp, firstNameInp, lastNameInp, addressInp,
-            cityInp, stateProvinceInp, countrySel, postCodeInp;
+            cityInp, stateProvinceInp, countrySel, postCodeInp, phoneInp;
     private static String sItemCheckout = propUIProdCategory.getProperty("href_ItemCheckout");
     private static String sItemQuantity = propUIProdCategory.getProperty("inp_ItemQuantity");
 
@@ -30,6 +30,7 @@ public class Checkout extends AbstractPageObject {
         stateProvinceInp = By.xpath(propUIProdCategory.getProperty("inp_StateProvince"));
         countrySel = By.xpath(propUIProdCategory.getProperty("sel_Country"));
         postCodeInp = By.xpath(propUIProdCategory.getProperty("inp_PostalCode"));
+        phoneInp = By.xpath(propUIProdCategory.getProperty("inp_Phone"));
     }
 
     public String getTitle() {
@@ -158,11 +159,10 @@ public class Checkout extends AbstractPageObject {
             postCodeElement.sendKeys(contacts.get("postalCode").toString());
 
             // Phone field
-            By phoneInp = By.xpath("//input[@title='billingphone']");
             waitForElementToBeClickable(postCodeInp);
             WebElement phoneElement = findElement(phoneInp);
             phoneElement.clear();
-            phoneElement.sendKeys("(11) 5885-4415");
+            phoneElement.sendKeys(contacts.get("phone").toString());
 
             Log.info("Contacts/Billing data filled up successfully");
         } catch (ElementNotFoundException e) {

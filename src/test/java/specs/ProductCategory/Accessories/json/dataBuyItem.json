@@ -13,7 +13,8 @@
       "city": "São Paulo",
       "stateProvince": "SP",
       "country": "Brazil",
-      "postalCode": "03570-060"
+      "postalCode": "03570-060",
+      "phone": "(11) 5885-4415"
     },
     "expCheckoutTitle": "Checkout",
     "expItemQuantity": 1

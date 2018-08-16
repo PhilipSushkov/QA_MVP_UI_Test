@@ -1,14 +1,11 @@
 package specs.ProductCategory.Accessories;
 
-import com.aventstack.extentreports.ExtentReports;
-import com.aventstack.extentreports.ExtentTest;
-import com.aventstack.extentreports.Status;
+import com.aventstack.extentreports.*;
 import org.json.simple.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.*;
 import org.testng.asserts.SoftAssert;
-import pageobjects.ProductCategory.Accessories.BuyItem;
-import pageobjects.ProductCategory.Accessories.Checkout;
+import pageobjects.ProductCategory.Accessories.*;
 import specs.AbstractSpec;
 import util.Log;
 
@@ -98,6 +95,7 @@ public class CheckBuyItem extends AbstractSpec {
 
                 // #6 Enter test data needed for email, billing/contact details
                 checkout.fillUpData((JSONObject) data.get("contacts"));
+                System.out.println("Done");
 
 
                 break;
