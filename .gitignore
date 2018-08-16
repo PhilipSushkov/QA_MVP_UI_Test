@@ -4,5 +4,3 @@
 .idea/workspace.xml
 target/
 *.orig
-chromedriver.exe
-chromedriver
