@@ -61,20 +61,6 @@ public class BuyItem extends AbstractPageObject {
             e.printStackTrace();
             Log.error("Add To Cart button: TimeoutException occurred");
         }
-
-
-
-        /*
-
-        // Click on Continue button
-        By continueBtn = By.xpath("//a/span[text()='Continue']");
-        findElement(continueBtn).click();
-
-        // Check if Calculate Shipping Price label is shown
-        By calculateH2 = By.xpath("//h2[text()='Calculate Shipping Price']");
-        waitForElement(calculateH2);
-        System.out.println(findElement(calculateH2).getText());
-        */
     }
 
 

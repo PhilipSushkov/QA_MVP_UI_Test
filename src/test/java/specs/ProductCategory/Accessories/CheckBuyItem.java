@@ -87,10 +87,12 @@ public class CheckBuyItem extends AbstractSpec {
         Assert.assertTrue(actItemQuantity == expItemQuantity, "Actual Item Quantity: " + actItemQuantity
                 + " doesn't equal to expected: " + expItemQuantity);
 
+        checkout.clickContinue();
+
         // Split test cases for negative and positive
         switch (data.get("test_type").toString()) {
             case "positive":
-
+                checkout.fillUpData((JSONObject) data.get("contacts"));
 
                 break;
             case "negative":

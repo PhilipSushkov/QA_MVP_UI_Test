@@ -5,11 +5,15 @@
     "item": "Magic Mouse",
     "test_type": "positive",
     "description": "Positive #1, buy a Magic Mouse",
+    "contacts": {
+      "email": "SophiaAzevedoLima@armyspy.com",
+      "firstName": "Sophia"
+    },
     "expCheckoutTitle": "Checkout",
     "expItemQuantity": 1
   },
     {
-      "do_assertions": true,
+      "do_assertions": false,
       "name": "buyMagicMouse_2",
       "item": "Magic Mouse",
       "test_type": "negative",
