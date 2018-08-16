@@ -147,16 +147,16 @@ public class CheckBuyItem extends AbstractSpec {
                 Thread.sleep(DEFAULT_PAUSE);
 
                 // #7 Check if we didn't fill up all required data we should stay on Checkout page
-                String expCheckoutTitle = data.get("expCheckoutTitle").toString();
-                String actCheckoutTitle = checkout.getTitle();
-                if (actCheckoutTitle.contains(expCheckoutTitle)) {
-                    test.log(Status.PASS, "Actual Checkout Page Title contains expected one: <b>" + actCheckoutTitle + "</b>");
+                String expTitle = data.get("expCheckoutTitle").toString();
+                String actTitle = driver.getTitle();
+                if (actTitle.contains(expTitle)) {
+                    test.log(Status.PASS, "Actual Page Title contains expected one: <b>" + actTitle + "</b>");
                 } else {
-                    test.log(Status.FAIL, "Actual Checkout Page Title doesn't contains expected one: <b>" + actCheckoutTitle + "</b>. " +
-                            "Supposed to be: <b>" + expCheckoutTitle + "</b>");
+                    test.log(Status.FAIL, "Actual Page Title doesn't contains expected one: <b>" + actTitle + "</b>. " +
+                            "Supposed to be: <b>" + expTitle + "</b>");
                 }
-                Assert.assertTrue(actCheckoutTitle.contains(expCheckoutTitle),
-                        "Actual Checkout Page Title doesn't contain expected one");
+                Assert.assertTrue(actTitle.contains(expTitle),
+                        "Actual Page Title doesn't contain expected one");
 
                 Log.info(method.getName() + " negative test has been finished");
                 break;

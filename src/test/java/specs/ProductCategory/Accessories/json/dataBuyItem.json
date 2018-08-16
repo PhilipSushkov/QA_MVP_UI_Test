@@ -1,6 +1,6 @@
 {
   "buyItem": [{
-    "do_assertions": false,
+    "do_assertions": true,
     "name": "buyMagicMouse_1",
     "item": "Magic Mouse",
     "test_type": "positive",
