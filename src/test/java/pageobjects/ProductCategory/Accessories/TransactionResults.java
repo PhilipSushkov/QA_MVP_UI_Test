@@ -51,7 +51,7 @@ public class TransactionResults extends AbstractPageObject {
             By itemNameTd = By.xpath(String.format(sItemName, sItem));
             waitForElement(itemNameTd);
             results.put("itemName", findElement(itemNameTd).getText());
-            results.put("itemuQantity", findElement(itemQuantityTd).getText());
+            results.put("itemuQuantity", findElement(itemQuantityTd).getText());
             Log.info("Transaction Results. All elements hav been found successfully");
             return results;
         } catch (ElementNotFoundException e) {

@@ -10,6 +10,7 @@ import specs.AbstractSpec;
 import util.Log;
 
 import java.lang.reflect.Method;
+import java.util.HashMap;
 
 /**
  * Created by PSUSHKOV on Aug, 2018
@@ -112,7 +113,31 @@ public class CheckBuyItem extends AbstractSpec {
                 Assert.assertTrue(actTransactionResultsTitle.contains(expTransactionResultsTitle),
                         "Actual Transaction Results Page Title doesn't contain expected one");
 
-                transactionResults.checkOrder(data);
+                HashMap results = transactionResults.checkOrder(data);
+
+                // #4 Check if we have Magic Mouse item for Order
+                String expOrderItemName = data.get("item").toString();
+                String actOrderItemName = results.get("itemName").toString();
+                if (actOrderItemName.equals(expOrderItemName)) {
+                    test.log(Status.PASS, "Actual Order Item Name equals to expected: <b>" + actOrderItemName + "</b>");
+                } else {
+                    test.log(Status.FAIL, "Actual OrderItem Name doesn't equal to expected: <b>" + actOrderItemName + "</b>. " +
+                            "Supposed to be: <b>" + expOrderItemName + "</b>");
+                }
+                Assert.assertEquals(actOrderItemName, expOrderItemName, "Actual Order Item Name doesn't equal to expected");
+
+                // #4 Check if a quantity of Magic Mouse item equals to 1 for Order
+                long expOrderItemQuantity = Long.parseLong(data.get("expItemQuantity").toString());
+                long actOrderItemQuantity = Long.parseLong(results.get("itemQuantity").toString());
+                if (actOrderItemQuantity == expOrderItemQuantity) {
+                    test.log(Status.PASS, "Actual Order Item Quantity equals to expected: <b>" + actOrderItemQuantity + "</b>");
+                } else {
+                    test.log(Status.FAIL, "Actual Order Item Quantity: <b>" + actOrderItemQuantity + "</b> doesn't equal to expected: <b>"
+                            + expOrderItemQuantity + "</b>");
+                }
+                Assert.assertTrue(actOrderItemQuantity == expOrderItemQuantity, "Actual Order Item Quantity: " + actOrderItemQuantity
+                        + " doesn't equal to expected: " + expOrderItemQuantity);
+
                 System.out.println("Done");
 
                 break;
