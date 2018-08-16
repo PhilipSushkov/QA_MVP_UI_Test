@@ -22,7 +22,7 @@ public class CheckBuyItem extends AbstractSpec {
     private static TransactionResults transactionResults;
     private static ExtentReports buyItemRep;
     private static String sPathToFile, sDataFileJson;
-
+    private static final long DEFAULT_PAUSE = 1500;
     private final String BUY_ITEM_DATA = "buyItemData", ITEM_NAME = "buyItem";
 
     @BeforeTest
@@ -44,7 +44,7 @@ public class CheckBuyItem extends AbstractSpec {
 
     // Check Buy Item functionality, positive and negative test cases
     @Test(dataProvider=BUY_ITEM_DATA, priority=1)
-    public void checkBuyItem(JSONObject data, Method method) {
+    public void checkBuyItem(JSONObject data, Method method) throws InterruptedException {
         Log.info(method.getName() + " test is starting.");
 
         // Create the report
@@ -101,7 +101,7 @@ public class CheckBuyItem extends AbstractSpec {
                 // #6 Click on Purchase button
                 checkout.clickPurchase();
 
-                // #4 Check if we are on Transaction Results page
+                // #7 Check if we are on Transaction Results page
                 String expTransactionResultsTitle = data.get("expTransactionResultsTitle").toString();
                 String actTransactionResultsTitle = transactionResults.getTitle();
                 if (actTransactionResultsTitle.contains(expTransactionResultsTitle)) {
@@ -115,7 +115,7 @@ public class CheckBuyItem extends AbstractSpec {
 
                 HashMap results = transactionResults.checkOrder(data);
 
-                // #4 Check if we have Magic Mouse item for Order
+                // #7 Check if we have Magic Mouse item for Order
                 String expOrderItemName = data.get("item").toString();
                 String actOrderItemName = results.get("itemName").toString();
                 if (actOrderItemName.equals(expOrderItemName)) {
@@ -126,7 +126,7 @@ public class CheckBuyItem extends AbstractSpec {
                 }
                 Assert.assertEquals(actOrderItemName, expOrderItemName, "Actual Order Item Name doesn't equal to expected");
 
-                // #4 Check if a quantity of Magic Mouse item equals to 1 for Order
+                // #7 Check if a quantity of Magic Mouse item equals to 1 for Order
                 long expOrderItemQuantity = Long.parseLong(data.get("expItemQuantity").toString());
                 long actOrderItemQuantity = Long.parseLong(results.get("itemQuantity").toString());
                 if (actOrderItemQuantity == expOrderItemQuantity) {
@@ -138,13 +138,27 @@ public class CheckBuyItem extends AbstractSpec {
                 Assert.assertTrue(actOrderItemQuantity == expOrderItemQuantity, "Actual Order Item Quantity: " + actOrderItemQuantity
                         + " doesn't equal to expected: " + expOrderItemQuantity);
 
-                System.out.println("Done");
-
+                Log.info(method.getName() + " positive test has been finished");
                 break;
+
             case "negative":
                 // #6 Click on Purchase button
                 checkout.clickPurchase();
+                Thread.sleep(DEFAULT_PAUSE);
 
+                // #7 Check if we didn't fill up all required data we should stay on Checkout page
+                String expCheckoutTitle = data.get("expCheckoutTitle").toString();
+                String actCheckoutTitle = checkout.getTitle();
+                if (actCheckoutTitle.contains(expCheckoutTitle)) {
+                    test.log(Status.PASS, "Actual Checkout Page Title contains expected one: <b>" + actCheckoutTitle + "</b>");
+                } else {
+                    test.log(Status.FAIL, "Actual Checkout Page Title doesn't contains expected one: <b>" + actCheckoutTitle + "</b>. " +
+                            "Supposed to be: <b>" + expCheckoutTitle + "</b>");
+                }
+                Assert.assertTrue(actCheckoutTitle.contains(expCheckoutTitle),
+                        "Actual Checkout Page Title doesn't contain expected one");
+
+                Log.info(method.getName() + " negative test has been finished");
                 break;
         }
 

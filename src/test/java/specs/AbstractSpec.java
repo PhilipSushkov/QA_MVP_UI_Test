@@ -81,7 +81,7 @@ public abstract class AbstractSpec extends util.Functions {
 
         driver = new ChromeDriver(ChromeOptions);
         driver.manage().timeouts().implicitlyWait(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
-        driver.manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS); //Increased to 30 to perhaps reduce timeouts?
+        driver.manage().timeouts().pageLoadTimeout(60, TimeUnit.SECONDS); //Increased to 30 to perhaps reduce timeouts?
 
         // #1 Open the site store.demoqa.com
         driver.get(storeUrl.toString());
@@ -111,6 +111,7 @@ public abstract class AbstractSpec extends util.Functions {
     @AfterTest(alwaysRun=true)
     public void teardown() throws Exception {
         if (driver != null) {
+            driver.close();
             driver.quit();
         }
     }

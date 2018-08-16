@@ -180,6 +180,7 @@ public class Checkout extends AbstractPageObject {
 
     public void clickPurchase() {
         try {
+            waitForElementToBeClickable(purchaseInp);
             findElement(purchaseInp).click();
             Log.info("Purchase button has been clicked successfully");
         } catch (ElementNotFoundException e) {
