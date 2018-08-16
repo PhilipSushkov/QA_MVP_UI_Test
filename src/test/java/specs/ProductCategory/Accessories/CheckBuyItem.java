@@ -18,6 +18,7 @@ import java.lang.reflect.Method;
 public class CheckBuyItem extends AbstractSpec {
     private static BuyItem buyItem;
     private static Checkout checkout;
+    private static TransactionResults transactionResults;
     private static ExtentReports buyItemRep;
     private static String sPathToFile, sDataFileJson;
 
@@ -27,6 +28,7 @@ public class CheckBuyItem extends AbstractSpec {
     public void setUp() {
         buyItem = new BuyItem(driver);
         checkout = new Checkout(driver);
+        transactionResults = new TransactionResults(driver);
 
         sPathToFile = System.getProperty("user.dir") + propUIProdCategory.getProperty("dataPath_BuyItem");
         sDataFileJson = propUIProdCategory.getProperty("json_BuyItemData");
@@ -92,14 +94,31 @@ public class CheckBuyItem extends AbstractSpec {
         // Split test cases for negative and positive
         switch (data.get("test_type").toString()) {
             case "positive":
-
                 // #6 Enter test data needed for email, billing/contact details
                 checkout.fillUpData((JSONObject) data.get("contacts"));
-                System.out.println("Done");
 
+                // #6 Click on Purchase button
+                checkout.clickPurchase();
+
+                // #4 Check if we are on Checkout page
+                String expTransactionResultsTitle = data.get("expTransactionResultsTitle").toString();
+                String actTransactionResultsTitle = transactionResults.getTitle();
+                if (actTransactionResultsTitle.contains(expTransactionResultsTitle)) {
+                    test.log(Status.PASS, "Actual Transaction Results Page Title contains expected one: <b>" + actTransactionResultsTitle + "</b>");
+                } else {
+                    test.log(Status.FAIL, "Actual Transaction Results Page Title doesn't contains expected one: <b>" + actTransactionResultsTitle + "</b>. " +
+                            "Supposed to be: <b>" + expTransactionResultsTitle + "</b>");
+                }
+                Assert.assertTrue(actTransactionResultsTitle.contains(expTransactionResultsTitle),
+                        "Actual Transaction Results Page Title doesn't contain expected one");
+
+                transactionResults.checkOrder(data);
+                System.out.println("Done");
 
                 break;
             case "negative":
+                // #6 Click on Purchase button
+                checkout.clickPurchase();
 
                 break;
         }

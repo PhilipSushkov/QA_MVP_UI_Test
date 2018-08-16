@@ -17,7 +17,8 @@
       "phone": "(11) 5885-4415"
     },
     "expCheckoutTitle": "Checkout",
-    "expItemQuantity": 1
+    "expItemQuantity": 1,
+    "expTransactionResultsTitle": "Transaction Results"
   },
     {
       "do_assertions": false,
@@ -26,7 +27,8 @@
       "test_type": "negative",
       "description": "Negative #1, wrong data for buying a Magic Mouse",
       "expCheckoutTitle": "Checkout",
-      "expItemQuantity": 2
+      "expItemQuantity": 2,
+      "expTransactionResultsTitle": "Transaction Results"
     }
   ]
 }

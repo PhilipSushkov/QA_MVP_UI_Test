@@ -11,10 +11,9 @@ import static specs.AbstractSpec.propUIProdCategory;
  * Created by PSUSHKOV on Aug, 2018
  **/
 
-
 public class Checkout extends AbstractPageObject {
     private static By continueBtn, emailInp, firstNameInp, lastNameInp, addressInp,
-            cityInp, stateProvinceInp, countrySel, postCodeInp, phoneInp;
+            cityInp, stateProvinceInp, countrySel, postCodeInp, phoneInp, purchaseInp;
     private static String sItemCheckout = propUIProdCategory.getProperty("href_ItemCheckout");
     private static String sItemQuantity = propUIProdCategory.getProperty("inp_ItemQuantity");
 
@@ -31,6 +30,7 @@ public class Checkout extends AbstractPageObject {
         countrySel = By.xpath(propUIProdCategory.getProperty("sel_Country"));
         postCodeInp = By.xpath(propUIProdCategory.getProperty("inp_PostalCode"));
         phoneInp = By.xpath(propUIProdCategory.getProperty("inp_Phone"));
+        purchaseInp = By.xpath(propUIProdCategory.getProperty("inp_Purchase"));
     }
 
     public String getTitle() {
@@ -176,6 +176,22 @@ public class Checkout extends AbstractPageObject {
             Log.error("Checkout. Fill Up data: TimeoutException occurred");
         }
 
+    }
+
+    public void clickPurchase() {
+        try {
+            findElement(purchaseInp).click();
+            Log.info("Purchase button has been clicked successfully");
+        } catch (ElementNotFoundException e) {
+            e.printStackTrace();
+            Log.error("Billing. Purchase button: ElementNotFoundException occurred");
+        } catch (ElementNotVisibleException e) {
+            e.printStackTrace();
+            Log.error("Billing. Purchase button: ElementNotVisibleException occurred");
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+            Log.error("Billing. Purchase button: TimeoutException occurred");
+        }
     }
 
 }
