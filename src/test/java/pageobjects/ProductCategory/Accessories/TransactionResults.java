@@ -16,11 +16,13 @@ import static specs.AbstractSpec.propUIProdCategory;
  **/
 
 public class TransactionResults extends AbstractPageObject {
-    private static By transResultsTbl;
+    private static By transResultsTbl, itemQuantityTd;
+    private static String sItemName = propUIProdCategory.getProperty("td_ItemName");
 
     public TransactionResults(WebDriver driver) {
         super(driver);
         transResultsTbl = By.xpath(propUIProdCategory.getProperty("tbl_TransResults"));
+        itemQuantityTd = By.xpath(propUIProdCategory.getProperty("td_ItemQuantity"));
     }
 
     public String getTitle() {
@@ -43,7 +45,25 @@ public class TransactionResults extends AbstractPageObject {
 
     public HashMap checkOrder(JSONObject data) {
         HashMap results = new HashMap();
+        String sItem = data.get("item").toString();
 
+        try {
+            By itemNameTd = By.xpath(String.format(sItemName, sItem));
+            waitForElement(itemNameTd);
+            results.put("itemName", findElement(itemNameTd).getText());
+            results.put("itemuQantity", findElement(itemQuantityTd).getText());
+            Log.info("Transaction Results. All elements hav been found successfully");
+            return results;
+        } catch (ElementNotFoundException e) {
+            e.printStackTrace();
+            Log.error("Transaction Results. Check Order: ElementNotFoundException occurred");
+        } catch (ElementNotVisibleException e) {
+            e.printStackTrace();
+            Log.error("Transaction Results. Check Order: ElementNotVisibleException occurred");
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+            Log.error("Transaction Results. Check Order: TimeoutException occurred");
+        }
 
         return results;
     }

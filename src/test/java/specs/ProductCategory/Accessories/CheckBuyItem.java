@@ -100,7 +100,7 @@ public class CheckBuyItem extends AbstractSpec {
                 // #6 Click on Purchase button
                 checkout.clickPurchase();
 
-                // #4 Check if we are on Checkout page
+                // #4 Check if we are on Transaction Results page
                 String expTransactionResultsTitle = data.get("expTransactionResultsTitle").toString();
                 String actTransactionResultsTitle = transactionResults.getTitle();
                 if (actTransactionResultsTitle.contains(expTransactionResultsTitle)) {
