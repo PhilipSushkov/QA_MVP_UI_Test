@@ -26,6 +26,17 @@
       "item": "Magic Mouse",
       "test_type": "negative",
       "description": "Negative #1, wrong data for buying a Magic Mouse",
+      "contacts": {
+        "email": "",
+        "firstName": "",
+        "lastName": "",
+        "address": "",
+        "city": "",
+        "stateProvince": "",
+        "country": "Brazil",
+        "postalCode": "",
+        "phone": ""
+      },
       "expCheckoutTitle": "Checkout",
       "expItemQuantity": 1
     }

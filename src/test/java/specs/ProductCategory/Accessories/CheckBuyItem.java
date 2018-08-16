@@ -22,7 +22,7 @@ public class CheckBuyItem extends AbstractSpec {
     private static TransactionResults transactionResults;
     private static ExtentReports buyItemRep;
     private static String sPathToFile, sDataFileJson;
-    private static final long DEFAULT_PAUSE = 1500;
+    private static final long DEFAULT_PAUSE = 3000;
     private final String BUY_ITEM_DATA = "buyItemData", ITEM_NAME = "buyItem";
 
     @BeforeTest
@@ -142,6 +142,9 @@ public class CheckBuyItem extends AbstractSpec {
                 break;
 
             case "negative":
+                // #6 Enter test data needed for email, billing/contact details
+                checkout.fillUpData((JSONObject) data.get("contacts"));
+
                 // #6 Click on Purchase button
                 checkout.clickPurchase();
                 Thread.sleep(DEFAULT_PAUSE);
@@ -156,7 +159,7 @@ public class CheckBuyItem extends AbstractSpec {
                             "Supposed to be: <b>" + expTitle + "</b>");
                 }
                 Assert.assertTrue(actTitle.contains(expTitle),
-                        "Actual Page Title doesn't contain expected one");
+                        "Actual Page Title: " + actTitle + " doesn't contain expected one: " + expTitle);
 
                 Log.info(method.getName() + " negative test has been finished");
                 break;
