@@ -117,6 +117,13 @@
         </profile>
     </profiles>
     <build>
+        <sourceDirectory>src/test/java</sourceDirectory>
+        <testSourceDirectory>src/test/java/specs</testSourceDirectory>
+        <resources>
+            <resource>
+                <directory>src/test/java/pageobjects/resources</directory>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

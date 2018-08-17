@@ -74,7 +74,8 @@ public abstract class AbstractSpec extends util.Functions {
         ChromeOptions ChromeOptions = new ChromeOptions();
 
         if (System.getProperty("os.name").equals("Windows 10")) {
-            ChromeOptions.addArguments("window-size=1024,768", "--no-sandbox", "--incognito");
+            //ChromeOptions.addArguments("window-size=1024,768", "--no-sandbox", "--incognito");
+            ChromeOptions.addArguments("--headless", "window-size=1024,768", "--no-sandbox", "--incognito", "--disable-gpu");
         } else {
             ChromeOptions.addArguments("--headless", "window-size=1024,768", "--no-sandbox", "--incognito", "--disable-gpu");
         }
