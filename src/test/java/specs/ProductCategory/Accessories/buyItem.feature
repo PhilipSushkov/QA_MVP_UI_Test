@@ -3,7 +3,7 @@ Feature: User should be able to buy an item from store.demoqa.com e-commerce web
   Background: No authorization needed
 
   Scenario: Place the order for Magic Mouse item in Product category, Accessories section
-    Given: Go to http://store.demoqa.com/
+    Given Go to http://store.demoqa.com
 
     When Go to Product category
     And select Accessories
