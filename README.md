@@ -1,5 +1,4 @@
-store.demoqa.com - Magic Mouse
-==============
+store.demoqa.com - Magic Mouse 
 
 **Intellij Setup**
 
