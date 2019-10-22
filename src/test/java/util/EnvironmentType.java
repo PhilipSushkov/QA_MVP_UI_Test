@@ -3,7 +3,7 @@ package util;
 public enum EnvironmentType {
 
   DEV("store.demoqa.dev"),
-  QA("store.demoqa.com"),
+  QA("shop.demoqa.com"),
   PROD("store.demoqa.prod");
 
   private final String host;

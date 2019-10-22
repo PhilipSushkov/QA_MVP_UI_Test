@@ -122,3 +122,8 @@
 2018-08-16 21:47:33 INFO  Log:22 - Contacts/Billing data filled up successfully
 2018-08-16 21:47:42 INFO  Log:22 - Purchase button has been clicked successfully
 2018-08-16 21:47:45 INFO  Log:22 - checkBuyItem negative test has been finished
+2019-10-22 16:32:16 INFO  Log:22 - checkLoginForm test is starting.
+2019-10-22 16:34:47 INFO  Log:22 - checkLoginForm test is starting.
+2019-10-22 16:35:57 INFO  Log:22 - checkLoginForm test is starting.
+2019-10-22 16:36:43 INFO  Log:22 - checkLoginForm test is starting.
+2019-10-22 16:37:13 INFO  Log:22 - checkLoginForm test is starting.

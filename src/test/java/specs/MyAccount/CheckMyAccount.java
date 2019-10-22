@@ -22,13 +22,23 @@ public class CheckMyAccount extends AbstractSpec {
 
     @BeforeTest
     public void setUp() {
-        sPathToFile = System.getProperty("user.dir") + propUIProdCategory.getProperty("dataPath_BuyItem");
-        sDataFileJson = propUIProdCategory.getProperty("json_BuyItemData");
+        sPathToFile = System.getProperty("user.dir") + propUIMayAccount.getProperty("dataPath_MyAccount");
+        sDataFileJson = propUIMayAccount.getProperty("json_MyAccountData");
         myAccountRep = RepMyAccount.GetExtent();
     }
 
     @BeforeMethod
     public void beforeMethod() throws InterruptedException {
+        driver.get(storeUrl+"/my-account/");
+        Thread.sleep(DEFAULT_PAUSE);
+    }
+
+    @Test(dataProvider = DATA, priority=1)
+    public void checkLoginForm(JSONObject data, Method method) throws InterruptedException {
+        Log.info(method.getName() + " test is starting.");
+
+        // Create the report
+        ExtentTest test = myAccountRep.createTest(data.get("name").toString() +"<br>" + data.get("description").toString());
 
     }
 
