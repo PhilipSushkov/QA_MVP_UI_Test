@@ -4,7 +4,6 @@ import com.aventstack.extentreports.*;
 import org.json.simple.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.*;
-import org.testng.asserts.SoftAssert;
 import pageobjects.ProductCategory.Accessories.*;
 import specs.AbstractSpec;
 import util.Log;

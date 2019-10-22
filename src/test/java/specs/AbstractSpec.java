@@ -73,12 +73,7 @@ public abstract class AbstractSpec extends util.Functions {
     private void setupChromeDriver() throws InterruptedException {
         ChromeOptions ChromeOptions = new ChromeOptions();
 
-        if (System.getProperty("os.name").equals("Windows 10")) {
-            //ChromeOptions.addArguments("window-size=1024,768", "--no-sandbox", "--incognito");
-            ChromeOptions.addArguments("--headless", "window-size=1024,768", "--no-sandbox", "--incognito", "--disable-gpu");
-        } else {
-            ChromeOptions.addArguments("--headless", "window-size=1024,768", "--no-sandbox", "--incognito", "--disable-gpu");
-        }
+        ChromeOptions.addArguments("window-size=1920,1080", "--no-sandbox", "--incognito");
 
         driver = new ChromeDriver(ChromeOptions);
         driver.manage().timeouts().implicitlyWait(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
@@ -110,7 +105,7 @@ public abstract class AbstractSpec extends util.Functions {
     }
 
     @AfterTest(alwaysRun=true)
-    public void teardown() throws Exception {
+    public void teardown() {
         if (driver != null) {
             driver.close();
             driver.quit();
@@ -136,7 +131,7 @@ public abstract class AbstractSpec extends util.Functions {
             }
         }
 
-    public static void setupPropUI() throws IOException {
+    public static void setupPropUI() {
         propUIProdCategory = ConnectToPropUI(PATHTO_PRODCATEGORY_PROP);
     }
 
