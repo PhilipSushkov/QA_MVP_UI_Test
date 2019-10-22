@@ -15,6 +15,10 @@ import java.util.HashMap;
  * Created by PSUSHKOV on Oct, 2019
  **/
 
-public class CheckMyAccount {
+public class CheckMyAccount extends AbstractSpec {
+    private static ExtentReports myAccountRep;
+    private static String sPathToFile, sDataFileJson;
+    private static final long DEFAULT_PAUSE = 3000;
+    private final String DATA = "myAccountData", NAME = "myAccount";
 
 }
