@@ -1,0 +1,13 @@
+{
+  "myAccount": [{
+    "do_assertions": true,
+    "name": "myAccount_1",
+    "test_type": "negative",
+    "description": "Positive #1, check Login form validation",
+    "credentials": {
+      "username": "SophiaAzevedoLima@armyspy.com",
+      "login": "Sophia"
+    },
+    "expCheckoutTitle": "ERROR: The username or password you entered is incorrect. Lost your password?",
+  }]
+}
