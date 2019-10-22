@@ -2,8 +2,6 @@ package pageobjects.ProductCategory.Accessories;
 
 import org.openqa.selenium.*;
 import org.json.simple.JSONObject;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import pageobjects.AbstractPageObject;
 import util.Log;
 
