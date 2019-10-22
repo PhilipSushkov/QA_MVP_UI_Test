@@ -1,177 +1,96 @@
 package specs;
 
-import org.apache.commons.lang.RandomStringUtils;
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.Platform;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxProfile;
-import org.openqa.selenium.phantomjs.PhantomJSDriver;
-import org.openqa.selenium.phantomjs.PhantomJSDriverService;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.chrome.*;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeTest;
-import util.BrowserStackCapability;
-import util.BrowserType;
+import org.testng.annotations.*;
 import util.EnvironmentType;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
-import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
+/**
+ * Created by PSUSHKOV on Aug, 2018
+ **/
+
 public abstract class AbstractSpec extends util.Functions {
 
-// IMPORTANT:
-// Determines which environment the test suite will run on but can be overridden by command line
-//------------------------------------------------------------------------------
-    //private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.DEVELOP;
-    //private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.BETA;
-    private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.PRODUCTION;
-//------------------------------------------------------------------------------
+    // Determines which environment the test suite will run on but can be overridden by command line
+    //private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.DEV;
+    private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.QA;
+    //private static final EnvironmentType DEFAULT_ENVIRONMENT = EnvironmentType.PROD;
 
     private static final EnvironmentType activeEnvironment = setupEnvironment();
-
-    private static final String BROWSER_STACK_URL = "http://jencampbell2:6jEURzbszfaWhLJc7XWx@hub.browserstack.com/wd/hub";
-    private static final String BUILD_ID = RandomStringUtils.randomAlphanumeric(6);
     public static final long DEFAULT_TIMEOUT = 25L;
     private static final long DEFAULT_PAUSE = 1500;
 
-    public static URL desktopUrl, desktopUrlPublic;
-    public static BrowserStackCapability browser;
+    public static URL storeUrl;
     protected WebDriver driver;
     private static boolean setupIsDone = false;
     private static final Logger LOG = Logger.getLogger(AbstractSpec.class.getName());
-    public static String sessionID = null;
 
     // Declare Properties files for every section
-    private static final String PATHTO_COMMON_PROP = "CommonMap.properties";
-    public static Properties propUICommon;
+    private static final String PATHTO_PRODCATEGORY_PROP = "ProductCategory/ProductCategory.properties";
+    public static Properties propUIProdCategory;
 
     @BeforeTest
     public void init(final ITestContext testContext) throws Exception {
         if (!setupIsDone) {
             setupEnvironment();
 
-            desktopUrl = new URL(activeEnvironment.getProtocol() + activeEnvironment.getHost());
-
-            LOG.info("ENV URL: " + desktopUrl);
-
-            browser = new BrowserStackCapability(Platform.WIN8, BrowserType.CHROME, null);
-            //browser = new BrowserStackCapability(Platform.WIN8, BrowserType.OPERA, null);
-            //browser = new BrowserStackCapability(Platform.WIN8, BrowserType.INTERNET_EXPLORER, null);
-            //browser = new BrowserStackCapability(Platform.WIN8, BrowserType.FIREFOX, null);
+            storeUrl = new URL(activeEnvironment.getProtocol() + activeEnvironment.getHost());
+            LOG.info("ENV URL: " + storeUrl);
 
             setupIsDone = true;
         }
 
-        //System.out.println(testContext.getName()); // it prints "Check name test"
-
         switch (getActiveEnvironment()) {
-            case DEVELOP:
-                //setupLocalDriver();
-                setupChromeLocalDriver();
+            case DEV:
+                setupChromeDriver();
                 break;
-            case BETA:
-                //temp code due to temp use of testing environment
-                //setupLocalDriver();
-                //setupFirefoxLocalDriver();
-                setupChromeLocalDriver();
+            case QA:
+                setupChromeDriver();
                 break;
-            case PRODUCTION:
-                setupChromeLocalDriver();
-                //setupFirefoxLocalDriver();
-                //setupWebDriver(testContext.getName());
+            case PROD:
+                setupChromeDriver();
                 break;
         }
 
         setupPropUI();
     }
 
-    private void setupLocalDriver() throws UnknownHostException {
-        DesiredCapabilities caps = new DesiredCapabilities();
-        caps.setJavascriptEnabled(true);
-        caps.setCapability(PhantomJSDriverService.PHANTOMJS_CLI_ARGS, new String[] {"--web-security=no", "--ignore-ssl-errors=yes", "--load-images=false"});
-        driver = new PhantomJSDriver(caps);
-        driver.manage().timeouts().implicitlyWait(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
-        driver.get(desktopUrl.toString());
+    private void setupChromeDriver() throws InterruptedException {
+        ChromeOptions ChromeOptions = new ChromeOptions();
 
-        //driver.setJavascriptEnabled(true);
-        //driver.manage().window().setSize(new Dimension(1400, 1400));
-        //driver.get("https://aestest.s1.q4web.newtest");
-        //driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-        //System.out.println(driver.getPageSource());
-    }
-
-    private void setupChromeLocalDriver() throws InterruptedException {
-        DesiredCapabilities capabilities = DesiredCapabilities.chrome();
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("incognito");
-        options.addArguments("no-sandbox");
-        capabilities.setCapability(ChromeOptions.CAPABILITY, options);
-        driver = new ChromeDriver(capabilities);
-
-        driver.manage().timeouts().implicitlyWait(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
-        driver.manage().timeouts().pageLoadTimeout(120, TimeUnit.SECONDS); //Increased to 20 to perhaps reduce timeouts?
-        //driver.manage().window().setSize(new Dimension(1400, 1400));
-        driver.get(desktopUrl.toString());
-
-        //System.out.println(driver.getCurrentUrl());
-
-        int attempts = 5;
-        for (int i=0; i<attempts; i++) {
-            if (!driver.getCurrentUrl().contains(desktopUrl.toString())) {
-                System.out.println("Home site page didn't download yet: "+desktopUrl.toString());
-                //System.out.println(driver.getCurrentUrl());
-                driver.navigate().refresh();
-                driver.get(desktopUrl.toString());
-                Thread.sleep(DEFAULT_PAUSE);
-            } else {
-                break;
-            }
+        if (System.getProperty("os.name").equals("Windows 10")) {
+            //ChromeOptions.addArguments("window-size=1024,768", "--no-sandbox", "--incognito");
+            ChromeOptions.addArguments("--headless", "window-size=1024,768", "--no-sandbox", "--incognito", "--disable-gpu");
+        } else {
+            ChromeOptions.addArguments("--headless", "window-size=1024,768", "--no-sandbox", "--incognito", "--disable-gpu");
         }
 
-    }
-
-    private void setupFirefoxLocalDriver() {
-        FirefoxProfile firefoxProfile = new FirefoxProfile();
-        firefoxProfile.setPreference("browser.privatebrowsing.autostart", true);
-        driver = new FirefoxDriver();
+        driver = new ChromeDriver(ChromeOptions);
         driver.manage().timeouts().implicitlyWait(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
-        driver.manage().timeouts().pageLoadTimeout(40, TimeUnit.SECONDS); //Increased to 20 to perhaps reduce timeouts?
-        driver.manage().window().setSize(new Dimension(1400, 1400));
-        driver.get(desktopUrl.toString());
-    }
+        driver.manage().timeouts().pageLoadTimeout(60, TimeUnit.SECONDS); //Increased to 30 to perhaps reduce timeouts?
 
-
-    private void setupWebDriver(String testName) throws Exception {
-        DesiredCapabilities capability = browser.toDesiredCapability();
-        capability.setCapability("project", getActiveEnvironment().name());
-        capability.setCapability("build", getActiveEnvironment().name() + " - " + browser.getPlatformType().name() + " " + browser.getBrowserType().getName() + " " + browser.getBrowserType().getLatestVersion()+ " - " + BUILD_ID);
-        capability.setCapability("name", testName);
-        capability.setCapability("resolution","1920x1200");
-        capability.setCapability("acceptSslCerts", "true");
-        capability.setCapability("browserstack.video","false");
-        capability.setCapability("browserstack.debug", "false");
-
-        driver = new RemoteWebDriver(new URL(BROWSER_STACK_URL), capability);
-        driver.manage().timeouts().implicitlyWait(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
-        driver.manage().timeouts().pageLoadTimeout(50, TimeUnit.SECONDS); //Increased to 20 to perhaps reduce timeouts?
-        //driver.manage().window().setSize(new Dimension(1400, 1400));
-        driver.get(desktopUrl.toString());
+        // #1 Open the site store.demoqa.com
+        driver.get(storeUrl.toString());
+        Thread.sleep(DEFAULT_PAUSE);
     }
 
     @AfterMethod
     public void afterMethod(ITestResult result) {
-
         switch (result.getStatus()) {
             case ITestResult.SUCCESS:
                 System.out.println(result.getMethod().getMethodName()+": PASS");
@@ -193,6 +112,7 @@ public abstract class AbstractSpec extends util.Functions {
     @AfterTest(alwaysRun=true)
     public void teardown() throws Exception {
         if (driver != null) {
+            driver.close();
             driver.quit();
         }
     }
@@ -202,11 +122,11 @@ public abstract class AbstractSpec extends util.Functions {
         return activeEnvironment;
     }
 
-    private static EnvironmentType setupEnvironment () {
+    private static EnvironmentType setupEnvironment() {
 
         String overrideEnvironment = System.getProperty("environment");
             if (overrideEnvironment != null) {
-                if ((overrideEnvironment.equals("PRODUCTION")) || (overrideEnvironment.equals("BETA")) || (overrideEnvironment.equals("DEVELOP"))) {
+                if ((overrideEnvironment.equals("PROD")) || (overrideEnvironment.equals("QA")) || (overrideEnvironment.equals("DEV"))) {
                     return EnvironmentType.valueOf(overrideEnvironment);
                 } else {
                     return DEFAULT_ENVIRONMENT;
@@ -216,16 +136,41 @@ public abstract class AbstractSpec extends util.Functions {
             }
         }
 
-    public static String getSessionID() {
-        return sessionID;
-    }
-
-    public static void setSessionID(String sessionIDCookie) {
-        sessionID = sessionIDCookie;
-    }
-
     public static void setupPropUI() throws IOException {
-        propUICommon = ConnectToPropUI(PATHTO_COMMON_PROP);
+        propUIProdCategory = ConnectToPropUI(PATHTO_PRODCATEGORY_PROP);
+    }
+
+    public Object[][] genericProvider(String dataType, String sPathToDataFile) {
+        JSONParser parser = new JSONParser();
+
+        try {
+            JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(sPathToDataFile));
+            JSONArray data = (JSONArray) jsonObject.get(dataType);
+            ArrayList<Object> zoom = new ArrayList();
+
+            for (int i = 0; i < data.size(); i++) {
+                JSONObject pageObj = (JSONObject) data.get(i);
+                if (Boolean.parseBoolean(pageObj.get("do_assertions").toString())) {
+                    zoom.add(data.get(i));
+                }
+            }
+
+            Object[][] newData = new Object[zoom.size()][1];
+            for (int i = 0; i < zoom.size(); i++) {
+                newData[i][0] = zoom.get(i);
+            }
+
+            return newData;
+
+        }  catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
 }

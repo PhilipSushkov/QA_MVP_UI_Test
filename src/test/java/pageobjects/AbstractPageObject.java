@@ -13,13 +13,12 @@ public class AbstractPageObject implements PageObject {
     private final Predicate<WebElement> displayedElementPredicate = new Predicate<WebElement>() {
         @Override
         public boolean evaluate(WebElement t) {
-
             return t.isDisplayed();
         }
     };
 
-    private static final long DEFAULT_PAUSE = 1500;
-    private static final int ATTEMPTS = 5;
+    private static final long DEFAULT_PAUSE = 1000;
+    private static final int ATTEMPTS = 3;
 
     public AbstractPageObject(WebDriver driver) {
         this.driver = driver;
@@ -68,7 +67,7 @@ public class AbstractPageObject implements PageObject {
         return size/columnsNumber;
     }
 
-    public void openPageFromCommonTasks(By taskLink) throws Exception {
+    public void openPageFromCommonTasks(By taskLink) throws InterruptedException {
         waitForElement(taskLink);
 
         for (int i=0; i<ATTEMPTS; i++) {
@@ -85,7 +84,7 @@ public class AbstractPageObject implements PageObject {
         }
     }
 
-    public void openPageFromMenu(By menuButton, By menuItem) throws Exception {
+    public boolean openPageFromMenu(By menuButton, By menuItem) throws InterruptedException {
         Actions action = new Actions(driver);
         wait.until(ExpectedConditions.visibilityOf(findElement(menuButton)));
 
@@ -95,16 +94,18 @@ public class AbstractPageObject implements PageObject {
                 wait.until(ExpectedConditions.visibilityOf(findElement(menuItem)));
                 Thread.sleep(DEFAULT_PAUSE);
                 findElement(menuItem).click();
-                break;
-            } catch (ElementNotVisibleException e1){
+                return true;
+            } catch (ElementNotVisibleException e){
                 System.out.println("Attempt #" + i);
-            } catch (ElementNotFoundException e2) {
+            } catch (ElementNotFoundException e) {
                 System.out.println("Attempt #" + i);
-            } catch (TimeoutException e3) {
+            } catch (TimeoutException e) {
                 System.out.println("Attempt #" + i);
             }
 
         }
+
+        return false;
     }
 
     // Purpose: openContentPageFromMenu takes into account the case when the content page might not be added to the Content Admin by adding it.
