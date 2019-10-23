@@ -2,10 +2,10 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="QA_MVP_UI_Test" parallel="tests" >
 
-    <!-- CheckBuyItem -->
-    <test name="CheckBuyItem">
+    <!-- CheckMyAccount -->
+    <test name="CheckMyAccount">
         <classes>
-            <class name="specs.ProductCategory.Accessories.CheckBuyItem" />
+            <class name="specs.MyAccount.CheckMyAccount" />
         </classes>
     </test>
 

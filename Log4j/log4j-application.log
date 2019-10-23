@@ -150,3 +150,8 @@
 2019-10-23 12:16:36 INFO  Log:22 - Login data has filled up successfully
 2019-10-23 12:16:37 INFO  Log:22 - Login button has been clicked
 2019-10-23 12:16:37 INFO  Log:22 - checkLoginForm negative test has been finished
+2019-10-23 12:19:38 INFO  Log:22 - checkLoginForm test is starting.
+2019-10-23 12:19:39 INFO  Log:22 - Login data has filled up successfully
+2019-10-23 12:19:40 INFO  Log:22 - Login button has been clicked
+2019-10-23 12:19:40 INFO  Log:22 - Error message text has been taken successfully
+2019-10-23 12:19:40 INFO  Log:22 - checkLoginForm negative test has been finished
