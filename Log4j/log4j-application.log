@@ -127,3 +127,26 @@
 2019-10-22 16:35:57 INFO  Log:22 - checkLoginForm test is starting.
 2019-10-22 16:36:43 INFO  Log:22 - checkLoginForm test is starting.
 2019-10-22 16:37:13 INFO  Log:22 - checkLoginForm test is starting.
+2019-10-23 11:59:33 INFO  Log:22 - checkLoginForm test is starting.
+2019-10-23 11:59:33 ERROR Log:32 - Get Login Error message: ElementNotFoundException occurred
+2019-10-23 12:02:24 INFO  Log:22 - checkLoginForm test is starting.
+2019-10-23 12:02:33 ERROR Log:32 - Get Login Error message: ElementNotFoundException occurred
+2019-10-23 12:03:49 INFO  Log:22 - checkLoginForm test is starting.
+2019-10-23 12:04:31 ERROR Log:32 - Get Login Error message: ElementNotFoundException occurred
+2019-10-23 12:05:13 INFO  Log:22 - checkLoginForm test is starting.
+2019-10-23 12:05:25 ERROR Log:32 - Get Login Error message: ElementNotFoundException occurred
+2019-10-23 12:06:16 INFO  Log:22 - checkLoginForm test is starting.
+2019-10-23 12:06:16 INFO  Log:22 - Login data has filled up successfully
+2019-10-23 12:07:03 INFO  Log:22 - checkLoginForm test is starting.
+2019-10-23 12:07:04 INFO  Log:22 - Login data has filled up successfully
+2019-10-23 12:13:39 INFO  Log:22 - checkLoginForm test is starting.
+2019-10-23 12:13:39 INFO  Log:22 - Login data has filled up successfully
+2019-10-23 12:13:40 INFO  Log:22 - Login button has been clicked
+2019-10-23 12:15:50 INFO  Log:22 - checkLoginForm test is starting.
+2019-10-23 12:15:50 INFO  Log:22 - Login data has filled up successfully
+2019-10-23 12:15:51 INFO  Log:22 - Login button has been clicked
+2019-10-23 12:15:51 ERROR Log:32 - Get Login Error message: ElementNotFoundException occurred
+2019-10-23 12:16:36 INFO  Log:22 - checkLoginForm test is starting.
+2019-10-23 12:16:36 INFO  Log:22 - Login data has filled up successfully
+2019-10-23 12:16:37 INFO  Log:22 - Login button has been clicked
+2019-10-23 12:16:37 INFO  Log:22 - checkLoginForm negative test has been finished

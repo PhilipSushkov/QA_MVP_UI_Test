@@ -43,7 +43,7 @@ public abstract class AbstractSpec extends util.Functions {
     // Declare Properties files for every section
     private static final String PATHTO_PRODCATEGORY_PROP = "ProductCategory/ProductCategory.properties";
     private static final String PATHTO_MYACCOUNT_PROP = "MyAccount/MyAccount.properties";
-    public static Properties propUIProdCategory, propUIMayAccount;
+    public static Properties propUIProdCategory, propUIMyAccount;
 
     @BeforeTest
     public void init(final ITestContext testContext) throws Exception {
@@ -134,7 +134,7 @@ public abstract class AbstractSpec extends util.Functions {
 
     public static void setupPropUI() {
         propUIProdCategory = ConnectToPropUI(PATHTO_PRODCATEGORY_PROP);
-        propUIMayAccount = ConnectToPropUI(PATHTO_MYACCOUNT_PROP);
+        propUIMyAccount = ConnectToPropUI(PATHTO_MYACCOUNT_PROP);
     }
 
     public Object[][] genericProvider(String dataType, String sPathToDataFile) {

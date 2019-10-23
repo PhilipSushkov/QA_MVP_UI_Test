@@ -6,7 +6,7 @@
     "description": "Positive #1, check Login form validation",
     "credentials": {
       "username": "SophiaAzevedoLima@armyspy.com",
-      "login": "Sophia"
+      "password": "Sophia"
     },
     "expErrorMessage": "ERROR: The username or password you entered is incorrect. Lost your password?",
   }]

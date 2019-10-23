@@ -12,7 +12,7 @@ public class RepMyAccount {
     private static ExtentReports extent;
     private static ExtentTest test;
     private static ExtentHtmlReporter htmlReporter;
-    private static String filePath = System.getProperty("user.dir") + AbstractSpec.propUIMayAccount.getProperty("repPath_MyAccount") +
+    private static String filePath = System.getProperty("user.dir") + AbstractSpec.propUIMyAccount.getProperty("repPath_MyAccount") +
             "./MyAccountRep.html";
 
     public static ExtentReports GetExtent() {

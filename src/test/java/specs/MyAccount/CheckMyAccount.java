@@ -26,8 +26,8 @@ public class CheckMyAccount extends AbstractSpec {
     public void setUp() {
         myAccount = new MyAccount(driver);
 
-        sPathToFile = System.getProperty("user.dir") + propUIMayAccount.getProperty("dataPath_MyAccount");
-        sDataFileJson = propUIMayAccount.getProperty("json_MyAccountData");
+        sPathToFile = System.getProperty("user.dir") + propUIMyAccount.getProperty("dataPath_MyAccount");
+        sDataFileJson = propUIMyAccount.getProperty("json_MyAccountData");
         myAccountRep = RepMyAccount.GetExtent();
     }
 
@@ -52,7 +52,7 @@ public class CheckMyAccount extends AbstractSpec {
                 break;
 
             case "negative":
-                String actErrorMessage = myAccount.getErrorMessage();
+                String actErrorMessage = myAccount.getErrorMessage(data);
                 String expErrorMessage = data.get("expErrorMessage").toString();
 
                 if (actErrorMessage.equals(expErrorMessage)) {
